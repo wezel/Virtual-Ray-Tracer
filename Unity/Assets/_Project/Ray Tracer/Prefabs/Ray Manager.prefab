@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3364825822907551460
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3364825822907551462}
+  - component: {fileID: 3364825822907551461}
+  m_Layer: 0
+  m_Name: Ray Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3364825822907551462
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3364825822907551460}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3364825822907551461
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3364825822907551460}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cd2915fe113a26f2b04552e68a06761, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rayRadius: 0.01
+  infiniteRayDrawLength: 10
+  rayPrefab: {fileID: 3475852730852656632, guid: c002e298918eb804994048849f871225, type: 3}
+  HideNoHitRays: 0
+  ShowRays: 1
+  noHitMaterial: {fileID: 2100000, guid: a98bb9836e3faab40afd0672bb18dc32, type: 2}
+  reflectMaterial: {fileID: 2100000, guid: 3d44750ec9ccdc547af676ae26be4ef1, type: 2}
+  refractMaterial: {fileID: 2100000, guid: fea3ef3a88139ae4eab5d116e182cb06, type: 2}
+  normalMaterial: {fileID: 2100000, guid: 400fade9670fe76469c19a7418a82390, type: 2}
+  shadowMaterial: {fileID: 2100000, guid: d264613b45e8db14fbaf3ad8f6a7ea34, type: 2}
+  lightMaterial: {fileID: 2100000, guid: ca1132ecbe5f8cd429367540678c7bb0, type: 2}
+  errorMaterial: {fileID: 2100000, guid: 2476b30221d1a2f4fb658070ee52c5b5, type: 2}
+  animate: 0
+  animateSequentially: 0
+  loop: 0
+  reset: 0
+  speed: 1
