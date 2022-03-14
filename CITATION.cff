@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Wezel"
+  name-particle: "van"
+  given-names: "Chris"
+#  orcid:
+- family-names: "Verschoore"
+  given-names: "Willard"
+#  orcid:
+  
+title: "Virtual-Ray-Tracer"
+version: 3.44
+# doi:
+date-released: 2022-03-13
+url: "https://github.com/wezel/Virtual-Ray-Tracer"
