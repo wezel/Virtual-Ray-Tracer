@@ -1,6 +1,9 @@
-# A Virtual Ray Tracer
 
-A Virtual Ray Tracer is a Unity application that visualizes ray tracing. The application shows a scene with a camera, lights and objects. Rays slowly shoot from the camera and interact with the lights and objects in the scene. Users can change the settings of the ray tracer and material properties of the objects and see how this affects the rays traced in real-time. The application comes with a number of scenes that walk the user through the settings and controls of the application as well as several ray tracing concepts.
+https://user-images.githubusercontent.com/5408480/158495833-fd7c4836-3924-4127-ac56-f29c75273958.mp4
+
+#Virtual Ray Tracer
+
+Virtual Ray Tracer is a Unity application that visualizes ray tracing. The application shows a scene with a camera, lights and objects. Rays slowly shoot from the camera and interact with the lights and objects in the scene. Users can change the settings of the ray tracer and material properties of the objects and see how this affects the rays traced in real-time. The application comes with a number of scenes that walk the user through the settings and controls of the application as well as several ray tracing concepts. 
 
 ## Building the Application
 
@@ -33,3 +36,22 @@ Ideally, each `RayObject` would be paired with one `RTRay` for its entire lifeti
 ### More
 
 This covers all the most important components of the application, but there are many more small details. If you want to know more, the best you can do is to look through the source code, everything is well documented.
+
+### About us
+
+The application is written by us, Willard and Chris, as a graduation project for their bachelor's. The project was proposed by our supervisors Jiri Kosinka and Steffen Frey. The goal was to create an application for the computer graphics course at our university of Groningen that could help students understand the principles behind ray tracing. You can read more about this and the user study we conducted in our theses mentioned below. <sub>Spoiler: although the small user study the results were overwhelmingly positive.</sub>. Because of the success of the project a new paper written by our supervisors, with our help, is currently submitted and accepted as an educational paper for the Eurographics 2022 convention.
+
+### Future
+
+Currently, the project is actively developed. A new user study has been conducted and under the guidance of the same supervisors, a new group of students started their bachelor's project based on improving the application.
+
+
+### License
+The project is released under the MIT license. This means that if you would like to use the project or improve it you are free to do so. However every new bit of data or every improvement is welcome, thus we do like it if you either cite our project (the repository or the Eurographics2022 paper), tell us about the great improvements you made or inform us if you are planning to use it, educationally or otherwise. You are ofcourse also free to create an issue at the repository if you have any suggestions for improvements, questions about the code or bug reports. If you have any paper or more indept questions you can contact the lead professor Jiri kosinka at: http://www.cs.rug.nl/svcg/People/JiriKosinka
+
+
+### Papers
+Eurographics2022:  
+RUG BSc Willard:  
+RUG BSc Chris:  
+more:  
