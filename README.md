@@ -1,9 +1,8 @@
+<https://user-images.githubusercontent.com/5408480/158495833-fd7c4836-3924-4127-ac56-f29c75273958.mp4>
 
-https://user-images.githubusercontent.com/5408480/158495833-fd7c4836-3924-4127-ac56-f29c75273958.mp4
+# Virtual Ray Tracer
 
-#Virtual Ray Tracer
-
-Virtual Ray Tracer is a Unity application that visualizes ray tracing. The application shows a scene with a camera, lights and objects. Rays slowly shoot from the camera and interact with the lights and objects in the scene. Users can change the settings of the ray tracer and material properties of the objects and see how this affects the rays traced in real-time. The application comes with a number of scenes that walk the user through the settings and controls of the application as well as several ray tracing concepts. 
+Virtual Ray Tracer is a Unity application that visualizes ray tracing. The application shows a scene with a camera, lights and objects. Rays slowly shoot from the camera and interact with the lights and objects in the scene. Users can change the settings of the ray tracer and material properties of the objects and see how this affects the rays traced in real-time. The application comes with a number of scenes that walk the user through the settings and controls of the application as well as several ray tracing concepts.
 
 ## Building the Application
 
@@ -15,7 +14,7 @@ There are three classes at the core of the application: the `SceneManager`, the 
 
 ### Scene Management
 
-Almost all scene data relevant to the ray tracer is stored in standard Unity components. For example, the material properties of an object are stored in a `Material` component. To mark certain `GameObject`s in the Unity scene as a camera, light or mesh to be sent to the ray tracer, a custom `RTCamera`, `RTLight` or `RTMesh` component should be attached. These components each provide fields with getters and setters for easy access to properties needed for ray tracing. Beyond that, the `RTLight` and `RTMesh` components are really not much more than tags to indicate to the `SceneManager` that the objects they are attached to should be sent to the ray tracer. The `RTCamera` component is slightly more complex. Because it does not rely on an attached Unity `Camera` component, it has to store its own data. It also has code for drawing the camera in the scene.
+Almost all scene data relevant to the ray tracer is stored in standard Unity components. For example, the material properties of an object are stored in a `Material` component. To mark certain `GameObject`s in the Unity scene as a camera, light or mesh to be sent to the ray tracer, a custom `RTCamera`, `RTLight` or `RTMesh` component should be attached. These components each provide fields with getters and setters for easy access to properties needed for ray tracing. Beyond that, the `RTLight` and `RTMesh` components are not much more than tags to indicate to the `SceneManager` that the objects they are attached to should be sent to the ray tracer. The `RTCamera` component is slightly more complex. Because it does not rely on an attached Unity `Camera` component, it has to store its own data. It also has code for drawing the camera in the scene.
 
 At the start of a scene, the `SceneManager` finds all instances of `RTCamera`, `RTLight` and `RTMesh` components and stores them in one `RTScene` object. This `RTScene` object then serves as the input to the ray tracer. The `SceneManager` also handles the selection and deselection of objects in the scene as well as object creation and deletion.
 
@@ -29,29 +28,33 @@ The rays are represented with simple `RTRay` objects that store the origin, dire
 
 ### Ray Visualization
 
-The `RayManager` takes this list of ray trees and draws them in the scene. Most of the drawing code lives in the `RayObject` class. `RayObject`s take in an `RTRay` and position, orient and scale a cylinder to match the ray's origin, direction and length. The `RayManager` simply manages these `RayObjects` by providing them the rays from the ray trees produced by the ray tracer. When animating the rays, the `RayManager` also tells each `RayObject` how long it needs to be. By increasing the length a bit each frame the `RayManager` can achieve the effect of the rays slowly shooting from the camera into the scene. This animation is done in a recursive fashion, so first all rays at the root of their ray tree are extended, then their children and so on.
+The `RayManager` takes this list of ray trees and draws them in the scene. Most of the drawing code lives in the `RayObject` class. `RayObject`s take in an `RTRay` and they position, orient and scale a cylinder to match the ray's origin, direction and length. The `RayManager` manages these `RayObjects` by providing them the rays from the ray trees produced by the ray tracer. When animating the rays, the `RayManager` also tells each `RayObject` how long it needs to be. By increasing the length slightly each frame, the `RayManager` can achieve the effect of the rays slowly shooting from the camera into the scene. This animation is done in a recursive fashion, so first all rays at the root of their ray tree are extended, then their children and so on.
 
 Ideally, each `RayObject` would be paired with one `RTRay` for its entire lifetime. However, this becomes a problem when the user changes something about the scene and a new list of ray trees is produced by the ray tracer. The simplest thing to do then would be to destroy all existing `RayObject`s and instantiate new ones for the new ray trees. The problem is that this becomes too slow when the user changes a value in the scene continuously (e.g. by dragging around an object) and there are new rays being traced every frame. Instead, it is possible to reuse existing `RayObjects` by providing them with a new `RTRay` and deactivating those we do not need. This approach of having a set of objects and activating and deactivating them instead of instantiating and destroying them is called object pooling. It is implemented in the `RayObjectPool` class.
 
 ### More
 
-This covers all the most important components of the application, but there are many more small details. If you want to know more, the best you can do is to look through the source code, everything is well documented.
+This covers all the most important components of the application, but there are many more small details. Please look through the source code if you want to know more, everything is well documented.
 
-### About us
+## About us
 
-The application is written by us, Willard and Chris, as a graduation project for their bachelor's. The project was proposed by our supervisors Jiri Kosinka and Steffen Frey. The goal was to create an application for the computer graphics course at our university of Groningen that could help students understand the principles behind ray tracing. You can read more about this and the user study we conducted in our theses mentioned below. <sub>Spoiler: although the small user study the results were overwhelmingly positive.</sub>. Because of the success of the project a new paper written by our supervisors, with our help, is currently submitted and accepted as an educational paper for the Eurographics 2022 convention.
+Virtual Ray Tracer was created by Chris van Wezel and Willard Verschoore as a graduation project for their Computing Science Bachelor's degree programme at the University of Groningen. The project was proposed and supervised by Jiri Kosinka and Steffen Frey. The application was built to aid students of the Computer Graphics course at the University of Groningen by providing them with an interactive introduction to the principles of ray tracing. A user study conducted at the end of the project found positive results. This success inspired the supervisors of the project to write a new paper in collaboration with Chris and Willard. The paper was submitted and accepted as an educational paper for the Eurographics 2022 conference.
 
-### Future
+## Future
 
-Currently, the project is actively developed. A new user study has been conducted and under the guidance of the same supervisors, a new group of students started their bachelor's project based on improving the application.
+The application is still in active development. A new user study has been conducted and, under the guidance of the same supervisors, a new group of students started their Bachelor's projects focused on improving and extending the application.
 
+## License
 
-### License
-The project is released under the MIT license. This means that if you would like to use the project or improve it you are free to do so. However every new bit of data or every improvement is welcome, thus we do like it if you either cite our project (the repository or the Eurographics2022 paper), tell us about the great improvements you made or inform us if you are planning to use it, educationally or otherwise. You are ofcourse also free to create an issue at the repository if you have any suggestions for improvements, questions about the code or bug reports. If you have any paper or more indept questions you can contact the lead professor Jiri kosinka at: http://www.cs.rug.nl/svcg/People/JiriKosinka
+The application is released under the MIT license. Therefore, you may use and modify the code as you see fit. If you use the application we would appreciate it if you cite either this repository or the Eurographics 2022 paper. As we are still working on the application ourselves, we would also like to hear about any improvements you may have made.
 
+## Contact
 
-### Papers
-Eurographics2022:  
-RUG BSc Willard:  
-RUG BSc Chris:  
-more:  
+Any questions, bug reports or suggestions can be created as an issue on this repository. Alternatively, please contact [Jiri Kosinka](http://www.cs.rug.nl/svcg/People/JiriKosinka).
+
+## Papers
+
+Eurographics 2022:
+RUG BSc Willard:
+RUG BSc Chris:
+more:
