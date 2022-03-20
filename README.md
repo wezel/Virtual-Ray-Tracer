@@ -6,7 +6,7 @@ Virtual Ray Tracer is a Unity application that visualizes ray tracing. The appli
 
 ## Building the Application
 
-To build the application you need a [Unity 2020.3 LTS](https://unity3d.com/unity/qa/lts-releases) release. To build the application you open the `Unity` folder with Unity, navigate to `File > Build Settings`, select your desired platform and press 'build'. The application has been tested on Windows, Linux and MacOS. For more information on building Unity applications see the [Unity Manual page](https://docs.unity3d.com/Manual/BuildSettings.html).
+To build the application you need a [Unity 2020.3 LTS](https://unity3d.com/unity/qa/lts-releases) release. To build the application, open the `Unity` folder with Unity, navigate to `File > Build Settings`, select your desired platform and press 'build'. The application has been tested on Windows, Linux and MacOS. For more information on building Unity applications see the [Unity Manual page](https://docs.unity3d.com/Manual/BuildSettings.html).
 
 ## Implementation
 
@@ -28,7 +28,7 @@ The rays are represented with simple `RTRay` objects that store the origin, dire
 
 ### Ray Visualization
 
-The `RayManager` takes this list of ray trees and draws them in the scene. Most of the drawing code lives in the `RayObject` class. `RayObject`s take in an `RTRay` and position, orient and scale a cylinder to match the ray's origin, direction and length. The `RayManager` simply manages these `RayObjects` by providing them the rays from the ray trees produced by the ray tracer. When animating the rays, the `RayManager` also informs each `RayObject` how long it needs to be. By increasing the length a bit each frame the `RayManager` can achieve the effect of rays slowly shooting from the camera into the scene. This animation is done in a recursive fashion, so first all rays at the root of their ray tree are extended, then their children, and so on.
+The `RayManager` takes this list of ray trees and draws them in the scene. Most of the drawing code lives in the `RayObject` class. `RayObject`s take in an `RTRay` and they position, orient and scale a cylinder to match the ray's origin, direction and length. The `RayManager` simply manages these `RayObjects` by providing them the rays from the ray trees produced by the ray tracer. When animating the rays, the `RayManager` also informs each `RayObject` how long it needs to be. By increasing the length a bit each frame the `RayManager` can achieve the effect of rays slowly shooting from the camera into the scene. This animation is done in a recursive fashion, so first all rays at the root of their ray tree are extended, then their children, and so on.
 
 Ideally, each `RayObject` would be paired with one `RTRay` for its entire lifetime. However, this becomes a problem when the user changes something about the scene and a new list of ray trees is produced by the ray tracer. The simplest thing to do then would be to destroy all existing `RayObject`s and instantiate new ones for the new ray trees. The problem is that this becomes too slow when the user changes a value in the scene continuously (e.g. by dragging around an object) and there are new rays being traced every frame. Instead, it is possible to reuse existing `RayObjects` by providing them with a new `RTRay` and deactivating those we do not need. This approach of having a set of objects and activating and deactivating them instead of instantiating and destroying them is called object pooling. It is implemented in the `RayObjectPool` class.
 
@@ -38,7 +38,7 @@ This covers all the most important components of the application, but there are 
 
 ## About us
 
-Virtual Ray Tracer was created by Chris van Wezel and Willard Verschoore as a graduation project for their Computing Science Bachelor's degree programme at the University of Groningen. The project was proposed and supervised by Jiri Kosinka and Steffen Frey. The application was built to aid students of the Computer Graphics course at the University of Groningen by providing them with an interactive introduction to the principles of ray tracing. A user study conducted at the end of the project found positive results. This success inspired the supervisors of the project to write a new paper in collaboration with Chris and Willard. The paper was submitted and accepted as an educational paper for the Eurographics 2022 conference.
+Virtual Ray Tracer was created by Chris van Wezel and Willard Verschoore as a graduation project for their Computing Science Bachelor's degree programme at the University of Groningen. The project was proposed and supervised by Jiri Kosinka and Steffen Frey. The application was built to aid students of the Computer Graphics course at the University of Groningen by providing them with an interactive introduction to the principles of ray tracing. A user study conducted at the end of the project found positive results. This success inspired the supervisors of the project to write a paper in collaboration with Chris and Willard. The paper is about to appear as an educational paper at the Eurographics 2022 conference and the EG Digital Library (DOI to follows soon).
 
 ## Future
 
@@ -46,7 +46,7 @@ The application is still in active development. A new user study has been conduc
 
 ## License
 
-The application is released under the MIT license. Therefore, you may use and modify the code as you see fit. If you use the application we would appreciate it if you cite either this repository or the Eurographics 2022 paper. As we are still working on the application ourselves, we would also like to hear about any improvements you may have made.
+The application is released under the MIT license. Therefore, you may use and modify the code as you see fit. If you use the application we would appreciate it if you cited this repository and the Eurographics 2022 paper. As we are still working on the application ourselves, we would also like to hear about any improvements you may have made.
 
 ## Contact
 
@@ -54,7 +54,10 @@ Any questions, bug reports or suggestions can be created as an issue on this rep
 
 ## Papers
 
-Eurographics 2022:
+Eurographics 2022: to appear
+
 RUG BSc Willard:
+
 RUG BSc Chris:
-more:
+
+More: to appear in due course
