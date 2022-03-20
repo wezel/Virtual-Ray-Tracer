@@ -42,7 +42,7 @@ Virtual Ray Tracer was created by Chris van Wezel and Willard Verschoore as a gr
 
 ## Future
 
-The application is still in active development. A new user study has been conducted and, under the guidance of the same supervisors, a new group of students started their Bachelor's projects focused on improving and extending the application. And we hope the you will contribute to Virtual Ray Tracer too; read on.
+The application is still in active development. A new user study has been conducted and, under the guidance of the same supervisors, a new group of students started their Bachelor's projects focused on improving and extending the application. And we hope that you will contribute to Virtual Ray Tracer, too; read on.
 
 ## License
 
