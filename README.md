@@ -46,7 +46,7 @@ The application is still in active development. A new user study has been conduc
 
 ## License
 
-The application is released under the MIT license. Therefore, you may use and modify the code as you see fit. If you use the application we would appreciate it if you cited this repository and the Eurographics 2022 paper. As we are still working on the application ourselves, we would also like to hear about any improvements you may have made.
+The application is released under the MIT license. Therefore, you may use and modify the code as you see fit. If you use or build on the application we would appreciate it if you cited this repository and the Eurographics 2022 paper. As we are still working on the application ourselves, we would also like to hear about any improvements you may have made.
 
 ## Contact
 
