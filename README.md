@@ -38,7 +38,7 @@ This covers all the most important components of the application, but there are 
 
 ## About us
 
-Virtual Ray Tracer was created by Chris van Wezel and Willard Verschoore as a graduation project for their Computing Science Bachelor's degree programme at the University of Groningen. The project was proposed and supervised by Jiri Kosinka and Steffen Frey. The application was built to aid students of the Computer Graphics course at the University of Groningen by providing them with an interactive introduction to the principles of ray tracing. A user study conducted at the end of the project found positive results. This success inspired the supervisors of the project to write a paper in collaboration with Chris and Willard. The paper is about to appear as an educational paper at the Eurographics 2022 conference and the EG Digital Library (DOI to follow soon).
+Virtual Ray Tracer was created by Chris van Wezel and Willard Verschoore as a graduation project for their Computing Science Bachelor's degree programme at the University of Groningen. The project was proposed and supervised by Jiri Kosinka and Steffen Frey in the [SVCG research group](https://www.cs.rug.nl/svcg/Main/HomePage). The application was built to aid students of the Computer Graphics course at the University of Groningen by providing them with an interactive introduction to the principles of ray tracing. A user study conducted at the end of the project found positive results. This success inspired the supervisors of the project to write a paper in collaboration with Chris and Willard. The paper is about to appear as an educational paper at the Eurographics 2022 conference and the EG Digital Library (DOI to follow soon).
 
 ## Future
 
@@ -56,10 +56,8 @@ Any questions, bug reports or suggestions can be created as an issue on this rep
 
 W.A. Verschoore de la Houssaije, C.S. van Wezel, S. Frey, and J. Kosinka: Virtual Ray Tracer, Eurographics 2022 Education Papers; to appear.
 
-RUG BSc thesis of Willard:  
 W.A. Verschoore de la Houssaije: A Virtual Ray Tracer, BSc thesis, University of Groningen, 2021; <http://fse.studenttheses.ub.rug.nl/24859>.
 
-RUG BSc thesis of Chris:  
 C.S. van Wezel: A Virtual Ray Tracer, BSc thesis, University of Groningen, 2022; <http://fse.studenttheses.ub.rug.nl/26455>.
 
-More: to appear in due course
+Further documents will appear here in due course.
