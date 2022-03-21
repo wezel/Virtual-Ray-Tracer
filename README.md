@@ -38,7 +38,7 @@ This covers all the most important components of the application, but there are 
 
 ## About us
 
-Virtual Ray Tracer was created by Chris van Wezel and Willard Verschoore as a graduation project for their Computing Science Bachelor's degree programme at the University of Groningen. The project was proposed and supervised by Jiri Kosinka and Steffen Frey. The application was built to aid students of the Computer Graphics course at the University of Groningen by providing them with an interactive introduction to the principles of ray tracing. A user study conducted at the end of the project found positive results. This success inspired the supervisors of the project to write a paper in collaboration with Chris and Willard. The paper is about to appear as an educational paper at the Eurographics 2022 conference and the EG Digital Library (DOI to follow soon).
+Virtual Ray Tracer was created by Chris van Wezel and Willard Verschoore as a graduation project for their Computing Science Bachelor's degree programme at the University of Groningen. The project was proposed and supervised by Jiri Kosinka and Steffen Frey in the [SVCG research group](https://www.cs.rug.nl/svcg/Main/HomePage). The application was built to aid students of the Computer Graphics course at the University of Groningen by providing them with an interactive introduction to the principles of ray tracing. A user study conducted at the end of the project found positive results. This success inspired the supervisors of the project to write a paper in collaboration with Chris and Willard. The paper is about to appear as an educational paper at the Eurographics 2022 conference and the EG Digital Library (DOI to follow soon).
 
 ## Future
 
