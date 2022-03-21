@@ -58,8 +58,10 @@ W.A. Verschoore de la Houssaije, C.S. van Wezel, S. Frey, and J. Kosinka: Virtua
 
 RUG BSc thesis of Willard:
 
-W.A. Verschoore de la Houssaije: A Virtual Ray Tracer, BSc thesis, University of Groningen, 2021; <http://fse.studenttheses.ub.rug.nl/id/eprint/24859>.
+W.A. Verschoore de la Houssaije: A Virtual Ray Tracer, BSc thesis, University of Groningen, 2021; <http://fse.studenttheses.ub.rug.nl/24859>.
 
 RUG BSc thesis of Chris:
+
+Chris van Wezel: A Virtual Ray Tracer, BSc thesis, University of Groningen, 2022; <http://fse.studenttheses.ub.rug.nl/26455>.
 
 More: to appear in due course
