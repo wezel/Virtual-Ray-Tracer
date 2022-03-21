@@ -56,10 +56,8 @@ Any questions, bug reports or suggestions can be created as an issue on this rep
 
 W.A. Verschoore de la Houssaije, C.S. van Wezel, S. Frey, and J. Kosinka: Virtual Ray Tracer, Eurographics 2022 Education Papers; to appear.
 
-RUG BSc thesis of Willard:  
 W.A. Verschoore de la Houssaije: A Virtual Ray Tracer, BSc thesis, University of Groningen, 2021; <http://fse.studenttheses.ub.rug.nl/24859>.
 
-RUG BSc thesis of Chris:  
 C.S. van Wezel: A Virtual Ray Tracer, BSc thesis, University of Groningen, 2022; <http://fse.studenttheses.ub.rug.nl/26455>.
 
-More: to appear in due course
+Further documents will appear here in due course.
