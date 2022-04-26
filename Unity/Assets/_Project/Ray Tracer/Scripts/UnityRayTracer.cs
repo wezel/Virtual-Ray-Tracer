@@ -83,6 +83,21 @@ namespace _Project.Ray_Tracer.Scripts
         }
 
         [SerializeField]
+        private bool superSamplingVisual = false;
+        /// <summary>
+        /// Whether SS is visualized.
+        /// </summary>
+        public bool SuperSamplingVisual
+        {
+            get { return superSamplingVisual; }
+            set
+            {
+                superSamplingVisual = value;
+                OnRayTracerChanged?.Invoke();
+            }
+        }
+
+        [SerializeField]
         private Color backgroundColor = Color.black;
         /// <summary>
         /// The color produced by rays that don't intersect an object.
@@ -229,6 +244,8 @@ namespace _Project.Ray_Tracer.Scripts
             float halfScreenWidth = aspectRatio * halfScreenHeight;
             float pixelWidth = halfScreenWidth * 2.0f / width;
             float pixelHeight = halfScreenHeight * 2.0f / height;
+            int ssFactor = superSamplingVisual ? SuperSamplingFactor : 1;
+            int superSamplingSquared = ssFactor * ssFactor;
             Vector3 origin = camera.transform.position;
 
             // Trace a ray for each pixel. 
@@ -236,27 +253,52 @@ namespace _Project.Ray_Tracer.Scripts
             {
                 for (int x = 0; x < width; ++x)
                 {
-                    // Convert the pixel coordinates to camera space positions.
-                    float pixelX = -halfScreenWidth + pixelWidth * (x + 0.5f);
-                    float pixelY = -halfScreenHeight + pixelHeight * (y + 0.5f);
+                    Color color = Color.black;
+                    float step = 1f / ssFactor;
 
-                    // Create and rotate the pixel location. Note that the camera looks along the positive z-axis.
-                    Vector3 pixel = new Vector3(pixelX, pixelY, camera.ScreenDistance);
-                    pixel = camera.transform.rotation * pixel;
+                    // Set a base Ray with a zero-distance to get the right colour of the pixel
+                    float centerPixelX = -halfScreenWidth + pixelWidth * (x + 0.5f);
+                    float centerPixelY = -halfScreenHeight + pixelHeight * (y + 0.5f);
+                    Vector3 centerPixel = new Vector3(centerPixelX, centerPixelY, camera.ScreenDistance);
+                    TreeNode<RTRay> rayTree = new TreeNode<RTRay>(new RTRay());
+                    rayTree.Data = new RTRay(origin, centerPixel / centerPixel.magnitude, 0f, Color.black, RTRay.RayType.Normal);
 
-                    // This is the distance between the pixel on the screen and the origin. We need this to compensate
-                    // for the length of the returned RTRay. Since we have this factor we also use it to normalize this
-                    // vector to make the code more efficient.
-                    float pixelDistance = pixel.magnitude;
+                    for (int supY = 0; supY < ssFactor; supY++)
+                    {
+                        float pixelY = -halfScreenHeight + pixelHeight * (y + step * (0.5f + supY));
 
-                    // Compensate for the location of the screen so we don't render objects that are behind the screen.
-                    TreeNode<RTRay> rayTree = Trace(origin + pixel,
-                                                    pixel / pixelDistance, // Division by magnitude == .normalized.
-                                                    MaxDepth, RTRay.RayType.Normal);
-                    
-                    // Fix the origin and the length so we visualize the right ray.
-                    rayTree.Data.Origin = origin;
-                    rayTree.Data.Length += pixelDistance; 
+                        for (int supX = 0; supX < ssFactor; supX++)
+                        {
+                            float pixelX = -halfScreenWidth + pixelWidth * (x + step * (0.5f + supX));
+
+                            // Create and rotate the pixel location. Note that the camera looks along the positive z-axis.
+                            Vector3 pixel = new Vector3(pixelX, pixelY, camera.ScreenDistance);
+                            pixel = camera.transform.rotation * pixel;
+
+                            // This is the distance between the pixel on the screen and the origin. We need this to compensate
+                            // for the length of the returned RTRay. Since we have this factor we also use it to normalize this
+                            // vector to make the code more efficient.
+                            float pixelDistance = pixel.magnitude;
+
+                            // Compensate for the location of the screen so we don't render objects that are behind the screen.
+                            TreeNode<RTRay> subRayTree = Trace(origin + pixel,
+                                                            pixel / pixelDistance, // Division by magnitude == .normalized.
+                                                            MaxDepth, RTRay.RayType.Normal);
+
+                            // Fix the origin and the length so we visualize the right ray.
+                            subRayTree.Data.Origin = origin;
+                            subRayTree.Data.Length += pixelDistance;
+                            rayTree.AddChild(subRayTree);
+
+                            color += subRayTree.Data.Color;
+                        }
+                    }
+
+                    // Divide by supersamplingFactor squared and set alpha levels back to 1. It should always be 1!
+                    color /= superSamplingSquared;
+                    color.a = 1.0f;
+
+                    rayTree.Data.Color = color;
                     rayTrees.Add(rayTree);
                 }
             }
