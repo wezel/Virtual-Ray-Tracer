@@ -256,7 +256,7 @@ namespace _Project.Ray_Tracer.Scripts
                     Color color = Color.black;
                     float step = 1f / ssFactor;
 
-                    // Set a base Ray with a zero-distance to get the right colour of the pixel
+                    // Set a base Ray with a zero-distance as the main ray of the pixel
                     float centerPixelX = -halfScreenWidth + pixelWidth * (x + 0.5f);
                     float centerPixelY = -halfScreenHeight + pixelHeight * (y + 0.5f);
                     Vector3 centerPixel = new Vector3(centerPixelX, centerPixelY, camera.ScreenDistance);
@@ -265,11 +265,11 @@ namespace _Project.Ray_Tracer.Scripts
 
                     for (int supY = 0; supY < ssFactor; supY++)
                     {
-                        float pixelY = -halfScreenHeight + pixelHeight * (y + step * (0.5f + supY));
+                        float pixelY = centerPixelY + pixelHeight * (step * (0.5f + supY) - 0.5f);
 
                         for (int supX = 0; supX < ssFactor; supX++)
                         {
-                            float pixelX = -halfScreenWidth + pixelWidth * (x + step * (0.5f + supX));
+                            float pixelX = centerPixelX + pixelWidth * (step * (0.5f + supX) - 0.5f);
 
                             // Create and rotate the pixel location. Note that the camera looks along the positive z-axis.
                             Vector3 pixel = new Vector3(pixelX, pixelY, camera.ScreenDistance);
@@ -288,6 +288,8 @@ namespace _Project.Ray_Tracer.Scripts
                             // Fix the origin and the length so we visualize the right ray.
                             subRayTree.Data.Origin = origin;
                             subRayTree.Data.Length += pixelDistance;
+                            
+                            // Add the ray as a child of the main ray of the pixel.
                             rayTree.AddChild(subRayTree);
 
                             color += subRayTree.Data.Color;
