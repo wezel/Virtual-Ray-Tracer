@@ -163,6 +163,9 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
 
         private void OnRenderObject()
         {
+            // Fix maximize window errors
+            if (UnityEditor.SceneView.lastActiveSceneView == null) 
+                return;
             canvas.transform.forward = UnityEditor.SceneView.lastActiveSceneView.camera.transform.forward;
         }
 #endif
