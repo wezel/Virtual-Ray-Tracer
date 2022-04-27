@@ -60,7 +60,11 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
             rayRenderer.Origin = Ray.Origin;
             rayRenderer.Direction = Ray.Direction;
             rayRenderer.Length = 0.0f;
-            rayRenderer.Material = rayManager.GetRayTypeMaterial(Ray.Type);
+
+            Material material = new Material(rayManager.GetRayTypeMaterial(Ray.Type));
+            material.SetFloat("_Ambient", Ray.Contribution);
+            if (Ray.Contribution < rayManager.RayTransThreshold) material.shader = Shader.Find("Custom/RayTracerShaderTransparent");
+            rayRenderer.Material = material;
         }
 
         private void DetermineDrawLength()

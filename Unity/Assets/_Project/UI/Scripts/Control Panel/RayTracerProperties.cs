@@ -29,6 +29,10 @@ namespace _Project.UI.Scripts.Control_Panel
         [SerializeField]
         private BoolEdit showRaysEdit;
         [SerializeField]
+        private FloatEdit rayHideThresholdEdit;
+        [SerializeField]
+        private FloatEdit rayTransThresholdEdit;
+        [SerializeField]
         private FloatEdit rayRadiusEdit;
 
         [SerializeField]
@@ -58,6 +62,8 @@ namespace _Project.UI.Scripts.Control_Panel
             gameObject.SetActive(true);
             rayTracer = UnityRayTracer.Get();
             rayManager = RayManager.Get();
+            Debug.Log(rayManager.RayHideThreshold);
+            Debug.Log(rayManager.RayTransThreshold);
             uiManager = UIManager.Get();
 
             renderShadowsEdit.IsOn = rayTracer.RenderShadows;
@@ -66,6 +72,8 @@ namespace _Project.UI.Scripts.Control_Panel
 
             hideNoHitRaysEdit.IsOn = rayManager.HideNoHitRays;
             showRaysEdit.IsOn = rayManager.ShowRays;
+            rayHideThresholdEdit.Value = rayManager.RayHideThreshold;
+            rayTransThresholdEdit.Value = rayManager.RayTransThreshold;
             rayRadiusEdit.Value = rayManager.RayRadius;
 
             animateEdit.IsOn = rayManager.Animate;
@@ -74,6 +82,7 @@ namespace _Project.UI.Scripts.Control_Panel
             speedEdit.Value = rayManager.Speed;
 
             superSamplingFactorEdit.Value = rayTracer.SuperSamplingFactor;
+            superSamplingVisualEdit.IsOn = rayTracer.SuperSamplingVisual;
         }
 
         /// <summary>
@@ -119,6 +128,8 @@ namespace _Project.UI.Scripts.Control_Panel
 
             hideNoHitRaysEdit.OnValueChanged += (value) => { rayManager.HideNoHitRays = value; };
             showRaysEdit.OnValueChanged += (value) => { rayManager.ShowRays = value; };
+            rayHideThresholdEdit.OnValueChanged += (value) => { rayManager.RayHideThreshold = value; };
+            rayTransThresholdEdit.OnValueChanged += (value) => { rayManager.RayTransThreshold = value; };
             rayRadiusEdit.OnValueChanged += (value) => { rayManager.RayRadius = value; };
 
             animateEdit.OnValueChanged += (value) => { rayManager.Animate = value; };

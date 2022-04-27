@@ -48,7 +48,12 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
         /// The type of this ray. For example, reflection, refraction or shadow.
         /// </summary>
         public RayType Type { get; set; }
-        
+
+        /// <summary>
+        /// The contribution of this ray.
+        /// </summary>
+        public float Contribution { get; set; }
+
         /// <summary>
         /// Construct a default ray. The resulting ray is technically valid, but should only be used in the
         /// construction of a proper ray.
@@ -60,6 +65,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
             Length = 0.0f;
             Color = Color.black;
             Type = RayType.NoHit;
+            Contribution = 0.0f;
         }
 
         /// <summary>
@@ -77,6 +83,26 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
             Length = length;
             Color = color;
             Type = type;
+            Contribution = type == RayType.NoHit ? 0.0f : 1.0f;
+        }
+
+        /// <summary>
+        /// Construct a new ray.
+        /// </summary>
+        /// <param name="origin"> The origin from which this ray was traced. </param>
+        /// <param name="direction"> The direction in which this ray was traced. This should be a unit vector. </param>
+        /// <param name="length"> The length of this ray. </param>
+        /// <param name="color">  The color this ray contributes to its pixel in the final image. </param>
+        /// <param name="type"> The type of this ray. </param>
+        /// <param name="contribution"> The contribution of this ray. </param>
+        public RTRay(Vector3 origin, Vector3 direction, float length, Color color, RayType type, float contribution)
+        {
+            Origin = origin;
+            Direction = direction;
+            Length = length;
+            Color = color;
+            Type = type;
+            Contribution = contribution;
         }
 
         /// <summary>

@@ -13,6 +13,28 @@ namespace _Project.Ray_Tracer.Scripts
     {
         [Header("Render Settings")]
 
+        [SerializeField, Range(0.00f, 1.00f)]
+        private float rayHideThreshold = 0.02f;
+        /// <summary>
+        /// The draw threshold of the rays this ray manager draws.
+        /// </summary>
+        public float RayHideThreshold
+        {
+            get { return rayHideThreshold; }
+            set { rayHideThreshold = value; }
+        }
+
+        [SerializeField, Range(0.00f, 1.00f)]
+        private float rayTransThreshold = 0.25f;
+        /// <summary>
+        /// The transparency threshold of the rays this ray manager draws.
+        /// </summary>
+        public float RayTransThreshold
+        {
+            get { return rayTransThreshold; }
+            set { rayTransThreshold = value; }
+        }
+
         [SerializeField, Range(0.0f, 0.1f)]
         private float rayRadius = 0.01f;
         /// <summary>
