@@ -43,6 +43,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9cd2915fe113a26f2b04552e68a06761, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rayHideThreshold: 0.02
+  rayTransThreshold: 0.25
   rayRadius: 0.01
   infiniteRayDrawLength: 10
   rayPrefab: {fileID: 3475852730852656632, guid: c002e298918eb804994048849f871225, type: 3}

@@ -261,7 +261,7 @@ namespace _Project.Ray_Tracer.Scripts
                     float centerPixelY = -halfScreenHeight + pixelHeight * (y + 0.5f);
                     Vector3 centerPixel = new Vector3(centerPixelX, centerPixelY, camera.ScreenDistance);
                     TreeNode<RTRay> rayTree = new TreeNode<RTRay>(new RTRay());
-                    rayTree.Data = new RTRay(origin, centerPixel / centerPixel.magnitude, 0f, Color.black, RTRay.RayType.Normal, 1.0f);
+                    rayTree.Data = new RTRay(origin, centerPixel / centerPixel.magnitude, 0f, Color.black, RTRay.RayType.Normal);
 
                     for (int supY = 0; supY < ssFactor; supY++)
                     {
@@ -312,6 +312,9 @@ namespace _Project.Ray_Tracer.Scripts
 
         private void SetContributions(TreeNode<RTRay> parent)
         {
+            if (parent.Data.Type == RTRay.RayType.NoHit)
+                Debug.Log(parent.Data.Contribution);
+
             foreach (TreeNode<RTRay> child in parent.Children)
             {
                 child.Data.Contribution *= parent.Data.Contribution;

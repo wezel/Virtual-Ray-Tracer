@@ -87,25 +87,6 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
         }
 
         /// <summary>
-        /// Construct a new ray.
-        /// </summary>
-        /// <param name="origin"> The origin from which this ray was traced. </param>
-        /// <param name="direction"> The direction in which this ray was traced. This should be a unit vector. </param>
-        /// <param name="length"> The length of this ray. </param>
-        /// <param name="color">  The color this ray contributes to its pixel in the final image. </param>
-        /// <param name="type"> The type of this ray. </param>
-        /// <param name="contribution"> The contribution of this ray. </param>
-        public RTRay(Vector3 origin, Vector3 direction, float length, Color color, RayType type, float contribution)
-        {
-            Origin = origin;
-            Direction = direction;
-            Length = length;
-            Color = color;
-            Type = type;
-            Contribution = contribution;
-        }
-
-        /// <summary>
         /// Determine the position of a point a certain distance along this ray.
         /// </summary>
         /// <param name="distance"> The distance to travel along this ray. </param>

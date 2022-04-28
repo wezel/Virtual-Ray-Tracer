@@ -73,6 +73,13 @@ namespace _Project.Ray_Tracer.Scripts
         /// </summary>
         public bool ShowRays;
 
+
+        /// <summary>
+        /// Whether this ray manager hides negligible rays it would normally draw. When this is <c>false</c>, no ray
+        /// will be hidden for contributing too little.
+        /// </summary>
+        public bool HideNegligibleRays;
+
         [SerializeField] private Material noHitMaterial;
         [SerializeField] private Material reflectMaterial;
         [SerializeField] private Material refractMaterial;
@@ -137,7 +144,7 @@ namespace _Project.Ray_Tracer.Scripts
         }
 
         [SerializeField, Range(0.0f, 10.0f)]
-        private float speed = 1.0f;
+        private float speed = 2.0f;
         /// <summary>
         /// The speed of this ray manager's animation. Does nothing if <see cref="Animate"/> is not set.
         /// </summary>
@@ -307,7 +314,8 @@ namespace _Project.Ray_Tracer.Scripts
 
         private void DrawRayTree(TreeNode<RTRay> rayTree)
         {
-            if (HideNoHitRays && rayTree.Data.Type == RTRay.RayType.NoHit)
+            if ((HideNoHitRays && rayTree.Data.Type == RTRay.RayType.NoHit) ||
+                (HideNegligibleRays && rayTree.Data.Contribution < rayHideThreshold))
                 return;
 
             RayObject rayObject = rayObjectPool.GetRayObject();
@@ -380,7 +388,8 @@ namespace _Project.Ray_Tracer.Scripts
 
         private bool DrawRayTreeAnimated(TreeNode<RTRay> rayTree, float distance)
         {
-            if (HideNoHitRays && rayTree.Data.Type == RTRay.RayType.NoHit)
+            if ((HideNoHitRays && rayTree.Data.Type == RTRay.RayType.NoHit) ||
+                (HideNegligibleRays && rayTree.Data.Contribution < rayHideThreshold))
                 return true;
 
             RayObject rayObject = rayObjectPool.GetRayObject();

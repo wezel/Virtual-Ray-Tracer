@@ -29,6 +29,8 @@ namespace _Project.UI.Scripts.Control_Panel
         [SerializeField]
         private BoolEdit showRaysEdit;
         [SerializeField]
+        private BoolEdit hideNegligibleRaysEdit;
+        [SerializeField]
         private FloatEdit rayHideThresholdEdit;
         [SerializeField]
         private FloatEdit rayTransThresholdEdit;
@@ -62,8 +64,6 @@ namespace _Project.UI.Scripts.Control_Panel
             gameObject.SetActive(true);
             rayTracer = UnityRayTracer.Get();
             rayManager = RayManager.Get();
-            Debug.Log(rayManager.RayHideThreshold);
-            Debug.Log(rayManager.RayTransThreshold);
             uiManager = UIManager.Get();
 
             renderShadowsEdit.IsOn = rayTracer.RenderShadows;
@@ -72,6 +72,7 @@ namespace _Project.UI.Scripts.Control_Panel
 
             hideNoHitRaysEdit.IsOn = rayManager.HideNoHitRays;
             showRaysEdit.IsOn = rayManager.ShowRays;
+            hideNegligibleRaysEdit.IsOn = rayManager.HideNegligibleRays;
             rayHideThresholdEdit.Value = rayManager.RayHideThreshold;
             rayTransThresholdEdit.Value = rayManager.RayTransThreshold;
             rayRadiusEdit.Value = rayManager.RayRadius;
@@ -128,6 +129,7 @@ namespace _Project.UI.Scripts.Control_Panel
 
             hideNoHitRaysEdit.OnValueChanged += (value) => { rayManager.HideNoHitRays = value; };
             showRaysEdit.OnValueChanged += (value) => { rayManager.ShowRays = value; };
+            hideNegligibleRaysEdit.OnValueChanged += (value) => { rayManager.HideNegligibleRays = value; };
             rayHideThresholdEdit.OnValueChanged += (value) => { rayManager.RayHideThreshold = value; };
             rayTransThresholdEdit.OnValueChanged += (value) => { rayManager.RayTransThreshold = value; };
             rayRadiusEdit.OnValueChanged += (value) => { rayManager.RayRadius = value; };
