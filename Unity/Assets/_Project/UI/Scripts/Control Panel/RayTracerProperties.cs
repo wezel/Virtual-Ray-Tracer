@@ -35,6 +35,8 @@ namespace _Project.UI.Scripts.Control_Panel
         [SerializeField]
         private FloatEdit rayTransThresholdEdit;
         [SerializeField]
+        private FloatEdit rayTransExponentEdit;
+        [SerializeField]
         private FloatEdit rayRadiusEdit;
 
         [SerializeField]
@@ -75,6 +77,7 @@ namespace _Project.UI.Scripts.Control_Panel
             hideNegligibleRaysEdit.IsOn = rayManager.HideNegligibleRays;
             rayHideThresholdEdit.Value = rayManager.RayHideThreshold;
             rayTransThresholdEdit.Value = rayManager.RayTransThreshold;
+            rayTransExponentEdit.Value = rayManager.RayTransExponent;
             rayRadiusEdit.Value = rayManager.RayRadius;
 
             animateEdit.IsOn = rayManager.Animate;
@@ -132,6 +135,7 @@ namespace _Project.UI.Scripts.Control_Panel
             hideNegligibleRaysEdit.OnValueChanged += (value) => { rayManager.HideNegligibleRays = value; };
             rayHideThresholdEdit.OnValueChanged += (value) => { rayManager.RayHideThreshold = value; };
             rayTransThresholdEdit.OnValueChanged += (value) => { rayManager.RayTransThreshold = value; };
+            rayTransExponentEdit.OnValueChanged += (value) => { rayManager.RayTransExponent = value; };
             rayRadiusEdit.OnValueChanged += (value) => { rayManager.RayRadius = value; };
 
             animateEdit.OnValueChanged += (value) => { rayManager.Animate = value; };

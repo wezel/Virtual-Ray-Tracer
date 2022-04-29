@@ -24,6 +24,17 @@ namespace _Project.Ray_Tracer.Scripts
             set { rayHideThreshold = value; }
         }
 
+        [SerializeField, Range(0.00f, 2.00f)]
+        private float rayTransExponent = 1.00f;
+        /// <summary>
+        /// The transparency threshold of the rays this ray manager draws.
+        /// </summary>
+        public float RayTransExponent
+        {
+            get { return rayTransExponent; }
+            set { rayTransExponent = value; }
+        }
+
         [SerializeField, Range(0.00f, 1.00f)]
         private float rayTransThreshold = 0.25f;
         /// <summary>
@@ -82,10 +93,15 @@ namespace _Project.Ray_Tracer.Scripts
 
         [SerializeField] private Material noHitMaterial;
         [SerializeField] private Material reflectMaterial;
+        [SerializeField] private Material reflectMaterialTransparent;
         [SerializeField] private Material refractMaterial;
+        [SerializeField] private Material refractMaterialTransparent;
         [SerializeField] private Material normalMaterial;
+        [SerializeField] private Material normalMaterialTransparent;
         [SerializeField] private Material shadowMaterial;
+        [SerializeField] private Material shadowMaterialTransparent;
         [SerializeField] private Material lightMaterial;
+        [SerializeField] private Material lightMaterialTransparent;
         [SerializeField] private Material errorMaterial;
 
         [Header("Animation Settings")]
@@ -220,6 +236,27 @@ namespace _Project.Ray_Tracer.Scripts
                     return shadowMaterial;
                 case RTRay.RayType.Light:
                     return lightMaterial;
+                default:
+                    Debug.LogError("Unrecognized ray type " + type + "!");
+                    return errorMaterial;
+            }
+        }
+        public Material GetRayTypeMaterialTransparent(RTRay.RayType type)
+        {
+            switch (type)
+            {
+                case RTRay.RayType.NoHit:
+                    return noHitMaterial;
+                case RTRay.RayType.Reflect:
+                    return reflectMaterialTransparent;
+                case RTRay.RayType.Refract:
+                    return refractMaterialTransparent;
+                case RTRay.RayType.Normal:
+                    return normalMaterialTransparent;
+                case RTRay.RayType.Shadow:
+                    return shadowMaterialTransparent;
+                case RTRay.RayType.Light:
+                    return lightMaterialTransparent;
                 default:
                     Debug.LogError("Unrecognized ray type " + type + "!");
                     return errorMaterial;

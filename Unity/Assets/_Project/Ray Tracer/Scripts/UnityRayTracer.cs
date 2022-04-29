@@ -312,9 +312,6 @@ namespace _Project.Ray_Tracer.Scripts
 
         private void SetContributions(TreeNode<RTRay> parent)
         {
-            if (parent.Data.Type == RTRay.RayType.NoHit)
-                Debug.Log(parent.Data.Contribution);
-
             foreach (TreeNode<RTRay> child in parent.Children)
             {
                 child.Data.Contribution *= parent.Data.Contribution;

@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: LightRayMaterial
-  m_Shader: {fileID: 4800000, guid: 6a6c9ced504449d41aec18ca724a04c7, type: 3}
+  m_Name: ReflectRayMaterialTransparent
+  m_Shader: {fileID: 4800000, guid: 4d8b81c66f213ca41a4f96a5531a7a5e, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 1
@@ -78,6 +78,6 @@ Material:
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 1, g: 0.90058327, b: 0, a: 1}
+    - _Color: {r: 0, g: 0.550797, b: 1, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
