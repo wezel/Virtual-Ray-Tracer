@@ -22,14 +22,25 @@ namespace _Project.UI.Scripts.Tutorial
         }
 
         /// <summary>
-        /// Descriptiop of this task that has to be completed by the user.
+        /// Name of this task.
         /// </summary>
         [SerializeField]
-        private string task;
-        public string Task
+        private string name;
+        public string Name
         {
-            get { return task; }
-            set { task = value; }
+            get { return name; }
+            set { name = value; }
+        }
+
+        /// <summary>
+        /// Description of this task that has to be completed by the user.
+        /// </summary>
+        [SerializeField]
+        private string description;
+        public string Description
+        {
+            get { return description; }
+            set { description = value; }
         }
 
     }

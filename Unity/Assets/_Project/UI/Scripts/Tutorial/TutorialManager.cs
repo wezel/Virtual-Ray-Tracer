@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using System.Collections.Generic;
 
 namespace _Project.UI.Scripts.Tutorial
 {
@@ -29,13 +28,17 @@ namespace _Project.UI.Scripts.Tutorial
         private Sprite collapsedIcon;
 
         [SerializeField]
-        private List<TutorialTasks> tutorialTasks;
+        private TutorialTaskManager requiredTaskManager;
+        [SerializeField]
+        private TutorialTaskManager optionalTaskManager;
 
-        private RectTransform panelTransform;
+        private RectTransform panelRect;
         private bool expanded = true;
 
         private int lastScene;
         private int currentScene;
+        private Vector2 originalSize;
+
 
         /// <summary>
         /// Load next level (if possible) and update the buttons.
@@ -76,15 +79,25 @@ namespace _Project.UI.Scripts.Tutorial
             if (expanded)
             {
                 expandCollapseImage.sprite = collapsedIcon;
-                panelTransform.sizeDelta = new Vector2(500, 38);
+                panelRect.sizeDelta = new Vector2(originalSize.x, 38);
             }
             else
             {
                 expandCollapseImage.sprite = expandedIcon;
-                panelTransform.sizeDelta = new Vector2(500, 250);
+                panelRect.sizeDelta = new Vector2(originalSize.x, originalSize.y);
             }
 
             expanded = !expanded;
+        }
+
+        /// <summary>
+        /// Try to complete a tutorial task
+        /// </summary>
+        /// <param name="identifier"></param>
+        public void CompleteTask(string identifier)
+        {
+            requiredTaskManager.CompleteTask(identifier);
+            optionalTaskManager.CompleteTask(identifier);
         }
 
         /// <summary>
@@ -94,8 +107,9 @@ namespace _Project.UI.Scripts.Tutorial
         {
             lastScene = SceneManager.sceneCountInBuildSettings - 1;
             currentScene = SceneManager.GetActiveScene().buildIndex;
-            panelTransform = panel.GetComponent<RectTransform>();
+            panelRect = panel.GetComponent<RectTransform>();
             expandCollapseButton.onClick.AddListener(ExpandCollapse);
+            originalSize = panelRect.sizeDelta;
             UpdateButtons();
         }
     }
