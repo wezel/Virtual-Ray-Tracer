@@ -288,8 +288,9 @@ namespace _Project.Ray_Tracer.Scripts
                             // Fix the origin and the length so we visualize the right ray.
                             subRayTree.Data.Origin = origin;
                             subRayTree.Data.Length += pixelDistance;
-                            
+
                             // Add the ray as a child of the main ray of the pixel.
+                            subRayTree.Data.Contribution = 1.0f / superSamplingSquared;
                             rayTree.AddChild(subRayTree);
 
                             color += subRayTree.Data.Color;
@@ -301,11 +302,21 @@ namespace _Project.Ray_Tracer.Scripts
                     color.a = 1.0f;
 
                     rayTree.Data.Color = color;
+                    SetContributions(rayTree);
                     rayTrees.Add(rayTree);
                 }
-            }
+            }       
 
             return rayTrees;
+        }
+
+        private void SetContributions(TreeNode<RTRay> parent)
+        {
+            foreach (TreeNode<RTRay> child in parent.Children)
+            {
+                child.Data.Contribution *= parent.Data.Contribution;
+                SetContributions(child);
+            }
         }
 
         private TreeNode<RTRay> Trace(Vector3 origin, Vector3 direction, int depth, RTRay.RayType type)
@@ -347,6 +358,10 @@ namespace _Project.Ray_Tracer.Scripts
             // Add the child ray colors to the parent ray.
             foreach (var child in rayTree.Children)
                 color += child.Data.Color;
+
+            // Calculate contribution to the parent.
+            foreach (var child in rayTree.Children)
+                child.Data.Contribution = child.Data.Color.grayscale / color.grayscale;
 
             rayTree.Data = new RTRay(origin, direction, hit.distance, ClampColor(color), type);
             return rayTree;

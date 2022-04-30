@@ -48,7 +48,12 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
         /// The type of this ray. For example, reflection, refraction or shadow.
         /// </summary>
         public RayType Type { get; set; }
-        
+
+        /// <summary>
+        /// The contribution of this ray.
+        /// </summary>
+        public float Contribution { get; set; }
+
         /// <summary>
         /// Construct a default ray. The resulting ray is technically valid, but should only be used in the
         /// construction of a proper ray.
@@ -60,6 +65,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
             Length = 0.0f;
             Color = Color.black;
             Type = RayType.NoHit;
+            Contribution = 0.0f;
         }
 
         /// <summary>
@@ -77,6 +83,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
             Length = length;
             Color = color;
             Type = type;
+            Contribution = type == RayType.NoHit ? 0.0f : 1.0f;
         }
 
         /// <summary>

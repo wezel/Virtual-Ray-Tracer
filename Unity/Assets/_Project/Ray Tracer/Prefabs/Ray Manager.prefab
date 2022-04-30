@@ -43,17 +43,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9cd2915fe113a26f2b04552e68a06761, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rayHideThreshold: 0.02
+  rayTransExponent: 1
+  rayTransThreshold: 0.25
   rayRadius: 0.01
   infiniteRayDrawLength: 10
   rayPrefab: {fileID: 3475852730852656632, guid: c002e298918eb804994048849f871225, type: 3}
   HideNoHitRays: 0
   ShowRays: 1
+  HideNegligibleRays: 0
   noHitMaterial: {fileID: 2100000, guid: a98bb9836e3faab40afd0672bb18dc32, type: 2}
   reflectMaterial: {fileID: 2100000, guid: 3d44750ec9ccdc547af676ae26be4ef1, type: 2}
+  reflectMaterialTransparent: {fileID: 2100000, guid: 280810bf45eb4a44096d286eeda64900, type: 2}
   refractMaterial: {fileID: 2100000, guid: fea3ef3a88139ae4eab5d116e182cb06, type: 2}
+  refractMaterialTransparent: {fileID: 2100000, guid: 14f832343c622264e9907f27db597846, type: 2}
   normalMaterial: {fileID: 2100000, guid: 400fade9670fe76469c19a7418a82390, type: 2}
+  normalMaterialTransparent: {fileID: 2100000, guid: 719e6f42cb3fe3e4881f1d60d66d5a35, type: 2}
   shadowMaterial: {fileID: 2100000, guid: d264613b45e8db14fbaf3ad8f6a7ea34, type: 2}
+  shadowMaterialTransparent: {fileID: 2100000, guid: 763eee2706c4a51419a4e12a0a02340f, type: 2}
   lightMaterial: {fileID: 2100000, guid: ca1132ecbe5f8cd429367540678c7bb0, type: 2}
+  lightMaterialTransparent: {fileID: 2100000, guid: a128415b4a4413e40943cf5c219ca694, type: 2}
   errorMaterial: {fileID: 2100000, guid: 2476b30221d1a2f4fb658070ee52c5b5, type: 2}
   animate: 0
   animateSequentially: 0
