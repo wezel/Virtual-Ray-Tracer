@@ -63,7 +63,8 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
 
             if (Ray.Contribution < rayManager.RayTransThreshold)
             {
-                rayRenderer.Material = rayManager.GetRayTypeMaterialTransparent(Ray.Type);
+                rayRenderer.Material = rayManager.GetRayTypeMaterialTransparent(Ray.Type, 
+                    Mathf.Pow(Ray.Contribution, rayManager.RayTransExponent));
             }
             else
             {

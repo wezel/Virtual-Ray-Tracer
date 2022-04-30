@@ -91,17 +91,23 @@ namespace _Project.Ray_Tracer.Scripts
         /// </summary>
         public bool HideNegligibleRays;
 
+        private const int transparencyRange = 50;
         [SerializeField] private Material noHitMaterial;
         [SerializeField] private Material reflectMaterial;
         [SerializeField] private Material reflectMaterialTransparent;
+        private Material[] reflectMaterialTransparentArray = new Material[transparencyRange];
         [SerializeField] private Material refractMaterial;
         [SerializeField] private Material refractMaterialTransparent;
+        private Material[] refractMaterialTransparentArray = new Material[transparencyRange];
         [SerializeField] private Material normalMaterial;
         [SerializeField] private Material normalMaterialTransparent;
+        private Material[] normalMaterialTransparentArray = new Material[transparencyRange];
         [SerializeField] private Material shadowMaterial;
         [SerializeField] private Material shadowMaterialTransparent;
+        private Material[] shadowMaterialTransparentArray = new Material[transparencyRange];
         [SerializeField] private Material lightMaterial;
         [SerializeField] private Material lightMaterialTransparent;
+        private Material[] lightMaterialTransparentArray = new Material[transparencyRange];
         [SerializeField] private Material errorMaterial;
 
         [Header("Animation Settings")]
@@ -241,22 +247,22 @@ namespace _Project.Ray_Tracer.Scripts
                     return errorMaterial;
             }
         }
-        public Material GetRayTypeMaterialTransparent(RTRay.RayType type)
+        public Material GetRayTypeMaterialTransparent(RTRay.RayType type, float transparency)
         {
             switch (type)
             {
                 case RTRay.RayType.NoHit:
                     return noHitMaterial;
                 case RTRay.RayType.Reflect:
-                    return reflectMaterialTransparent;
+                    return reflectMaterialTransparentArray[Mathf.FloorToInt(transparency * transparencyRange)];
                 case RTRay.RayType.Refract:
-                    return refractMaterialTransparent;
+                    return refractMaterialTransparentArray[Mathf.FloorToInt(transparency * transparencyRange)];
                 case RTRay.RayType.Normal:
-                    return normalMaterialTransparent;
+                    return normalMaterialTransparentArray[Mathf.FloorToInt(transparency * transparencyRange)];
                 case RTRay.RayType.Shadow:
-                    return shadowMaterialTransparent;
+                    return shadowMaterialTransparentArray[Mathf.FloorToInt(transparency * transparencyRange)];
                 case RTRay.RayType.Light:
-                    return lightMaterialTransparent;
+                    return lightMaterialTransparentArray[Mathf.FloorToInt(transparency * transparencyRange)];
                 default:
                     Debug.LogError("Unrecognized ray type " + type + "!");
                     return errorMaterial;
@@ -284,6 +290,13 @@ namespace _Project.Ray_Tracer.Scripts
         private void Start()
         {
             rays = new List<TreeNode<RTRay>>();
+            // Generate range of transparent materials
+            MakeTransparentMaterials(ref reflectMaterialTransparent, ref reflectMaterialTransparentArray);
+            MakeTransparentMaterials(ref refractMaterialTransparent, ref refractMaterialTransparentArray);
+            MakeTransparentMaterials(ref normalMaterialTransparent, ref normalMaterialTransparentArray);
+            MakeTransparentMaterials(ref shadowMaterialTransparent, ref shadowMaterialTransparentArray);
+            MakeTransparentMaterials(ref lightMaterialTransparent, ref lightMaterialTransparentArray);
+
             rayObjectPool = new RayObjectPool(rayPrefab, initialRayPoolSize, transform);
             Reset = true;
 
@@ -292,6 +305,18 @@ namespace _Project.Ray_Tracer.Scripts
 
             rtSceneManager.Scene.OnSceneChanged += () => { shouldUpdateRays = true; };
             rayTracer.OnRayTracerChanged += () => { shouldUpdateRays = true; };
+        }
+
+        //[SerializeField] private Material lightMaterialTransparent;
+        //private Material[] lightMaterialTransparentArray = new Material[transparencyRange];
+
+        private void MakeTransparentMaterials(ref Material baseMaterial, ref Material[] arrayMaterial)
+        {
+            for (int i = 0; i < transparencyRange; i++)
+            {
+                arrayMaterial[i] = new Material(baseMaterial);
+                arrayMaterial[i].SetFloat("_Ambient", (i + 1) * (1.0f / transparencyRange));
+            }
         }
 
         private void FixedUpdate()
