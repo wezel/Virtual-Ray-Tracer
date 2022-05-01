@@ -12,14 +12,25 @@ namespace _Project.UI.Scripts
         [SerializeField]
         private float hudRefreshRate = 1f;
     
-        private float timer;
+
+        private float totalTime = 0f;
+        private int frames = 0;
     
         public void Update()
         {
-            if (!(Time.unscaledTime > timer)) return;
-        
-            counter.text =  (1f / Time.unscaledDeltaTime).ToString("F1");
-            timer = Time.unscaledTime + hudRefreshRate;
+            frames++;
+            totalTime += Time.unscaledDeltaTime;
+
+            if (totalTime < hudRefreshRate) return;
+
+            counter.text = (frames / totalTime).ToString("F1");
+            frames = 0;
+            totalTime = 0.0f;
+        }
+
+        private void Awake()
+        {
+            counter.text = (1.0f / Time.unscaledDeltaTime).ToString("F1");
         }
     }
 }
