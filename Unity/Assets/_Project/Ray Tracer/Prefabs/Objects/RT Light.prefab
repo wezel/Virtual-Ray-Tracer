@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2869057598925096038}
   - component: {fileID: 2869057598925096032}
   - component: {fileID: 2869057598925096033}
-  - component: {fileID: 1415938711584125191}
+  - component: {fileID: 3990558496392322583}
   m_Layer: 8
   m_Name: RT Light
   m_TagString: Untagged
@@ -54,6 +54,7 @@ MonoBehaviour:
   label: {fileID: 4415559385507083291}
   outline: {fileID: 2936163527658708494}
   canvas: {fileID: 1104547694093982553}
+  boxCollider: {fileID: 3990558496392322583}
 --- !u!108 &2869057598925096033
 Light:
   m_ObjectHideFlags: 0
@@ -116,7 +117,7 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
---- !u!65 &1415938711584125191
+--- !u!65 &3990558496392322583
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -127,7 +128,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.256, y: 0.256, z: 0.01}
+  m_Size: {x: 0.47, y: 0.5, z: 0.01}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &3904491717560610861
 GameObject:
@@ -156,7 +157,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3904491717560610861}
-  m_LocalRotation: {x: 0.27414727, y: 0.21723528, z: -0.06371768, w: 0.9346615}
+  m_LocalRotation: {x: 0.001002846, y: 0.97795504, z: -0.20876054, w: 0.004697911}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.001, y: 0.001, z: 0.001}
   m_Children:

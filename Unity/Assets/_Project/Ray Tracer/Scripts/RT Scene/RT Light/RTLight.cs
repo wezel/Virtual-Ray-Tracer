@@ -133,6 +133,9 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
         [SerializeField]
         private Canvas canvas;
 
+        [SerializeField]
+        private BoxCollider boxCollider;
+
         private Color defaultOutline;
 
         public void Higlight(Color value) => outline.color = value;
@@ -152,6 +155,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
             // Make the label face the camera. We do this in LateUpdate to make sure the camera has finished its moving.
             // From: https://answers.unity.com/questions/52656/how-i-can-create-an-sprite-that-always-look-at-the.html
             canvas.transform.forward = Camera.main.transform.forward;
+            boxCollider.transform.forward = Camera.main.transform.forward;
         }
 
 #if UNITY_EDITOR
