@@ -5,14 +5,59 @@ using UnityEngine;
 namespace _Project.UI.Scripts.Tutorial
 {
     /// <summary>
+    /// Simple class that describes a tutorial task.
+    /// </summary>
+    [Serializable]
+    public class Task
+    {
+        /// <summary>
+        /// Identifier of this task.
+        /// </summary>
+        [SerializeField]
+        private string identifier;
+        public string Identifier
+        {
+            get { return identifier; }
+            set { identifier = value; }
+        }
+
+        /// <summary>
+        /// Name of this task.
+        /// </summary>
+        [SerializeField]
+        private string name;
+        public string Name
+        {
+            get { return name; }
+            set { name = value; }
+        }
+
+        /// <summary>
+        /// Description of this task that has to be completed by the user.
+        /// </summary>
+        [SerializeField]
+        private string description;
+        public string Description
+        {
+            get { return description; }
+            set { description = value; }
+        }
+
+    }
+
+
+    /// <summary>
     /// Class that manages the tutorial tasks
     /// </summary>
     [Serializable]
-    public class TutorialTasks
+    public class Tasks
     {
         [SerializeField]
-        private List<TutorialTask> tasks;
-        private List<TutorialTask> completedTasks = new List<TutorialTask>();
+        private int optionalTasksStart;
+
+        [SerializeField]
+        private List<Task> tasks;
+        private List<Task> completedTasks = new List<Task>();
 
         private int index;
 

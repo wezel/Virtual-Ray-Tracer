@@ -43,4 +43,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2772df30850017f4ea8f72e5bb972550, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DragCursor: {fileID: 2800000, guid: 23c570611e040334a8476f6bf7e7d07f, type: 3}
+  FPSEnabled: 0
+  Unlimited: 0
+  TutorialTasks:
+  - tasks:
+    - identifier: 
+      name: 
+      description: 
+    - identifier: 
+      name: 
+      description: 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
 using UnityEngine.UIElements;
+using _Project.UI.Scripts.Tutorial;
 using Cursor = UnityEngine.Cursor;
 using Object = UnityEngine.Object;
 
@@ -33,6 +34,8 @@ namespace _Project.Scripts
 
         public bool FPSEnabled = false;
         public bool Unlimited = false;
+
+        public List<Tasks> TutorialTasks;
 
         /// <summary>
         /// Get the current <see cref="GlobalSettings"/> instance.

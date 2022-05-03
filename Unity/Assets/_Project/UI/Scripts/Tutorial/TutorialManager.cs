@@ -1,116 +1,47 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro;
+using System.Collections.Generic;
+using UnityEngine.SceneManagement;
+using System.Collections;
 
 namespace _Project.UI.Scripts.Tutorial
 {
     /// <summary>
-    /// This class manages the tutorial UI.
+    /// Tutorial task UI class
     /// </summary>
     public class TutorialManager : MonoBehaviour
     {
-        [SerializeField]
-        private GameObject panel;
+        private static TutorialManager instance;
 
         [SerializeField]
-        private Button nextLevelButton;
-        [SerializeField]
-        private Button previousLevelButton;
+        private GameObject fill;
+        private RectTransform fillRect;
 
         [SerializeField]
-        private Button expandCollapseButton;
-        [SerializeField]
-        private Image expandCollapseImage;
+        private Color taskColor;
 
         [SerializeField]
-        private Sprite expandedIcon;
+        private TextMeshProUGUI taskName;
         [SerializeField]
-        private Sprite collapsedIcon;
-
-        [SerializeField]
-        private TutorialTaskManager requiredTaskManager;
-        [SerializeField]
-        private TutorialTaskManager optionalTaskManager;
-
-        private RectTransform panelRect;
-        private bool expanded = true;
-
-        private int lastScene;
-        private int currentScene;
-        private Vector2 originalSize;
-
+        private TextMeshProUGUI taskDescription;
 
         /// <summary>
-        /// Load next level (if possible) and update the buttons.
+        /// Get the current <see cref="TutorialManager"/> instance.
         /// </summary>
-        public void NextLevel()
+        /// <returns> The current <see cref="TutorialManager"/> instance. </returns>
+        public static TutorialManager Get()
         {
-            if (nextLevelButton.interactable && currentScene < lastScene)
-                SceneManager.LoadSceneAsync(++currentScene);
-
-            UpdateButtons();
+            return instance;
         }
 
         /// <summary>
-        /// Load previous level (if possible) and update the buttons.
-        /// </summary>
-        public void PreviousLevel()
-        {
-            if (previousLevelButton.interactable && currentScene > 1)
-                SceneManager.LoadSceneAsync(--currentScene);
-
-            UpdateButtons();
-        }
-
-        /// <summary>
-        /// Update the enabled status of the two buttons.
-        /// </summary>
-        private void UpdateButtons()
-        {
-             previousLevelButton.interactable = currentScene > 1;
-             nextLevelButton.interactable = currentScene < lastScene;
-        }
-
-        /// <summary>
-        /// Expand or collapse the tutorial tasks
-        /// </summary>
-        private void ExpandCollapse()
-        {
-            if (expanded)
-            {
-                expandCollapseImage.sprite = collapsedIcon;
-                panelRect.sizeDelta = new Vector2(originalSize.x, 38);
-            }
-            else
-            {
-                expandCollapseImage.sprite = expandedIcon;
-                panelRect.sizeDelta = new Vector2(originalSize.x, originalSize.y);
-            }
-
-            expanded = !expanded;
-        }
-
-        /// <summary>
-        /// Try to complete a tutorial task
-        /// </summary>
-        /// <param name="identifier"></param>
-        public void CompleteTask(string identifier)
-        {
-            requiredTaskManager.CompleteTask(identifier);
-            optionalTaskManager.CompleteTask(identifier);
-        }
-
-        /// <summary>
-        /// Initialize variables, add listeners, and update the buttons.
+        /// Set background color, update UI
         /// </summary>
         private void Awake()
         {
-            lastScene = SceneManager.sceneCountInBuildSettings - 1;
-            currentScene = SceneManager.GetActiveScene().buildIndex;
-            panelRect = panel.GetComponent<RectTransform>();
-            expandCollapseButton.onClick.AddListener(ExpandCollapse);
-            originalSize = panelRect.sizeDelta;
-            UpdateButtons();
+            instance = this;
         }
     }
 }
+
