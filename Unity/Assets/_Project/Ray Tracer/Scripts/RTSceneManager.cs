@@ -192,9 +192,15 @@ namespace _Project.Ray_Tracer.Scripts
         /// <param name="newSelection"> The new selected object. </param>
         public void Select(Transform newSelection)
         {
+
             // Do nothing if what we selected is already the selected object.
             if (selection.Transform == newSelection)
+            {
+                if (selection.Type == typeof(RTMesh))
+                    selection.Mesh.OnMeshSelected?.Invoke();
+
                 return;
+            }
 
             // Do nothing if we selected something other than a camera, light or mesh.
             Selection candidate = DetermineSelection(newSelection);
@@ -222,8 +228,9 @@ namespace _Project.Ray_Tracer.Scripts
                 selection.Mesh.Outline.OutlineColor = SelectionColor;
                 selection.Mesh.Outline.enabled = true;
                 previousTransform = newSelection;
+                selection.Mesh.OnMeshSelected?.Invoke();
             }
-            
+
             transformHandle.target = selection.Transform;
             SetHandleType(transformHandle.type);
             transformHandle.gameObject.SetActive(true);

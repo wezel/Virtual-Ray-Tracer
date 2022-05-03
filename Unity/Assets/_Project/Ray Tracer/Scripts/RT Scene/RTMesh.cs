@@ -1,8 +1,12 @@
+using System;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Rendering;
 
 namespace _Project.Ray_Tracer.Scripts.RT_Scene
 {
+
+
     /// <summary>
     /// Represents a mesh in the ray tracer scene. Requires that the attached game object has a mesh and a material
     /// based on the RayTracerShader. Should be considered something like a tag to indicate to the scene manager that
@@ -12,6 +16,10 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
     [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer), typeof(MeshCollider)), RequireComponent(typeof(Outline))]
     public class RTMesh : MonoBehaviour
     {
+        [Serializable]
+        public class MeshSelected : UnityEvent { }
+        public MeshSelected OnMeshSelected;
+
         private static Shader StandardShader = null;
         private static Shader TransparentShader = null;
 

@@ -35,6 +35,7 @@ namespace _Project.Scripts
         public bool FPSEnabled = false;
         public bool Unlimited = false;
 
+        public static bool TutorialExpanded = true;
         public List<Tasks> TutorialTasks;
 
         /// <summary>

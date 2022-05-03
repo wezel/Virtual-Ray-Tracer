@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using System;
+using UnityEngine.Events;
 
 namespace _Project.Scripts
 {
@@ -9,6 +11,11 @@ namespace _Project.Scripts
     /// </summary>
     public class CameraController : MonoBehaviour
     {
+        [Serializable]
+        public class OnChanged : UnityEvent { }
+        public OnChanged onPanChanged, OnOrbitChanged, OnZoomChanged;
+
+
         [SerializeField]
         private RectTransform inputBlocker;
         public bool InputBlockerHovered { get; set; }
@@ -98,6 +105,9 @@ namespace _Project.Scripts
                 yDistance = -Input.GetAxis("Mouse Y") * 0.01f;
             }
 
+            if (Input.GetAxis("Mouse X") != 0 || Input.GetAxis("Mouse Y") != 0)
+                onPanChanged?.Invoke();
+
             // And we pan with the arrow keys
             if (Input.GetKey(KeyCode.LeftArrow))
                 xDistance -= Time.deltaTime * 0.5f;
@@ -130,7 +140,10 @@ namespace _Project.Scripts
                 xDegrees += Input.GetAxis("Mouse X") * OrbitSpeed;
                 yDegrees -= Input.GetAxis("Mouse Y") * OrbitSpeed;
             }
-            
+
+            if (Input.GetAxis("Mouse X") != 0 || Input.GetAxis("Mouse Y") != 0)
+                OnOrbitChanged?.Invoke();
+
             if (Input.GetKey(KeyCode.LeftArrow))
                 xDegrees += Time.deltaTime * 20.0f * OrbitSpeed;
             if (Input.GetKey(KeyCode.RightArrow))
@@ -212,6 +225,9 @@ namespace _Project.Scripts
         
             // If scrollWheel is used change zoom. This one is not exclusive.
             distance -= Input.GetAxis("Mouse ScrollWheel") * ZoomSpeed * Mathf.Abs(distance);
+
+            if (Input.GetAxis("Mouse ScrollWheel") != 0)
+                OnZoomChanged.Invoke();
 
             // If the left control is pressed and.... 
             if (Input.GetKey(KeyCode.LeftControl))
