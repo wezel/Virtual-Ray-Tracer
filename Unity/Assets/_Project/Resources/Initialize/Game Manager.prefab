@@ -59,38 +59,38 @@ MonoBehaviour:
     - identifier: cameraZoom
       name: Camera Zooming
       description: Zoom the camera in and out by scrolling.
-    - identifier: ballSelect
+    - identifier: objectSelect
       name: Object Selection
       description: You can select the camera, lights and objects in the scene by
-        left-clicking on them. Select the red ball in this scene.
+        left-clicking on them. Select an object in this scene.
     - identifier: hoverColor
       name: Property Information
-      description: The red ball's properties are now shown on the right. Hover over
+      description: The object's properties are now shown on the right. Hover over
         the "Color" text to see more information.
     - identifier: editColor
       name: Edit Properties
-      description: Change the color of the red ball in the properties panel.
-    - identifier: ballTranslation
+      description: Change the color of an object in the properties panel.
+    - identifier: objectTranslation
       name: Translation
-      description: 'Move the ball by moving your mouse while holding down left-click
-        on one of the three gizmos (the arrows coming from the ball). Notice how
-        the position values change while moving the ball. '
+      description: 'Move an object by moving your mouse while holding down left-click
+        on one of the three gizmos (the arrows coming from the object). Notice how
+        the position values change while moving the object. '
     - identifier: transformationEdit
       name: Transformation Mode
       description: Change the current "Translate" transformation mode to "Scale"
         by clicking the dropdown in the top left.
-    - identifier: ballScaling
+    - identifier: objectScaling
       name: Scaling
-      description: 'Now scale the ball using the gizmos. Notice how the scale values
-        change while scaling the ball. '
-    - identifier: ballRotate
+      description: 'Now scale an object using the gizmos. Notice how the scale values
+        change while scaling the object. '
+    - identifier: objectRotation
       name: Rotation
       description: 'Change the current transformation mode to "rotate" and rotate
-        the ball using the gizmos. Notice how the rotation values change while rotating
-        the ball. '
+        an object using the gizmos. Notice how the rotation values change while rotating
+        the object. '
     - identifier: deselect
       name: Deselection
-      description: Deselect the ball by left-clicking on an empty part of the scene.
+      description: Deselect an object by left-clicking on an empty part of the scene.
     - identifier: notDisabledEdit
       name: Ray Tracer Properties
       description: 'When nothing is selected, the general ray tracer properties are

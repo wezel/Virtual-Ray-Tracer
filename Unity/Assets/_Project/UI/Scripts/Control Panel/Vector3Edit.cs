@@ -3,6 +3,7 @@ using _Project.Scripts;
 using _Project.UI.Scripts.Tooltips;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace _Project.UI.Scripts.Control_Panel
@@ -22,8 +23,9 @@ namespace _Project.UI.Scripts.Control_Panel
             X, Y, Z
         }
 
-        public delegate void ValueChanged(Vector3 value);
-        public event ValueChanged OnValueChanged;
+        [Serializable]
+        public class ValueChanged : UnityEvent<Vector3> { };
+        public ValueChanged OnValueChanged;
 
         /// <summary>
         /// Whether the mouse is dragging the x component of this <see cref="Vector3Edit"/>. It is set through event

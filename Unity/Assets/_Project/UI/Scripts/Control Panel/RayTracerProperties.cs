@@ -128,7 +128,7 @@ namespace _Project.UI.Scripts.Control_Panel
         {
             renderShadowsEdit.OnValueChanged += (value) => { rayTracer.RenderShadows = value; };
             recursionDepthEdit.OnValueChanged += (value) => { rayTracer.MaxDepth = (int)value; };
-            backgroundColorEdit.OnValueChanged += (value) => { rayTracer.BackgroundColor = value; };
+            backgroundColorEdit.OnValueChanged.AddListener((value) => { rayTracer.BackgroundColor = value; });
 
             hideNoHitRaysEdit.OnValueChanged += (value) => { rayManager.HideNoHitRays = value; };
             showRaysEdit.OnValueChanged += (value) => { rayManager.ShowRays = value; };

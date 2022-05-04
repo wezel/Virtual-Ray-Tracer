@@ -11,11 +11,6 @@ namespace _Project.Scripts
     /// </summary>
     public class CameraController : MonoBehaviour
     {
-        [Serializable]
-        public class OnChanged : UnityEvent { }
-        public OnChanged onPanChanged, OnOrbitChanged, OnZoomChanged;
-
-
         [SerializeField]
         private RectTransform inputBlocker;
         public bool InputBlockerHovered { get; set; }
@@ -29,6 +24,10 @@ namespace _Project.Scripts
         public float OrbitSpeed = 4.0f;
         public float PanSpeed = 2.0f;
         public float ZoomSpeed = 1.0f;
+
+        [Serializable]
+        public class OnChanged : UnityEvent { }
+        public OnChanged onPanChanged, OnOrbitChanged, OnZoomChanged;
 
         private float xDegrees = 0.0f;
         private float yDegrees = 0.0f;

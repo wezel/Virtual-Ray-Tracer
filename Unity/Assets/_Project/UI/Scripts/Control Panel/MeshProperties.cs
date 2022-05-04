@@ -78,11 +78,11 @@ namespace _Project.UI.Scripts.Control_Panel
         
         private void Awake()
         {
-            positionEdit.OnValueChanged += (value) => { mesh.Position = value; };
-            rotationEdit.OnValueChanged += (value) => { mesh.Rotation = value; };
-            scaleEdit.OnValueChanged += (value) => { mesh.Scale = value; };
+            positionEdit.OnValueChanged.AddListener((value) => { mesh.Position = value; });
+            rotationEdit.OnValueChanged.AddListener((value) => { mesh.Rotation = value; });
+            scaleEdit.OnValueChanged.AddListener((value) => { mesh.Scale = value; });
 
-            colorEdit.OnValueChanged += (value) => { mesh.Color = value; };
+            colorEdit.OnValueChanged.AddListener((value) => { mesh.Color = value; });
             ambientEdit.OnValueChanged += (value) => { mesh.Ambient = value; };
             diffuseEdit.OnValueChanged += (value) => { mesh.Diffuse = value; };
             specularEdit.OnValueChanged += (value) => { mesh.Specular = value; };

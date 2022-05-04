@@ -58,8 +58,8 @@ namespace _Project.UI.Scripts.Control_Panel
 
         private void Awake()
         {
-            positionEdit.OnValueChanged += (value) => { camera.Position = value; };
-            rotationEdit.OnValueChanged += (value) => { camera.Rotation = value; };
+            positionEdit.OnValueChanged.AddListener((value) => { camera.Position = value; });
+            rotationEdit.OnValueChanged.AddListener((value) => { camera.Rotation = value; });
 
             fieldOfViewEdit.OnValueChanged += (value) => { camera.FieldOfView = value; };
             screenWidthEdit.OnValueChanged += (value) => { camera.ScreenWidth = (int)value; };

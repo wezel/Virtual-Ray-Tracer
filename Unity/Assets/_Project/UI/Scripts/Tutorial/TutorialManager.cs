@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
 using _Project.Scripts;
+using System.Collections;
 
 namespace _Project.UI.Scripts.Tutorial
 {
@@ -96,7 +97,8 @@ namespace _Project.UI.Scripts.Tutorial
         /// </summary>
         public static void SkiptTask()
         {
-            Get().SkipTaskInternal();
+            TutorialManager manager = Get();
+            manager.SkipTaskInternal();
         }
 
         /// <summary>
@@ -105,15 +107,17 @@ namespace _Project.UI.Scripts.Tutorial
         /// <param name="identifier"></param>
         public static void CompleteTask(string identifier)
         {
-            Get().CompleteTaskInternal(identifier);
+            TutorialManager manager = Get();
+            manager.StartCoroutine(manager.CompleteTaskInternal(identifier));
         }
 
         /// <summary>
         /// Complete a tutorial task and update the UI if necessary
         /// </summary>
         /// <param name="identifier"></param>
-        private void CompleteTaskInternal(string identifier)
+        private IEnumerator CompleteTaskInternal(string identifier)
         {
+            yield return new WaitForSeconds(.2f);
             if (currentTasks.CompleteTask(identifier)) UpdateTutorial();
         }
 

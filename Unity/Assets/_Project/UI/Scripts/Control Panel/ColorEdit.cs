@@ -1,7 +1,9 @@
 using _Project.UI.Scripts.Tooltips;
 using HSVPicker;
+using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace _Project.UI.Scripts.Control_Panel
@@ -13,8 +15,9 @@ namespace _Project.UI.Scripts.Control_Panel
     /// </summary>
     public class ColorEdit : MonoBehaviour
     {
-        public delegate void ValueChanged(Color color);
-        public event ValueChanged OnValueChanged;
+        [Serializable]
+        public class ValueChanged : UnityEvent<Color> { }
+        public ValueChanged OnValueChanged;
 
         /// <summary>
         /// Whether the mouse is hovered over the color picker UI component. It is set through event triggers on the color
@@ -53,6 +56,8 @@ namespace _Project.UI.Scripts.Control_Panel
             get { return color; }
             set
             {
+                if (color == value) return;
+
                 // Set the color.
                 color = value;
 

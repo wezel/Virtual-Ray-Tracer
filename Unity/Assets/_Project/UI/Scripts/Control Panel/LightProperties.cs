@@ -51,8 +51,8 @@ namespace _Project.UI.Scripts.Control_Panel
 
         private void Awake()
         {
-            positionEdit.OnValueChanged += value => light.Position = value;
-            colorEdit.OnValueChanged += value => light.Color = value;
+            positionEdit.OnValueChanged.AddListener(value => light.Position = value);
+            colorEdit.OnValueChanged.AddListener(value => light.Color = value);
             ambientEdit.OnValueChanged += (value) => { light.Ambient = value; };
             diffuseEdit.OnValueChanged += (value) => { light.Diffuse = value; };
             specularEdit.OnValueChanged += (value) => { light.Specular = value; };

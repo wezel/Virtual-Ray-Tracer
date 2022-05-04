@@ -16,9 +16,6 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
     [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer), typeof(MeshCollider)), RequireComponent(typeof(Outline))]
     public class RTMesh : MonoBehaviour
     {
-        [Serializable]
-        public class MeshSelected : UnityEvent { }
-        public MeshSelected OnMeshSelected;
 
         private static Shader StandardShader = null;
         private static Shader TransparentShader = null;
@@ -271,5 +268,9 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             else
                 Outline.enabled = false; // Outline should be disabled by default.
         }
+
+        [Serializable]
+        public class MeshSelected : UnityEvent { }
+        public MeshSelected OnMeshSelected;
     }
 }
