@@ -42,17 +42,6 @@ namespace _Project.UI.Scripts.Tutorial
             get { return description; }
             set { description = value; }
         }
-
-        /// <summary>
-        /// Whether the task is completed.
-        /// </summary>
-        private bool completed = false;
-        public bool Completed
-        {
-            get { return completed; }
-            set { completed = value; }
-        }
-
     }
 
     /// <summary>
@@ -118,8 +107,8 @@ namespace _Project.UI.Scripts.Tutorial
         public bool CompleteTask(string identifier)
         {
             if (index >= tasks.Count - 1) return false;
-            if (tasks[index].Identifier != identifier) return false;
-            tasks[index++].Completed = true;
+            if (GetIdentifier() != identifier) return false;
+            index++;
             return true;
         }
 
@@ -129,22 +118,7 @@ namespace _Project.UI.Scripts.Tutorial
         /// <returns> Whether a task was skipped </returns>
         public bool SkipTask()
         {
-            // Find next uncompleted task
-            for (int step = 1; step < tasks.Count; step++)
-            {
-                if (!tasks[(index + step) % tasks.Count].Completed)
-                {
-                    index = (index + step) % tasks.Count;
-                    return true;
-                }
-            }
-
-            // In case we are already at the end
-            if (index == tasks.Count - 1) return false;
-
-            // Skip to the end
-            index = Math.Max(tasks.Count - 1, 0);
-            return true;
+            return CompleteTask(GetIdentifier());
         }
     }
 }

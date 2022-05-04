@@ -1,6 +1,8 @@
 using _Project.Ray_Tracer.Scripts.RT_Scene;
+using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
 namespace _Project.UI.Scripts.Control_Panel
@@ -34,6 +36,10 @@ namespace _Project.UI.Scripts.Control_Panel
         private TMP_Dropdown typeDropdown; 
         [SerializeField]
         private FloatEdit refractiveIndexEdit;
+
+        [Serializable]
+        public class ExternalChange : UnityEvent { };
+        public ExternalChange OnExternalTranslationChange, OnExternalRotationChange, OnExternalScaleChange;
 
         /// <summary>
         /// Show the mesh properties for <paramref name="mesh"/>. These properties can be changed via the shown UI.
@@ -100,9 +106,21 @@ namespace _Project.UI.Scripts.Control_Panel
             bool draggingEdit = positionEdit.IsDragging() || rotationEdit.IsDragging() || scaleEdit.IsDragging();
             if (gameObject.activeSelf && mesh.transform.hasChanged && !inUI && !draggingEdit)
             {
-                positionEdit.Value = mesh.transform.position;
-                rotationEdit.Value = mesh.transform.eulerAngles;
-                scaleEdit.Value = mesh.transform.localScale;
+                if (positionEdit.Value != mesh.transform.position)
+                {
+                    positionEdit.Value = mesh.transform.position;
+                    OnExternalTranslationChange?.Invoke();
+                }
+                if (rotationEdit.Value != mesh.transform.eulerAngles)
+                {
+                    rotationEdit.Value = mesh.transform.eulerAngles;
+                    OnExternalRotationChange?.Invoke();
+                }
+                if (scaleEdit.Value != mesh.transform.localScale)
+                {
+                    scaleEdit.Value = mesh.transform.localScale;
+                    OnExternalScaleChange?.Invoke();
+                }
                 mesh.transform.hasChanged = false;
             }
         }

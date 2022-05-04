@@ -51,14 +51,14 @@ MonoBehaviour:
     - identifier: cameraPan
       name: Camera Panning
       description: Pan the camera by moving your mouse while holding down the middle
-        mouse button.
+        mouse button or by using the arrow keys.
     - identifier: cameraOrbit
       name: Camera Orbitting
       description: Orbit the camera by moving your mouse while holding down left-click
-        and left control.
+        and left control or by using the arrow keys while holding down left control.
     - identifier: cameraZoom
       name: Camera Zooming
-      description: Zoom the camera in and out by scrolling.
+      description: Zoom the camera in and out by scrolling your mousewheel.
     - identifier: objectSelect
       name: Object Selection
       description: You can select the camera, lights and objects in the scene by
@@ -72,13 +72,14 @@ MonoBehaviour:
       description: Change the color of an object in the properties panel.
     - identifier: objectTranslation
       name: Translation
-      description: 'Move an object by moving your mouse while holding down left-click
+      description: Move an object by moving your mouse while holding down left-click
         on one of the three gizmos (the arrows coming from the object). Notice how
-        the position values change while moving the object. '
+        the position values change while moving the object.
     - identifier: transformationEdit
       name: Transformation Mode
-      description: Change the current "Translate" transformation mode to "Scale"
-        by clicking the dropdown in the top left.
+      description: The transformation mode can be changed using the dropdown in the
+        top left or by pressing [T]ranslate, [S]cale and [R]otate. Change the current
+        transformation mode to Scale.
     - identifier: objectScaling
       name: Scaling
       description: 'Now scale an object using the gizmos. Notice how the scale values
@@ -90,7 +91,8 @@ MonoBehaviour:
         the object. '
     - identifier: deselect
       name: Deselection
-      description: Deselect an object by left-clicking on an empty part of the scene.
+      description: Deselect an object by left-clicking on an empty part of the scene
+        or by pressing [ESC].
     - identifier: notDisabledEdit
       name: Ray Tracer Properties
       description: 'When nothing is selected, the general ray tracer properties are
@@ -100,41 +102,20 @@ MonoBehaviour:
       name: Help Menu
       description: All the information from these tasks can also be found in the
         help menu. Access this menu any time by clicking the "Help" button in the
-        top left.
+        top left or by pressing [F1].
     - identifier: 
       name: 
       description: 
-    - identifier: help2
-      name: Help Menu Alternative
-      description: You can also open the help menu by pressing F1.
-    - identifier: deselect2
-      name: Deselection Alternative
-      description: Deselect any object by pressing ESC.
-    - identifier: cameraPan2
-      name: Camera Panning Alternative
-      description: Pan the camera by using the arrow keys.
-    - identifier: cameraOrbit2
-      name: Camera Orbitting Alternative
-      description: Orbit the camera by using the arrow keys while holding down left
-        control.
-    - identifier: cameraZoom2
-      name: Camera Zooming Alternative
-      description: Zoom the camera in and out by moving your mouse while holding
-        down right-click and left control.
-    - identifier: transformationEdit2
-      name: Transformation Mode alternative
-      description: Change the current transformation mode by pressing the "R", "T"
-        or "S" keys. Change the transformation mode to "Translate" using the "T"
-        key.
+    - identifier: cameraSelection
+      name: Camera
+      description: Select the camera.
     - identifier: localSpace
       name: Global vs Local Space
-      description: In the "Translate" and "Rotate" transformation modes, you are
-        also able to switch between "Local" and "Global" space. Switch to "local"
-        space.
-    - identifier: translateBallLocal
-      name: Local Translation
-      description: Select the ball and move it in local space. Notice how it is different
-        from global space.
+      description: Switch to "Local" space by changing the dropdown in the top left.
+    - identifier: cameraTranslation
+      name: Global vs Local Space
+      description: Switch to "Translate" transformation mode and move the camera
+        around. Notice how local space differs from global space.
     - identifier: 
       name: 
       description: 

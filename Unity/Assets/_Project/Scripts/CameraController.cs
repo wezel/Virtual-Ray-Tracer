@@ -26,8 +26,8 @@ namespace _Project.Scripts
         public float ZoomSpeed = 1.0f;
 
         [Serializable]
-        public class OnChanged : UnityEvent { }
-        public OnChanged onPanChanged, OnOrbitChanged, OnZoomChanged;
+        public class Event : UnityEvent { }
+        public Event onPanChanged, OnOrbitChanged, OnZoomChanged;
 
         private float xDegrees = 0.0f;
         private float yDegrees = 0.0f;
@@ -104,8 +104,6 @@ namespace _Project.Scripts
                 yDistance = -Input.GetAxis("Mouse Y") * 0.01f;
             }
 
-            if (Input.GetAxis("Mouse X") != 0 || Input.GetAxis("Mouse Y") != 0)
-                onPanChanged?.Invoke();
 
             // And we pan with the arrow keys
             if (Input.GetKey(KeyCode.LeftArrow))
@@ -116,6 +114,9 @@ namespace _Project.Scripts
                 yDistance += Time.deltaTime * 0.5f;
             if (Input.GetKey(KeyCode.DownArrow))
                 yDistance -= Time.deltaTime * 0.5f;
+
+            if (yDistance != 0f || xDistance != 0f)
+                onPanChanged?.Invoke();
 
             // we pan by way of transforming the target in screen space.
             // Grab the rotation of the camera so we can move in a pseudo local XY space.
@@ -134,23 +135,29 @@ namespace _Project.Scripts
 
         private void OrbitingUpdate()
         {
+            float xDistance = 0.0f;
+            float yDistance = 0.0f;
+
             if (Input.GetMouseButton(0))
             {
-                xDegrees += Input.GetAxis("Mouse X") * OrbitSpeed;
-                yDegrees -= Input.GetAxis("Mouse Y") * OrbitSpeed;
+                xDistance += Input.GetAxis("Mouse X") * OrbitSpeed;
+                yDistance -= Input.GetAxis("Mouse Y") * OrbitSpeed;
             }
 
-            if (Input.GetAxis("Mouse X") != 0 || Input.GetAxis("Mouse Y") != 0)
+            if (Input.GetKey(KeyCode.LeftArrow))
+                xDistance += Time.deltaTime * 20.0f * OrbitSpeed;
+            if (Input.GetKey(KeyCode.RightArrow))
+                xDistance -= Time.deltaTime * 20.0f * OrbitSpeed;
+            if (Input.GetKey(KeyCode.UpArrow))
+                yDistance += Time.deltaTime * 20.0f * OrbitSpeed;
+            if (Input.GetKey(KeyCode.DownArrow))
+                yDistance -= Time.deltaTime * 20.0f * OrbitSpeed;
+
+            if (yDistance != 0f || xDistance != 0f)
                 OnOrbitChanged?.Invoke();
 
-            if (Input.GetKey(KeyCode.LeftArrow))
-                xDegrees += Time.deltaTime * 20.0f * OrbitSpeed;
-            if (Input.GetKey(KeyCode.RightArrow))
-                xDegrees -= Time.deltaTime * 20.0f * OrbitSpeed;
-            if (Input.GetKey(KeyCode.UpArrow))
-                yDegrees += Time.deltaTime * 20.0f * OrbitSpeed;
-            if (Input.GetKey(KeyCode.DownArrow))
-                yDegrees -= Time.deltaTime * 20.0f * OrbitSpeed;
+            xDegrees += xDistance;
+            yDegrees += yDistance;
 
             // Clamp the vertical axis for the orbit.
             yDegrees = ClampAngle(yDegrees, YMinLimit, YMaxLimit);
@@ -225,7 +232,8 @@ namespace _Project.Scripts
             // If scrollWheel is used change zoom. This one is not exclusive.
             distance -= Input.GetAxis("Mouse ScrollWheel") * ZoomSpeed * Mathf.Abs(distance);
 
-            if (Input.GetAxis("Mouse ScrollWheel") != 0)
+            // Invoke zoom changed
+            if (Input.GetAxis("Mouse ScrollWheel") != 0f)
                 OnZoomChanged.Invoke();
 
             // If the left control is pressed and.... 

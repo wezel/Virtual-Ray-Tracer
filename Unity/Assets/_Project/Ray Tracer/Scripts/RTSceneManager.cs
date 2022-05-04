@@ -9,6 +9,7 @@ using _Project.UI.Scripts.Control_Panel;
 using RuntimeHandle;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
 namespace _Project.Ray_Tracer.Scripts
@@ -56,6 +57,10 @@ namespace _Project.Ray_Tracer.Scripts
 
         [Header("Objects")]
         [SerializeField] private bool deleteAllowed = false;
+
+        [Serializable]
+        public class Event : UnityEvent { };
+        public Event OnTranslationMode, OnRotationMode, OnScaleMode, OnLocalSpace, OnGlobalSpace, OnDeselect;
 
         private static RTSceneManager instance = null;
         private Selection selection = new Selection();
@@ -196,8 +201,8 @@ namespace _Project.Ray_Tracer.Scripts
             // Do nothing if what we selected is already the selected object.
             if (selection.Transform == newSelection)
             {
-                if (selection.Type == typeof(RTMesh))
-                    selection.Mesh.OnMeshSelected?.Invoke();
+                selection.Mesh.OnMeshSelected?.Invoke();
+                selection.Camera?.OnCameraSelected?.Invoke();
 
                 return;
             }
@@ -215,6 +220,7 @@ namespace _Project.Ray_Tracer.Scripts
             {
                 ControlPanel.ShowCameraProperties(selection.Camera);
                 selection.Camera.Color = SelectionColor;
+                selection.Camera.OnCameraSelected?.Invoke();
             }
             else if (selection.Type == typeof(RTLight))
             {
@@ -234,7 +240,7 @@ namespace _Project.Ray_Tracer.Scripts
             transformHandle.target = selection.Transform;
             SetHandleType(transformHandle.type);
             transformHandle.gameObject.SetActive(true);
-            UIManager.Get().AddEscapable(Deselect);
+            UIManager.Get().AddEscapable(DeselectAndInvoke);
         }
         
         public bool HasSelection()
@@ -263,7 +269,13 @@ namespace _Project.Ray_Tracer.Scripts
             selection = new Selection();
 
             transformHandle.gameObject.SetActive(false);
-            UIManager.Get().RemoveEscapable(Deselect);
+            UIManager.Get().RemoveEscapable(DeselectAndInvoke);
+        }
+
+        public void DeselectAndInvoke()
+        {
+            Deselect();
+            OnDeselect?.Invoke();
         }
 
         /// <summary>
@@ -389,7 +401,15 @@ namespace _Project.Ray_Tracer.Scripts
                 HandleSpaceDropdown.interactable = false;
             else
                 HandleSpaceDropdown.interactable = true;
-            
+
+            // Invoke transformation type changed listeners
+            if (type == HandleType.POSITION)
+                OnTranslationMode?.Invoke();
+            else if (type == HandleType.ROTATION)
+                OnRotationMode?.Invoke();
+            else
+                OnScaleMode?.Invoke();
+
             transformHandle.type = type;
         }
 
@@ -397,6 +417,11 @@ namespace _Project.Ray_Tracer.Scripts
         {
             handleSpace = space;
             transformHandle.space = space;
+
+            if (space == HandleSpace.LOCAL)
+                OnLocalSpace?.Invoke();
+            else 
+                OnGlobalSpace?.Invoke();
 
             if (HandleSpaceDropdown.value != (int)space)
                 HandleSpaceDropdown.value = (int)space;
@@ -473,9 +498,9 @@ namespace _Project.Ray_Tracer.Scripts
                 Select(hit.transform);
                 return;
             }
-            
+
             // If nothing was hit deselect all.
-            Deselect();
+            DeselectAndInvoke();
         }
         
         private void Update()

@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace _Project.UI.Scripts.Toolbar
 {
@@ -7,6 +9,9 @@ namespace _Project.UI.Scripts.Toolbar
     /// </summary>
     public class HelpPanel : MonoBehaviour
     {
+        [Serializable]
+        public class Event : UnityEvent { }
+        public Event OnHelpMenuShown;
         /// <summary>
         /// Show the help panel.
         /// </summary>
@@ -24,7 +29,6 @@ namespace _Project.UI.Scripts.Toolbar
             gameObject.SetActive(false);
             UIManager.Get().RemoveEscapable(Hide);
         }
-
         /// <summary>
         /// Toggle the visibility of the help panel. If the help panel is hidden it will now be shown and vice versa.
         /// </summary>
@@ -36,6 +40,7 @@ namespace _Project.UI.Scripts.Toolbar
                 return;
             }
             Show();
+            OnHelpMenuShown?.Invoke();
         }
     }
 }

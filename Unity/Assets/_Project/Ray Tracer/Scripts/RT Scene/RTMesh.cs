@@ -33,6 +33,13 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
         public event MeshChanged OnMeshChanged;
 
         /// <summary>
+        /// An event invoked whenever a mesh is selected.
+        /// </summary>
+        [Serializable]
+        public class MeshSelected : UnityEvent { }
+        public MeshSelected OnMeshSelected;
+
+        /// <summary>
         /// The underlying <see cref="UnityEngine.Material"/> used by the mesh. Its shader should be either
         /// RayTracerShader or RayTracerShaderTransparent.
         /// </summary>
@@ -268,9 +275,5 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             else
                 Outline.enabled = false; // Outline should be disabled by default.
         }
-
-        [Serializable]
-        public class MeshSelected : UnityEvent { }
-        public MeshSelected OnMeshSelected;
     }
 }
