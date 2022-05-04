@@ -11,7 +11,12 @@ namespace Editor.RT_Light
         {
             //var p = serializedObject.GetIterator();
 
-            DrawPropertiesExcluding(serializedObject, "m_Color");
+            //while (p.Next(true))
+            //{
+            //    Debug.Log(p.name);
+            //}
+
+            //DrawPropertiesExcluding(serializedObject, "e_Color");
         }
     }
 }
