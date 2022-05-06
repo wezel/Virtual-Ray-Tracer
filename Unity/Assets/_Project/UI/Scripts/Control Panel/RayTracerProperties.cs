@@ -121,30 +121,30 @@ namespace _Project.UI.Scripts.Control_Panel
         // TODO code wise. Objects should ideally set there own values on awake and do everything else on start.
         private void Start()
         {
-            renderShadowsEdit.OnValueChanged += (value) => { RTSceneManager.Get().SetShadows(value); };
+            renderShadowsEdit.OnValueChanged.AddListener((value) => { RTSceneManager.Get().SetShadows(value); });
         }
         
         private void Awake()
         {
-            renderShadowsEdit.OnValueChanged += (value) => { rayTracer.RenderShadows = value; };
-            recursionDepthEdit.OnValueChanged += (value) => { rayTracer.MaxDepth = (int)value; };
+            renderShadowsEdit.OnValueChanged.AddListener((value) => { rayTracer.RenderShadows = value; });
+            recursionDepthEdit.OnValueChanged.AddListener((value) => { rayTracer.MaxDepth = (int)value; });
             backgroundColorEdit.OnValueChanged.AddListener((value) => { rayTracer.BackgroundColor = value; });
 
-            hideNoHitRaysEdit.OnValueChanged += (value) => { rayManager.HideNoHitRays = value; };
-            showRaysEdit.OnValueChanged += (value) => { rayManager.ShowRays = value; };
-            hideNegligibleRaysEdit.OnValueChanged += (value) => { rayManager.HideNegligibleRays = value; };
-            rayHideThresholdEdit.OnValueChanged += (value) => { rayManager.RayHideThreshold = value; };
-            rayTransThresholdEdit.OnValueChanged += (value) => { rayManager.RayTransThreshold = value; };
-            rayTransExponentEdit.OnValueChanged += (value) => { rayManager.RayTransExponent = value; };
-            rayRadiusEdit.OnValueChanged += (value) => { rayManager.RayRadius = value; };
+            hideNoHitRaysEdit.OnValueChanged.AddListener( (value) => { rayManager.HideNoHitRays = value; });
+            showRaysEdit.OnValueChanged.AddListener((value) => { rayManager.ShowRays = value; });
+            hideNegligibleRaysEdit.OnValueChanged.AddListener((value) => { rayManager.HideNegligibleRays = value; });
+            rayHideThresholdEdit.OnValueChanged.AddListener((value) => { rayManager.RayHideThreshold = value; });
+            rayTransThresholdEdit.OnValueChanged.AddListener((value) => { rayManager.RayTransThreshold = value; });
+            rayTransExponentEdit.OnValueChanged.AddListener((value) => { rayManager.RayTransExponent = value; });
+            rayRadiusEdit.OnValueChanged.AddListener((value) => { rayManager.RayRadius = value; });
 
-            animateEdit.OnValueChanged += (value) => { rayManager.Animate = value; };
-            animateSequentiallyEdit.OnValueChanged += (value) => { rayManager.AnimateSequentially = value; };
-            loopEdit.OnValueChanged += (value) => { rayManager.Loop = value; };
-            speedEdit.OnValueChanged += (value) => { rayManager.Speed = value; };
+            animateEdit.OnValueChanged.AddListener((value) => { rayManager.Animate = value; });
+            animateSequentiallyEdit.OnValueChanged.AddListener((value) => { rayManager.AnimateSequentially = value; });
+            loopEdit.OnValueChanged.AddListener((value) => { rayManager.Loop = value; });
+            speedEdit.OnValueChanged.AddListener((value) => { rayManager.Speed = value; });
 
-            superSamplingFactorEdit.OnValueChanged += (value) => { rayTracer.SuperSamplingFactor = (int)value; };
-            superSamplingVisualEdit.OnValueChanged += (value) => { rayTracer.SuperSamplingVisual = value; };
+            superSamplingFactorEdit.OnValueChanged.AddListener((value) => { rayTracer.SuperSamplingFactor = (int)value; });
+            superSamplingVisualEdit.OnValueChanged.AddListener((value) => { rayTracer.SuperSamplingVisual = value; });
             renderImageButton.onClick.AddListener(RenderImage);
             openImageButton.onClick.AddListener(ToggleImage);
         }

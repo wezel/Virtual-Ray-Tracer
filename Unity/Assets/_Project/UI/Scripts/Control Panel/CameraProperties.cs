@@ -67,11 +67,11 @@ namespace _Project.UI.Scripts.Control_Panel
             positionEdit.OnValueChanged.AddListener((value) => { camera.Position = value; });
             rotationEdit.OnValueChanged.AddListener((value) => { camera.Rotation = value; });
 
-            fieldOfViewEdit.OnValueChanged += (value) => { camera.FieldOfView = value; };
-            screenWidthEdit.OnValueChanged += (value) => { camera.ScreenWidth = (int)value; };
-            screenHeightEdit.OnValueChanged += (value) => { camera.ScreenHeight = (int)value; };
-            screenDistanceEdit.OnValueChanged += (value) => { camera.ScreenDistance = value; };
-            screenOpacityEdit.OnValueChanged += (value) => { camera.Screen.ImageAlpha = value; };
+            fieldOfViewEdit.OnValueChanged.AddListener((value) => { camera.FieldOfView = value; });
+            screenWidthEdit.OnValueChanged.AddListener((value) => { camera.ScreenWidth = (int)value; });
+            screenHeightEdit.OnValueChanged.AddListener((value) => { camera.ScreenHeight = (int)value; });
+            screenDistanceEdit.OnValueChanged.AddListener((value) => { camera.ScreenDistance = value; });
+            screenOpacityEdit.OnValueChanged.AddListener((value) => { camera.Screen.ImageAlpha = value; });
         }
 
         private void Update()

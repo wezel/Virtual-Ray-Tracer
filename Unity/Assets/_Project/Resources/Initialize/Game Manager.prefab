@@ -52,70 +52,175 @@ MonoBehaviour:
       name: Camera Panning
       description: Pan the camera by moving your mouse while holding down the middle
         mouse button or by using the arrow keys.
+      skippable: 0
     - identifier: cameraOrbit
       name: Camera Orbitting
       description: Orbit the camera by moving your mouse while holding down left-click
         and left control or by using the arrow keys while holding down left control.
+      skippable: 0
     - identifier: cameraZoom
       name: Camera Zooming
       description: Zoom the camera in and out by scrolling your mousewheel.
+      skippable: 0
     - identifier: objectSelect
       name: Object Selection
       description: You can select the camera, lights and objects in the scene by
         left-clicking on them. Select an object in this scene.
+      skippable: 0
     - identifier: hoverColor
       name: Property Information
       description: The object's properties are now shown on the right. Hover over
         the "Color" text to see more information.
+      skippable: 0
     - identifier: editColor
       name: Edit Properties
       description: Change the color of an object in the properties panel.
+      skippable: 0
     - identifier: objectTranslation
       name: Translation
       description: Move an object by moving your mouse while holding down left-click
         on one of the three gizmos (the arrows coming from the object). Notice how
         the position values change while moving the object.
+      skippable: 0
     - identifier: transformationEdit
       name: Transformation Mode
       description: The transformation mode can be changed using the dropdown in the
         top left or by pressing [T]ranslate, [S]cale and [R]otate. Change the current
         transformation mode to Scale.
+      skippable: 0
     - identifier: objectScaling
       name: Scaling
       description: 'Now scale an object using the gizmos. Notice how the scale values
         change while scaling the object. '
+      skippable: 0
     - identifier: objectRotation
       name: Rotation
       description: 'Change the current transformation mode to "rotate" and rotate
         an object using the gizmos. Notice how the rotation values change while rotating
         the object. '
+      skippable: 0
     - identifier: deselect
       name: Deselection
       description: Deselect an object by left-clicking on an empty part of the scene
         or by pressing [ESC].
+      skippable: 0
     - identifier: notDisabledEdit
       name: Ray Tracer Properties
       description: 'When nothing is selected, the general ray tracer properties are
         shown. Almost all options are disabled right now to keep things simple. Click
         on an option that is not disabled (HINT: it''s a button).'
+      skippable: 0
     - identifier: help
       name: Help Menu
       description: All the information from these tasks can also be found in the
         help menu. Access this menu any time by clicking the "Help" button in the
         top left or by pressing [F1].
+      skippable: 0
     - identifier: 
       name: 
       description: 
+      skippable: 1
     - identifier: cameraSelection
       name: Camera
       description: Select the camera.
+      skippable: 0
     - identifier: localSpace
       name: Global vs Local Space
       description: Switch to "Local" space by changing the dropdown in the top left.
+      skippable: 0
     - identifier: cameraTranslation
       name: Global vs Local Space
       description: Switch to "Translate" transformation mode and move the camera
         around. Notice how local space differs from global space.
+      skippable: 0
     - identifier: 
       name: 
       description: 
+      skippable: 0
+  - optionalTasksStart: 11
+    tasks:
+    - identifier: 
+      name: Light in the Real World
+      description: Light emits photons that travel in straight lines until they hit
+        an object. These photons may be absorbed, reflected or pass through an object.
+        Some photons will find its way back to an eye/camera where they are processed
+        into an image.
+      skippable: 1
+    - identifier: 
+      name: Ray Tracing
+      description: In ray tracing, this process is simulated. However, instead of
+        tacing rays (photons) from the light source, the rays are traced backwards
+        from the eye/camera to the light source. This still creates realistic images
+        but is much faster.
+      skippable: 1
+    - identifier: selectPixel
+      name: Example
+      description: In the bottom right a render preview is shown. This render preview
+        shows the ray traced colors of the camera's pixels. Click on one of the pixels
+        in the render preview and notice how the ray is traced from the camera towards
+        the light source.
+      skippable: 0
+    - identifier: deselectPixel
+      name: Deselect Pixel
+      description: If we want to see all rays again, we need to deselect the selected
+        pixel. Click on the selected pixel again to deselect it.
+      skippable: 0
+    - identifier: selectSphere
+      name: Select Sphere
+      description: Now we will try to change the color of the sphere in the render
+        preview. Select the sphere.
+      skippable: 0
+    - identifier: editColor
+      name: Change Color
+      description: Change the color of the sphere and notice how it affects the render
+        preview.
+      skippable: 0
+    - identifier: selectCamera
+      name: Camera Pixels
+      description: The render preview only shows a few pixels right now. We can change
+        this in the camera settings. Select the camera.
+      skippable: 0
+    - identifier: editHorPixels
+      name: Horizonal Camera Pixels
+      description: Change the amount of horizontal pixels and notice how it affects
+        the render preview.
+      skippable: 0
+    - identifier: editVerPixels
+      name: Vertical Camera Pixels
+      description: Change the amount of vertical pixels and notice how it affects
+        the render preview.
+      skippable: 0
+    - identifier: renderImage
+      name: Rendering the Scene
+      description: We can get even more ray traced pixels by rendering the current
+        scene into an image. Go into the ray tracer properties and click the "Render
+        Image" button on the bottom.
+      skippable: 0
+    - identifier: 
+      name: 
+      description: 
+      skippable: 1
+    - identifier: editAnimSpeed
+      name: Animation Speed
+      description: 'The ray tracing animation can also be changed in the ray tracer
+        settings. Change the animation speed. '
+      skippable: 0
+    - identifier: editAnimSeq
+      name: Animate Sequentially
+      description: Check the "Animate Sequentially" checkbox and notice how the rays
+        are now animated one after the other (sequentially).
+      skippable: 0
+    - identifier: editAnimLoop
+      name: Animation Loop
+      description: Currently the animation is looping. Turn this off by unchecking
+        the "Loop Animation" checkbox.
+      skippable: 0
+    - identifier: editAnimRays
+      name: Animate Rays
+      description: We can also turn off all ray animations. Uncheck the "Animate
+        Rays" checkbox.
+      skippable: 0
+    - identifier: 
+      name: 
+      description: 
+      skippable: 0

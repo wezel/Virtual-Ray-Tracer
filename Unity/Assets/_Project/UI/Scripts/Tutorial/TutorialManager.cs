@@ -172,10 +172,12 @@ namespace _Project.UI.Scripts.Tutorial
             taskDescription.text = currentTasks.GetDescription();
             if (taskDescription.text == "") taskDescription.text = currentTasks.IsRequired() ? DEFAULT_REQUIRED_DESC : DEFAULT_OPTIONAL_DESC;
 
+            // Update the next/previous level buttons
             previousLevelButton.interactable = currentScene > 1;
             nextLevelButton.interactable = currentScene < lastScene && currentTasks.RequiredTasksFinished();
 
-            skipButton.gameObject.SetActive(currentTasks.IsLastRequiredTask());
+            // Show/hide skip button
+            skipButton.gameObject.SetActive(currentTasks.IsSkippable());
         }
 
         /// <summary>

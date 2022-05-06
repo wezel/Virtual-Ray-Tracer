@@ -2,6 +2,7 @@ using System;
 using _Project.UI.Scripts.Tooltips;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace _Project.UI.Scripts.Control_Panel
@@ -13,8 +14,9 @@ namespace _Project.UI.Scripts.Control_Panel
     /// </summary>
     public class FloatEdit : MonoBehaviour
     {
-        public delegate void ValueChanged(float value);
-        public event ValueChanged OnValueChanged;
+        [Serializable]
+        public class ValueChanged : UnityEvent<float> { };
+        public ValueChanged OnValueChanged;
 
         [SerializeField]
         private TextMeshProUGUI title;

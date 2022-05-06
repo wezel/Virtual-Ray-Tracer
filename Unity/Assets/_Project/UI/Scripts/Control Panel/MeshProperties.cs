@@ -89,14 +89,14 @@ namespace _Project.UI.Scripts.Control_Panel
             scaleEdit.OnValueChanged.AddListener((value) => { mesh.Scale = value; });
 
             colorEdit.OnValueChanged.AddListener((value) => { mesh.Color = value; });
-            ambientEdit.OnValueChanged += (value) => { mesh.Ambient = value; };
-            diffuseEdit.OnValueChanged += (value) => { mesh.Diffuse = value; };
-            specularEdit.OnValueChanged += (value) => { mesh.Specular = value; };
-            shininessEdit.OnValueChanged += (value) => { mesh.Shininess = value; };
+            ambientEdit.OnValueChanged.AddListener((value) => { mesh.Ambient = value; });
+            diffuseEdit.OnValueChanged.AddListener((value) => { mesh.Diffuse = value; });
+            specularEdit.OnValueChanged.AddListener((value) => { mesh.Specular = value; });
+            shininessEdit.OnValueChanged.AddListener((value) => { mesh.Shininess = value; });
 
             typeDropdown.onValueChanged.AddListener( type => ChangeObjectType( (RTMesh.ObjectType) type));
 
-            refractiveIndexEdit.OnValueChanged += (value) => { mesh.RefractiveIndex = value; };
+            refractiveIndexEdit.OnValueChanged.AddListener((value) => { mesh.RefractiveIndex = value; });
         }
 
         private void Update()

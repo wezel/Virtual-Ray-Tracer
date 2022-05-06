@@ -1,6 +1,8 @@
 using _Project.Ray_Tracer.Scripts;
 using _Project.Ray_Tracer.Scripts.Utility;
+using System;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace _Project.UI.Scripts
@@ -35,6 +37,10 @@ namespace _Project.UI.Scripts
         private Sprite expandedIcon;
         [SerializeField]
         private Sprite collapsedIcon;
+
+        [Serializable]
+        public class Event : UnityEvent { };
+        public Event OnPixelSelected, OnPixelDeselected;
 
         private RectTransform windowSize;
         private bool expanded = false;
@@ -182,6 +188,7 @@ namespace _Project.UI.Scripts
                     {
                         selectImage.enabled = false;
                         rayManager.DeselectRay();
+                        OnPixelDeselected?.Invoke();
                     }
                     // Select the hovered pixel.
                     else
@@ -190,6 +197,7 @@ namespace _Project.UI.Scripts
                         selectImage.rectTransform.anchoredPosition = mouseSnapped;
                         selectImage.enabled = true;
                         rayManager.SelectRay(selectedPixel);
+                        OnPixelSelected?.Invoke();
                     }
                 }
             }

@@ -1,6 +1,8 @@
 using _Project.UI.Scripts.Tooltips;
+using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace _Project.UI.Scripts.Control_Panel
@@ -12,8 +14,12 @@ namespace _Project.UI.Scripts.Control_Panel
     /// </summary>
     public class BoolEdit : MonoBehaviour
     {
-        public delegate void ValueChanged(bool value);
-        public event ValueChanged OnValueChanged;
+        [Serializable]
+        public class ValueChanged : UnityEvent<bool> { };
+        [Serializable]
+        public class Event : UnityEvent { };
+        public ValueChanged OnValueChanged;
+        public Event OnEnabled, OnDisabled;
 
         [SerializeField]
         private TextMeshProUGUI title;
@@ -47,6 +53,10 @@ namespace _Project.UI.Scripts.Control_Panel
 
                 // Notify listeners of the change.
                 OnValueChanged?.Invoke(toggle.isOn);
+                if (isOn)
+                    OnEnabled?.Invoke();
+                else
+                    OnDisabled?.Invoke();
             }
         }
 

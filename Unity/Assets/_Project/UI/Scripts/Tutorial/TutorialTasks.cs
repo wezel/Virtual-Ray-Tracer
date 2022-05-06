@@ -8,6 +8,7 @@ namespace _Project.UI.Scripts.Tutorial
     /// Simple class that describes a tutorial task.
     /// </summary>
     [Serializable]
+    
     public class Task
     {
         /// <summary>
@@ -35,12 +36,25 @@ namespace _Project.UI.Scripts.Tutorial
         /// <summary>
         /// Description of this task that has to be completed by the user.
         /// </summary>
+        [TextArea(10, 20)]
         [SerializeField]
         private string description;
         public string Description
         {
             get { return description; }
             set { description = value; }
+        }
+
+        /// <summary>
+        /// Whether this task is skippable (by pressing a skip button)
+        /// Used for when there is no task involved, just an explanation text
+        /// </summary>
+        [SerializeField]
+        public bool skippable;
+        public bool Skippable
+        {
+            get { return skippable; }
+            set { skippable = value; }
         }
     }
 
@@ -68,9 +82,10 @@ namespace _Project.UI.Scripts.Tutorial
             return index >= optionalTasksStart - 1;
         }
 
-        public bool IsLastRequiredTask()
+        public bool IsSkippable()
         {
-            return index == optionalTasksStart- 1;
+            if (index >= tasks.Count) return false;
+            return tasks[index].Skippable;
         }
 
         public string GetName()

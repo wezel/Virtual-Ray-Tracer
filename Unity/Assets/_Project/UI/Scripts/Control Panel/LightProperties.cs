@@ -53,9 +53,9 @@ namespace _Project.UI.Scripts.Control_Panel
         {
             positionEdit.OnValueChanged.AddListener(value => light.Position = value);
             colorEdit.OnValueChanged.AddListener(value => light.Color = value);
-            ambientEdit.OnValueChanged += (value) => { light.Ambient = value; };
-            diffuseEdit.OnValueChanged += (value) => { light.Diffuse = value; };
-            specularEdit.OnValueChanged += (value) => { light.Specular = value; };
+            ambientEdit.OnValueChanged.AddListener((value) => { light.Ambient = value; });
+            diffuseEdit.OnValueChanged.AddListener((value) => { light.Diffuse = value; });
+            specularEdit.OnValueChanged.AddListener((value) => { light.Specular = value; });
         }
 
         private void Update()
