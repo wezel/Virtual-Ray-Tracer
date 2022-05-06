@@ -151,13 +151,13 @@ MonoBehaviour:
   m_RenderPipelineResources: {fileID: 11400000, guid: 3ce144cff5783da45aa5d4fdc2da14b7, type: 2}
   m_RenderPipelineRayTracingResources: {fileID: 0}
   m_DefaultVolumeProfile: {fileID: 11400000, guid: a4edcdab8a009914f84744b5f3033347, type: 2}
-  m_LensAttenuation: 0
+  m_LensAttenuation: 1
   m_UseRenderGraph: 1
   m_DefaultLookDevProfile: {fileID: 11400000, guid: d643fe69674ae6f41b1ee04ae2e03b7d, type: 2}
   m_RenderingPathDefaultCameraFrameSettings:
     bitDatas:
-      data1: 72198262773251917
-      data2: 13763000468760363032
+      data1: 72197713017306957
+      data2: 13763000468626210840
     lodBias: 1
     lodBiasMode: 0
     lodBiasQualityLevel: 0
@@ -200,14 +200,14 @@ MonoBehaviour:
     supportShadowMask: 1
     supportSSR: 0
     supportSSRTransparent: 0
-    supportSSAO: 1
+    supportSSAO: 0
     supportSSGI: 0
     supportSubsurfaceScattering: 1
     sssSampleBudget:
       m_Values: 140000002800000050000000
       m_SchemaId:
         m_Id: With3Levels
-    supportVolumetrics: 1
+    supportVolumetrics: 0
     supportLightLayers: 0
     lightLayerName0: Light Layer default
     lightLayerName1: Light Layer 1

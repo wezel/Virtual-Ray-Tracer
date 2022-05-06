@@ -6,25 +6,25 @@ using UnityEngine.UIElements;
 
 namespace Editor.RT_Light
 {
-    [CustomEditor(typeof(RTLight))]
-    public class RTLightInspector : UnityEditor.Editor
-    {
+    //[CustomEditor(typeof(RTLight))]
+    //public class RTLightInspector : UnityEditor.Editor
+    //{
         
-        private RTLight rtLight;
-        private Light light;
+    //    private RTLight rtLight;
+    //    private Light light;
         
-        void OnEnable(){
-            rtLight = (RTLight) target;
-            light = rtLight.gameObject.GetComponent<Light>();
-            light.hideFlags = HideFlags.None;
-        }
+    //    void OnEnable(){
+    //        rtLight = (RTLight) target;
+    //        light = rtLight.gameObject.GetComponent<Light>();
+    //        light.hideFlags = HideFlags.None;
+    //    }
 
-        private void OnPreSceneGUI()
-        {
-            rtLight.Color = rtLight.Color;
-            rtLight.Ambient = rtLight.Ambient;
-            rtLight.Diffuse = rtLight.Diffuse;
-            rtLight.Specular = rtLight.Specular;
-        }
-    }
+    //    private void OnPreSceneGUI()
+    //    {
+    //        rtLight.Color = rtLight.Color;
+    //        rtLight.Ambient = rtLight.Ambient;
+    //        rtLight.Diffuse = rtLight.Diffuse;
+    //        rtLight.Specular = rtLight.Specular;
+    //    }
+    //}
 }

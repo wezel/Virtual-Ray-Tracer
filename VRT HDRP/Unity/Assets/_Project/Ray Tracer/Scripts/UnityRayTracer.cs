@@ -5,6 +5,7 @@ using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Camera;
 using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light;
 using _Project.Ray_Tracer.Scripts.Utility;
 using UnityEngine;
+using UnityEngine.Rendering.HighDefinition;
 
 namespace _Project.Ray_Tracer.Scripts
 {
@@ -108,7 +109,9 @@ namespace _Project.Ray_Tracer.Scripts
             set
             {
                 backgroundColor = value;
-                Camera.main.backgroundColor = backgroundColor;
+                //Camera.main.backgroundColor = backgroundColor;
+                Camera.main.GetComponent<HDAdditionalCameraData>().clearColorMode = HDAdditionalCameraData.ClearColorMode.Color;
+                Camera.main.GetComponent<HDAdditionalCameraData>().backgroundColorHDR = backgroundColor;
                 OnRayTracerChanged?.Invoke();
             }
         }

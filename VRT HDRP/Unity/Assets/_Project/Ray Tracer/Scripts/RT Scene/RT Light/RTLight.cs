@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Rendering.HighDefinition;
 
 namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
 {
@@ -38,7 +39,11 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
                 lightData.r = Mathf.Floor(value.r * 256) + value.g / 2;
                 lightData.g = value.b;
                 light.color = lightData;
-                
+                light.GetComponent<HDAdditionalLightData>().EnableColorTemperature(false);
+                Debug.Log(light.GetComponent<HDAdditionalLightData>().color);
+                light.GetComponent<HDAdditionalLightData>().SetColor(Color.white);
+                Debug.Log(light.GetComponent<HDAdditionalLightData>().color);
+
                 OnLightChanged?.Invoke();
             }
         }
