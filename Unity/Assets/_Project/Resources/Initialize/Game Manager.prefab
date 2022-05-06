@@ -224,3 +224,81 @@ MonoBehaviour:
       name: 
       description: 
       skippable: 0
+  - optionalTasksStart: 10
+    tasks:
+    - identifier: 
+      name: Reflections
+      description: Using ray tracing we are also able to implement reflections like
+        in the real world. If we hit an object with reflective properties, we cast
+        a ray (again) in the reflected direction.
+      skippable: 1
+    - identifier: rayLegend
+      name: Ray Color
+      description: Examine the scene and notice how the reflected rays are a darker
+        blue color. The meaning of all ray colors can be found in the help menu.
+        Open this "Ray Legend" in the help menu.
+      skippable: 0
+    - identifier: editDepth
+      name: Recursion Depth
+      description: The "Recursion Depth" setting determines after how many shot rays,
+        we stop shooting new rays and (try to) go to the light source immediately.
+        Change this setting in the ray tracer properties and see what happens to
+        the amount of reflected rays.
+      skippable: 0
+    - identifier: 
+      name: Limitations
+      description: Unfortunately, the mirrors in this scene are incorrectly displayed.
+        This is due to the scene itself not being rendered using ray tracing. Only
+        the render preview and rendered images are ray traced.
+      skippable: 1
+    - identifier: renderImage
+      name: Render Image
+      description: To see what it should like, click on "Render Image" in the ray
+        tracer properties again.
+      skippable: 0
+    - identifier: selectMirror
+      name: Reflective Properties
+      description: As you can see, the wall behind the sphere acts like a "true"
+        mirror. We can change the reflective properties of the wall. Select this
+        wall.
+      skippable: 0
+    - identifier: editSpecular
+      name: Specular
+      description: The specular of this wall is set to 1. This value describes how
+        much of the incoming light is reflected. So, the wall here reflects all the
+        incoming light.  Change the specular and notice how the render preview changes.
+      skippable: 0
+    - identifier: editShininess
+      name: Shininess
+      description: The shininess of this wall is set to 128. This value describes
+        the size/smoothness of the specular highlights. So, the wall here has very
+        small specular highlights. Change the shininess and notice how the specular
+        highlights change in size.
+      skippable: 0
+    - identifier: renderImage
+      name: Render Image
+      description: See what the scene looks now by clicking on the "Render Image"
+        in the ray tracer properties again.
+      skippable: 0
+    - identifier: 
+      name: 
+      description: 
+      skippable: 1
+    - identifier: openImage
+      name: Open Image
+      description: You can open the last rendered image by clicking "Open Image"
+        next to the "Render Image" button. Open the last rendered image.
+      skippable: 0
+    - identifier: editLightColor
+      name: Light Color
+      description: Click on the light and change the light's color property.
+      skippable: 0
+    - identifier: renderImage
+      name: Render Image
+      description: Render the scene again and notice how changing the light's color
+        changes the scene.
+      skippable: 0
+    - identifier: 
+      name: 
+      description: 
+      skippable: 0

@@ -47,6 +47,7 @@ namespace _Project.UI.Scripts.Control_Panel
             get { return isOn; }
             set
             {
+                if (isOn == value) return;
                 isOn = value;
                 
                 toggle.isOn = isOn;

@@ -26,18 +26,33 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
         private static readonly int shininess = Shader.PropertyToID("_Shininess");
         private static readonly int refractiveIndex = Shader.PropertyToID("_RefractiveIndex");
 
-        public delegate void MeshChanged();
+
+        [Serializable]
+        public class MeshChanged : UnityEvent { }
         /// <summary>
         /// An event invoked whenever a property of this mesh is changed.
         /// </summary>
-        public event MeshChanged OnMeshChanged;
+        public MeshChanged OnMeshChanged;
 
         /// <summary>
         /// An event invoked whenever a mesh is selected.
         /// </summary>
-        [Serializable]
-        public class MeshSelected : UnityEvent { }
-        public MeshSelected OnMeshSelected;
+        public MeshChanged OnMeshSelected;
+
+        /// <summary>
+        /// An event invoked whenever the color changes of a mesh.
+        /// </summary>
+        public MeshChanged OnMeshColorChanged;
+
+        /// <summary>
+        /// An event invoked whenever the specular changes of a mesh.
+        /// </summary>
+        public MeshChanged OnSpecularChanged;
+
+        /// <summary>
+        /// An event invoked whenever the shininess changes of a mesh.
+        /// </summary>
+        public MeshChanged OnShininessChanged;
 
         /// <summary>
         /// The underlying <see cref="UnityEngine.Material"/> used by the mesh. Its shader should be either
@@ -97,8 +112,11 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             get => Material.color;
             set
             {
+                if (Material.color == value) return;
+
                 Material.color = value;
                 OnMeshChanged?.Invoke();
+                OnMeshColorChanged?.Invoke();
             }
         }
 
@@ -136,8 +154,11 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             get => Material.GetFloat(specular);
             set
             {
+                if (Material.GetFloat(specular) == value) return;
+
                 Material.SetFloat(specular, value);
                 OnMeshChanged?.Invoke();
+                OnSpecularChanged?.Invoke();
             }
         }
 
@@ -149,8 +170,11 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             get => Material.GetFloat(shininess);
             set
             {
+                if (Material.GetFloat(shininess) == value) return;
+
                 Material.SetFloat(shininess, value);
                 OnMeshChanged?.Invoke();
+                OnShininessChanged?.Invoke();
             }
         }
 
@@ -198,6 +222,8 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
 
         public void ChangeObjectType(ObjectType type)
         {
+            if (Type == type) return;
+
             switch (type)
             {
                 case ObjectType.Transparent:

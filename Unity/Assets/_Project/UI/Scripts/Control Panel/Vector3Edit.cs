@@ -67,6 +67,8 @@ namespace _Project.UI.Scripts.Control_Panel
             get { return value; }
             set
             {
+                if (this.value == value) return;
+
                 // Set the value.
                 this.value = value;
 

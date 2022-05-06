@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
@@ -31,6 +32,8 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
             set
             {
                 value.a = 1;
+                if (color == value) return;
+
                 color = value;
                 label.color = value;
                 
@@ -40,6 +43,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
                 light.color = lightData;
                 
                 OnLightChanged?.Invoke();
+                OnLightColorChanged?.Invoke();
             }
         }
 
@@ -95,12 +99,13 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
                 OnLightChanged?.Invoke();
             }
         }
-        
-        public delegate void LightChanged();
+
+        [Serializable]
+        public class LightChanged : UnityEvent { };
         /// <summary>
-        /// An event invoked whenever a property of this light is changed.
+        /// An event invoked whenever a this light is changed.
         /// </summary>
-        public event LightChanged OnLightChanged;
+        public LightChanged OnLightChanged, OnLightColorChanged;
 
         /// <summary>
         /// The underlying <see cref="UnityEngine.Light"/> used by the light.

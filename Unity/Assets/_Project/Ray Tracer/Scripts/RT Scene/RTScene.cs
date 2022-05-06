@@ -55,11 +55,11 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             
             Lights = lights;
             foreach (var light in lights)
-                light.OnLightChanged += SceneObjectChanged;
+                light.OnLightChanged.AddListener(SceneObjectChanged);
             
             Meshes = meshes;
             foreach (var mesh in meshes)
-                mesh.OnMeshChanged += SceneObjectChanged;
+                mesh.OnMeshChanged.AddListener(SceneObjectChanged);
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
         public void AddLight(RTLight light)
         {
             Lights.Add(light);
-            light.OnLightChanged += SceneObjectChanged;
+            light.OnLightChanged.AddListener(SceneObjectChanged);
             OnSceneChanged?.Invoke();
         }
 
@@ -80,7 +80,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
         public void RemoveLight(RTLight light)
         {
             Lights.Remove(light);
-            light.OnLightChanged -= SceneObjectChanged;
+            light.OnLightChanged.RemoveListener(SceneObjectChanged);
             OnSceneChanged?.Invoke();
         }
 
@@ -91,7 +91,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
         public void AddMesh(RTMesh mesh)
         {
             Meshes.Add(mesh);
-            mesh.OnMeshChanged += SceneObjectChanged;
+            mesh.OnMeshChanged.AddListener(SceneObjectChanged);
             OnSceneChanged?.Invoke();
         }
 
@@ -102,7 +102,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
         public void RemoveMesh(RTMesh mesh)
         {
             Meshes.Remove(mesh);
-            mesh.OnMeshChanged -= SceneObjectChanged;
+            mesh.OnMeshChanged.RemoveListener(SceneObjectChanged);
             OnSceneChanged?.Invoke();
         }
         
@@ -122,7 +122,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             {
                 if (light != null)
                 {
-                    light.OnLightChanged -= SceneObjectChanged;
+                    light.OnLightChanged.RemoveListener(SceneObjectChanged);
                     Object.Destroy(light.gameObject);
                 }
             }
@@ -132,7 +132,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             {
                 if (mesh != null)
                 {
-                    mesh.OnMeshChanged -= SceneObjectChanged;
+                    mesh.OnMeshChanged.RemoveListener(SceneObjectChanged);
                     Object.Destroy(mesh.gameObject);
                 }
             }
