@@ -32,27 +32,12 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
         /// <summary>
         /// An event invoked whenever a property of this mesh is changed.
         /// </summary>
-        public MeshChanged OnMeshChanged;
+        public MeshChanged OnMeshChanged, OnMeshColorChanged, OnAmbientChanged, OnDiffuseChanged, OnSpecularChanged, OnShininessChanged;
 
         /// <summary>
         /// An event invoked whenever a mesh is selected.
         /// </summary>
         public MeshChanged OnMeshSelected;
-
-        /// <summary>
-        /// An event invoked whenever the color changes of a mesh.
-        /// </summary>
-        public MeshChanged OnMeshColorChanged;
-
-        /// <summary>
-        /// An event invoked whenever the specular changes of a mesh.
-        /// </summary>
-        public MeshChanged OnSpecularChanged;
-
-        /// <summary>
-        /// An event invoked whenever the shininess changes of a mesh.
-        /// </summary>
-        public MeshChanged OnShininessChanged;
 
         /// <summary>
         /// The underlying <see cref="UnityEngine.Material"/> used by the mesh. Its shader should be either
@@ -128,8 +113,11 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             get => Material.GetFloat(ambient);
             set
             {
+                if (Material.GetFloat(ambient) == value) return;
+
                 Material.SetFloat(ambient, value);
                 OnMeshChanged?.Invoke();
+                OnAmbientChanged?.Invoke();
             }
         }
 
@@ -141,8 +129,11 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             get => Material.GetFloat(diffuse);
             set
             {
+                if (Material.GetFloat(diffuse) == value) return;
+
                 Material.SetFloat(diffuse, value);
                 OnMeshChanged?.Invoke();
+                OnDiffuseChanged?.Invoke();
             }
         }
 

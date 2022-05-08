@@ -137,7 +137,7 @@ MonoBehaviour:
       name: 
       description: 
       skippable: 0
-  - optionalTasksStart: 11
+  - optionalTasksStart: 12
     tasks:
     - identifier: 
       name: Light in the Real World
@@ -154,7 +154,7 @@ MonoBehaviour:
         but is much faster.
       skippable: 1
     - identifier: selectPixel
-      name: Example
+      name: Select Pixel
       description: In the bottom right a render preview is shown. This render preview
         shows the ray traced colors of the camera's pixels. Click on one of the pixels
         in the render preview and notice how the ray is traced from the camera towards
@@ -166,14 +166,22 @@ MonoBehaviour:
         pixel. Click on the selected pixel again to deselect it.
       skippable: 0
     - identifier: selectSphere
-      name: Select Sphere
-      description: Now we will try to change the color of the sphere in the render
-        preview. Select the sphere.
+      name: Ambient and Diffuse
+      description: In this scene, the colors in the render preview are determined
+        by the ambient and diffuse components of the objects. Select the sphere to
+        see its ambient and diffuse components.
       skippable: 0
-    - identifier: editColor
-      name: Change Color
-      description: Change the color of the sphere and notice how it affects the render
-        preview.
+    - identifier: editAmbient
+      name: Ambient
+      description: The ambient describes the base brightness of the object. This
+        way, it simulates a global ambient light. Change the ambient and notice how
+        it affects the scene and render preview.
+      skippable: 0
+    - identifier: editDiffuse
+      name: Diffuse
+      description: The diffuse describes the brightness of the object in the places
+        where it is lit. Change the diffuse and notice how it is different from the
+        ambient component.
       skippable: 0
     - identifier: selectCamera
       name: Camera Pixels
