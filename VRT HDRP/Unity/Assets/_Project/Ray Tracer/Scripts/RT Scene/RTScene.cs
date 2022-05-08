@@ -84,11 +84,6 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             OnSceneChanged?.Invoke();
         }
 
-        public void GetLight(out Vector3 lightColor)
-        {
-            lightColor = new Vector3(Lights[0].Color.r, Lights[0].Color.g, Lights[0].Color.b);
-        }
-
         /// <summary>
         /// Add a mesh to this scene.
         /// </summary>

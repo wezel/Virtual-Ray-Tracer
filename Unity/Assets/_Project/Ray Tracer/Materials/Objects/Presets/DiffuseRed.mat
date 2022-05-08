@@ -24,9 +24,9 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _Ambient: 0.2
+    - _Ambient: 0
     - _BreakingsIndex: 1.5
-    - _Diffuse: 1
+    - _Diffuse: 0.5
     - _Glossiness: 0.5
     - _Metallic: 0
     - _RefractiveIndex: 0
