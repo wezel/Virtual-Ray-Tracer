@@ -32,7 +32,8 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
         /// <summary>
         /// An event invoked whenever a property of this mesh is changed.
         /// </summary>
-        public MeshChanged OnMeshChanged, OnMeshColorChanged, OnAmbientChanged, OnDiffuseChanged, OnSpecularChanged, OnShininessChanged;
+        public MeshChanged OnMeshChanged, OnMeshColorChanged, OnAmbientChanged, OnDiffuseChanged, 
+            OnSpecularChanged, OnShininessChanged, OnRefractiveIndexChanged, OnMaterialTypeChanged;
 
         /// <summary>
         /// An event invoked whenever a mesh is selected.
@@ -177,8 +178,11 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             get => Material.GetFloat(refractiveIndex);
             set
             {
+                if (Material.GetFloat(refractiveIndex) == value) return;
+
                 Material.SetFloat(refractiveIndex, value);
                 OnMeshChanged?.Invoke();
+                OnRefractiveIndexChanged?.Invoke();
             }
         }
 
@@ -246,6 +250,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
 
             Type = type;
             OnMeshChanged?.Invoke();
+            OnMaterialTypeChanged?.Invoke();
         }
 
         private void Awake()

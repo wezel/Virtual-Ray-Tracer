@@ -243,12 +243,12 @@ MonoBehaviour:
     tasks:
     - identifier: 
       name: Reflections
-      description: Using ray tracing we are also able to implement reflections like
+      description: Using ray tracing we are also able to implement reflections as
         in the real world. If we hit an object with reflective properties, we cast
         a ray (again) in the reflected direction.
       skippable: 1
     - identifier: rayLegend
-      name: Ray Color
+      name: Reflected Ray Color
       description: Examine the scene and notice how the reflected rays are a darker
         blue color. The meaning of all ray colors can be found in the help menu.
         Open this "Ray Legend" in the help menu.
@@ -312,6 +312,57 @@ MonoBehaviour:
       name: Render Image
       description: Render the scene again and notice how changing the light's color
         changes the scene.
+      skippable: 0
+    - identifier: 
+      name: 
+      description: 
+      skippable: 0
+  - optionalTasksStart: 7
+    tasks:
+    - identifier: 
+      name: Refractions
+      description: Using ray tracing we are also able to implement transparency as
+        in the real world. If we hit an object with transparent properties, we cast
+        a ray (again) in the refracted direction.
+      skippable: 1
+    - identifier: 
+      name: Refractions
+      description: The refracted ray continues to go through the transparent object.
+        However, the refractedd ray does not continu in the same direction as the
+        original ray. Instead, it bends a certain amount depending on the refractive
+        index of a material.
+      skippable: 1
+    - identifier: renderImage
+      name: Render Image
+      description: Unfortunately, the transparent objects in this scene are incorrectly
+        displayed as well. To see what it should like, click on "Render Image" in
+        the ray tracer properties.
+      skippable: 0
+    - identifier: editAnimRays
+      name: Refracted Rays
+      description: Examine the scene and notice how the refracted rays are a bright
+        green color. Toggle "Animate Rays" off in the ray tracer properties to see
+        the refracted rays continuously.
+      skippable: 0
+    - identifier: editRefractiveIndex
+      name: Refractive Index
+      description: The sphere in this scene tries to mimic glass with a refractive
+        index of about 1.5. Change the refractive index property of the sphere and
+        notice how the refracted rays bend differently.
+      skippable: 0
+    - identifier: renderImage
+      name: Render Image
+      description: Render the image again to see what it should actually look like.
+      skippable: 0
+    - identifier: 
+      name: 
+      description: 
+      skippable: 1
+    - identifier: editSphereMaterialType
+      name: Material Type
+      description: 'We have now seen opaque, mirror and transparent material types.
+        You can change the material type in the object''s properties. Change the
+        sphere''s material type. '
       skippable: 0
     - identifier: 
       name: 
