@@ -13,39 +13,6 @@ namespace _Project.Ray_Tracer.Scripts
     {
         [Header("Render Settings")]
 
-        [SerializeField, Range(0.00f, 1.00f)]
-        private float rayHideThreshold = 0.02f;
-        /// <summary>
-        /// The draw threshold of the rays this ray manager draws.
-        /// </summary>
-        public float RayHideThreshold
-        {
-            get { return rayHideThreshold; }
-            set { rayHideThreshold = value; }
-        }
-
-        [SerializeField, Range(0.00f, 2.00f)]
-        private float rayTransExponent = 1.00f;
-        /// <summary>
-        /// The transparency threshold of the rays this ray manager draws.
-        /// </summary>
-        public float RayTransExponent
-        {
-            get { return rayTransExponent; }
-            set { rayTransExponent = value; }
-        }
-
-        [SerializeField, Range(0.00f, 1.00f)]
-        private float rayTransThreshold = 0.25f;
-        /// <summary>
-        /// The transparency threshold of the rays this ray manager draws.
-        /// </summary>
-        public float RayTransThreshold
-        {
-            get { return rayTransThreshold; }
-            set { rayTransThreshold = value; }
-        }
-
         [SerializeField, Range(0.0f, 0.1f)]
         private float rayRadius = 0.01f;
         /// <summary>
@@ -84,30 +51,12 @@ namespace _Project.Ray_Tracer.Scripts
         /// </summary>
         public bool ShowRays;
 
-
-        /// <summary>
-        /// Whether this ray manager hides negligible rays it would normally draw. When this is <c>false</c>, no ray
-        /// will be hidden for contributing too little.
-        /// </summary>
-        public bool HideNegligibleRays;
-
-        private const int transparencyRange = 50;
         [SerializeField] private Material noHitMaterial;
         [SerializeField] private Material reflectMaterial;
-        [SerializeField] private Material reflectMaterialTransparent;
-        private Material[] reflectMaterialTransparentArray = new Material[transparencyRange];
         [SerializeField] private Material refractMaterial;
-        [SerializeField] private Material refractMaterialTransparent;
-        private Material[] refractMaterialTransparentArray = new Material[transparencyRange];
         [SerializeField] private Material normalMaterial;
-        [SerializeField] private Material normalMaterialTransparent;
-        private Material[] normalMaterialTransparentArray = new Material[transparencyRange];
         [SerializeField] private Material shadowMaterial;
-        [SerializeField] private Material shadowMaterialTransparent;
-        private Material[] shadowMaterialTransparentArray = new Material[transparencyRange];
         [SerializeField] private Material lightMaterial;
-        [SerializeField] private Material lightMaterialTransparent;
-        private Material[] lightMaterialTransparentArray = new Material[transparencyRange];
         [SerializeField] private Material errorMaterial;
 
         [Header("Animation Settings")]
@@ -247,27 +196,6 @@ namespace _Project.Ray_Tracer.Scripts
                     return errorMaterial;
             }
         }
-        public Material GetRayTypeMaterialTransparent(RTRay.RayType type, float transparency)
-        {
-            switch (type)
-            {
-                case RTRay.RayType.NoHit:
-                    return noHitMaterial;
-                case RTRay.RayType.Reflect:
-                    return reflectMaterialTransparentArray[Mathf.FloorToInt(transparency * transparencyRange)];
-                case RTRay.RayType.Refract:
-                    return refractMaterialTransparentArray[Mathf.FloorToInt(transparency * transparencyRange)];
-                case RTRay.RayType.Normal:
-                    return normalMaterialTransparentArray[Mathf.FloorToInt(transparency * transparencyRange)];
-                case RTRay.RayType.Shadow:
-                    return shadowMaterialTransparentArray[Mathf.FloorToInt(transparency * transparencyRange)];
-                case RTRay.RayType.Light:
-                    return lightMaterialTransparentArray[Mathf.FloorToInt(transparency * transparencyRange)];
-                default:
-                    Debug.LogError("Unrecognized ray type " + type + "!");
-                    return errorMaterial;
-            }
-        }
 
         public void SelectRay(Vector2Int rayCoordinates)
         {
@@ -290,12 +218,6 @@ namespace _Project.Ray_Tracer.Scripts
         private void Start()
         {
             rays = new List<TreeNode<RTRay>>();
-            // Generate range of transparent materials
-            MakeTransparentMaterials(ref reflectMaterialTransparent, ref reflectMaterialTransparentArray);
-            MakeTransparentMaterials(ref refractMaterialTransparent, ref refractMaterialTransparentArray);
-            MakeTransparentMaterials(ref normalMaterialTransparent, ref normalMaterialTransparentArray);
-            MakeTransparentMaterials(ref shadowMaterialTransparent, ref shadowMaterialTransparentArray);
-            MakeTransparentMaterials(ref lightMaterialTransparent, ref lightMaterialTransparentArray);
 
             rayObjectPool = new RayObjectPool(rayPrefab, initialRayPoolSize, transform);
             Reset = true;
@@ -305,18 +227,6 @@ namespace _Project.Ray_Tracer.Scripts
 
             rtSceneManager.Scene.OnSceneChanged += () => { shouldUpdateRays = true; };
             rayTracer.OnRayTracerChanged += () => { shouldUpdateRays = true; };
-        }
-
-        //[SerializeField] private Material lightMaterialTransparent;
-        //private Material[] lightMaterialTransparentArray = new Material[transparencyRange];
-
-        private void MakeTransparentMaterials(ref Material baseMaterial, ref Material[] arrayMaterial)
-        {
-            for (int i = 0; i < transparencyRange; i++)
-            {
-                arrayMaterial[i] = new Material(baseMaterial);
-                arrayMaterial[i].SetFloat("_Ambient", (i + 1) * (1.0f / transparencyRange));
-            }
         }
 
         private void FixedUpdate()
@@ -376,8 +286,7 @@ namespace _Project.Ray_Tracer.Scripts
 
         private void DrawRayTree(TreeNode<RTRay> rayTree)
         {
-            if ((HideNoHitRays && rayTree.Data.Type == RTRay.RayType.NoHit) ||
-                (HideNegligibleRays && rayTree.Data.Contribution < rayHideThreshold))
+            if (HideNoHitRays && rayTree.Data.Type == RTRay.RayType.NoHit)
                 return;
 
             RayObject rayObject = rayObjectPool.GetRayObject();
@@ -450,8 +359,7 @@ namespace _Project.Ray_Tracer.Scripts
 
         private bool DrawRayTreeAnimated(TreeNode<RTRay> rayTree, float distance)
         {
-            if ((HideNoHitRays && rayTree.Data.Type == RTRay.RayType.NoHit) ||
-                (HideNegligibleRays && rayTree.Data.Contribution < rayHideThreshold))
+            if (HideNoHitRays && rayTree.Data.Type == RTRay.RayType.NoHit)
                 return true;
 
             RayObject rayObject = rayObjectPool.GetRayObject();

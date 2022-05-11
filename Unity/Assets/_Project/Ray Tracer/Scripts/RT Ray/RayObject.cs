@@ -12,8 +12,8 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
         /// <summary>
         /// The <see cref="RTRay"/> produced by the ray tracer that this ray object represents.
         /// </summary>
-        public RTRay Ray 
-        { 
+        public RTRay Ray
+        {
             get { return ray; }
             set { ray = value; Reset(); }
         }
@@ -60,16 +60,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
             rayRenderer.Origin = Ray.Origin;
             rayRenderer.Direction = Ray.Direction;
             rayRenderer.Length = 0.0f;
-
-            if (Ray.Contribution < rayManager.RayTransThreshold)
-            {
-                rayRenderer.Material = rayManager.GetRayTypeMaterialTransparent(Ray.Type, 
-                    Mathf.Pow(Ray.Contribution, rayManager.RayTransExponent));
-            }
-            else
-            {
-                rayRenderer.Material = rayManager.GetRayTypeMaterial(Ray.Type);
-            }
+            rayRenderer.Material = rayManager.GetRayTypeMaterial(Ray.Type);
         }
 
         private void DetermineDrawLength()

@@ -29,14 +29,6 @@ namespace _Project.UI.Scripts.Control_Panel
         [SerializeField]
         private BoolEdit showRaysEdit;
         [SerializeField]
-        private BoolEdit hideNegligibleRaysEdit;
-        [SerializeField]
-        private FloatEdit rayHideThresholdEdit;
-        [SerializeField]
-        private FloatEdit rayTransThresholdEdit;
-        [SerializeField]
-        private FloatEdit rayTransExponentEdit;
-        [SerializeField]
         private FloatEdit rayRadiusEdit;
 
         [SerializeField]
@@ -50,8 +42,6 @@ namespace _Project.UI.Scripts.Control_Panel
 
         [SerializeField]
         private FloatEdit superSamplingFactorEdit;
-        [SerializeField]
-        private BoolEdit superSamplingVisualEdit;
         [SerializeField]
         private Button renderImageButton;
         [SerializeField]
@@ -74,10 +64,6 @@ namespace _Project.UI.Scripts.Control_Panel
 
             hideNoHitRaysEdit.IsOn = rayManager.HideNoHitRays;
             showRaysEdit.IsOn = rayManager.ShowRays;
-            hideNegligibleRaysEdit.IsOn = rayManager.HideNegligibleRays;
-            rayHideThresholdEdit.Value = rayManager.RayHideThreshold;
-            rayTransThresholdEdit.Value = rayManager.RayTransThreshold;
-            rayTransExponentEdit.Value = rayManager.RayTransExponent;
             rayRadiusEdit.Value = rayManager.RayRadius;
 
             animateEdit.IsOn = rayManager.Animate;
@@ -86,7 +72,6 @@ namespace _Project.UI.Scripts.Control_Panel
             speedEdit.Value = rayManager.Speed;
 
             superSamplingFactorEdit.Value = rayTracer.SuperSamplingFactor;
-            superSamplingVisualEdit.IsOn = rayTracer.SuperSamplingVisual;
         }
 
         /// <summary>
@@ -132,10 +117,6 @@ namespace _Project.UI.Scripts.Control_Panel
 
             hideNoHitRaysEdit.OnValueChanged.AddListener( (value) => { rayManager.HideNoHitRays = value; });
             showRaysEdit.OnValueChanged.AddListener((value) => { rayManager.ShowRays = value; });
-            hideNegligibleRaysEdit.OnValueChanged.AddListener((value) => { rayManager.HideNegligibleRays = value; });
-            rayHideThresholdEdit.OnValueChanged.AddListener((value) => { rayManager.RayHideThreshold = value; });
-            rayTransThresholdEdit.OnValueChanged.AddListener((value) => { rayManager.RayTransThreshold = value; });
-            rayTransExponentEdit.OnValueChanged.AddListener((value) => { rayManager.RayTransExponent = value; });
             rayRadiusEdit.OnValueChanged.AddListener((value) => { rayManager.RayRadius = value; });
 
             animateEdit.OnValueChanged.AddListener((value) => { rayManager.Animate = value; });
@@ -144,7 +125,6 @@ namespace _Project.UI.Scripts.Control_Panel
             speedEdit.OnValueChanged.AddListener((value) => { rayManager.Speed = value; });
 
             superSamplingFactorEdit.OnValueChanged.AddListener((value) => { rayTracer.SuperSamplingFactor = (int)value; });
-            superSamplingVisualEdit.OnValueChanged.AddListener((value) => { rayTracer.SuperSamplingVisual = value; });
             renderImageButton.onClick.AddListener(RenderImage);
             openImageButton.onClick.AddListener(ToggleImage);
         }
