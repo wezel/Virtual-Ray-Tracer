@@ -1893,7 +1893,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8882536383311718140, guid: 6b89fca95de018940b539a1addb8405e, type: 3}
       propertyPath: m_Value
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6b89fca95de018940b539a1addb8405e, type: 3}
@@ -2392,6 +2392,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8496189227971302856, guid: 36c3d85e447cd4f4f81bb48bc8a9229e, type: 3}
+      propertyPath: nextLevelButtonMainMenu
+      value: 
+      objectReference: {fileID: 7540082232802035033}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 36c3d85e447cd4f4f81bb48bc8a9229e, type: 3}
 --- !u!224 &8984676670074455421 stripped
@@ -3690,6 +3694,22 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6f293205685a9953aa64480509900909, type: 3}
+--- !u!224 &8032761699754625214 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 1437191304297973281, guid: 6f293205685a9953aa64480509900909, type: 3}
+  m_PrefabInstance: {fileID: 8974539175353831071}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7540082232802035033 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1452471369184611270, guid: 6f293205685a9953aa64480509900909, type: 3}
+  m_PrefabInstance: {fileID: 8974539175353831071}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &6410858498583578752 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2628982888818050591, guid: 6f293205685a9953aa64480509900909, type: 3}
@@ -3701,8 +3721,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 819b1243bf87482e8ae28c9d2a0c1ddd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!224 &8032761699754625214 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 1437191304297973281, guid: 6f293205685a9953aa64480509900909, type: 3}
-  m_PrefabInstance: {fileID: 8974539175353831071}
-  m_PrefabAsset: {fileID: 0}

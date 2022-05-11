@@ -24,6 +24,8 @@ namespace _Project.UI.Scripts.Tutorial
         [SerializeField]
         private Button nextLevelButton;
         [SerializeField]
+        private Button nextLevelButtonMainMenu;
+        [SerializeField]
         private Button previousLevelButton;
 
         [SerializeField]
@@ -175,6 +177,7 @@ namespace _Project.UI.Scripts.Tutorial
             // Update the next/previous level buttons
             previousLevelButton.interactable = currentScene > 1;
             nextLevelButton.interactable = currentScene < lastScene && currentTasks.RequiredTasksFinished();
+            nextLevelButtonMainMenu.interactable = nextLevelButton.interactable;
 
             // Show/hide skip button
             skipButton.gameObject.SetActive(currentTasks.IsSkippable());
