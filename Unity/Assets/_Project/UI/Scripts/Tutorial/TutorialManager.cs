@@ -169,10 +169,11 @@ namespace _Project.UI.Scripts.Tutorial
             fillRect.sizeDelta = new Vector2(maxWidth * currentTasks.GetPercentage(), fillRect.sizeDelta.y);
 
             // Set the name and description
-            taskName.text = currentScene + ". " + currentTasks.GetName();
-            if (taskName.text == "") taskName.text = (currentTasks.IsRequired() ? DEFAULT_REQUIRED_NAME : DEFAULT_OPTIONAL_NAME) + currentScene + "/" + lastScene + "!";
-            taskDescription.text = currentTasks.GetDescription();
-            if (taskDescription.text == "") taskDescription.text = currentTasks.IsRequired() ? DEFAULT_REQUIRED_DESC : DEFAULT_OPTIONAL_DESC;
+            if (currentTasks.GetName() == "") taskName.text = (currentTasks.IsRequired() ? DEFAULT_REQUIRED_NAME : DEFAULT_OPTIONAL_NAME) + currentScene + "/" + lastScene + "!";
+            else taskName.text = currentScene + ". " + currentTasks.GetName();
+
+            if (currentTasks.GetDescription() == "") taskDescription.text = currentTasks.IsRequired() ? DEFAULT_REQUIRED_DESC : DEFAULT_OPTIONAL_DESC;
+            else taskDescription.text = currentTasks.GetDescription();
 
             // Update the next/previous level buttons
             previousLevelButton.interactable = currentScene > 1;
