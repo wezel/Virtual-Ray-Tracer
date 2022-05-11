@@ -13,8 +13,8 @@ namespace _Project.UI.Scripts.Tutorial
     public class TutorialManager : MonoBehaviour
     {
         private static TutorialManager instance;
-        private const string DEFAULT_REQUIRED_NAME = "All required tasks completed!";
-        private const string DEFAULT_OPTIONAL_NAME = "All optional tasks completed!";
+        private const string DEFAULT_REQUIRED_NAME = "You have completed all required tasks for level ";
+        private const string DEFAULT_OPTIONAL_NAME = "You have completed all optional tasks for level ";
         private const string DEFAULT_REQUIRED_DESC = "You may press \"Next Level\" now to move onto the next level or click the button below to continue with additional tasks.";
         private const string DEFAULT_OPTIONAL_DESC = "You may press \"Next Level\" now to move onto the next level or do some more exploring.";
 
@@ -169,8 +169,8 @@ namespace _Project.UI.Scripts.Tutorial
             fillRect.sizeDelta = new Vector2(maxWidth * currentTasks.GetPercentage(), fillRect.sizeDelta.y);
 
             // Set the name and description
-            taskName.text = currentTasks.GetName();
-            if (taskName.text == "") taskName.text = currentTasks.IsRequired() ? DEFAULT_REQUIRED_NAME : DEFAULT_OPTIONAL_NAME;
+            taskName.text = currentScene + ". " + currentTasks.GetName();
+            if (taskName.text == "") taskName.text = (currentTasks.IsRequired() ? DEFAULT_REQUIRED_NAME : DEFAULT_OPTIONAL_NAME) + currentScene + "/" + lastScene + "!";
             taskDescription.text = currentTasks.GetDescription();
             if (taskDescription.text == "") taskDescription.text = currentTasks.IsRequired() ? DEFAULT_REQUIRED_DESC : DEFAULT_OPTIONAL_DESC;
 

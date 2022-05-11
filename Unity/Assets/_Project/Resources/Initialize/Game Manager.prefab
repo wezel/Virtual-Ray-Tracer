@@ -46,8 +46,21 @@ MonoBehaviour:
   FPSEnabled: 0
   Unlimited: 0
   TutorialTasks:
-  - optionalTasksStart: 14
+  - optionalTasksStart: 15
     tasks:
+    - identifier: 
+      name: Introduction
+      description: Welcome to the Virtual Ray Tracer! These tutorial tasks will guide
+        you through the program. We'll first start by going over the controls and
+        the various options. Press the button next to this text to continue to the
+        next task.
+      skippable: 1
+    - identifier: help
+      name: Help Menu
+      description: All the information from these tasks can also be found in the
+        help menu. Access this menu any time by clicking the "Help" button in the
+        top left or by pressing [F1].
+      skippable: 0
     - identifier: cameraPan
       name: Camera Panning
       description: Pan the camera by moving your mouse while holding down the middle
@@ -65,7 +78,7 @@ MonoBehaviour:
     - identifier: objectSelect
       name: Object Selection
       description: You can select the camera, lights and objects in the scene by
-        left-clicking on them. Select an object in this scene.
+        left-clicking on them. Select the ground, wall or sphere in this scene.
       skippable: 0
     - identifier: hoverColor
       name: Property Information
@@ -109,12 +122,6 @@ MonoBehaviour:
       description: 'When nothing is selected, the general ray tracer properties are
         shown. Almost all options are disabled right now to keep things simple. Click
         on an option that is not disabled (HINT: it''s a button).'
-      skippable: 0
-    - identifier: help
-      name: Help Menu
-      description: All the information from these tasks can also be found in the
-        help menu. Access this menu any time by clicking the "Help" button in the
-        top left or by pressing [F1].
       skippable: 0
     - identifier: 
       name: 
@@ -166,22 +173,22 @@ MonoBehaviour:
         pixel. Click on the selected pixel again to deselect it.
       skippable: 0
     - identifier: selectSphere
-      name: Ambient and Diffuse
+      name: Ambient and Diffuse Components
       description: In this scene, the colors in the render preview are determined
         by the ambient and diffuse components of the objects. Select the sphere to
         see its ambient and diffuse components.
       skippable: 0
     - identifier: editAmbient
-      name: Ambient
-      description: The ambient describes the base brightness of the object. This
-        way, it simulates a global ambient light. Change the ambient and notice how
-        it affects the scene and render preview.
+      name: Ambient Component
+      description: The ambient component describes the base brightness of the object.
+        This way, it simulates a global ambient light. Change the ambient component
+        and notice how it affects the scene and render preview.
       skippable: 0
     - identifier: editDiffuse
-      name: Diffuse
-      description: The diffuse describes the brightness of the object in the places
-        where it is lit. Change the diffuse and notice how it is different from the
-        ambient component.
+      name: Diffuse Component
+      description: The diffuse component describes the brightness of the object in
+        the places where it is lit. Change the diffuse component and notice how it
+        is different from the ambient component.
       skippable: 0
     - identifier: selectCamera
       name: Camera Pixels
@@ -190,12 +197,12 @@ MonoBehaviour:
       skippable: 0
     - identifier: editHorPixels
       name: Horizonal Camera Pixels
-      description: Change the amount of horizontal pixels and notice how it affects
+      description: Change the number of horizontal pixels and notice how it affects
         the render preview.
       skippable: 0
     - identifier: editVerPixels
       name: Vertical Camera Pixels
-      description: Change the amount of vertical pixels and notice how it affects
+      description: Change the number of vertical pixels and notice how it affects
         the render preview.
       skippable: 0
     - identifier: renderImage
