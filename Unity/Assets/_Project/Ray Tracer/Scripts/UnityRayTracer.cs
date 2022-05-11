@@ -360,8 +360,12 @@ namespace _Project.Ray_Tracer.Scripts
                 color += child.Data.Color;
 
             // Calculate contribution to the parent.
+            float colorrgb = color.r + color.b + color.g;
             foreach (var child in rayTree.Children)
-                child.Data.Contribution = child.Data.Color.grayscale / color.grayscale;
+                if (colorrgb > 0.0f)    // prevent division by zero
+                    child.Data.Contribution = (child.Data.Color.r+child.Data.Color.g+child.Data.Color.b) / colorrgb;
+                else
+                    child.Data.Contribution = 0.0f;
 
             rayTree.Data = new RTRay(origin, direction, hit.distance, ClampColor(color), type);
             return rayTree;

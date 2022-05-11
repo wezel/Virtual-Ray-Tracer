@@ -24,6 +24,17 @@ namespace _Project.Ray_Tracer.Scripts
             set { rayHideThreshold = value; }
         }
 
+        [SerializeField]
+        private bool rayTransparencyEnabled = true;
+        /// <summary>
+        /// Whether this ray manager makes rays transparent when it draws.
+        /// </summary>
+        public bool RayTransparencyEnabled
+        {
+            get { return rayTransparencyEnabled; }
+            set { rayTransparencyEnabled = value; }
+        }
+
         [SerializeField, Range(0.00f, 2.00f)]
         private float rayTransExponent = 1.00f;
         /// <summary>
@@ -46,7 +57,18 @@ namespace _Project.Ray_Tracer.Scripts
             set { rayTransThreshold = value; }
         }
 
-        [SerializeField, Range(0.0f, 0.1f)]
+        [SerializeField]
+        private bool rayDynamicRadiusEnabled = true;
+        /// <summary>
+        /// Whether this ray manager's rays' radius is contribution-based.
+        /// </summary>
+        public bool RayDynamicRadiusEnabled
+        {
+            get { return rayDynamicRadiusEnabled; }
+            set { rayDynamicRadiusEnabled = value; }
+        }
+
+        [SerializeField, Range(0.005f, 0.1f)]
         private float rayRadius = 0.01f;
         /// <summary>
         /// The radius of the rays this ray manager draws.
@@ -55,6 +77,28 @@ namespace _Project.Ray_Tracer.Scripts
         {
             get { return rayRadius; }
             set { rayRadius = value; }
+        }
+
+        [SerializeField, Range(0.003f, 0.1f)]
+        private float rayMinRadius = 0.003f;
+        /// <summary>
+        /// The minimum radius of the rays this ray manager draws.
+        /// </summary>
+        public float RayMinRadius
+        {
+            get { return rayMinRadius; }
+            set { rayMinRadius = value; }
+        }
+
+        [SerializeField, Range(0.003f, 0.1f)]
+        private float rayMaxRadius = 0.025f;
+        /// <summary>
+        /// The maximum radius of the rays this ray manager draws.
+        /// </summary>
+        public float RayMaxRadius
+        {
+            get { return rayMaxRadius; }
+            set { rayMaxRadius = value; }
         }
 
         [SerializeField, Range(0.0f, 25.0f)]
@@ -254,15 +298,15 @@ namespace _Project.Ray_Tracer.Scripts
                 case RTRay.RayType.NoHit:
                     return noHitMaterial;
                 case RTRay.RayType.Reflect:
-                    return reflectMaterialTransparentArray[Mathf.FloorToInt(transparency * transparencyRange)];
+                    return reflectMaterialTransparentArray[Mathf.FloorToInt(transparency * (transparencyRange - 1))];
                 case RTRay.RayType.Refract:
-                    return refractMaterialTransparentArray[Mathf.FloorToInt(transparency * transparencyRange)];
+                    return refractMaterialTransparentArray[Mathf.FloorToInt(transparency * (transparencyRange - 1))];
                 case RTRay.RayType.Normal:
-                    return normalMaterialTransparentArray[Mathf.FloorToInt(transparency * transparencyRange)];
+                    return normalMaterialTransparentArray[Mathf.FloorToInt(transparency * (transparencyRange - 1))];
                 case RTRay.RayType.Shadow:
-                    return shadowMaterialTransparentArray[Mathf.FloorToInt(transparency * transparencyRange)];
+                    return shadowMaterialTransparentArray[Mathf.FloorToInt(transparency * (transparencyRange - 1))];
                 case RTRay.RayType.Light:
-                    return lightMaterialTransparentArray[Mathf.FloorToInt(transparency * transparencyRange)];
+                    return lightMaterialTransparentArray[Mathf.FloorToInt(transparency * (transparencyRange - 1))];
                 default:
                     Debug.LogError("Unrecognized ray type " + type + "!");
                     return errorMaterial;
@@ -353,6 +397,19 @@ namespace _Project.Ray_Tracer.Scripts
         }
 
         /// <summary>
+        /// Returns the radius of the ray.
+        /// </summary>
+        /// <param name="rayTree">ray to get radius from</param>
+        /// <returns></returns>
+        private float GetRayRadius(TreeNode<RTRay> rayTree)
+        {
+            if (rayDynamicRadiusEnabled)
+                return rayMinRadius + rayTree.Data.Contribution * (rayMaxRadius - rayMinRadius);
+            else
+                return rayRadius;
+        }
+
+        /// <summary>
         /// Draw <see cref="rays"/> in full.
         /// </summary>
         private void DrawRays()
@@ -363,13 +420,15 @@ namespace _Project.Ray_Tracer.Scripts
             // If we have selected a ray we only draw its ray tree.
             if (hasSelectedRay)
             {
-                DrawRayTree(selectedRay);
+                foreach (var ray in selectedRay.Children) // Skip the zero-length base-ray 
+                    DrawRayTree(ray);
             }
             // Otherwise we draw all ray trees.
             else
             {
                 foreach (var rayTree in rays)
-                    DrawRayTree(rayTree);
+                    foreach (var ray in rayTree.Children) // Skip the zero-length base-ray 
+                        DrawRayTree(ray);
             }
 
         }
@@ -377,12 +436,12 @@ namespace _Project.Ray_Tracer.Scripts
         private void DrawRayTree(TreeNode<RTRay> rayTree)
         {
             if ((HideNoHitRays && rayTree.Data.Type == RTRay.RayType.NoHit) ||
-                (HideNegligibleRays && rayTree.Data.Contribution < rayHideThreshold))
+                (HideNegligibleRays && rayTree.Data.Contribution <= rayHideThreshold))
                 return;
 
             RayObject rayObject = rayObjectPool.GetRayObject();
             rayObject.Ray = rayTree.Data;
-            rayObject.Draw(RayRadius);
+            rayObject.Draw(GetRayRadius(rayTree));
 
             if (!rayTree.IsLeaf())
             {
@@ -456,8 +515,8 @@ namespace _Project.Ray_Tracer.Scripts
 
             RayObject rayObject = rayObjectPool.GetRayObject();
             rayObject.Ray = rayTree.Data;
-            rayObject.Draw(RayRadius, distance);
-            
+            rayObject.Draw(GetRayRadius(rayTree), distance);
+
             float leftover = distance - rayObject.DrawLength;
 
             // If this ray is not at its full length we are not done animating.

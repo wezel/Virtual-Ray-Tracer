@@ -44,9 +44,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rayHideThreshold: 0.02
+  rayTransparencyEnabled: 1
   rayTransExponent: 1
   rayTransThreshold: 0.25
+  rayDynamicRadiusEnabled: 1
   rayRadius: 0.01
+  rayMinRadius: 0.003
+  rayMaxRadius: 0.025
   infiniteRayDrawLength: 10
   rayPrefab: {fileID: 3475852730852656632, guid: c002e298918eb804994048849f871225, type: 3}
   HideNoHitRays: 0

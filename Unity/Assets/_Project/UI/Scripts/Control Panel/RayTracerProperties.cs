@@ -25,19 +25,27 @@ namespace _Project.UI.Scripts.Control_Panel
         private ColorEdit backgroundColorEdit;
 
         [SerializeField]
-        private BoolEdit hideNoHitRaysEdit;
-        [SerializeField]
         private BoolEdit showRaysEdit;
+        [SerializeField]
+        private BoolEdit hideNoHitRaysEdit;
         [SerializeField]
         private BoolEdit hideNegligibleRaysEdit;
         [SerializeField]
         private FloatEdit rayHideThresholdEdit;
+        [SerializeField]
+        private BoolEdit rayTransparencyEnabled;
+        [SerializeField]
+        private BoolEdit rayDynamicRadiusEnabled;
         [SerializeField]
         private FloatEdit rayTransThresholdEdit;
         [SerializeField]
         private FloatEdit rayTransExponentEdit;
         [SerializeField]
         private FloatEdit rayRadiusEdit;
+        [SerializeField]
+        private FloatEdit rayMinRadiusEdit;
+        [SerializeField]
+        private FloatEdit rayMaxRadiusEdit;
 
         [SerializeField]
         private BoolEdit animateEdit;
@@ -72,13 +80,17 @@ namespace _Project.UI.Scripts.Control_Panel
             recursionDepthEdit.Value = rayTracer.MaxDepth;
             backgroundColorEdit.Color = rayTracer.BackgroundColor;
 
-            hideNoHitRaysEdit.IsOn = rayManager.HideNoHitRays;
             showRaysEdit.IsOn = rayManager.ShowRays;
+            hideNoHitRaysEdit.IsOn = rayManager.HideNoHitRays;
             hideNegligibleRaysEdit.IsOn = rayManager.HideNegligibleRays;
             rayHideThresholdEdit.Value = rayManager.RayHideThreshold;
+            rayTransparencyEnabled.IsOn = rayManager.RayTransparencyEnabled;
+            rayDynamicRadiusEnabled.IsOn = rayManager.RayDynamicRadiusEnabled;
             rayTransThresholdEdit.Value = rayManager.RayTransThreshold;
             rayTransExponentEdit.Value = rayManager.RayTransExponent;
             rayRadiusEdit.Value = rayManager.RayRadius;
+            rayMinRadiusEdit.Value = rayManager.RayMinRadius;
+            rayMaxRadiusEdit.Value = rayManager.RayMaxRadius;
 
             animateEdit.IsOn = rayManager.Animate;
             animateSequentiallyEdit.IsOn = rayManager.AnimateSequentially;
@@ -134,9 +146,13 @@ namespace _Project.UI.Scripts.Control_Panel
             showRaysEdit.OnValueChanged += (value) => { rayManager.ShowRays = value; };
             hideNegligibleRaysEdit.OnValueChanged += (value) => { rayManager.HideNegligibleRays = value; };
             rayHideThresholdEdit.OnValueChanged += (value) => { rayManager.RayHideThreshold = value; };
+            rayTransparencyEnabled.OnValueChanged += (value) => { rayManager.RayTransparencyEnabled = value; };
+            rayDynamicRadiusEnabled.OnValueChanged += (value) => { rayManager.RayDynamicRadiusEnabled = value; };
             rayTransThresholdEdit.OnValueChanged += (value) => { rayManager.RayTransThreshold = value; };
             rayTransExponentEdit.OnValueChanged += (value) => { rayManager.RayTransExponent = value; };
             rayRadiusEdit.OnValueChanged += (value) => { rayManager.RayRadius = value; };
+            rayMinRadiusEdit.OnValueChanged += (value) => { rayManager.RayMinRadius = value; };
+            rayMaxRadiusEdit.OnValueChanged += (value) => { rayManager.RayMaxRadius = value; };
 
             animateEdit.OnValueChanged += (value) => { rayManager.Animate = value; };
             animateSequentiallyEdit.OnValueChanged += (value) => { rayManager.AnimateSequentially = value; };

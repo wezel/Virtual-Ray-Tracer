@@ -61,7 +61,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
             rayRenderer.Direction = Ray.Direction;
             rayRenderer.Length = 0.0f;
 
-            if (Ray.Contribution < rayManager.RayTransThreshold)
+            if (rayManager.RayTransparencyEnabled && Ray.Contribution <= rayManager.RayTransThreshold)
             {
                 rayRenderer.Material = rayManager.GetRayTypeMaterialTransparent(Ray.Type, 
                     Mathf.Pow(Ray.Contribution, rayManager.RayTransExponent));

@@ -83,7 +83,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
             Length = length;
             Color = color;
             Type = type;
-            Contribution = type == RayType.NoHit ? 0.0f : 1.0f;
+            Contribution = type == RayType.NoHit || type == RayType.Shadow ? 0.0f : 1.0f;
         }
 
         /// <summary>
