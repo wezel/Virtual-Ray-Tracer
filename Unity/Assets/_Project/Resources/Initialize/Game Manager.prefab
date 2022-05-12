@@ -452,34 +452,24 @@ MonoBehaviour:
       description: You may press "Next Level" now to move onto the next level or
         do some more exploring.
       skippable: 0
-  - optionalTasksStart: 6
+  - optionalTasksStart: 4
     tasks:
     - identifier: 
-      name: Everything Put Together
-      description: This scene contains all principles combined. It contains a mirror,
-        a transparent object and various shapes. It also contains a sphere that causes
-        some interesting interactions with the rays.
+      name: Freedom
+      description: You have reached the final level! This is a sandbox level which
+        means all tools are available to create a customized scene yourself.
       skippable: 1
-    - identifier: selectSphere
-      name: Spot The Sphere
-      description: 'Can you spot the sphere? Find the sphere and select it (HINT:
-        zoom all the way out). '
+    - identifier: createObject
+      name: Creating Objects
+      description: You can now create objects. Create an object by choosing one of
+        the objects in the "Create" dropdown.
       skippable: 0
-    - identifier: selectGreenLight
-      name: First Light Source
-      description: This scene also has multiple light sources. Find and select the
-        green light source.
-      skippable: 0
-    - identifier: selectPurpleLight
-      name: Second Light Source
-      description: Now find and select the purple light source.
-      skippable: 0
-    - identifier: selectRedLight
-      name: Third Light Source
-      description: Lastly find and select the red light source.
+    - identifier: deleteObject
+      name: Deleting Objects
+      description: You can now also delete any object, except for the camera. Delete
+        a non-camera object from the scene by selecting it and pressing [DEL].
       skippable: 0
     - identifier: 
       name: 
-      description: You may press "Next Level" now to move onto the next level or
-        do some more exploring.
+      description: You are now able to create your own custom scenes. Go crazy!
       skippable: 0

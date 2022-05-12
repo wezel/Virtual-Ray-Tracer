@@ -60,7 +60,7 @@ namespace _Project.Ray_Tracer.Scripts
 
         [Serializable]
         public class Event : UnityEvent { };
-        public Event OnTranslationMode, OnRotationMode, OnScaleMode, OnLocalSpace, OnGlobalSpace, OnDeselect;
+        public Event OnTranslationMode, OnRotationMode, OnScaleMode, OnLocalSpace, OnGlobalSpace, OnDeselect, OnObjectDeleted;
 
         private static RTSceneManager instance = null;
         private Selection selection = new Selection();
@@ -307,6 +307,9 @@ namespace _Project.Ray_Tracer.Scripts
             // Destroy
             // Immediate is necessary because otherwise the object will still exist when the ray tracer updates next.
             DestroyImmediate(gameObject);
+
+            // Invoke listeners
+            OnObjectDeleted?.Invoke();
         }
 
         public void CreateObject(ObjectType type)
