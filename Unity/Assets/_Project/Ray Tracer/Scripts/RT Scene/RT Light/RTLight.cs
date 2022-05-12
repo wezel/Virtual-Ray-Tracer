@@ -105,7 +105,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
         /// <summary>
         /// An event invoked whenever a this light is changed.
         /// </summary>
-        public LightChanged OnLightChanged, OnLightColorChanged;
+        public LightChanged OnLightSelected, OnLightChanged, OnLightColorChanged;
 
         /// <summary>
         /// The underlying <see cref="UnityEngine.Light"/> used by the light.

@@ -203,6 +203,7 @@ namespace _Project.Ray_Tracer.Scripts
             {
                 selection.Mesh.OnMeshSelected?.Invoke();
                 selection.Camera?.OnCameraSelected?.Invoke();
+                selection.Light?.OnLightSelected?.Invoke();
 
                 return;
             }
@@ -227,6 +228,7 @@ namespace _Project.Ray_Tracer.Scripts
                 ControlPanel.ShowLightProperties(selection.Light);
                 selection.Light.Higlight(SelectionColor);
                 previousTransform = newSelection;
+                selection.Light.OnLightSelected?.Invoke();
             }
             else if (selection.Type == typeof(RTMesh))
             {
