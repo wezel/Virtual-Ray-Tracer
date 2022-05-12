@@ -368,3 +368,56 @@ MonoBehaviour:
       name: 
       description: 
       skippable: 0
+  - optionalTasksStart: 8
+    tasks:
+    - identifier: selectCamera
+      name: Transparent Interactions
+      description: In this scene we will explore three different interactions the
+        raytracer has with transparent objects. This results in many rays being cast.
+        Select the camera and play with the number of horizontal and vertical pixels
+        to really notice the amount of rays.
+      skippable: 0
+    - identifier: hideNoHitRays
+      name: No Hit Rays
+      description: You might also notice a number of red rays. These red rays are
+        called no hit rays, they do not contribute to the final color. To get a clearer
+        view of this scene, toggle "Hide No Hit Rays" to on in the ray tracer properties.
+      skippable: 0
+    - identifier: 
+      name: Lens
+      description: "A lensing effect is achieved by placing an elongated sphere in
+        front of the camera. If you examine the scene, you will see that the rays
+        (green) rays converge to a focal point. \nThe convergence isn't perfect but
+        it is quite close."
+      skippable: 1
+    - identifier: 
+      name: Transparent Wall
+      description: There's also a transparent wall behind the lens. Because the wall
+        is transparent, you would expect that light rays can pass through it. However,
+        they don't. This is a limitation of the way the ray tracer generates light
+        rays.
+      skippable: 1
+    - identifier: 
+      name: Transparent Wall
+      description: The ray tracer determines light rays by tracing a straight line
+        from the object to the light source. The transparent wall bends light, so
+        it won't work. Therefore, the lights rays are blocked and replaced by shadow
+        rays.
+      skippable: 1
+    - identifier: 
+      name: Prism
+      description: In real life, light is also able to split into a rainbow of colors.
+        The prism that is placed on the bottom should cause this effect. If you place
+        the prism in front of the camera however, it doesn't work.
+      skippable: 1
+    - identifier: 
+      name: Prism
+      description: The reason for this is that the rays in the raytracer are indivisible,
+        whereas light in the real world is almost always composed of a large range
+        of wavelengths.
+      skippable: 1
+    - identifier: 
+      name: 
+      description: You may press "Next Level" now to move onto the next level or
+        do some more exploring.
+      skippable: 0
