@@ -15,11 +15,11 @@ namespace _Project.UI.Scripts.Tutorial
         private static TutorialManager instance;
         private const string DEFAULT_REQUIRED_NAME = "You have completed all required tasks for level ";
         private const string DEFAULT_OPTIONAL_NAME = "You have completed all optional tasks for level ";
-        private const string DEFAULT_REQUIRED_DESC = "You may press \"Next Level\" now to move onto the next level or click the button below to continue with additional tasks.";
+        private const string DEFAULT_REQUIRED_DESC = "You may press \"Next Level\" now to move onto the next level or click the button next to the progress bar to continue with additional tasks.";
         private const string DEFAULT_OPTIONAL_DESC = "You may press \"Next Level\" now to move onto the next level or do some more exploring.";
 
         [SerializeField]
-        private GameObject content;
+        private GameObject contents;
 
         [SerializeField]
         private Button nextLevelButton;
@@ -42,17 +42,12 @@ namespace _Project.UI.Scripts.Tutorial
         private Sprite collapsedIcon;
 
         [SerializeField]
-        private GameObject fill;
-        private RectTransform fillRect;
-
+        private GameObject progressBar;
         [SerializeField]
-        private Color requiredTaskColor;
-
+        private GameObject progressRequiredFill;
         [SerializeField]
-        private Color optionalTaskColor;
+        private GameObject progressOptionalFill;
 
-        [SerializeField]
-        private int maxWidth;
 
         [SerializeField]
         private TextMeshProUGUI taskName;
@@ -149,11 +144,15 @@ namespace _Project.UI.Scripts.Tutorial
             {
                 expandCollapseImage.sprite = expandedIcon;
                 rectTransform.sizeDelta = new Vector2(originalSize.x, originalSize.y);
+                progressBar.gameObject.SetActive(true);
+                skipButton.gameObject.SetActive(true);
             }
             else
             {
                 expandCollapseImage.sprite = collapsedIcon;
                 rectTransform.sizeDelta = new Vector2(originalSize.x, 38);
+                progressBar.gameObject.SetActive(false);
+                skipButton.gameObject.SetActive(false);
             }
         }
 
@@ -162,11 +161,11 @@ namespace _Project.UI.Scripts.Tutorial
         /// </summary>
         private void UpdateTutorial()
         {
-            // Set the fill color
-            fill.GetComponent<Image>().color = currentTasks.IsRequired() ? requiredTaskColor : optionalTaskColor;
-
             // Set the fill width/percentage
-            fillRect.sizeDelta = new Vector2(maxWidth * currentTasks.GetPercentage(), fillRect.sizeDelta.y);
+            progressRequiredFill.GetComponent<RectTransform>().sizeDelta = new Vector2(progressBar.GetComponent<RectTransform>().rect.width * 
+                currentTasks.RequiredPercentage(), 0);
+            progressOptionalFill.GetComponent<RectTransform>().sizeDelta = new Vector2(progressBar.GetComponent<RectTransform>().rect.width *
+                currentTasks.OptionalPercentage(), 0);
 
             // Set the name and description
             if (currentTasks.GetName() == "") taskName.text = (currentTasks.IsRequired() ? DEFAULT_REQUIRED_NAME : DEFAULT_OPTIONAL_NAME) + currentScene + "/" + lastScene + "!";
@@ -181,7 +180,7 @@ namespace _Project.UI.Scripts.Tutorial
             nextLevelButtonMainMenu.interactable = nextLevelButton.interactable;
 
             // Show/hide skip button
-            skipButton.gameObject.SetActive(currentTasks.IsSkippable());
+            skipButton.interactable =currentTasks.IsSkippable();
         }
 
         /// <summary>
@@ -191,10 +190,10 @@ namespace _Project.UI.Scripts.Tutorial
         {
             lastScene = SceneManager.sceneCountInBuildSettings - 1;
             currentScene = SceneManager.GetActiveScene().buildIndex;
-            rectTransform = content.GetComponent<RectTransform>();
+            rectTransform = contents.GetComponent<RectTransform>();
             originalSize = rectTransform.sizeDelta;
             expandCollapseButton.onClick.AddListener(ExpandCollapse);
-            fillRect = fill.GetComponent<RectTransform>();
+            
             int level = SceneManager.GetActiveScene().buildIndex - 1;
             if (level < 0 || level >= GlobalSettings.Get().TutorialTasks.Count) currentTasks = new Tasks();
             else currentTasks = GlobalSettings.Get().TutorialTasks[level];

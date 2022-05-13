@@ -106,12 +106,18 @@ namespace _Project.UI.Scripts.Tutorial
             return tasks[index].Identifier;
         }
 
-        public float GetPercentage()
+        public float RequiredPercentage()
         {
-            int completed = IsRequired() ? index : index - optionalTasksStart;
-            int total = IsRequired() ? optionalTasksStart - 1 : tasks.Count - optionalTasksStart - 1;
+            int total = optionalTasksStart - 1;
             if (total == 0) return 1f;
-            return completed / (float)total;
+            return Math.Min(index / (float)total, 1f);
+        }
+
+        public float OptionalPercentage()
+        {
+            int total = tasks.Count - optionalTasksStart - 1;
+            if (total == 0) return 1f;
+            return Math.Max(0f, (index - optionalTasksStart) / (float)total);
         }
 
         /// <summary>

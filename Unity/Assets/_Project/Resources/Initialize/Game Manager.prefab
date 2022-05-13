@@ -51,15 +51,16 @@ MonoBehaviour:
     - identifier: 
       name: Introduction
       description: Welcome to the Virtual Ray Tracer! These tutorial tasks will guide
-        you through the program. We'll first start by going over the controls and
-        the various options. Press the button next to this text to continue to the
-        next task.
+        you through the program. Below this text, a progress bar is shown, which
+        displays your progress in the current level. There are 7 levels in total.
+        Press the button next to the progress bar to continue to the next task.
       skippable: 1
     - identifier: help
       name: Help Menu
-      description: All the information from these tasks can also be found in the
-        help menu. Access this menu any time by clicking the "Help" button in the
-        top left or by pressing [F1].
+      description: We'll first start by going over the controls and the various interface
+        elements. If you get lost somewhere, you can always find all the necessary
+        information in the help menu. Access this menu any time by clicking the "Help"
+        button in the top left or by pressing [F1].
       skippable: 0
     - identifier: cameraPan
       name: Camera Panning
