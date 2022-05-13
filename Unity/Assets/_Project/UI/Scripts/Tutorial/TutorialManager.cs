@@ -56,7 +56,6 @@ namespace _Project.UI.Scripts.Tutorial
 
         private Tasks currentTasks;
 
-        private RectTransform rectTransform;
         private Vector2 originalSize;
 
         private int lastScene;
@@ -143,14 +142,16 @@ namespace _Project.UI.Scripts.Tutorial
             if (GlobalSettings.TutorialExpanded)
             {
                 expandCollapseImage.sprite = expandedIcon;
-                rectTransform.sizeDelta = new Vector2(originalSize.x, originalSize.y);
+                GetComponent<LayoutElement>().preferredHeight = originalSize.y;
+                contents.GetComponent<RectTransform>().sizeDelta = new Vector2(originalSize.x, originalSize.y);
                 progressBar.gameObject.SetActive(true);
                 skipButton.gameObject.SetActive(true);
             }
             else
             {
                 expandCollapseImage.sprite = collapsedIcon;
-                rectTransform.sizeDelta = new Vector2(originalSize.x, 38);
+                GetComponent<LayoutElement>().preferredHeight = 38;
+                contents.GetComponent<RectTransform>().sizeDelta = new Vector2(originalSize.x, 38);
                 progressBar.gameObject.SetActive(false);
                 skipButton.gameObject.SetActive(false);
             }
@@ -190,8 +191,7 @@ namespace _Project.UI.Scripts.Tutorial
         {
             lastScene = SceneManager.sceneCountInBuildSettings - 1;
             currentScene = SceneManager.GetActiveScene().buildIndex;
-            rectTransform = contents.GetComponent<RectTransform>();
-            originalSize = rectTransform.sizeDelta;
+            originalSize = contents.GetComponent<RectTransform>().sizeDelta;
             expandCollapseButton.onClick.AddListener(ExpandCollapse);
             
             int level = SceneManager.GetActiveScene().buildIndex - 1;
