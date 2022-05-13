@@ -121,6 +121,22 @@ namespace _Project.UI.Scripts.Tutorial
             return Math.Max(0f, (index - optionalTasksStart) / (float)total);
         }
 
+        public float GetTotalPercentage()
+        {
+            if (tasks.Count == 0) return 0f;
+            return index / (float)tasks.Count;
+        }
+
+        public int CurrentTaskIndex()
+        {
+            return index;
+        }
+
+        public int TotalTasksCount()
+        {
+            return tasks.Count;
+        }
+
         /// <summary>
         /// Complete a tutorial task
         /// </summary>

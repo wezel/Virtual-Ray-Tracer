@@ -53,6 +53,8 @@ namespace _Project.UI.Scripts.Tutorial
         private TextMeshProUGUI taskName;
         [SerializeField]
         private TextMeshProUGUI taskDescription;
+        [SerializeField]
+        private TextMeshProUGUI taskProgress;
 
         private Tasks currentTasks;
 
@@ -164,9 +166,12 @@ namespace _Project.UI.Scripts.Tutorial
         {
             // Set the fill width/percentage
             progressRequiredFill.GetComponent<RectTransform>().sizeDelta = new Vector2(progressBar.GetComponent<RectTransform>().rect.width * 
-                currentTasks.RequiredPercentage(), 0);
-            progressOptionalFill.GetComponent<RectTransform>().sizeDelta = new Vector2(progressBar.GetComponent<RectTransform>().rect.width *
-                currentTasks.OptionalPercentage(), 0);
+                currentTasks.GetTotalPercentage(), 0);
+            //progressOptionalFill.GetComponent<RectTransform>().sizeDelta = new Vector2(progressBar.GetComponent<RectTransform>().rect.width *
+            //    currentTasks.OptionalPercentage(), 0);
+
+            // Set the task progression text
+            taskProgress.text = currentTasks.CurrentTaskIndex() + "/" + (currentTasks.TotalTasksCount() - 1);
 
             // Set the name and description
             if (currentTasks.GetName() == "") taskName.text = (currentTasks.IsRequired() ? DEFAULT_REQUIRED_NAME : DEFAULT_OPTIONAL_NAME) + currentScene + "/" + lastScene + "!";
