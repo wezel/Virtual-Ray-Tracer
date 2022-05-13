@@ -115,6 +115,7 @@ namespace _Project.UI.Scripts.Tutorial
 
         public float OptionalPercentage()
         {
+            if (index < optionalTasksStart) return 0f;
             int total = tasks.Count - optionalTasksStart - 1;
             if (total == 0) return 1f;
             return Math.Max(0f, (index - optionalTasksStart) / (float)total);

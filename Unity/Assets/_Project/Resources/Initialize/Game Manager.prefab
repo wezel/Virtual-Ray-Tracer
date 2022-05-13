@@ -386,10 +386,10 @@ MonoBehaviour:
       skippable: 0
     - identifier: 
       name: Lens
-      description: "A lensing effect is achieved by placing an elongated sphere in
+      description: A lensing effect is achieved by placing an elongated sphere in
         front of the camera. If you examine the scene, you will see that the rays
-        (green) rays converge to a focal point. \nThe convergence isn't perfect but
-        it is quite close."
+        (green) rays converge to a focal point. The convergence isn't perfect but
+        it is quite close.
       skippable: 1
     - identifier: 
       name: Transparent Wall
