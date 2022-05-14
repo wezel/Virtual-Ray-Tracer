@@ -60,16 +60,16 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
             rayRenderer.Origin = Ray.Origin;
             rayRenderer.Direction = Ray.Direction;
             rayRenderer.Length = 0.0f;
+            rayRenderer.Material = rayManager.GetRayMaterial(Ray.Contribution, Ray.Type, Ray.Color);
 
-            if (rayManager.RayTransparencyEnabled && Ray.Contribution <= rayManager.RayTransThreshold)
-            {
-                rayRenderer.Material = rayManager.GetRayTypeMaterialTransparent(Ray.Type, 
-                    Mathf.Pow(Ray.Contribution, rayManager.RayTransExponent));
-            }
-            else
-            {
-                rayRenderer.Material = rayManager.GetRayTypeMaterial(Ray.Type);
-            }
+            //if (rayManager.RayTransparencyEnabled)
+            //{
+            //    rayRenderer.Material.color = new Color(
+            //        rayRenderer.Material.color.r,
+            //        rayRenderer.Material.color.g,
+            //        rayRenderer.Material.color.b,
+            //        rayManager.aaa);
+            //}
         }
 
         private void DetermineDrawLength()

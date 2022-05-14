@@ -3,6 +3,7 @@ using _Project.Ray_Tracer.Scripts.RT_Ray;
 using _Project.Ray_Tracer.Scripts.Utility;
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEditor;
 
 namespace _Project.Ray_Tracer.Scripts
 {
@@ -36,7 +37,7 @@ namespace _Project.Ray_Tracer.Scripts
         }
 
         [SerializeField, Range(0.00f, 2.00f)]
-        private float rayTransExponent = 1.00f;
+        public static float rayTransExponent = 1.00f;
         /// <summary>
         /// The transparency threshold of the rays this ray manager draws.
         /// </summary>
@@ -68,7 +69,18 @@ namespace _Project.Ray_Tracer.Scripts
             set { rayDynamicRadiusEnabled = value; }
         }
 
-        [SerializeField, Range(0.005f, 0.1f)]
+        [SerializeField]
+        private bool rayColorContributionEnabled = true;
+        /// <summary>
+        /// Whether this ray manager's rays' color is contribution-based.
+        /// </summary>
+        public bool RayColorContributionEnabled
+        {
+            get { return rayColorContributionEnabled; }
+            set { rayColorContributionEnabled = value; }
+        }
+
+        [SerializeField, Range(0.001f, 0.1f)]
         private float rayRadius = 0.01f;
         /// <summary>
         /// The radius of the rays this ray manager draws.
@@ -79,7 +91,7 @@ namespace _Project.Ray_Tracer.Scripts
             set { rayRadius = value; }
         }
 
-        [SerializeField, Range(0.003f, 0.1f)]
+        [SerializeField, Range(0.001f, 0.1f)]
         private float rayMinRadius = 0.003f;
         /// <summary>
         /// The minimum radius of the rays this ray manager draws.
@@ -90,7 +102,7 @@ namespace _Project.Ray_Tracer.Scripts
             set { rayMinRadius = value; }
         }
 
-        [SerializeField, Range(0.003f, 0.1f)]
+        [SerializeField, Range(0.001f, 0.1f)]
         private float rayMaxRadius = 0.025f;
         /// <summary>
         /// The maximum radius of the rays this ray manager draws.
@@ -135,7 +147,7 @@ namespace _Project.Ray_Tracer.Scripts
         /// </summary>
         public bool HideNegligibleRays;
 
-        private const int transparencyRange = 50;
+        public const int transparencyRange = 50;
         [SerializeField] private Material noHitMaterial;
         [SerializeField] private Material reflectMaterial;
         [SerializeField] private Material reflectMaterialTransparent;
@@ -153,6 +165,13 @@ namespace _Project.Ray_Tracer.Scripts
         [SerializeField] private Material lightMaterialTransparent;
         private Material[] lightMaterialTransparentArray = new Material[transparencyRange];
         [SerializeField] private Material errorMaterial;
+
+        private const int colorN = 18;
+        private const float colorStep = 1f / (colorN - 1);
+        [SerializeField] private Material colorRayMaterial;
+        [SerializeField] private Material colorRayMaterialTransparent;
+        private static Material[,,] colorRayMaterialArray = new Material[colorN, colorN, colorN];
+        private static Material[,,,] colorRayMaterialTransparentArray = new Material[colorN, colorN, colorN, transparencyRange];
 
         [Header("Animation Settings")]
 
@@ -261,6 +280,32 @@ namespace _Project.Ray_Tracer.Scripts
             }
             return colors;
         }
+        /// <summary>
+        /// Get the material used to render rays of the given <see cref="RTRay.RayType"/>.
+        /// </summary>
+        /// <param name="contribution"> The fraction of the pixel-color this ray adds to it. </param>
+        /// <param name="type"> What type of ray to get the material for. </param>
+        /// <param name="color"> The color this ray contributes to the pixel-color </param>
+        /// <returns>
+        /// The <see cref="Material"/> for <paramref name="contribution"/>, <paramref name="type"/> and <paramref name="color"/>.
+        /// </returns>
+        public Material GetRayMaterial(float contribution, RTRay.RayType type, Color color)
+        {
+            if (RayTransparencyEnabled && contribution <= RayTransThreshold)
+            {
+                if (RayColorContributionEnabled)
+                    return GetRayColorMaterialTransparent(color.r, color.g, color.b, Mathf.Pow(contribution, RayTransExponent));
+                else
+                    return GetRayTypeMaterialTransparent(type, Mathf.Pow(contribution, RayTransExponent));
+            }
+            else
+            {
+                if (RayColorContributionEnabled)
+                    return GetRayColorMaterial(color.r, color.g, color.b);
+                else
+                    return GetRayTypeMaterial(type);
+            }
+        }
 
         /// <summary>
         /// Get the material used to render rays of the given <see cref="RTRay.RayType"/>.
@@ -270,7 +315,7 @@ namespace _Project.Ray_Tracer.Scripts
         /// The <see cref="Material"/> for <paramref name="type"/>. The material for <see cref="RTRay.RayType.NoHit"/>
         /// is returned if <paramref name="type"/> is not a recognized <see cref="RTRay.RayType"/>.
         /// </returns>
-        public Material GetRayTypeMaterial(RTRay.RayType type)
+        private Material GetRayTypeMaterial(RTRay.RayType type)
         {
             switch (type)
             {
@@ -291,26 +336,91 @@ namespace _Project.Ray_Tracer.Scripts
                     return errorMaterial;
             }
         }
-        public Material GetRayTypeMaterialTransparent(RTRay.RayType type, float transparency)
+
+        /// <summary>
+        /// Get the transparent material used to render rays of the given <see cref="RTRay.RayType"/>.
+        /// </summary>
+        /// <param name="type"> What type of ray to get the material for. </param>
+        /// <param name="transparency"> How transparent the ray should be. </param>
+        /// <returns> 
+        /// The transparent <see cref="Material"/> for <paramref name="type"/>.
+        /// </returns>
+        private Material GetRayTypeMaterialTransparent(RTRay.RayType type, float transparency)
         {
+            if (transparency > 1.0f)
+                Debug.LogError("Transparency bigger than 1: " + transparency.ToString());
+
             switch (type)
             {
                 case RTRay.RayType.NoHit:
                     return noHitMaterial;
                 case RTRay.RayType.Reflect:
-                    return reflectMaterialTransparentArray[Mathf.FloorToInt(transparency * (transparencyRange - 1))];
+                    return reflectMaterialTransparentArray[Mathf.RoundToInt(transparency * (transparencyRange - 1))];
                 case RTRay.RayType.Refract:
-                    return refractMaterialTransparentArray[Mathf.FloorToInt(transparency * (transparencyRange - 1))];
+                    return refractMaterialTransparentArray[Mathf.RoundToInt(transparency * (transparencyRange - 1))];
                 case RTRay.RayType.Normal:
-                    return normalMaterialTransparentArray[Mathf.FloorToInt(transparency * (transparencyRange - 1))];
+                    return normalMaterialTransparentArray[Mathf.RoundToInt(transparency * (transparencyRange - 1))];
                 case RTRay.RayType.Shadow:
-                    return shadowMaterialTransparentArray[Mathf.FloorToInt(transparency * (transparencyRange - 1))];
+                    return shadowMaterialTransparentArray[Mathf.RoundToInt(transparency * (transparencyRange - 1))];
                 case RTRay.RayType.Light:
-                    return lightMaterialTransparentArray[Mathf.FloorToInt(transparency * (transparencyRange - 1))];
+                    return lightMaterialTransparentArray[Mathf.RoundToInt(transparency * (transparencyRange - 1))];
                 default:
                     Debug.LogError("Unrecognized ray type " + type + "!");
                     return errorMaterial;
             }
+        }
+
+        /// <summary>
+        /// Get the material used to render rays of the given Ray based on its color.
+        /// </summary>
+        /// <param name="r"> The red component of the color </param>
+        /// <param name="g"> The green component of the color </param>
+        /// <param name="b"> The blue component of the color </param>
+        /// <returns> 
+        /// The <see cref="Material"/> for <paramref name="r"/>, <paramref name="g"/> and <paramref name="b"/>.
+        /// </returns>
+        private Material GetRayColorMaterial(float r, float g, float b)
+        {
+            int idxr = Mathf.RoundToInt(r * (colorN - 1));
+            int idxg = Mathf.RoundToInt(b * (colorN - 1));
+            int idxb = Mathf.RoundToInt(g * (colorN - 1));
+
+            // To optimize load-performance, these materials are constucted on-demand.
+            // To further optimize performance, once they're made, they're saved
+            if (!colorRayMaterialArray[idxr, idxg, idxb])
+                colorRayMaterialArray[idxr, idxg, idxb] = new Material(colorRayMaterial)
+                { color = new Color(idxr * colorStep, idxg * colorStep, idxb * colorStep, 1f) };
+
+            return colorRayMaterialArray[idxr, idxg, idxb];
+        }
+
+        /// <summary>
+        /// Get the transparent material used to render rays of the given Ray based on its color.
+        /// </summary>
+        /// <param name="r"> The red component of the color </param>
+        /// <param name="g"> The green component of the color </param>
+        /// <param name="b"> The blue component of the color </param>
+        /// <param name="transparency"> How transparent the ray should be. </param>
+        /// <returns> 
+        /// The transparent <see cref="Material"/> for <paramref name="r"/>, <paramref name="g"/> and <paramref name="b"/>.
+        /// </returns>
+        private Material GetRayColorMaterialTransparent(float r, float g, float b, float transparency)
+        {
+            int idxr = Mathf.RoundToInt(r * (colorN - 1));
+            int idxg = Mathf.RoundToInt(b * (colorN - 1));
+            int idxb = Mathf.RoundToInt(g * (colorN - 1));
+            int idxa = Mathf.RoundToInt(transparency * (transparencyRange - 1));
+
+            // To optimize load-performance, these materials are constucted on-demand.
+            // To further optimize performance, once they're made, they're saved.
+            if (!colorRayMaterialTransparentArray[idxr, idxg, idxb, idxa])
+            {
+                colorRayMaterialTransparentArray[idxr, idxg, idxb, idxa] = new Material(colorRayMaterialTransparent)
+                { color = new Color(idxr * colorStep, idxg * colorStep, idxb * colorStep, colorRayMaterialTransparent.color.a) };
+                colorRayMaterialTransparentArray[idxr, idxg, idxb, idxa].SetFloat("_Ambient", (idxa + 1) * (1f / transparencyRange));
+            }
+
+            return colorRayMaterialTransparentArray[idxr, idxg, idxb, idxa];
         }
 
         public void SelectRay(Vector2Int rayCoordinates)
@@ -351,15 +461,12 @@ namespace _Project.Ray_Tracer.Scripts
             rayTracer.OnRayTracerChanged += () => { shouldUpdateRays = true; };
         }
 
-        //[SerializeField] private Material lightMaterialTransparent;
-        //private Material[] lightMaterialTransparentArray = new Material[transparencyRange];
-
         private void MakeTransparentMaterials(ref Material baseMaterial, ref Material[] arrayMaterial)
         {
             for (int i = 0; i < transparencyRange; i++)
             {
                 arrayMaterial[i] = new Material(baseMaterial);
-                arrayMaterial[i].SetFloat("_Ambient", (i + 1) * (1.0f / transparencyRange));
+                arrayMaterial[i].SetFloat("_Ambient", (i + 1) * (1f / transparencyRange));
             }
         }
 
@@ -426,8 +533,8 @@ namespace _Project.Ray_Tracer.Scripts
             // Otherwise we draw all ray trees.
             else
             {
-                foreach (var rayTree in rays)
-                    foreach (var ray in rayTree.Children) // Skip the zero-length base-ray 
+                foreach (var pixel in rays)
+                    foreach (var ray in pixel.Children) // Skip the zero-length base-ray 
                         DrawRayTree(ray);
             }
 
@@ -476,17 +583,22 @@ namespace _Project.Ray_Tracer.Scripts
                 // If we have selected a ray we only draw its ray tree.
                 if (hasSelectedRay)
                 {
-                    animationDone = DrawRayTreeAnimated(selectedRay, distanceToDraw);
+                    foreach (var ray in selectedRay.Children) // Skip the zero-length base-ray 
+                        animationDone &= DrawRayTreeAnimated(ray, distanceToDraw);
                 }
                 // If specified we animate the ray trees sequentially (pixel by pixel).
                 else if (animateSequentially)
                 {
                     // Draw all previous ray trees in full.
                     for (int i = 0; i < rayTreeToDraw; ++i)
-                        DrawRayTree(rays[i]);
+                        foreach (var ray in rays[i].Children) // Skip the zero-length base-ray 
+                            DrawRayTree(ray);
 
                     // Animate the current ray tree. If it is now fully drawn we move on to the next one.
-                    bool treeDone = DrawRayTreeAnimated(rays[rayTreeToDraw], distanceToDraw);
+                    bool treeDone = true;
+                    foreach(var ray in rays[rayTreeToDraw].Children) // Skip the zero-length base-ray 
+                        treeDone &= DrawRayTreeAnimated(ray, distanceToDraw);
+
                     if (treeDone)
                     {
                         distanceToDraw = 0.0f;
@@ -498,8 +610,9 @@ namespace _Project.Ray_Tracer.Scripts
                 // Otherwise we animate all ray trees.
                 else
                 {
-                    foreach (var rayTree in rays)
-                        animationDone &= DrawRayTreeAnimated(rayTree, distanceToDraw);
+                    foreach (var pixel in rays)
+                        foreach (var rayTree in pixel.Children) // Skip the zero-length base-ray 
+                            animationDone &= DrawRayTreeAnimated(rayTree, distanceToDraw);
                 }
             }
             // Otherwise we can just draw all rays in full.

@@ -37,6 +37,8 @@ namespace _Project.UI.Scripts.Control_Panel
         [SerializeField]
         private BoolEdit rayDynamicRadiusEnabled;
         [SerializeField]
+        private BoolEdit rayColorContributionEnabled;
+        [SerializeField]
         private FloatEdit rayTransThresholdEdit;
         [SerializeField]
         private FloatEdit rayTransExponentEdit;
@@ -86,6 +88,7 @@ namespace _Project.UI.Scripts.Control_Panel
             rayHideThresholdEdit.Value = rayManager.RayHideThreshold;
             rayTransparencyEnabled.IsOn = rayManager.RayTransparencyEnabled;
             rayDynamicRadiusEnabled.IsOn = rayManager.RayDynamicRadiusEnabled;
+            rayColorContributionEnabled.IsOn = rayManager.RayColorContributionEnabled;
             rayTransThresholdEdit.Value = rayManager.RayTransThreshold;
             rayTransExponentEdit.Value = rayManager.RayTransExponent;
             rayRadiusEdit.Value = rayManager.RayRadius;
@@ -148,6 +151,7 @@ namespace _Project.UI.Scripts.Control_Panel
             rayHideThresholdEdit.OnValueChanged += (value) => { rayManager.RayHideThreshold = value; };
             rayTransparencyEnabled.OnValueChanged += (value) => { rayManager.RayTransparencyEnabled = value; };
             rayDynamicRadiusEnabled.OnValueChanged += (value) => { rayManager.RayDynamicRadiusEnabled = value; };
+            rayColorContributionEnabled.OnValueChanged += (value) => { rayManager.RayColorContributionEnabled = value; };
             rayTransThresholdEdit.OnValueChanged += (value) => { rayManager.RayTransThreshold = value; };
             rayTransExponentEdit.OnValueChanged += (value) => { rayManager.RayTransExponent = value; };
             rayRadiusEdit.OnValueChanged += (value) => { rayManager.RayRadius = value; };

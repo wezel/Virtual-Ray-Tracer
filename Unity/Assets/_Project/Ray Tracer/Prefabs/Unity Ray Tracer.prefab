@@ -44,7 +44,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   epsilon: 0.001
+  rayDynamicColorMaterial: {fileID: 2100000, guid: 79cae673e2b06ab4c967933347beb21b, type: 2}
+  rayDynamicColorTransMaterial: {fileID: 2100000, guid: 69bd0e396dc160edfaaf3b6a2cfde5bb, type: 2}
   renderShadows: 1
   maxDepth: 3
   superSamplingFactor: 1
+  superSamplingVisual: 0
   backgroundColor: {r: 0.7, g: 0.7, b: 0.7, a: 1}
