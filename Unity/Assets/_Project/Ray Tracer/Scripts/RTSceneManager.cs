@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using _Project.Ray_Tracer.Scripts.RT_Scene;
+using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light;
 using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Camera;
 using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light;
 using _Project.Ray_Tracer.Scripts.Utility;
@@ -441,10 +442,11 @@ namespace _Project.Ray_Tracer.Scripts
             // Find the first camera and all lights and meshes in the Unity scene.
             RTCamera camera = FindObjectOfType<RTCamera>();
             List<RTLight> lights = new List<RTLight>(FindObjectsOfType<RTLight>());
+            List<RTAreaLight> arealights = new List<RTAreaLight>(FindObjectsOfType<RTAreaLight>());
             List<RTMesh> meshes = new List<RTMesh>(FindObjectsOfType<RTMesh>());
             
             // Construct the ray tracer scene with the found objects.
-            Scene = new RTScene(camera, lights, meshes);
+            Scene = new RTScene(camera, lights, arealights, meshes);
             
             ControlPanel.Subscribe(OnEvent);
         }

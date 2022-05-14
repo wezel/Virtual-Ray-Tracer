@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light;
 using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Camera;
 using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light;
 using UnityEngine;
@@ -43,20 +44,29 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
         public List<RTLight> Lights { get; }
 
         /// <summary>
+        /// This ray tracers scene's list of area lights.
+        /// </summary>
+        public List<RTAreaLight> AreaLights { get; }
+
+        /// <summary>
         /// This ray tracers scene's list of meshes.
         /// </summary>
         public List<RTMesh> Meshes { get; }
 
-        public RTScene(RTCamera camera) : this(camera, new List<RTLight>(), new List<RTMesh>()) { }
+        public RTScene(RTCamera camera) : this(camera, new List<RTLight>(), new List<RTAreaLight>(), new List<RTMesh>()) { }
 
-        public RTScene(RTCamera camera, List<RTLight> lights, List<RTMesh> meshes)
+        public RTScene(RTCamera camera, List<RTLight> lights, List<RTAreaLight> arealights, List<RTMesh> meshes)
         {
             Camera = camera;
             
             Lights = lights;
             foreach (var light in lights)
                 light.OnLightChanged += SceneObjectChanged;
-            
+
+            AreaLights = arealights;
+            foreach (var arealight in arealights)
+                arealight.OnLightChanged += SceneObjectChanged;
+
             Meshes = meshes;
             foreach (var mesh in meshes)
                 mesh.OnMeshChanged += SceneObjectChanged;

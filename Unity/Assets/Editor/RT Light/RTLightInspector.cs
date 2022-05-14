@@ -9,12 +9,13 @@ namespace Editor.RT_Light
     [CustomEditor(typeof(RTLight))]
     public class RTLightInspector : UnityEditor.Editor
     {
-        
+
         private RTLight rtLight;
         private Light light;
-        
-        void OnEnable(){
-            rtLight = (RTLight) target;
+
+        void OnEnable()
+        {
+            rtLight = (RTLight)target;
             light = rtLight.gameObject.GetComponent<Light>();
             light.hideFlags = HideFlags.None;
         }

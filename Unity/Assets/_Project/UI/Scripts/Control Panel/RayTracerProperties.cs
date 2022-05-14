@@ -63,6 +63,12 @@ namespace _Project.UI.Scripts.Control_Panel
         [SerializeField]
         private BoolEdit superSamplingVisualEdit;
         [SerializeField]
+        private BoolEdit renderPointLightsEdit;
+        [SerializeField]
+        private BoolEdit renderAreaLightsEdit;
+        [SerializeField]
+        private FloatEdit areaLightSamplesEdit;
+        [SerializeField]
         private Button renderImageButton;
         [SerializeField]
         private Button openImageButton;
@@ -79,6 +85,9 @@ namespace _Project.UI.Scripts.Control_Panel
             uiManager = UIManager.Get();
 
             renderShadowsEdit.IsOn = rayTracer.RenderShadows;
+            renderPointLightsEdit.IsOn = rayTracer.RenderPointLights;
+            renderAreaLightsEdit.IsOn = rayTracer.RenderAreaLights;
+            areaLightSamplesEdit.Value = rayTracer.AreaLightSamples;
             recursionDepthEdit.Value = rayTracer.MaxDepth;
             backgroundColorEdit.Color = rayTracer.BackgroundColor;
 
@@ -142,6 +151,8 @@ namespace _Project.UI.Scripts.Control_Panel
         private void Awake()
         {
             renderShadowsEdit.OnValueChanged += (value) => { rayTracer.RenderShadows = value; };
+            renderPointLightsEdit.OnValueChanged += (value) => { rayTracer.RenderPointLights = value; };
+            renderAreaLightsEdit.OnValueChanged += (value) => { rayTracer.RenderAreaLights = value; };
             recursionDepthEdit.OnValueChanged += (value) => { rayTracer.MaxDepth = (int)value; };
             backgroundColorEdit.OnValueChanged += (value) => { rayTracer.BackgroundColor = value; };
 
@@ -165,6 +176,7 @@ namespace _Project.UI.Scripts.Control_Panel
 
             superSamplingFactorEdit.OnValueChanged += (value) => { rayTracer.SuperSamplingFactor = (int)value; };
             superSamplingVisualEdit.OnValueChanged += (value) => { rayTracer.SuperSamplingVisual = value; };
+            areaLightSamplesEdit.OnValueChanged += (value) => { rayTracer.AreaLightSamples = (int)value; };
             renderImageButton.onClick.AddListener(RenderImage);
             openImageButton.onClick.AddListener(ToggleImage);
         }

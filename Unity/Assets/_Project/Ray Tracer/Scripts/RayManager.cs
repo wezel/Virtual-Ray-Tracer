@@ -311,7 +311,7 @@ namespace _Project.Ray_Tracer.Scripts
         /// Get the material used to render rays of the given <see cref="RTRay.RayType"/>.
         /// </summary>
         /// <param name="type"> What type of ray to get the material for. </param>
-        /// <returns> 
+        /// <returns>
         /// The <see cref="Material"/> for <paramref name="type"/>. The material for <see cref="RTRay.RayType.NoHit"/>
         /// is returned if <paramref name="type"/> is not a recognized <see cref="RTRay.RayType"/>.
         /// </returns>
@@ -342,7 +342,7 @@ namespace _Project.Ray_Tracer.Scripts
         /// </summary>
         /// <param name="type"> What type of ray to get the material for. </param>
         /// <param name="transparency"> How transparent the ray should be. </param>
-        /// <returns> 
+        /// <returns>
         /// The transparent <see cref="Material"/> for <paramref name="type"/>.
         /// </returns>
         private Material GetRayTypeMaterialTransparent(RTRay.RayType type, float transparency)
@@ -376,7 +376,7 @@ namespace _Project.Ray_Tracer.Scripts
         /// <param name="r"> The red component of the color </param>
         /// <param name="g"> The green component of the color </param>
         /// <param name="b"> The blue component of the color </param>
-        /// <returns> 
+        /// <returns>
         /// The <see cref="Material"/> for <paramref name="r"/>, <paramref name="g"/> and <paramref name="b"/>.
         /// </returns>
         private Material GetRayColorMaterial(float r, float g, float b)

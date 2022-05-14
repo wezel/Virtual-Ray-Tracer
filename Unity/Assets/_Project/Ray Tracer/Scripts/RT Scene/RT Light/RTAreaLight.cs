@@ -32,14 +32,14 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
             {
                 value.a = 1;
                 color = value;
-                label.color = value;
-                
-                //Color lightData = light.color;
-                //lightData.r = Mathf.Floor(value.r * 256) + value.g / 2;
-                //lightData.g = value.b;
-                //light.color = lightData;
-                
-                //OnLightChanged?.Invoke();
+                //label.color = value;
+
+                Color lightData = light.color;
+                lightData.r = Mathf.Floor(value.r * 256) + value.g / 2;
+                lightData.g = value.b;
+                light.color = lightData;
+
+                OnLightChanged?.Invoke();
             }
         }
 
@@ -51,12 +51,12 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
             set
             {
                 ambient = value;
-                
-                //Color lightData = light.color;
-                //lightData.b = lightData.b % 1 + Mathf.Floor(value * 256);
-                //light.color = lightData;
-                
-                //OnLightChanged?.Invoke();
+
+                Color lightData = light.color;
+                lightData.b = lightData.b % 1 + Mathf.Floor(value * 256);
+                light.color = lightData;
+
+                OnLightChanged?.Invoke();
             }
         }
 
@@ -70,11 +70,11 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
             {
                 diffuse = value;
 
-                //Color lightData = light.color;
-                //lightData.b = Mathf.Floor(lightData.b) + value / 2;
-                //light.color = lightData;
+                Color lightData = light.color;
+                lightData.b = Mathf.Floor(lightData.b) + value / 2;
+                light.color = lightData;
 
-                //OnLightChanged?.Invoke();
+                OnLightChanged?.Invoke();
             }
         }
 
@@ -88,11 +88,11 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
             {
                 specular = value;
 
-                //Color lightData = light.color;
-                //lightData.a = specular;
-                //light.color = lightData;
+                Color lightData = light.color;
+                lightData.a = specular;
+                light.color = lightData;
 
-                //OnLightChanged?.Invoke();
+                OnLightChanged?.Invoke();
             }
         }
         
@@ -105,11 +105,11 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
         /// <summary>
         /// The underlying <see cref="UnityEngine.Light"/> used by the light.
         /// </summary>
-        //[SerializeField]
-        //private new Light light;
-        
-        //public LightShadows Shadows { get => light.shadows; set => light.shadows = value; }
-        
+        [SerializeField]
+        private new Light light;
+
+        public LightShadows Shadows { get => light.shadows; set => light.shadows = value; }
+
 
         /// <summary>
         /// The position of the light.
@@ -120,28 +120,50 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
             set
             {
                 transform.position = value;
-                //OnLightChanged?.Invoke();
+                OnLightChanged?.Invoke();
             }
         }
-        
-        [SerializeField]
-        private Image label;
-        
-        [SerializeField]
-        private Image outline;
 
-        [SerializeField]
-        private Canvas canvas;
+        //private int limit = 10;
+
+        private readonly System.Random rnd = new System.Random();
+
+        public Vector3 RandomPointOnLight()
+        {
+            Vector3 randomPoint = Position;
+
+            float range = 1f;
+            randomPoint.z += ((float)rnd.NextDouble() * range) - (range / 2f);
+            randomPoint.x += ((float)rnd.NextDouble() * range) - (range / 2f);
+            //if (limit-- > 0)
+            //    Debug.Log(randomPoint.ToString("F4"));
+            return randomPoint;
+        }
+        
+        //[SerializeField]
+        //private Image label;
+        
+        //[SerializeField]
+        //private Image outline;
+
+        //[SerializeField]
+        //private Canvas canvas;
 
         private Color defaultOutline;
 
-        public void Higlight(Color value) => outline.color = value;
+        public void Higlight(Color value)
+        {
+            //outline.color = value;
+        }
 
-        public void ResetHighlight() => outline.color = defaultOutline;
-        
+        public void ResetHighlight()
+        {
+            //outline.color = defaultOutline;
+        }
+
         private void Awake()
         {
-            defaultOutline = outline.color;
+            //defaultOutline = outline.color;
         }
         
         private void LateUpdate()
@@ -151,14 +173,14 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
             #endif
             // Make the label face the camera. We do this in LateUpdate to make sure the camera has finished its moving.
             // From: https://answers.unity.com/questions/52656/how-i-can-create-an-sprite-that-always-look-at-the.html
-            canvas.transform.forward = Camera.main.transform.forward;
+            //canvas.transform.forward = Camera.main.transform.forward;
         }
 
 #if UNITY_EDITOR
 
         private void OnEnable()
         {
-            label.color = color;
+            //label.color = color;
         }
 
         private void OnRenderObject()
@@ -166,7 +188,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
             // Fix maximize window errors
             if (UnityEditor.SceneView.lastActiveSceneView == null) 
                 return;
-            canvas.transform.forward = UnityEditor.SceneView.lastActiveSceneView.camera.transform.forward;
+            //canvas.transform.forward = UnityEditor.SceneView.lastActiveSceneView.camera.transform.forward;
         }
 #endif
         
