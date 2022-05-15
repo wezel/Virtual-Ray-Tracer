@@ -128,21 +128,36 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
 
         private readonly System.Random rnd = new System.Random();
 
+        private float range = 1f;
         public Vector3 RandomPointOnLight()
         {
             Vector3 randomPoint = Position;
 
-            float range = 1f;
             randomPoint.z += ((float)rnd.NextDouble() * range) - (range / 2f);
             randomPoint.x += ((float)rnd.NextDouble() * range) - (range / 2f);
             //if (limit-- > 0)
             //    Debug.Log(randomPoint.ToString("F4"));
             return randomPoint;
         }
-        
+        public Vector3[] GetEdgePoints()
+        {
+            Vector3[] edgePoints = new Vector3[8];
+            edgePoints[0] = Position; edgePoints[0].x += range / 2f; edgePoints[0].y += range / 2f;
+            edgePoints[1] = Position; edgePoints[1].x -= range / 2f; edgePoints[1].y += range / 2f;
+            edgePoints[2] = Position; edgePoints[2].x += range / 2f; edgePoints[2].y -= range / 2f;
+            edgePoints[3] = Position; edgePoints[3].x -= range / 2f; edgePoints[3].y -= range / 2f;
+
+            edgePoints[4] = (edgePoints[0] + edgePoints[1]) / 2f;
+            edgePoints[5] = (edgePoints[0] + edgePoints[2]) / 2f;
+            edgePoints[6] = (edgePoints[1] + edgePoints[3]) / 2f;
+            edgePoints[7] = (edgePoints[2] + edgePoints[3]) / 2f;
+
+            return edgePoints;
+        }
+
         //[SerializeField]
         //private Image label;
-        
+
         //[SerializeField]
         //private Image outline;
 

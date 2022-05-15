@@ -555,22 +555,7 @@ namespace _Project.Ray_Tracer.Scripts
             }
 
             image.Apply(); // Very important.
-
-            if (true)
-                return image;
-
-            // Bilateral filter
-            Texture2D imageFiltered = new Texture2D(width, height, TextureFormat.RGBA32, false);
-            
-            
-
-            imageFiltered.Apply(); // Very important.
-            return imageFiltered;
-        }
-
-        private float Gaussian(float x)
-        {
-            return 0f;
+            return image;
         }
 
         private Color TraceImage(Vector3 origin, Vector3 direction, int depth)
@@ -600,13 +585,38 @@ namespace _Project.Ray_Tracer.Scripts
             if (RenderAreaLights)
                 foreach (RTAreaLight arealight in scene.AreaLights)
                 {
-                    for (int sample = 0; sample < areaLightSamples; sample++)
+                    bool fullyVisible = true;
+                    foreach (Vector3 edgePoint in arealight.GetEdgePoints())
                     {
-                        Vector3 point = arealight.RandomPointOnLight();
+                        Vector3 lightVector = (edgePoint - hit.point).normalized;
+                        if (Vector3.Dot(hitInfo.Normal, lightVector) >= 0.0f)
+                        {
+                            Vector3 shadowOrigin = hitInfo.Point + Epsilon * hitInfo.Normal;
+                            float lightDistance = Vector3.Dot(lightVector, edgePoint - hitInfo.Point);
+                            if (Physics.Raycast(shadowOrigin, lightVector, out _, lightDistance, rayTracerLayer))
+                            {
+                                fullyVisible = false;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (!fullyVisible)
+                        for (int sample = 0; sample < areaLightSamples; sample++)
+                        {
+                            Vector3 point = arealight.RandomPointOnLight();
+                            Vector3 lightVector = (point - hit.point).normalized;
+
+                            if (Vector3.Dot(hitInfo.Normal, lightVector) >= 0.0f)
+                                color += TraceAreaLightImage(ref lightVector, ref point, arealight, in hitInfo) / areaLightSamples;
+                        }
+                    else
+                    {
+                        Vector3 point = arealight.Position;
                         Vector3 lightVector = (point - hit.point).normalized;
 
                         if (Vector3.Dot(hitInfo.Normal, lightVector) >= 0.0f)
-                            color += TraceAreaLightImage(ref lightVector, ref point, arealight, in hitInfo) / areaLightSamples;
+                            color += TraceAreaLightImage(ref lightVector, ref point, arealight, in hitInfo);
                     }
                 }
 
