@@ -382,11 +382,11 @@ namespace _Project.Ray_Tracer.Scripts
         private Material GetRayColorMaterial(float r, float g, float b)
         {
             int idxr = Mathf.RoundToInt(r * (colorN - 1));
-            int idxg = Mathf.RoundToInt(b * (colorN - 1));
-            int idxb = Mathf.RoundToInt(g * (colorN - 1));
+            int idxg = Mathf.RoundToInt(g * (colorN - 1));
+            int idxb = Mathf.RoundToInt(b * (colorN - 1));
 
-            // To optimize load-performance, these materials are constucted on-demand.
-            // To further optimize performance, once they're made, they're saved
+            // To optimize loading-performance, these materials are constucted on-demand.
+            // To optimize runtime-performance, once they're made, they're saved
             if (!colorRayMaterialArray[idxr, idxg, idxb])
                 colorRayMaterialArray[idxr, idxg, idxb] = new Material(colorRayMaterial)
                 { color = new Color(idxr * colorStep, idxg * colorStep, idxb * colorStep, 1f) };
