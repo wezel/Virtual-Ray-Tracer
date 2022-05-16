@@ -124,20 +124,25 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
             }
         }
 
-        //private int limit = 10;
-
         private readonly System.Random rnd = new System.Random();
 
         private float range = 1f;
-        public Vector3 RandomPointOnLight()
+        public Vector3[] RandomPointsOnLight(int samples)
         {
-            Vector3 randomPoint = Position;
+            Vector3[] points = new Vector3[samples*samples];
+            Vector3 start = Position;
+            start.x -= range / 2f;
+            start.z -= range / 2f;
 
-            randomPoint.z += ((float)rnd.NextDouble() * range) - (range / 2f);
-            randomPoint.x += ((float)rnd.NextDouble() * range) - (range / 2f);
-            //if (limit-- > 0)
-            //    Debug.Log(randomPoint.ToString("F4"));
-            return randomPoint;
+            float step = range / samples;
+            for (int i = 0; i < samples * samples; i++)
+            {
+                points[i] = start;
+                points[i].x += (i / samples) * step + (float)rnd.NextDouble() * step;
+                points[i].z += (i % samples) * step + (float)rnd.NextDouble() * step;
+            }
+
+            return points;
         }
         public Vector3[] GetEdgePoints()
         {

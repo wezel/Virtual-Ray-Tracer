@@ -99,9 +99,9 @@ namespace _Project.Ray_Tracer.Scripts
         }
 
         [SerializeField]
-        private int areaLightSamples = 8;
+        private int areaLightSamples = 2;
         /// <summary>
-        /// The samples taken per lightray per area light.
+        /// The square root of samples taken per lightray per area light.
         /// </summary>
         public int AreaLightSamples
         {
@@ -602,14 +602,17 @@ namespace _Project.Ray_Tracer.Scripts
                     }
 
                     if (!fullyVisible)
-                        for (int sample = 0; sample < areaLightSamples; sample++)
+                    {
+                        int samples = areaLightSamples * areaLightSamples;
+                        foreach (Vector3 p in arealight.RandomPointsOnLight(areaLightSamples))
                         {
-                            Vector3 point = arealight.RandomPointOnLight();
+                            Vector3 point = p;
                             Vector3 lightVector = (point - hit.point).normalized;
 
                             if (Vector3.Dot(hitInfo.Normal, lightVector) >= 0.0f)
-                                color += TraceAreaLightImage(ref lightVector, ref point, arealight, in hitInfo) / areaLightSamples;
+                                color += TraceAreaLightImage(ref lightVector, ref point, arealight, in hitInfo) / samples;
                         }
+                    }
                     else
                     {
                         Vector3 point = arealight.Position;

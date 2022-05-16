@@ -2927,11 +2927,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 590595069432362183, guid: 9c7e9f84e5dea9c40a41d59563b4d99b, type: 3}
       propertyPath: tooltip
-      value: Samples per lightray per area light
+      value: k^2 samples point per area light
       objectReference: {fileID: 0}
     - target: {fileID: 590595069432362183, guid: 9c7e9f84e5dea9c40a41d59563b4d99b, type: 3}
       propertyPath: maxValue
-      value: 1024
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 590595069432362183, guid: 9c7e9f84e5dea9c40a41d59563b4d99b, type: 3}
       propertyPath: minValue
@@ -2948,6 +2948,10 @@ PrefabInstance:
     - target: {fileID: 590595070482668862, guid: 9c7e9f84e5dea9c40a41d59563b4d99b, type: 3}
       propertyPath: m_AnchorMin.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 801594575733259345, guid: 9c7e9f84e5dea9c40a41d59563b4d99b, type: 3}
+      propertyPath: Content
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9c7e9f84e5dea9c40a41d59563b4d99b, type: 3}
