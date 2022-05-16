@@ -221,7 +221,7 @@ MonoBehaviour:
       description: You might notice that the sphere isn't very round in the rendered
         image; you can see the edges of some pixels. This can be improved by the
         use of super sampling. Super sampling will shoot multiple rays through one
-        pixel and then average the color. Increase the "Super Sampling" amount in
+        pixel and then average the color. Increase the "Super Sampling" factor in
         the ray tracer properties.
       skippable: 0
     - identifier: renderImage
