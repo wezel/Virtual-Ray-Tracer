@@ -68,7 +68,7 @@ MonoBehaviour:
         mouse button or by using the arrow keys.
       skippable: 0
     - identifier: cameraOrbit
-      name: Camera Orbitting
+      name: Camera Orbiting
       description: Orbit the camera by moving your mouse while holding down left-click
         and left control or by using the arrow keys while holding down left control.
       skippable: 0
@@ -157,9 +157,9 @@ MonoBehaviour:
     - identifier: 
       name: Ray Tracing
       description: In ray tracing, this process is simulated. However, instead of
-        tacing rays (photons) from the light source, the rays are traced backwards
+        tracing rays (photons) from the light source, the rays are traced backwards
         from the eye/camera to the light source. This still creates realistic images
-        but is much faster.
+        but it is much faster.
       skippable: 1
     - identifier: selectPixel
       name: Select Pixel
@@ -197,7 +197,7 @@ MonoBehaviour:
         this in the camera settings. Select the camera.
       skippable: 0
     - identifier: editHorPixels
-      name: Horizonal Camera Pixels
+      name: Horizontal Camera Pixels
       description: Change the number of horizontal pixels and notice how it affects
         the render preview.
       skippable: 0
@@ -216,6 +216,20 @@ MonoBehaviour:
       name: 
       description: 
       skippable: 1
+    - identifier: editSuperSampling
+      name: Super Sampling
+      description: You might notice that the sphere isn't very round in the rendered
+        image; you can see the edges of some pixels. This can be improved by the
+        use of super sampling. Super sampling will shoot multiple rays through one
+        pixel and then average the color. Increase the "Super Sampling" amount in
+        the ray tracer properties.
+      skippable: 0
+    - identifier: renderImage
+      name: Rendering the Scene
+      description: Rendering the scene will now take a lot longer as more rays are
+        being traced. However, it does result in a better image. Render the scene
+        again.
+      skippable: 0
     - identifier: editAnimSpeed
       name: Animation Speed
       description: 'The ray tracing animation can also be changed in the ray tracer
@@ -270,7 +284,7 @@ MonoBehaviour:
     - identifier: renderImage
       name: Render Image
       description: To see what it should like, click on "Render Image" in the ray
-        tracer properties again.
+        tracer properties again. Make sure the "Recursion Depth" is not set to zero.
       skippable: 0
     - identifier: selectMirror
       name: Reflective Properties
@@ -329,7 +343,7 @@ MonoBehaviour:
     - identifier: 
       name: Refractions
       description: The refracted ray continues to go through the transparent object.
-        However, the refractedd ray does not continu in the same direction as the
+        However, the refracted ray does not continue in the same direction as the
         original ray. Instead, it bends a certain amount depending on the refractive
         index of a material.
       skippable: 1
@@ -369,7 +383,7 @@ MonoBehaviour:
       name: 
       description: 
       skippable: 0
-  - optionalTasksStart: 8
+  - optionalTasksStart: 9
     tasks:
     - identifier: selectCamera
       name: Transparent Interactions
@@ -403,8 +417,15 @@ MonoBehaviour:
       description: The ray tracer determines light rays by tracing a straight line
         from the object to the light source. The transparent wall bends light, so
         it won't work. Therefore, the lights rays are blocked and replaced by shadow
-        rays.
+        rays. These shadow rays only take the ambient components into consideration.
       skippable: 1
+    - identifier: disableShadows
+      name: Render Shadows
+      description: You can also disable rendering shadows. The light rays will then
+        go straight through the object(s). Turn off "Render Shadows" in the ray tracer
+        properties and notice how the shadow rays are replaced with light rays and
+        go straight through the transparent wall.
+      skippable: 0
     - identifier: 
       name: Prism
       description: In real life, light is also able to split into a rainbow of colors.
@@ -452,6 +473,27 @@ MonoBehaviour:
       name: 
       description: You may press "Next Level" now to move onto the next level or
         do some more exploring.
+      skippable: 0
+  - optionalTasksStart: 4
+    tasks:
+    - identifier: 
+      name: Freedom
+      description: You have reached the final level! This is a sandbox level which
+        means all tools are available to create a customized scene yourself.
+      skippable: 1
+    - identifier: createObject
+      name: Creating Objects
+      description: You can now create objects. Create an object by choosing one of
+        the objects in the "Create" dropdown.
+      skippable: 0
+    - identifier: deleteObject
+      name: Deleting Objects
+      description: You can now also delete any object, except for the camera. Delete
+        a non-camera object from the scene by selecting it and pressing [DEL].
+      skippable: 0
+    - identifier: 
+      name: 
+      description: You are now able to create your own custom scenes. Go crazy!
       skippable: 0
   - optionalTasksStart: 4
     tasks:

@@ -124,7 +124,7 @@ namespace _Project.UI.Scripts.Tutorial
         public float GetTotalPercentage()
         {
             if (tasks.Count == 0) return 0f;
-            return index / (float)tasks.Count;
+            return index / ((float)tasks.Count - 1);
         }
 
         public int CurrentTaskIndex()
