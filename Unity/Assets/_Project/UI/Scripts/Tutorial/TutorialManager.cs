@@ -90,6 +90,18 @@ namespace _Project.UI.Scripts.Tutorial
                 SceneManager.LoadSceneAsync(--currentScene);
         }
 
+        public static bool CanLevelBeLoaded(int level)
+        {
+            if (level <= 1)
+                return true;
+
+            if (GlobalSettings.Get().TutorialTasks.Count <= level - 2)
+                return false;
+
+            // Check whether the tasks of the previous level are finished
+            return GlobalSettings.Get().TutorialTasks[level - 2].RequiredTasksFinished();
+        }
+
         /// <summary>
         /// Skip a tutorial task
         /// </summary>

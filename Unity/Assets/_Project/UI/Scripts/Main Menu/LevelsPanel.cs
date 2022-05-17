@@ -21,11 +21,7 @@ namespace _Project.UI.Scripts.Main_Menu
         [SerializeField]
         private Button exitButton;
 
-        [SerializeField]
-        private Button loadLevelButton;
-
         private List<Button> levelsList = new List<Button>();
-        private Button selectedButton;
         private MainMenu mainMenu;
 
         /// <summary>
@@ -34,7 +30,6 @@ namespace _Project.UI.Scripts.Main_Menu
         public void Show()
         {
             gameObject.SetActive(true);
-            OnButtonClicked(levelsList.First()); // Select the first level by default.
             UIManager.Get().AddEscapable(Hide);
         }
 
@@ -60,25 +55,14 @@ namespace _Project.UI.Scripts.Main_Menu
 
         private void OnButtonClicked(Button clickedButton)
         {
-            // Set all level buttons to be interactable.
-            foreach (Button levelButton in levelsList)
-                levelButton.interactable = true;
-
-            // Select the clicked button and prevent any further interaction.
-            clickedButton.interactable = false;
-            selectedButton = clickedButton;
-        }
-
-        private void LoadLevel()
-        {
+            // Hide main menu and loat the scene
             mainMenu.Toggle();
-            SceneManager.LoadSceneAsync(selectedButton.GetComponentInChildren<TextMeshProUGUI>().text);
+            SceneManager.LoadSceneAsync(clickedButton.name);
         }
 
         private void Awake()
         {
             exitButton.onClick.AddListener(Hide);
-            loadLevelButton.onClick.AddListener(LoadLevel);
             mainMenu = gameObject.GetComponentInParent<MainMenu>();
 
             // Set up a button for each scene. We start the index at 2 because we skip the start and initialize scene.
@@ -86,13 +70,13 @@ namespace _Project.UI.Scripts.Main_Menu
             for (int i = 1; i < sceneCount; i++)
             {
                 Button levelButton = Instantiate(levelsPrefab, content.transform);
-                string levelName = System.IO.Path.GetFileNameWithoutExtension(SceneUtility.GetScenePathByBuildIndex(i));
+                levelButton.name = System.IO.Path.GetFileNameWithoutExtension(SceneUtility.GetScenePathByBuildIndex(i));
 
-                levelButton.GetComponentInChildren<TextMeshProUGUI>().text = levelName;
+                levelButton.interactable = Tutorial.TutorialManager.CanLevelBeLoaded(i);
+                levelButton.GetComponentInChildren<TextMeshProUGUI>().text = i + ". " + levelButton.name;
                 levelButton.onClick.AddListener(() => OnButtonClicked(levelButton));
                 levelsList.Add(levelButton);
             }
-            
         }
     }
 }
