@@ -144,18 +144,36 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
 
             return points;
         }
+
+        private Vector3[] GetPointsBetween(int n, Vector3 p1, Vector3 p2)
+        {
+            Vector3[] points = new Vector3[n];
+            Vector3 step = (p2 - p1) / (n + 1);
+
+            for (int i = 0; i < n; ++i)
+                points[i] = p1 + (i + 1) * step;
+
+            return points;
+        }
+
         public Vector3[] GetEdgePoints()
         {
-            Vector3[] edgePoints = new Vector3[8];
-            edgePoints[0] = Position; edgePoints[0].x += range / 2f; edgePoints[0].y += range / 2f;
-            edgePoints[1] = Position; edgePoints[1].x -= range / 2f; edgePoints[1].y += range / 2f;
-            edgePoints[2] = Position; edgePoints[2].x += range / 2f; edgePoints[2].y -= range / 2f;
-            edgePoints[3] = Position; edgePoints[3].x -= range / 2f; edgePoints[3].y -= range / 2f;
+            int n = 8;
+            int idx = 4;
+            Vector3[] edgePoints = new Vector3[4*(n + 1)];
+            edgePoints[0] = Position; edgePoints[0].x += range / 2f; edgePoints[0].z += range / 2f;
+            edgePoints[1] = Position; edgePoints[1].x -= range / 2f; edgePoints[1].z += range / 2f;
+            edgePoints[2] = Position; edgePoints[2].x += range / 2f; edgePoints[2].z -= range / 2f;
+            edgePoints[3] = Position; edgePoints[3].x -= range / 2f; edgePoints[3].z -= range / 2f;
 
-            edgePoints[4] = (edgePoints[0] + edgePoints[1]) / 2f;
-            edgePoints[5] = (edgePoints[0] + edgePoints[2]) / 2f;
-            edgePoints[6] = (edgePoints[1] + edgePoints[3]) / 2f;
-            edgePoints[7] = (edgePoints[2] + edgePoints[3]) / 2f;
+            foreach (Vector3 point in GetPointsBetween(n, edgePoints[0], edgePoints[1]))
+                edgePoints[idx++] = point;
+            foreach (Vector3 point in GetPointsBetween(n, edgePoints[0], edgePoints[2]))
+                edgePoints[idx++] = point;
+            foreach (Vector3 point in GetPointsBetween(n, edgePoints[1], edgePoints[3]))
+                edgePoints[idx++] = point;
+            foreach (Vector3 point in GetPointsBetween(n, edgePoints[2], edgePoints[3]))
+                edgePoints[idx++] = point;
 
             return edgePoints;
         }

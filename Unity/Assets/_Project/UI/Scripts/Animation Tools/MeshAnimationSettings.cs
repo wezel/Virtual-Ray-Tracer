@@ -23,9 +23,6 @@ namespace _Project.UI.Scripts.Animation_Tools
         private float rayHideThreshold = 0.02f;
 
         [SerializeField]
-        private float rayTransThreshold = 0.25f;
-
-        [SerializeField]
         private bool animate;
 
         [SerializeField]
@@ -60,7 +57,6 @@ namespace _Project.UI.Scripts.Animation_Tools
             rayManager.AnimateSequentially = sequentialAnimate;
             rayManager.HideNoHitRays = hideNoHitRays;
             rayManager.RayHideThreshold = rayHideThreshold;
-            rayManager.RayTransThreshold = rayTransThreshold;
             rayManager.Reset = true;
             mesh = gameObject.GetComponent<RTMesh>();
             update = axis.magnitude != 0;

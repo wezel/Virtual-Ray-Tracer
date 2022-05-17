@@ -47,16 +47,16 @@ namespace _Project.Ray_Tracer.Scripts
             set { rayTransExponent = value; }
         }
 
-        [SerializeField, Range(0.00f, 1.00f)]
-        private float rayTransThreshold = 0.25f;
-        /// <summary>
-        /// The transparency threshold of the rays this ray manager draws.
-        /// </summary>
-        public float RayTransThreshold
-        {
-            get { return rayTransThreshold; }
-            set { rayTransThreshold = value; }
-        }
+        //[SerializeField, Range(0.00f, 1.00f)]
+        //private float rayTransThreshold = 0.25f;
+        ///// <summary>
+        ///// The transparency threshold of the rays this ray manager draws.
+        ///// </summary>
+        //public float RayTransThreshold
+        //{
+        //    get { return rayTransThreshold; }
+        //    set { rayTransThreshold = value; }
+        //}
 
         [SerializeField]
         private bool rayDynamicRadiusEnabled = true;
@@ -280,6 +280,7 @@ namespace _Project.Ray_Tracer.Scripts
             }
             return colors;
         }
+
         /// <summary>
         /// Get the material used to render rays of the given <see cref="RTRay.RayType"/>.
         /// </summary>
@@ -291,7 +292,7 @@ namespace _Project.Ray_Tracer.Scripts
         /// </returns>
         public Material GetRayMaterial(float contribution, RTRay.RayType type, Color color)
         {
-            if (RayTransparencyEnabled && contribution <= RayTransThreshold)
+            if (RayTransparencyEnabled)
             {
                 if (RayColorContributionEnabled)
                     return GetRayColorMaterialTransparent(color.r, color.g, color.b, Mathf.Pow(contribution, RayTransExponent));
@@ -407,12 +408,12 @@ namespace _Project.Ray_Tracer.Scripts
         private Material GetRayColorMaterialTransparent(float r, float g, float b, float transparency)
         {
             int idxr = Mathf.RoundToInt(r * (colorN - 1));
-            int idxg = Mathf.RoundToInt(b * (colorN - 1));
-            int idxb = Mathf.RoundToInt(g * (colorN - 1));
+            int idxg = Mathf.RoundToInt(g * (colorN - 1));
+            int idxb = Mathf.RoundToInt(b * (colorN - 1));
             int idxa = Mathf.RoundToInt(transparency * (transparencyRange - 1));
 
-            // To optimize load-performance, these materials are constucted on-demand.
-            // To further optimize performance, once they're made, they're saved.
+            // To optimize loading-performance, these materials are constucted on-demand.
+            // To optimize runtime-performance, once they're made, they're saved
             if (!colorRayMaterialTransparentArray[idxr, idxg, idxb, idxa])
             {
                 colorRayMaterialTransparentArray[idxr, idxg, idxb, idxa] = new Material(colorRayMaterialTransparent)

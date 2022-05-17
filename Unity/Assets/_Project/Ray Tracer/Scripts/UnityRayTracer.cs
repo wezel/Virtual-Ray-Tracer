@@ -523,6 +523,7 @@ namespace _Project.Ray_Tracer.Scripts
             Vector3 origin = camera.transform.position;
 
             // Trace a ray for each pixel.
+            float start = Time.realtimeSinceStartup;
             for (int y = 0; y < height; ++y)
             {
                 for (int x = 0; x < width; ++x)
@@ -555,6 +556,7 @@ namespace _Project.Ray_Tracer.Scripts
             }
 
             image.Apply(); // Very important.
+            Debug.Log(Time.realtimeSinceStartup - start);
             return image;
         }
 

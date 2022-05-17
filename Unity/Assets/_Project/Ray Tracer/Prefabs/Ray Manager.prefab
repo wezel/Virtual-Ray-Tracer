@@ -43,10 +43,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9cd2915fe113a26f2b04552e68a06761, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aaa: 0.02
   rayHideThreshold: 0.02
   rayTransparencyEnabled: 1
-  rayTransThreshold: 0.25
+  rayTransThreshold: 1
   rayDynamicRadiusEnabled: 1
   rayColorContributionEnabled: 1
   rayRadius: 0.01
