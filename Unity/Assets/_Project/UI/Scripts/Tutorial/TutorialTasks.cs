@@ -71,68 +71,100 @@ namespace _Project.UI.Scripts.Tutorial
         private List<Task> tasks = new List<Task>();
 
         private int index = 0;
+        private int completedIndex = 0;
 
-        public bool IsRequired()
+        /// <summary>
+        /// Whether the current task is a required one.
+        /// </summary>
+        /// <returns>Whether the current task is a required one</returns>
+        public bool IsRequiredTask()
         {
             return index < optionalTasksStart;
         }
 
-        public bool RequiredTasksFinished()
+        /// <summary>
+        /// Whether the required tasks are finished.
+        /// </summary>
+        /// <returns>Whether the required tasks are finished</returns>
+        public bool AreRequiredTasksFinished()
         {
-            return index >= optionalTasksStart - 1;
+            return completedIndex >= optionalTasksStart - 1;
         }
 
+        /// <summary>
+        /// Whether the current task is skippable.
+        /// </summary>
+        /// <returns>Whether the current task is skippable</returns>
         public bool IsSkippable()
         {
+            if (index < completedIndex) return true;
             if (index >= tasks.Count) return false;
             return tasks[index].Skippable;
         }
 
+        /// <summary>
+        /// Get the current tasks' name.
+        /// </summary>
+        /// <returns>The current tasks' name</returns>
         public string GetName()
         {
             if (index >= tasks.Count) return "";
             return tasks[index].Name;
         }
 
+        /// <summary>
+        /// Get the current tasks' description.
+        /// </summary>
+        /// <returns>The current tasks' description</returns>
         public string GetDescription()
         {
             if (index >= tasks.Count) return "";
             return tasks[index].Description;
         }
 
+        /// <summary>
+        /// Get the current tasks' identifier.
+        /// </summary>
+        /// <returns>The current tasks' identifier</returns>
         public string GetIdentifier()
         {
             if (index >= tasks.Count) return "";
             return tasks[index].Identifier;
         }
 
-        public float RequiredPercentage()
-        {
-            int total = optionalTasksStart - 1;
-            if (total == 0) return 1f;
-            return Math.Min(index / (float)total, 1f);
-        }
-
-        public float OptionalPercentage()
-        {
-            if (index < optionalTasksStart) return 0f;
-            int total = tasks.Count - optionalTasksStart - 1;
-            if (total == 0) return 1f;
-            return Math.Max(0f, (index - optionalTasksStart) / (float)total);
-        }
-
-        public float GetTotalPercentage()
+        /// <summary>
+        /// Get the percentage of completed tasks.
+        /// </summary>
+        /// <returns>The percentage of completed tasks</returns>
+        public float GetCompletedPercentage()
         {
             if (tasks.Count == 0) return 0f;
-            return index / ((float)tasks.Count - 1);
+            return completedIndex / ((float)tasks.Count - 1);
         }
 
-        public int CurrentTaskIndex()
+        /// <summary>
+        /// Get the current task index.
+        /// </summary>
+        /// <returns>The current task index</returns>
+        public int GetCurrentTaskindex()
         {
             return index;
         }
 
-        public int TotalTasksCount()
+        /// <summary>
+        /// Get the completed task index.
+        /// </summary>
+        /// <returns>The completed task index</returns>
+        public int GetCompletedTaskIndex()
+        {
+            return completedIndex;
+        }
+
+        /// <summary>
+        /// Get the total number of tasks.
+        /// </summary>
+        /// <returns>The total number of tasks</returns>
+        public int GetTotalTaskCount()
         {
             return tasks.Count;
         }
@@ -147,6 +179,7 @@ namespace _Project.UI.Scripts.Tutorial
             if (index >= tasks.Count - 1) return false;
             if (GetIdentifier() != identifier) return false;
             index++;
+            if (index > completedIndex) completedIndex++;
             return true;
         }
 
@@ -154,9 +187,16 @@ namespace _Project.UI.Scripts.Tutorial
         /// Skip a tutorial task
         /// </summary>
         /// <returns> Whether a task was skipped </returns>
-        public bool SkipTask()
+        public bool NextTask()
         {
             return CompleteTask(GetIdentifier());
+        }
+
+        public bool PreviousTask()
+        {
+            if (index == 0) return false;
+            index--;
+            return true;
         }
     }
 }

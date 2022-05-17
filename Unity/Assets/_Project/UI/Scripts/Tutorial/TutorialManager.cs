@@ -34,6 +34,11 @@ namespace _Project.UI.Scripts.Tutorial
         private Image nextImage;
 
         [SerializeField]
+        private Button previousButton;
+        [SerializeField]
+        private Image previousImage;
+
+        [SerializeField]
         private Button expandCollapseButton;
         [SerializeField]
         private Image expandCollapseImage;
@@ -46,9 +51,7 @@ namespace _Project.UI.Scripts.Tutorial
         [SerializeField]
         private GameObject progressBar;
         [SerializeField]
-        private GameObject progressRequiredFill;
-        [SerializeField]
-        private GameObject progressOptionalFill;
+        private GameObject progressFill;
 
 
         [SerializeField]
@@ -92,29 +95,45 @@ namespace _Project.UI.Scripts.Tutorial
                 SceneManager.LoadSceneAsync(--currentScene);
         }
 
+        /// <summary>
+        /// Whether the level can be loaded.
+        /// </summary>
+        /// <param name="level"></param>
+        /// <returns>Whether the level can be loaded></returns>
         public static bool CanLevelBeLoaded(int level)
         {
+            // The first level can always be loaded
             if (level <= 1)
                 return true;
 
+            // Check whether the tasks of the previous level exist
             if (GlobalSettings.Get().TutorialTasks.Count <= level - 2)
                 return false;
 
             // Check whether the tasks of the previous level are finished
-            return GlobalSettings.Get().TutorialTasks[level - 2].RequiredTasksFinished();
+            return GlobalSettings.Get().TutorialTasks[level - 2].AreRequiredTasksFinished();
         }
 
         /// <summary>
-        /// Skip a tutorial task
+        /// Skip a tutorial task.
         /// </summary>
-        public static void SkiptTask()
+        public static void NextTask()
         {
             TutorialManager manager = Get();
-            manager.SkipTaskInternal();
+            manager.NextTaskinternal();
         }
 
         /// <summary>
-        /// Complete a tutorial task
+        /// Go to the previous task.
+        /// </summary>
+        public static void PreviousTask()
+        {
+            TutorialManager manager = Get();
+            manager.PreviousTaskInternal();
+        }
+
+        /// <summary>
+        /// Complete a tutorial task.
         /// </summary>
         /// <param name="identifier"></param>
         public static void CompleteTask(string identifier)
@@ -124,7 +143,7 @@ namespace _Project.UI.Scripts.Tutorial
         }
 
         /// <summary>
-        /// Complete a tutorial task and update the UI if necessary
+        /// Complete a tutorial task and update the UI if necessary.
         /// </summary>
         /// <param name="identifier"></param>
         private IEnumerator CompleteTaskInternal(string identifier)
@@ -134,15 +153,23 @@ namespace _Project.UI.Scripts.Tutorial
         }
 
         /// <summary>
-        /// Skip a tutorial task and update the UI if necessary
+        /// Goes to the previous task and updates the UI if necessary.
         /// </summary>
-        private void SkipTaskInternal()
+        private void PreviousTaskInternal()
         {
-            if (currentTasks.SkipTask()) UpdateTutorial();
+            if (currentTasks.PreviousTask()) UpdateTutorial();
         }
 
         /// <summary>
-        /// Expand or collapse the tutorial tasks
+        /// Skip a tutorial task and update the UI if necessary.
+        /// </summary>
+        private void NextTaskinternal()
+        {
+            if (currentTasks.NextTask()) UpdateTutorial();
+        }
+
+        /// <summary>
+        /// Expand or collapse the tutorial tasks.
         /// </summary>
         private void ExpandCollapse()
         {
@@ -151,7 +178,7 @@ namespace _Project.UI.Scripts.Tutorial
         }
 
         /// <summary>
-        /// Update the collapse/expand state
+        /// Update the collapse/expand state.
         /// </summary>
         private void UpdateExpandCollapse()
         {
@@ -174,38 +201,38 @@ namespace _Project.UI.Scripts.Tutorial
         }
 
         /// <summary>
-        /// Updates all UI elements
+        /// Updates all UI elements.
         /// </summary>
         private void UpdateTutorial()
         {
             // Set the fill width/percentage
-            progressRequiredFill.GetComponent<RectTransform>().sizeDelta = new Vector2(progressBar.GetComponent<RectTransform>().rect.width * 
-                currentTasks.GetTotalPercentage(), 0);
-            //progressOptionalFill.GetComponent<RectTransform>().sizeDelta = new Vector2(progressBar.GetComponent<RectTransform>().rect.width *
-            //    currentTasks.OptionalPercentage(), 0);
+            progressFill.GetComponent<RectTransform>().sizeDelta = new Vector2(progressBar.GetComponent<RectTransform>().rect.width * 
+                currentTasks.GetCompletedPercentage(), 0);
 
             // Set the task progression text
-            taskProgress.text = currentTasks.CurrentTaskIndex() + "/" + (currentTasks.TotalTasksCount() - 1);
+            taskProgress.text = currentTasks.GetCompletedTaskIndex() + "/" + (currentTasks.GetTotalTaskCount() - 1);
 
             // Set the name and description
-            if (currentTasks.GetName() == "") taskName.text = (currentTasks.IsRequired() ? DEFAULT_REQUIRED_NAME : DEFAULT_OPTIONAL_NAME) + currentScene + "/" + lastScene + "!";
+            if (currentTasks.GetName() == "") taskName.text = (currentTasks.IsRequiredTask() ? DEFAULT_REQUIRED_NAME : DEFAULT_OPTIONAL_NAME) + currentScene + "/" + lastScene + "!";
             else taskName.text = currentScene + ". " + currentTasks.GetName();
 
-            if (currentTasks.GetDescription() == "") taskDescription.text = currentTasks.IsRequired() ? DEFAULT_REQUIRED_DESC : DEFAULT_OPTIONAL_DESC;
+            if (currentTasks.GetDescription() == "") taskDescription.text = currentTasks.IsRequiredTask() ? DEFAULT_REQUIRED_DESC : DEFAULT_OPTIONAL_DESC;
             else taskDescription.text = currentTasks.GetDescription();
 
             // Update the next/previous level buttons
             previousLevelButton.interactable = currentScene > 1;
-            nextLevelButton.interactable = currentScene < lastScene && currentTasks.RequiredTasksFinished();
+            nextLevelButton.interactable = currentScene < lastScene && currentTasks.AreRequiredTasksFinished();
             nextLevelButtonMainMenu.interactable = nextLevelButton.interactable;
 
             // Update the next/previous buttons
             nextButton.interactable = currentTasks.IsSkippable();
             nextImage.color = nextButton.interactable ? Color.white : new Color(0.3f, 0.3f, 0.3f);
+            previousButton.interactable = currentTasks.GetCurrentTaskindex() > 0;
+            previousImage.color = previousButton.interactable ? Color.white : new Color(0.3f, 0.3f, 0.3f);
         }
 
         /// <summary>
-        /// Initialize variables, update UI
+        /// Initialize variables, update UI.
         /// </summary>
         private void Start()
         {
