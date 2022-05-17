@@ -29,7 +29,9 @@ namespace _Project.UI.Scripts.Tutorial
         private Button previousLevelButton;
 
         [SerializeField]
-        private Button skipButton;
+        private Button nextButton;
+        [SerializeField]
+        private Image nextImage;
 
         [SerializeField]
         private Button expandCollapseButton;
@@ -159,7 +161,7 @@ namespace _Project.UI.Scripts.Tutorial
                 GetComponent<LayoutElement>().preferredHeight = originalSize.y;
                 contents.GetComponent<RectTransform>().sizeDelta = new Vector2(originalSize.x, originalSize.y);
                 progressBar.gameObject.SetActive(true);
-                skipButton.gameObject.SetActive(true);
+                nextButton.gameObject.SetActive(true);
             }
             else
             {
@@ -167,7 +169,7 @@ namespace _Project.UI.Scripts.Tutorial
                 GetComponent<LayoutElement>().preferredHeight = 38;
                 contents.GetComponent<RectTransform>().sizeDelta = new Vector2(originalSize.x, 38);
                 progressBar.gameObject.SetActive(false);
-                skipButton.gameObject.SetActive(false);
+                nextButton.gameObject.SetActive(false);
             }
         }
 
@@ -197,8 +199,9 @@ namespace _Project.UI.Scripts.Tutorial
             nextLevelButton.interactable = currentScene < lastScene && currentTasks.RequiredTasksFinished();
             nextLevelButtonMainMenu.interactable = nextLevelButton.interactable;
 
-            // Show/hide skip button
-            skipButton.interactable =currentTasks.IsSkippable();
+            // Update the next/previous buttons
+            nextButton.interactable = currentTasks.IsSkippable();
+            nextImage.color = nextButton.interactable ? Color.white : new Color(0.3f, 0.3f, 0.3f);
         }
 
         /// <summary>

@@ -308,7 +308,8 @@ MonoBehaviour:
   nextLevelButton: {fileID: 5537872182934813873}
   nextLevelButtonMainMenu: {fileID: 0}
   previousLevelButton: {fileID: 3845365516097736202}
-  skipButton: {fileID: 7918198650366508793}
+  nextButton: {fileID: 7918198650366508793}
+  nextImage: {fileID: 6557752901866937279}
   expandCollapseButton: {fileID: 3346769085728452140}
   expandCollapseImage: {fileID: 8798832725449534576}
   expandedIcon: {fileID: 21300000, guid: 55f7c40f67c054d4e831a09a0fbb6478, type: 3}
@@ -409,7 +410,7 @@ GameObject:
   - component: {fileID: 8227342653608294123}
   - component: {fileID: 6557752901866937279}
   m_Layer: 5
-  m_Name: Image
+  m_Name: NextImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1370,7 +1371,7 @@ GameObject:
   - component: {fileID: 434773065618501688}
   - component: {fileID: 7918198650366508793}
   m_Layer: 5
-  m_Name: SkipButton
+  m_Name: NextButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
