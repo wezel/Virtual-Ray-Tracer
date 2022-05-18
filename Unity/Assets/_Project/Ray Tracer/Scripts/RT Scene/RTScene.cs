@@ -2,13 +2,14 @@ using System.Collections.Generic;
 using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light;
 using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Camera;
 using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light;
+using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Point_Light;
 using UnityEngine;
 
 namespace _Project.Ray_Tracer.Scripts.RT_Scene
 {
     /// <summary>
     /// A simple class that stores all components of a ray tracer scene. A ray tracer scene consists of an
-    /// <see cref="RTCamera"/>, a list of <see cref="RTLight"/>s and a list of <see cref="RTMesh"/>es. All of these
+    /// <see cref="RTCamera"/>, a list of <see cref="RTPointLight"/>s,  <see cref="RTAreaLight"/>s and a list of <see cref="RTMesh"/>es. All of these
     /// objects refer to "real" objects in the Unity scene. This class simply collects those references for easy
     /// access.
     /// </summary>
@@ -41,7 +42,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
         /// <summary>
         /// This ray tracers scene's list of lights.
         /// </summary>
-        public List<RTLight> Lights { get; }
+        public List<RTPointLight> PointLights { get; }
 
         /// <summary>
         /// This ray tracers scene's list of area lights.
@@ -53,13 +54,13 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
         /// </summary>
         public List<RTMesh> Meshes { get; }
 
-        public RTScene(RTCamera camera) : this(camera, new List<RTLight>(), new List<RTAreaLight>(), new List<RTMesh>()) { }
+        public RTScene(RTCamera camera) : this(camera, new List<RTPointLight>(), new List<RTAreaLight>(), new List<RTMesh>()) { }
 
-        public RTScene(RTCamera camera, List<RTLight> lights, List<RTAreaLight> arealights, List<RTMesh> meshes)
+        public RTScene(RTCamera camera, List<RTPointLight> lights, List<RTAreaLight> arealights, List<RTMesh> meshes)
         {
             Camera = camera;
             
-            Lights = lights;
+            PointLights = lights;
             foreach (var light in lights)
                 light.OnLightChanged += SceneObjectChanged;
 
@@ -78,7 +79,11 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
         /// <param name="light"> The <see cref="RTLight"/> object to add. </param>
         public void AddLight(RTLight light)
         {
-            Lights.Add(light);
+            if (light.GetType() == typeof(RTLight))
+                PointLights.Add(light as RTPointLight);
+            else // (light.GetType() == typeof(RTAreaLight))
+                AreaLights.Add(light as RTAreaLight);
+
             light.OnLightChanged += SceneObjectChanged;
             OnSceneChanged?.Invoke();
         }
@@ -89,7 +94,11 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
         /// <param name="light"> The <see cref="RTLight"/> object to remove. </param>
         public void RemoveLight(RTLight light)
         {
-            Lights.Remove(light);
+            if (light.GetType() == typeof(RTLight))
+                PointLights.Remove(light as RTPointLight);
+            else // (light.GetType() == typeof(RTAreaLight))
+                AreaLights.Remove(light as RTAreaLight);
+
             light.OnLightChanged -= SceneObjectChanged;
             OnSceneChanged?.Invoke();
         }
@@ -128,7 +137,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             }
             camera = null;
 
-            foreach (var light in Lights)
+            foreach (var light in PointLights)
             {
                 if (light != null)
                 {
@@ -136,7 +145,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
                     Object.Destroy(light.gameObject);
                 }
             }
-            Lights.Clear();
+            PointLights.Clear();
 
             foreach (var mesh in Meshes)
             {

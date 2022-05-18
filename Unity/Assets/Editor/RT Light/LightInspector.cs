@@ -9,7 +9,6 @@ namespace Editor.RT_Light
     {
         public override void OnInspectorGUI()
         {
-            var p = serializedObject.GetIterator();
             DrawPropertiesExcluding(serializedObject, "m_Color");
         }
     }

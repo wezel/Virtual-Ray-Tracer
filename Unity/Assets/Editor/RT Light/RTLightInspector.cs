@@ -1,21 +1,21 @@
 using System;
-using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light;
+using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Point_Light;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Editor.RT_Light
 {
-    [CustomEditor(typeof(RTLight))]
+    [CustomEditor(typeof(RTPointLight))]
     public class RTLightInspector : UnityEditor.Editor
     {
 
-        private RTLight rtLight;
+        private RTPointLight rtLight;
         private Light light;
 
         void OnEnable()
         {
-            rtLight = (RTLight)target;
+            rtLight = (RTPointLight)target;
             light = rtLight.gameObject.GetComponent<Light>();
             light.hideFlags = HideFlags.None;
         }

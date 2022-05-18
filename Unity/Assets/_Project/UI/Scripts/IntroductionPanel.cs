@@ -19,15 +19,15 @@ namespace _Project.UI.Scripts
         public void Show()
         {
             return;
-            if (uiManager == null)
-                uiManager = UIManager.Get();
+            //if (uiManager == null)
+            //    uiManager = UIManager.Get();
 
-            // Only enable the blocker if the panel is inactive now.
-            if (!gameObject.activeInHierarchy)
-                uiManager.EnableBlocker();
+            //// Only enable the blocker if the panel is inactive now.
+            //if (!gameObject.activeInHierarchy)
+            //    uiManager.EnableBlocker();
 
-            gameObject.SetActive(true);
-            UIManager.Get().AddEscapable(Hide);
+            //gameObject.SetActive(true);
+            //UIManager.Get().AddEscapable(Hide);
         }
 
         /// <summary>

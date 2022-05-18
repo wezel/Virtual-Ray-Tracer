@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
 using _Project.Ray_Tracer.Scripts.RT_Scene;
+using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Point_Light;
 using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light;
-using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Camera;
 using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light;
+using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Camera;
 using _Project.Ray_Tracer.Scripts.Utility;
 using _Project.UI.Scripts;
 using _Project.UI.Scripts.Control_Panel;
@@ -16,7 +17,7 @@ namespace _Project.Ray_Tracer.Scripts
 {
     /// <summary>
     /// Manages a ray tracer scene. On <see cref="Start"/> it will find all objects in the Unity scene with
-    /// <see cref="RTCamera"/>, <see cref="RTMesh"/> and <see cref="RTLight"/> components and construct an
+    /// <see cref="RTCamera"/>, <see cref="RTMesh"/> and <see cref="RTPointLight"/> components and construct an
     /// <see cref="RTScene"/> from them.
     /// </summary>
     public class RTSceneManager : MonoBehaviour
@@ -33,7 +34,8 @@ namespace _Project.Ray_Tracer.Scripts
 
         [Header("Scene Objects")]
         [SerializeField] private RTCamera cameraPrefab;
-        [SerializeField] private RTLight lightPrefab;
+        [SerializeField] private RTPointLight pointLightPrefab;
+        [SerializeField] private RTAreaLight areaLightPrefab;
         [SerializeField] private RTMesh goatPrefab;
         [SerializeField] private RTMesh spherePrefab;
         [SerializeField] private RTMesh cubePrefab;
@@ -66,7 +68,8 @@ namespace _Project.Ray_Tracer.Scripts
         
         public enum ObjectType
         {
-            Light,
+            PointLight,
+            AreaLight,
             Goat,
             Sphere,
             Cube,
@@ -115,14 +118,15 @@ namespace _Project.Ray_Tracer.Scripts
             }
 
             /// <summary>
-            /// The <see cref="RTLight"/> component attached to the selected object. Will be <c>null</c> if there is
+            /// The <see cref="RTPointLight"/> component attached to the selected object. Will be <c>null</c> if there is
             /// none.
             /// </summary>
             public RTLight Light
             {
                 get
                 {
-                    if (Type == typeof(RTLight)) return (RTLight)selected;
+                    if (Type == typeof(RTPointLight)) return (RTPointLight)selected;
+                    if (Type == typeof(RTAreaLight)) return (RTAreaLight)selected;
                     return null;
                 }
                 set
@@ -130,7 +134,7 @@ namespace _Project.Ray_Tracer.Scripts
                     if (value == null) return;
                     selected = value;
 
-                    Type = typeof(RTLight);
+                    Type = value.GetType();
                     Transform = value.transform;
                     Empty = false;
                 }
@@ -211,7 +215,7 @@ namespace _Project.Ray_Tracer.Scripts
                 ControlPanel.ShowCameraProperties(selection.Camera);
                 selection.Camera.Color = SelectionColor;
             }
-            else if (selection.Type == typeof(RTLight))
+            else if (selection.Type.BaseType == typeof(RTLight))
             {
                 ControlPanel.ShowLightProperties(selection.Light);
                 selection.Light.Higlight(SelectionColor);
@@ -249,7 +253,7 @@ namespace _Project.Ray_Tracer.Scripts
             // Deactivate the outline around the selected object.
             if (selection.Type == typeof(RTCamera))
                 selection.Camera.ResetColor();
-            else if (selection.Type == typeof(RTLight))
+            else if (selection.Type.BaseType == typeof(RTLight))
                 selection.Light.ResetHighlight();
             else if (selection.Type == typeof(RTMesh))
                 selection.Mesh.Outline.enabled = false;
@@ -272,7 +276,7 @@ namespace _Project.Ray_Tracer.Scripts
             if (selection.Type == typeof(RTCamera)) return; // Cameras can't be deleted, there must always be a camera.
 
             // delete the object in our database
-            if (selection.Type == typeof(RTLight))
+            if (selection.Type.BaseType == typeof(RTLight))
                 Scene.RemoveLight(selection.Light);
             else if (selection.Type == typeof(RTMesh))
                 Scene.RemoveMesh(selection.Mesh);
@@ -294,10 +298,15 @@ namespace _Project.Ray_Tracer.Scripts
             RTMesh mesh;
             switch (type)
             {
-                case ObjectType.Light:
-                    RTLight light = Instantiate(lightPrefab);
-                    Scene.AddLight(light);
-                    Select(light.transform);
+                case ObjectType.PointLight:
+                    RTPointLight pointLight = Instantiate(pointLightPrefab);
+                    Scene.AddLight(pointLight);
+                    Select(pointLight.transform);
+                    return;
+                case ObjectType.AreaLight:
+                    RTAreaLight areaLight = Instantiate(areaLightPrefab);
+                    Scene.AddLight(areaLight);
+                    Select(areaLight.transform);
                     return;
                 case ObjectType.Sphere:
                     mesh = Instantiate(spherePrefab);
@@ -354,9 +363,12 @@ namespace _Project.Ray_Tracer.Scripts
             result.Camera = selection.GetComponent<RTCamera>();
             if (!result.Empty) return result;
            
-            result.Light = selection.GetComponent<RTLight>();
+            result.Light = selection.GetComponent<RTPointLight>();
             if (!result.Empty) return result;
-            
+
+            result.Light = selection.GetComponent<RTAreaLight>();
+            if (!result.Empty) return result;
+
             result.Mesh = selection.GetComponent<RTMesh>();
             if (!result.Empty) return result;
             
@@ -368,7 +380,7 @@ namespace _Project.Ray_Tracer.Scripts
             
             // Cameras should not be scaled and lights should not be scaled or rotated. We default to translation.
             bool selectedCamera = selection.Type == typeof(RTCamera);
-            bool selectedLight = selection.Type == typeof(RTLight);
+            bool selectedLight = selection.Type.BaseType == typeof(RTLight);
             if (type == HandleType.ROTATION && selectedLight)
                 type = HandleType.POSITION;
             if (type == HandleType.SCALE && (selectedCamera || selectedLight))
@@ -422,7 +434,7 @@ namespace _Project.Ray_Tracer.Scripts
         {
             LightShadows shadowType = value ? LightShadows.Hard : LightShadows.None;
             
-            foreach (var sceneLight in Scene.Lights) 
+            foreach (var sceneLight in Scene.PointLights) 
                 sceneLight.Shadows = shadowType;
         }
 
@@ -441,12 +453,12 @@ namespace _Project.Ray_Tracer.Scripts
             
             // Find the first camera and all lights and meshes in the Unity scene.
             RTCamera camera = FindObjectOfType<RTCamera>();
-            List<RTLight> lights = new List<RTLight>(FindObjectsOfType<RTLight>());
-            List<RTAreaLight> arealights = new List<RTAreaLight>(FindObjectsOfType<RTAreaLight>());
+            List<RTPointLight> pointLights = new List<RTPointLight>(FindObjectsOfType<RTPointLight>());
+            List<RTAreaLight> areaLights = new List<RTAreaLight>(FindObjectsOfType<RTAreaLight>());
             List<RTMesh> meshes = new List<RTMesh>(FindObjectsOfType<RTMesh>());
             
             // Construct the ray tracer scene with the found objects.
-            Scene = new RTScene(camera, lights, arealights, meshes);
+            Scene = new RTScene(camera, pointLights, areaLights, meshes);
             
             ControlPanel.Subscribe(OnEvent);
         }
@@ -457,18 +469,22 @@ namespace _Project.Ray_Tracer.Scripts
         {
             
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            
+            Debug.Log(1);
+
             // If we hit a handle we do nothing
             if (Physics.Raycast(ray, Mathf.Infinity, LayerMask.GetMask("Gizmos"))) return;
+            Debug.Log(2);
 
             // If we don't hit a handle we try to select the first object we did hit.
-            int mask = LayerMask.GetMask("Ray Tracer Objects", "Camera and Lights");
-            if (Physics.Raycast(ray, out var hit,Mathf.Infinity, mask))
+            int mask = LayerMask.GetMask("Ray Tracer Objects", "Camera and PointLights");
+            if (Physics.Raycast(ray, out var hit, Mathf.Infinity, mask))
             {
+                Debug.Log(3);
                 Select(hit.transform);
                 return;
             }
-            
+
+            Debug.Log(4);
             // If nothing was hit deselect all.
             Deselect();
         }

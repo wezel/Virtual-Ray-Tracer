@@ -1,7 +1,4 @@
 using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light;
-using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Point_Light;
-using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light;
-using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -11,9 +8,9 @@ namespace _Project.UI.Scripts.Control_Panel
     /// A UI class that provides access to the properties of an <see cref="RTLight"/>. Any changes made to the shown
     /// properties will be applied to the light.
     /// </summary>
-    public class LightProperties : MonoBehaviour
+    public class AreaLightProperties : MonoBehaviour
     {
-        private new RTLight light; // Hides Component.light which is obsolete.
+        private new RTAreaLight light; // Hides Component.light which is obsolete.
 
         [SerializeField]
         private Vector3Edit positionEdit;
@@ -31,14 +28,11 @@ namespace _Project.UI.Scripts.Control_Panel
         [SerializeField]
         private FloatEdit specularEdit;
 
-        [SerializeField]
-        private TMP_Dropdown typeDropdown;
-
         /// <summary>
         /// Show the light properties for <paramref name="light"/>. These properties can be changed via the shown UI.
         /// </summary>
-        /// <param name="light"> The <see cref="RTLight"/> whose properties will be shown. </param>
-        public void Show(RTLight light)
+        /// <param name="light"> The <see cref="RTAreaLight"/> whose properties will be shown. </param>
+        public void Show(RTAreaLight light)
         {
             gameObject.SetActive(true);
             this.light = light;

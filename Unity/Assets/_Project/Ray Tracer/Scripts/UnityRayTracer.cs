@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using _Project.Ray_Tracer.Scripts.RT_Ray;
 using _Project.Ray_Tracer.Scripts.RT_Scene;
 using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Camera;
-using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light;
+using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Point_Light;
 using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light;
 using _Project.Ray_Tracer.Scripts.Utility;
 using UnityEngine;
@@ -386,7 +386,7 @@ namespace _Project.Ray_Tracer.Scripts
 
             // Add diffuse and specular components.
             if (RenderPointLights)
-                foreach (RTLight light in scene.Lights)
+                foreach (RTPointLight light in scene.PointLights)
                 {
                     Vector3 lightVector = (light.transform.position - hit.point).normalized;
 
@@ -418,7 +418,7 @@ namespace _Project.Ray_Tracer.Scripts
             return rayTree;
         }
 
-        private RTRay TraceLight(ref Vector3 lightVector, RTLight light, in HitInfo hitInfo)
+        private RTRay TraceLight(ref Vector3 lightVector, RTPointLight light, in HitInfo hitInfo)
         {
             // Determine the distance to the light source. Note the clever use of the dot product.
             float lightDistance = Vector3.Dot(lightVector, light.transform.position - hitInfo.Point); 
@@ -576,7 +576,7 @@ namespace _Project.Ray_Tracer.Scripts
 
             // Add diffuse and specular components.
             if (RenderPointLights)
-                foreach (RTLight light in scene.Lights)
+                foreach (RTPointLight light in scene.PointLights)
                 {
                     Vector3 lightVector = (light.transform.position - hit.point).normalized;
 
@@ -588,7 +588,7 @@ namespace _Project.Ray_Tracer.Scripts
                 foreach (RTAreaLight arealight in scene.AreaLights)
                 {
                     bool fullyVisible = true;
-                    foreach (Vector3 edgePoint in arealight.GetEdgePoints())
+                    foreach (Vector3 edgePoint in arealight.GetEdgePoints(16))
                     {
                         Vector3 lightVector = (edgePoint - hit.point).normalized;
                         if (Vector3.Dot(hitInfo.Normal, lightVector) >= 0.0f)
@@ -632,7 +632,7 @@ namespace _Project.Ray_Tracer.Scripts
             return ClampColor(color);
         }
 
-        private Color TraceLightImage(ref Vector3 lightVector, RTLight light, in HitInfo hitInfo)
+        private Color TraceLightImage(ref Vector3 lightVector, RTPointLight light, in HitInfo hitInfo)
         {
             // Determine the distance to the light source. Note the clever use of the dot product.
             float lightDistance = Vector3.Dot(lightVector, light.transform.position - hitInfo.Point);

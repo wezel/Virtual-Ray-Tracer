@@ -42,15 +42,6 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
         /// of a ray tree will be the color of a pixel (assuming no super sampling takes place), while the color of a
         /// reflection ray will only be the color that the reflection contributes to its root pixel.
         /// </summary>
-        //public Color Color
-        //{
-        //    get { return opaqueMaterial.color; }
-        //    set 
-        //    {
-        //        opaqueMaterial.color = value;
-        //        transMaterial.color = new Color(value.r, value.g, value.b, 0.0f);
-        //    }
-        //}
         public Color Color { get; set; }
 
         /// <summary>
@@ -65,36 +56,8 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
         public float Contribution
         {
             get { return contribution; }
-            set
-            {
-                contribution = value;
-                //transMaterial.SetFloat("_Ambient", Mathf.Pow(value, RayManager.rayTransExponent));
-            }
+            set { contribution = value; }
         }
-
-        //private Material opaqueMaterial = new Material(Resources.Load("Materials/Objects/RayTracerMaterial", typeof(Material)) as Material);
-        ///// <summary>
-        ///// The opaque material of this ray, used for contribution-based color.
-        ///// </summary>
-        //public Material OpaqueMaterial
-        //{
-        //    get { return opaqueMaterial; }
-        //    set { opaqueMaterial = value; }
-        //}
-
-        //private Material transMaterial = new Material(Resources.Load("Materials/Objects/RayTracerTransparentMaterial", typeof(Material)) as Material);
-        ///// <summary>
-        ///// The transparent material of this ray, used for contribution-based color.
-        ///// </summary>
-        //public Material TransMaterial
-        //{
-        //    get
-        //    {
-        //        transMaterial.SetFloat("_Ambient", Mathf.Pow(Contribution, RayManager.rayTransExponent));
-        //        return transMaterial;
-        //    }
-        //    set { transMaterial = value; }
-        //}
 
         /// <summary>
         /// Construct a default ray. The resulting ray is technically valid, but should only be used in the
@@ -108,9 +71,6 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
             Color = Color.black;
             Type = RayType.NoHit;
             Contribution = 0.0f;
-            //opaqueMaterial.color = Color;
-            //transMaterial.color = new Color(Color.r, Color.g, Color.b, 0.0f);
-            //transMaterial.SetFloat("_Ambient", Mathf.Pow(Contribution, RayManager.rayTransExponent));
         }
 
         /// <summary>
@@ -129,9 +89,6 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
             Color = color;
             Type = type;
             Contribution = type == RayType.NoHit || type == RayType.Shadow ? 0.0f : 1.0f;
-            //opaqueMaterial.color = Color;
-            //transMaterial.color = new Color(Color.r, Color.g, Color.b, 0.0f);
-            //transMaterial.SetFloat("_Ambient", Mathf.Pow(Contribution, RayManager.rayTransExponent));
         }
 
         /// <summary>

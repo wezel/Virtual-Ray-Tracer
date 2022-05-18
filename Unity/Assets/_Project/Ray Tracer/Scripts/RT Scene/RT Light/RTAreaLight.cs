@@ -1,6 +1,8 @@
 using System;
+using UnityEditor.Experimental.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
+using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light;
 
 namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
 {
@@ -15,136 +17,150 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
     /// be changed with the color settings in the RT Light tab instead.
     /// </summary>
     [ExecuteAlways]
-    //[RequireComponent(typeof(Light))]
-    public class RTAreaLight : MonoBehaviour
+    public class RTAreaLight : RTLight
     {
-
         /// <summary>
         /// This function encodes the color data. By encoding the color data we have extra room to send other data to
         /// the graphic renderer.
         /// </summary>
-        [SerializeField]
-        private Color color;
-        public Color Color
+        public override Color Color
         {
             get => color;
             set
             {
-                value.a = 1;
-                color = value;
-                //label.color = value;
+                Color color = value;
+                value /= lightSamples;
+                value.a = 1f;
 
-                Color lightData = light.color;
+                Color lightData = lights[0].color;
                 lightData.r = Mathf.Floor(value.r * 256) + value.g / 2;
                 lightData.g = value.b;
-                light.color = lightData;
+                foreach (Light light in lights)
+                    light.color = lightData;
 
-                OnLightChanged?.Invoke();
+                base.Color = color;
             }
         }
 
-        [SerializeField, Range(0,1)]
-        private float ambient;
-        public float Ambient
+        public override float Ambient
         {
             get => ambient;
             set
             {
-                ambient = value;
+                float ambient = value;
+                value /= (lightSamples);
 
-                Color lightData = light.color;
+                Color lightData = lights[0].color;
                 lightData.b = lightData.b % 1 + Mathf.Floor(value * 256);
-                light.color = lightData;
+                foreach (Light light in lights)
+                    light.color = lightData;
 
-                OnLightChanged?.Invoke();
+                base.Ambient = ambient;
             }
         }
 
-        [SerializeField, Range(0,1)]
-        private float diffuse;
-
-        public float Diffuse
+        public override float Diffuse
         {
             get => diffuse;
             set
             {
-                diffuse = value;
+                float diffuse = value;
+                value /= (lightSamples);
 
-                Color lightData = light.color;
+                Color lightData = lights[0].color;
                 lightData.b = Mathf.Floor(lightData.b) + value / 2;
-                light.color = lightData;
+                foreach (Light light in lights)
+                    light.color = lightData;
 
-                OnLightChanged?.Invoke();
+                base.Diffuse = diffuse;
             }
         }
 
-        [SerializeField, Range(0,1)]
-        private float specular;
+        //[SerializeField, Range(0, 1)]
+        //private float specular;
 
-        public float Specular
+        public override float Specular
         {
             get => specular;
             set
             {
-                specular = value;
+                float specular = value;
+                value /= (lightSamples);
 
-                Color lightData = light.color;
-                lightData.a = specular;
-                light.color = lightData;
+                Color lightData = lights[0].color;
+                lightData.a = value;
+                foreach (Light light in lights)
+                    light.color = lightData;
 
-                OnLightChanged?.Invoke();
+                base.Specular = specular;
             }
         }
-        
-        public delegate void LightChanged();
-        /// <summary>
-        /// An event invoked whenever a property of this light is changed.
-        /// </summary>
-        public event LightChanged OnLightChanged;
 
         /// <summary>
-        /// The underlying <see cref="UnityEngine.Light"/> used by the light.
+        /// The underlying <see cref="UnityEngine.Light"/>s used by the light.
         /// </summary>
-        [SerializeField]
-        private new Light light;
+        private Light[] lights;
 
-        public LightShadows Shadows { get => light.shadows; set => light.shadows = value; }
-
+        private RectTransform rectTransform { get => GetComponent<RectTransform>(); }
 
         /// <summary>
-        /// The position of the light.
+        /// The rotation of the mesh.
         /// </summary>
-        public Vector3 Position
+        public Vector3 Rotation
         {
-            get { return transform.position; }
+            get => transform.eulerAngles;
             set
             {
-                transform.position = value;
-                OnLightChanged?.Invoke();
+                transform.eulerAngles = value;
+                OnLightChangedInvoke();
+            }
+        }
+
+        /// <summary>
+        /// The scale of the mesh.
+        /// </summary>
+        public Vector3 Scale
+        {
+            get => transform.localScale;
+            set
+            {
+                transform.localScale = value;
+                OnLightChangedInvoke();
             }
         }
 
         private readonly System.Random rnd = new System.Random();
 
-        private float range = 1f;
+        /// <summary>
+        /// Samples uniformly random points on the arealight
+        /// </summary>
+        /// <param name="samples"> The square root of how many points should be sampled </param>
+        /// <returns> <paramref name="samples"/>^2 points on the arealight. </returns>
         public Vector3[] RandomPointsOnLight(int samples)
         {
-            Vector3[] points = new Vector3[samples*samples];
-            Vector3 start = Position;
-            start.x -= range / 2f;
-            start.z -= range / 2f;
+            Vector3[] points = new Vector3[samples * samples];
+            Vector3[] corners = new Vector3[4];
+            rectTransform.GetWorldCorners(corners);  // clockwise corners
 
-            float step = range / samples;
+            Vector3 step_1 = (corners[1] - corners[0]) / samples; // corner 0 to corner 1
+            Vector3 step_2 = (corners[3] - corners[0]) / samples; // corner 0 to corner 3
+
+
             for (int i = 0; i < samples * samples; i++)
-            {
-                points[i] = start;
-                points[i].x += (i / samples) * step + (float)rnd.NextDouble() * step;
-                points[i].z += (i % samples) * step + (float)rnd.NextDouble() * step;
-            }
+                points[i] = corners[0]
+                        + (i / samples) * step_1 + (float)rnd.NextDouble() * step_1
+                        + (i % samples) * step_2 + (float)rnd.NextDouble() * step_2;
 
             return points;
         }
 
+        /// <summary>
+        /// Returns <paramref name="n"/> points between point <paramref name="p1"/> and <paramref name="p2"/>.
+        /// </summary>
+        /// <param name="n"> The numer of points requested. </param>
+        /// <param name="p1"> The first point. </param>
+        /// <param name="p2"> The second point. </param>
+        /// <returns> n points between p1 and p2 </returns>
         private Vector3[] GetPointsBetween(int n, Vector3 p1, Vector3 p2)
         {
             Vector3[] points = new Vector3[n];
@@ -156,79 +172,98 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
             return points;
         }
 
-        public Vector3[] GetEdgePoints()
+        /// <summary>
+        /// Returns points on the edges of the arealight, with <paramref name="pointsBetweenCorners"/> between each corner.
+        /// </summary>
+        /// <param name="pointsBetweenCorners"> The numer of point between the corners. </param>
+        /// <returns> Points on the edges of the arealight, including the corners. </returns>
+        public Vector3[] GetEdgePoints(int pointsBetweenCorners)
         {
-            int n = 8;
             int idx = 4;
-            Vector3[] edgePoints = new Vector3[4*(n + 1)];
-            edgePoints[0] = Position; edgePoints[0].x += range / 2f; edgePoints[0].z += range / 2f;
-            edgePoints[1] = Position; edgePoints[1].x -= range / 2f; edgePoints[1].z += range / 2f;
-            edgePoints[2] = Position; edgePoints[2].x += range / 2f; edgePoints[2].z -= range / 2f;
-            edgePoints[3] = Position; edgePoints[3].x -= range / 2f; edgePoints[3].z -= range / 2f;
+            Vector3[] edgePoints = new Vector3[4 * (pointsBetweenCorners + 1)];
+            rectTransform.GetWorldCorners(edgePoints); // Corners clockwise
 
-            foreach (Vector3 point in GetPointsBetween(n, edgePoints[0], edgePoints[1]))
+            foreach (Vector3 point in GetPointsBetween(pointsBetweenCorners, edgePoints[0], edgePoints[1]))
                 edgePoints[idx++] = point;
-            foreach (Vector3 point in GetPointsBetween(n, edgePoints[0], edgePoints[2]))
+            foreach (Vector3 point in GetPointsBetween(pointsBetweenCorners, edgePoints[1], edgePoints[2]))
                 edgePoints[idx++] = point;
-            foreach (Vector3 point in GetPointsBetween(n, edgePoints[1], edgePoints[3]))
+            foreach (Vector3 point in GetPointsBetween(pointsBetweenCorners, edgePoints[2], edgePoints[3]))
                 edgePoints[idx++] = point;
-            foreach (Vector3 point in GetPointsBetween(n, edgePoints[2], edgePoints[3]))
+            foreach (Vector3 point in GetPointsBetween(pointsBetweenCorners, edgePoints[0], edgePoints[3]))
                 edgePoints[idx++] = point;
 
             return edgePoints;
         }
 
-        //[SerializeField]
-        //private Image label;
 
-        //[SerializeField]
-        //private Image outline;
+        [SerializeField]
+        [Range(2, 16)]
+        private int lightSamples;
 
-        //[SerializeField]
-        //private Canvas canvas;
+        [SerializeField]
+        private GameObject pointLightPrefab;
 
-        private Color defaultOutline;
+        private bool update = false;
 
-        public void Higlight(Color value)
+        private void Update()
         {
-            //outline.color = value;
-        }
-
-        public void ResetHighlight()
-        {
-            //outline.color = defaultOutline;
-        }
-
-        private void Awake()
-        {
-            //defaultOutline = outline.color;
-        }
-        
-        private void LateUpdate()
-        {
-            #if UNITY_EDITOR
-                if(!Application.isPlaying) return;
-            #endif
-            // Make the label face the camera. We do this in LateUpdate to make sure the camera has finished its moving.
-            // From: https://answers.unity.com/questions/52656/how-i-can-create-an-sprite-that-always-look-at-the.html
-            //canvas.transform.forward = Camera.main.transform.forward;
-        }
-
+            // Update label; black at the back; light color at the front
 #if UNITY_EDITOR
-
-        private void OnEnable()
-        {
-            //label.color = color;
-        }
-
-        private void OnRenderObject()
-        {
-            // Fix maximize window errors
-            if (UnityEditor.SceneView.lastActiveSceneView == null) 
-                return;
-            //canvas.transform.forward = UnityEditor.SceneView.lastActiveSceneView.camera.transform.forward;
-        }
+            if (!Application.isPlaying)
+                if (Vector3.Dot(transform.forward, (transform.position - UnityEditor.SceneView.lastActiveSceneView.camera.transform.position).normalized) > 0)
+                    label.color = Color.black;
+                else
+                    label.color = Color;
+            else
 #endif
-        
+                if (Vector3.Dot(transform.forward, (transform.position - Camera.main.transform.position).normalized) > 0)
+                    label.color = Color.black;
+                else
+                    label.color = Color;
+
+            // Update the (amount of) lights
+#if UNITY_EDITOR
+            if (PrefabStageUtility.GetCurrentPrefabStage() != null) // In Prefab Mode
+                return;                                             // Don't add lights to the prefab
+#endif
+            if (!update && lights != null && lights.Length == lightSamples * lightSamples)
+                return;
+
+            foreach (Light light in GetComponentsInChildren<Light>())
+#if UNITY_EDITOR
+                DestroyImmediate(light.gameObject);
+#else
+                Destroy(light.gameObject);
+#endif
+            lights = new Light[lightSamples * lightSamples];
+            float stepx = rectTransform.rect.width / (lightSamples - 1);
+            float stepy = rectTransform.rect.height / (lightSamples - 1);
+            Vector3 start = new Vector3(0f, 0f, 0f);
+            start.x -= rectTransform.rect.width / 2;
+            start.y -= rectTransform.rect.height / 2;
+            float maxBias = 2 * (lightSamples - 1);
+
+            for (int i = 0; i < lightSamples; i++)
+            {
+                for (int j = 0; j < lightSamples; j++)
+                {
+                    Light light = Instantiate(pointLightPrefab, transform).GetComponent<Light>();
+                    Vector3 pos = start;
+                    pos.x += i * stepx;
+                    pos.y += j * stepy;
+                    light.transform.localPosition = pos;
+                    light.shadowBias = (i + j)/ maxBias * 0.035f + 0.005f;
+                    lights[i * lightSamples + j] = light;
+                }
+            }
+
+            // 'Call' these funtions to set the all the lights correctly
+            Color = Color;
+            Ambient = Ambient;
+            Diffuse = Diffuse;
+            Specular = Specular;
+            update = false;
+        }
+                
     }
 }
