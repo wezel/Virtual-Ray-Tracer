@@ -51,7 +51,13 @@ namespace _Project.UI.Scripts.Main_Menu
         
         public void Exit()
         {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#elif UNITY_WEBGL
+            Application.OpenURL("about:blank");
+#else //UNITY_STANDALONE
             Application.Quit();
+#endif
         }
 
         public void GoHome()
