@@ -60,6 +60,8 @@ namespace _Project.UI.Scripts.Tutorial
         private TextMeshProUGUI taskDescription;
         [SerializeField]
         private TextMeshProUGUI taskProgress;
+        [SerializeField]
+        private TextMeshProUGUI taskPoints;
 
         private Tasks currentTasks;
 
@@ -229,6 +231,9 @@ namespace _Project.UI.Scripts.Tutorial
             nextImage.color = nextButton.interactable ? Color.white : new Color(0.3f, 0.3f, 0.3f);
             previousButton.interactable = currentTasks.GetCurrentTaskindex() > 0;
             previousImage.color = previousButton.interactable ? Color.white : new Color(0.3f, 0.3f, 0.3f);
+
+            // Update the points
+            taskPoints.text = GlobalSettings.TutorialPoints.ToString();
         }
 
         /// <summary>

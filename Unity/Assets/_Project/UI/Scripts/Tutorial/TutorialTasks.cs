@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System;
 using UnityEngine;
+using _Project.Scripts;
 
 namespace _Project.UI.Scripts.Tutorial
 {
@@ -19,7 +20,6 @@ namespace _Project.UI.Scripts.Tutorial
         public string Identifier
         {
             get { return identifier; }
-            set { identifier = value; }
         }
 
         /// <summary>
@@ -30,7 +30,6 @@ namespace _Project.UI.Scripts.Tutorial
         public string Name
         {
             get { return name; }
-            set { name = value; }
         }
 
         /// <summary>
@@ -42,24 +41,32 @@ namespace _Project.UI.Scripts.Tutorial
         public string Description
         {
             get { return description; }
-            set { description = value; }
         }
 
         /// <summary>
         /// Whether this task is skippable (by pressing a skip button)
-        /// Used for when there is no task involved, just an explanation text
+        /// Used for when there is no task involved, just an explanation text.
         /// </summary>
         [SerializeField]
-        public bool skippable;
+        private bool skippable;
         public bool Skippable
         {
             get { return skippable; }
-            set { skippable = value; }
+        }
+
+        /// <summary>
+        /// The amount of points earned for completing this task.
+        /// </summary>
+        [SerializeField]
+        private int points;
+        public int Points
+        {
+            get { return points; }
         }
     }
 
     /// <summary>
-    /// Class that manages the tutorial tasks
+    /// Class that manages the tutorial tasks.
     /// </summary>
     [Serializable]
     public class Tasks
@@ -170,7 +177,7 @@ namespace _Project.UI.Scripts.Tutorial
         }
 
         /// <summary>
-        /// Complete a tutorial task
+        /// Complete a tutorial task.
         /// </summary>
         /// <param name="identifier"></param>
         /// <returns> Whether identifier was found </returns>
@@ -178,20 +185,30 @@ namespace _Project.UI.Scripts.Tutorial
         {
             if (index >= tasks.Count - 1) return false;
             if (GetIdentifier() != identifier) return false;
+
+            if (index == completedIndex)
+            {
+                GlobalSettings.TutorialPoints += tasks[index].Points;
+                completedIndex++;
+            }
             index++;
-            if (index > completedIndex) completedIndex++;
+
             return true;
         }
 
         /// <summary>
-        /// Skip a tutorial task
+        /// Skip/Go to the next tutorial task.
         /// </summary>
-        /// <returns> Whether a task was skipped </returns>
+        /// <returns> Whether it went to the next task</returns>
         public bool NextTask()
         {
             return CompleteTask(GetIdentifier());
         }
 
+        /// <summary>
+        /// Go to the previous tutorial task.
+        /// </summary>
+        /// <returns>Whether it returned to the previous task</returns>
         public bool PreviousTask()
         {
             if (index == 0) return false;

@@ -56,6 +56,7 @@ MonoBehaviour:
         Press the second button next to the progress bar to continue to the next
         task.
       skippable: 1
+      points: 95
     - identifier: help
       name: Help Menu
       description: We'll first start by going over the controls and the various interface
@@ -63,98 +64,117 @@ MonoBehaviour:
         or find all the necessary information in the help menu. Access this menu
         any time by clicking the "Help" button in the top left or by pressing [F1].
       skippable: 0
+      points: 153
     - identifier: cameraPan
       name: Camera Panning
       description: Pan the camera by moving your mouse while holding down the middle
         mouse button or by using the arrow keys.
       skippable: 0
+      points: 162
     - identifier: cameraOrbit
       name: Camera Orbiting
       description: Orbit the camera by moving your mouse while holding down left-click
         and left control or by using the arrow keys while holding down left control.
       skippable: 0
+      points: 169
     - identifier: cameraZoom
       name: Camera Zooming
       description: Zoom the camera in and out by scrolling your mousewheel.
       skippable: 0
+      points: 126
     - identifier: objectSelect
       name: Object Selection
       description: You can select the camera, lights and objects in the scene by
         left-clicking on them. Select the ground, wall or sphere in this scene.
       skippable: 0
+      points: 121
     - identifier: hoverColor
       name: Property Information
       description: The object's properties are now shown on the right. Hover over
         the "Color" text to see more information.
       skippable: 0
+      points: 138
     - identifier: editColor
       name: Edit Properties
       description: Change the color of an object in the properties panel.
       skippable: 0
+      points: 107
     - identifier: objectTranslation
       name: Translation
       description: Move an object by moving your mouse while holding down left-click
         on one of the three gizmos (the arrows coming from the object). Notice how
         the position values change while moving the object.
       skippable: 0
+      points: 155
     - identifier: transformationEdit
       name: Transformation Mode
       description: The transformation mode can be changed using the dropdown in the
         top left or by pressing [T]ranslate, [S]cale and [R]otate. Change the current
         transformation mode to Scale.
       skippable: 0
+      points: 99
     - identifier: objectScaling
       name: Scaling
       description: 'Now scale an object using the gizmos. Notice how the scale values
         change while scaling the object. '
       skippable: 0
+      points: 98
     - identifier: objectRotation
       name: Rotation
       description: 'Change the current transformation mode to "rotate" and rotate
         an object using the gizmos. Notice how the rotation values change while rotating
         the object. '
       skippable: 0
+      points: 77
     - identifier: deselect
       name: Deselection
       description: Deselect an object by left-clicking on an empty part of the scene
         or by pressing [ESC].
       skippable: 0
+      points: 58
     - identifier: notDisabledEdit
       name: Ray Tracer Properties
       description: 'When nothing is selected, the general ray tracer properties are
         shown. Almost all options are disabled right now to keep things simple. Click
         on an option that is not disabled (HINT: it''s a button).'
       skippable: 0
+      points: 51
     - identifier: 
       name: 
       description: 
       skippable: 1
+      points: 0
     - identifier: cameraSelection
       name: Camera
       description: Select the camera.
       skippable: 0
+      points: 187
     - identifier: localSpace
       name: Global vs Local Space
       description: Switch to "Local" space by changing the dropdown in the top left.
       skippable: 0
+      points: 241
     - identifier: cameraTranslation
       name: Global vs Local Space
       description: Switch to "Translate" transformation mode and move the camera
         around. Notice how local space differs from global space.
       skippable: 0
+      points: 144
     - identifier: 
       name: 
       description: 
       skippable: 0
+      points: 0
   - optionalTasksStart: 12
     tasks:
     - identifier: 
       name: Light in the Real World
-      description: Light emits photons that travel in straight lines until they hit
-        an object. These photons may be absorbed, reflected or pass through an object.
-        Some photons will find its way back to an eye/camera where they are processed
-        into an image.
+      description: Light sources (like the sun) emit photons that travel in straight
+        lines until they hit an object. These photons may be absorbed, reflected
+        or pass through an object. Some photons will find its way to an eye/camera
+        where they are processed into an image.
       skippable: 1
+      points: 102
     - identifier: 
       name: Ray Tracing
       description: In ray tracing, this process is simulated. However, instead of
@@ -162,6 +182,7 @@ MonoBehaviour:
         from the eye/camera to the light source. This still creates realistic images
         but it is much faster.
       skippable: 1
+      points: 111
     - identifier: selectPixel
       name: Select Pixel
       description: In the bottom right a render preview is shown. This render preview
@@ -169,54 +190,64 @@ MonoBehaviour:
         in the render preview and notice how the ray is traced from the camera towards
         the light source.
       skippable: 0
+      points: 127
     - identifier: deselectPixel
       name: Deselect Pixel
       description: If we want to see all rays again, we need to deselect the selected
         pixel. Click on the selected pixel again to deselect it.
       skippable: 0
+      points: 120
     - identifier: selectSphere
       name: Ambient and Diffuse Components
       description: In this scene, the colors in the render preview are determined
         by the ambient and diffuse components of the objects. Select the sphere to
         see its ambient and diffuse components.
       skippable: 0
+      points: 106
     - identifier: editAmbient
       name: Ambient Component
       description: The ambient component describes the base brightness of the object.
         This way, it simulates a global ambient light. Change the ambient component
         and notice how it affects the scene and render preview.
       skippable: 0
+      points: 108
     - identifier: editDiffuse
       name: Diffuse Component
       description: The diffuse component describes the brightness of the object in
         the places where it is lit. Change the diffuse component and notice how it
         is different from the ambient component.
       skippable: 0
+      points: 87
     - identifier: selectCamera
       name: Camera Pixels
       description: The render preview only shows a few pixels right now. We can change
         this in the camera settings. Select the camera.
       skippable: 0
+      points: 46
     - identifier: editHorPixels
       name: Horizontal Camera Pixels
       description: Change the number of horizontal pixels and notice how it affects
         the render preview.
       skippable: 0
+      points: 40
     - identifier: editVerPixels
       name: Vertical Camera Pixels
       description: Change the number of vertical pixels and notice how it affects
         the render preview.
       skippable: 0
+      points: 33
     - identifier: renderImage
       name: Rendering the Scene
       description: We can get even more ray traced pixels by rendering the current
         scene into an image. Go into the ray tracer properties and click the "Render
         Image" button on the bottom.
       skippable: 0
+      points: 55
     - identifier: 
       name: 
       description: 
       skippable: 1
+      points: 0
     - identifier: editSuperSampling
       name: Super Sampling
       description: You might notice that the sphere isn't very round in the rendered
@@ -225,36 +256,43 @@ MonoBehaviour:
         pixel and then average the color. Increase the "Super Sampling" factor in
         the ray tracer properties.
       skippable: 0
+      points: 234
     - identifier: renderImage
       name: Rendering the Scene
       description: Rendering the scene will now take a lot longer as more rays are
         being traced. However, it does result in a better image. Render the scene
         again.
       skippable: 0
+      points: 555
     - identifier: editAnimSpeed
       name: Animation Speed
       description: 'The ray tracing animation can also be changed in the ray tracer
         settings. Change the animation speed. '
       skippable: 0
+      points: 357
     - identifier: editAnimSeq
       name: Animate Sequentially
       description: Check the "Animate Sequentially" checkbox and notice how the rays
         are now animated one after the other (sequentially).
       skippable: 0
+      points: 321
     - identifier: editAnimLoop
       name: Animation Loop
       description: Currently the animation is looping. Turn this off by unchecking
         the "Loop Animation" checkbox.
       skippable: 0
+      points: 285
     - identifier: editAnimRays
       name: Animate Rays
       description: We can also turn off all ray animations. Uncheck the "Animate
         Rays" checkbox.
       skippable: 0
+      points: 258
     - identifier: 
       name: 
       description: 
       skippable: 0
+      points: 0
   - optionalTasksStart: 10
     tasks:
     - identifier: 
@@ -263,42 +301,49 @@ MonoBehaviour:
         in the real world. If we hit an object with reflective properties, we cast
         a ray (again) in the reflected direction.
       skippable: 1
+      points: 121
     - identifier: rayLegend
       name: Reflected Ray Color
       description: Examine the scene and notice how the reflected rays are a darker
-        blue color. The meaning of all ray colors can be found in the help menu.
-        Open this "Ray Legend" in the help menu.
+        blue color. The meaning of all ray colors can be found in a legend in the
+        help menu. Open the "Ray Legend" in the help menu.
       skippable: 0
+      points: 177
     - identifier: editDepth
       name: Recursion Depth
       description: The "Recursion Depth" setting determines after how many shot rays,
         we stop shooting new rays and (try to) go to the light source immediately.
-        Change this setting in the ray tracer properties and see what happens to
-        the amount of reflected rays.
+        Play with this setting in the ray tracer properties and see what happens
+        to the amount of reflected rays.
       skippable: 0
+      points: 189
     - identifier: 
       name: Limitations
       description: Unfortunately, the mirrors in this scene are incorrectly displayed.
         This is due to the scene itself not being rendered using ray tracing. Only
         the render preview and rendered images are ray traced.
       skippable: 1
+      points: 145
     - identifier: renderImage
       name: Render Image
       description: To see what it should like, click on "Render Image" in the ray
         tracer properties again. Make sure the "Recursion Depth" is not set to zero.
       skippable: 0
+      points: 144
     - identifier: selectMirror
       name: Reflective Properties
       description: As you can see, the wall behind the sphere acts like a "true"
         mirror. We can change the reflective properties of the wall. Select this
         wall.
       skippable: 0
+      points: 92
     - identifier: editSpecular
       name: Specular
       description: The specular of this wall is set to 1. This value describes how
         much of the incoming light is reflected. So, the wall here reflects all the
         incoming light.  Change the specular and notice how the render preview changes.
       skippable: 0
+      points: 104
     - identifier: editShininess
       name: Shininess
       description: The shininess of this wall is set to 128. This value describes
@@ -306,33 +351,40 @@ MonoBehaviour:
         small specular highlights. Change the shininess and notice how the specular
         highlights change in size.
       skippable: 0
+      points: 93
     - identifier: renderImage
       name: Render Image
       description: See what the scene looks now by clicking on the "Render Image"
         in the ray tracer properties again.
       skippable: 0
+      points: 87
     - identifier: 
       name: 
       description: 
       skippable: 1
+      points: 0
     - identifier: openImage
       name: Open Image
       description: You can open the last rendered image by clicking "Open Image"
         next to the "Render Image" button. Open the last rendered image.
       skippable: 0
+      points: 174
     - identifier: editLightColor
       name: Light Color
       description: Click on the light and change the light's color property.
       skippable: 0
+      points: 309
     - identifier: renderImage
       name: Render Image
       description: Render the scene again and notice how changing the light's color
         changes the scene.
       skippable: 0
+      points: 193
     - identifier: 
       name: 
       description: 
       skippable: 0
+      points: 0
   - optionalTasksStart: 7
     tasks:
     - identifier: 
@@ -341,6 +393,7 @@ MonoBehaviour:
         in the real world. If we hit an object with transparent properties, we cast
         a ray (again) in the refracted direction.
       skippable: 1
+      points: 112
     - identifier: 
       name: Refractions
       description: The refracted ray continues to go through the transparent object.
@@ -348,42 +401,50 @@ MonoBehaviour:
         original ray. Instead, it bends a certain amount depending on the refractive
         index of a material.
       skippable: 1
+      points: 135
     - identifier: renderImage
       name: Render Image
       description: Unfortunately, the transparent objects in this scene are incorrectly
         displayed as well. To see what it should like, click on "Render Image" in
         the ray tracer properties.
       skippable: 0
+      points: 97
     - identifier: editAnimRays
       name: Refracted Rays
       description: Examine the scene and notice how the refracted rays are a bright
         green color. Toggle "Animate Rays" off in the ray tracer properties to see
         the refracted rays continuously.
       skippable: 0
+      points: 146
     - identifier: editRefractiveIndex
       name: Refractive Index
       description: The sphere in this scene tries to mimic glass with a refractive
         index of about 1.5. Change the refractive index property of the sphere and
         notice how the refracted rays bend differently.
       skippable: 0
+      points: 130
     - identifier: renderImage
       name: Render Image
       description: Render the image again to see what it should actually look like.
       skippable: 0
+      points: 90
     - identifier: 
       name: 
       description: 
       skippable: 1
+      points: 0
     - identifier: editSphereMaterialType
       name: Material Type
       description: 'We have now seen opaque, mirror and transparent material types.
         You can change the material type in the object''s properties. Change the
         sphere''s material type. '
       skippable: 0
+      points: 419
     - identifier: 
       name: 
       description: 
       skippable: 0
+      points: 0
   - optionalTasksStart: 9
     tasks:
     - identifier: selectCamera
@@ -393,12 +454,14 @@ MonoBehaviour:
         Select the camera and play with the number of horizontal and vertical pixels
         to really notice the amount of rays.
       skippable: 0
+      points: 71
     - identifier: hideNoHitRays
       name: No Hit Rays
       description: You might also notice a number of red rays. These red rays are
         called no hit rays, they do not contribute to the final color. To get a clearer
         view of this scene, toggle "Hide No Hit Rays" to on in the ray tracer properties.
       skippable: 0
+      points: 95
     - identifier: 
       name: Lens
       description: A lensing effect is achieved by placing an elongated sphere in
@@ -406,6 +469,7 @@ MonoBehaviour:
         (green) rays converge to a focal point. The convergence isn't perfect but
         it is quite close.
       skippable: 1
+      points: 102
     - identifier: 
       name: Transparent Wall
       description: There's also a transparent wall behind the lens. Because the wall
@@ -413,6 +477,7 @@ MonoBehaviour:
         they don't. This is a limitation of the way the ray tracer generates light
         rays.
       skippable: 1
+      points: 99
     - identifier: 
       name: Transparent Wall
       description: The ray tracer determines light rays by tracing a straight line
@@ -420,6 +485,7 @@ MonoBehaviour:
         it won't work. Therefore, the lights rays are blocked and replaced by shadow
         rays. These shadow rays only take the ambient components into consideration.
       skippable: 1
+      points: 140
     - identifier: disableShadows
       name: Render Shadows
       description: You can also disable rendering shadows. The light rays will then
@@ -427,24 +493,28 @@ MonoBehaviour:
         properties and notice how the shadow rays are replaced with light rays and
         go straight through the transparent wall.
       skippable: 0
+      points: 156
     - identifier: 
       name: Prism
       description: In real life, light is also able to split into a rainbow of colors.
         The prism that is placed on the bottom should cause this effect. If you place
         the prism in front of the camera however, it doesn't work.
       skippable: 1
+      points: 131
     - identifier: 
       name: Prism
       description: The reason for this is that the rays in the raytracer are indivisible,
         whereas light in the real world is almost always composed of a large range
         of wavelengths.
       skippable: 1
+      points: 163
     - identifier: 
       name: 
       description: You may press "Next Level" now to move onto the next level or
         do some more exploring.
       skippable: 0
-  - optionalTasksStart: 6
+      points: 0
+  - optionalTasksStart: 3
     tasks:
     - identifier: 
       name: Everything Put Together
@@ -452,29 +522,39 @@ MonoBehaviour:
         a transparent object and various shapes. It also contains a sphere that causes
         some interesting interactions with the rays.
       skippable: 1
+      points: 88
     - identifier: selectSphere
       name: Spot The Sphere
       description: 'Can you spot the sphere? Find the sphere and select it (HINT:
         zoom all the way out). '
       skippable: 0
+      points: 179
+    - identifier: 
+      name: 
+      description: 
+      skippable: 1
+      points: 0
     - identifier: selectGreenLight
       name: First Light Source
       description: This scene also has multiple light sources. Find and select the
         green light source.
       skippable: 0
+      points: 400
     - identifier: selectPurpleLight
       name: Second Light Source
       description: Now find and select the purple light source.
       skippable: 0
+      points: 350
     - identifier: selectRedLight
       name: Third Light Source
       description: Lastly find and select the red light source.
       skippable: 0
+      points: 300
     - identifier: 
       name: 
-      description: You may press "Next Level" now to move onto the next level or
-        do some more exploring.
+      description: 
       skippable: 0
+      points: 0
   - optionalTasksStart: 4
     tasks:
     - identifier: 
@@ -482,38 +562,21 @@ MonoBehaviour:
       description: You have reached the final level! This is a sandbox level which
         means all tools are available to create a customized scene yourself.
       skippable: 1
+      points: 93
     - identifier: createObject
       name: Creating Objects
       description: You can now create objects. Create an object by choosing one of
         the objects in the "Create" dropdown.
       skippable: 0
+      points: 538
     - identifier: deleteObject
       name: Deleting Objects
       description: You can now also delete any object, except for the camera. Delete
         a non-camera object from the scene by selecting it and pressing [DEL].
       skippable: 0
+      points: 410
     - identifier: 
       name: 
       description: You are now able to create your own custom scenes. Go crazy!
       skippable: 0
-  - optionalTasksStart: 4
-    tasks:
-    - identifier: 
-      name: Freedom
-      description: You have reached the final level! This is a sandbox level which
-        means all tools are available to create a customized scene yourself.
-      skippable: 1
-    - identifier: createObject
-      name: Creating Objects
-      description: You can now create objects. Create an object by choosing one of
-        the objects in the "Create" dropdown.
-      skippable: 0
-    - identifier: deleteObject
-      name: Deleting Objects
-      description: You can now also delete any object, except for the camera. Delete
-        a non-camera object from the scene by selecting it and pressing [DEL].
-      skippable: 0
-    - identifier: 
-      name: 
-      description: You are now able to create your own custom scenes. Go crazy!
-      skippable: 0
+      points: 0

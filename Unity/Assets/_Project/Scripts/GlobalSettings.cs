@@ -36,6 +36,7 @@ namespace _Project.Scripts
         public bool Unlimited = false;
 
         public static bool TutorialExpanded = true;
+        public static int TutorialPoints = 0;
         public List<Tasks> TutorialTasks;
 
         /// <summary>
