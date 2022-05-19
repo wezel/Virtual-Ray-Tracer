@@ -68,15 +68,19 @@ namespace _Project.Ray_Tracer.Scripts
 
         private HandleSpace handleSpace = HandleSpace.WORLD;
         
+        /// <summary>
+        /// The object type. 
+        /// The value represents the amount of points to unlock the object in sandbox mode.
+        /// </summary>
         public enum ObjectType
         {
-            Light,
-            Goat,
-            Sphere,
+            Sphere = 0,
             Cube,
-            Capsule,
             Cylinder,
-            Prism
+            Capsule,
+            Prism,
+            Goat,
+            Light = 10000
         }
 
         /// <summary>
