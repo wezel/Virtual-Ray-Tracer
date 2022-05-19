@@ -6,6 +6,9 @@ using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Point_Light;
 using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light;
 using _Project.Ray_Tracer.Scripts.Utility;
 using UnityEngine;
+using _Project.UI.Scripts;
+using _Project.UI.Scripts.Render_Image_Window;
+using System.Collections;
 
 namespace _Project.Ray_Tracer.Scripts
 {
@@ -98,20 +101,20 @@ namespace _Project.Ray_Tracer.Scripts
             }
         }
 
-        [SerializeField]
-        private int areaLightSamples = 2;
-        /// <summary>
-        /// The square root of samples taken per lightray per area light.
-        /// </summary>
-        public int AreaLightSamples
-        {
-            get { return areaLightSamples; }
-            set
-            {
-                areaLightSamples = value;
-                OnRayTracerChanged?.Invoke();
-            }
-        }
+        //[SerializeField]
+        //private int areaLightSamples = 2;
+        ///// <summary>
+        ///// The square root of samples taken per lightray per area light.
+        ///// </summary>
+        //public int AreaLightSamples
+        //{
+        //    get { return areaLightSamples; }
+        //    set
+        //    {
+        //        areaLightSamples = value;
+        //        OnRayTracerChanged?.Invoke();
+        //    }
+        //}
 
         [SerializeField]
         private int superSamplingFactor = 1;
@@ -161,6 +164,8 @@ namespace _Project.Ray_Tracer.Scripts
 
         static private UnityRayTracer instance = null;
         private RTSceneManager rtSceneManager;
+        private Texture2D image;
+        public Texture2D Image { get => image; }
 
         private RTScene scene;
         private new RTCamera camera;
@@ -495,11 +500,11 @@ namespace _Project.Ray_Tracer.Scripts
 
         /// <summary>
         /// Render the current <see cref="RTSceneManager"/>'s <see cref="RTScene"/> while building up a "high resolution"
-        /// image.
+        /// image. Saved in <see cref="UnityRayTracer.Image"/>.
         /// </summary>
-        /// <returns> A high resolution render in the form of a <see cref="Texture2D"/>. </returns>
-        public Texture2D RenderImage()
+        public IEnumerator RenderImage()
         {
+            RenderedImageWindow renderedImageWindow = UIManager.Get().RenderedImageWindow;
             scene = rtSceneManager.Scene;
             camera = scene.Camera;
             
@@ -512,7 +517,7 @@ namespace _Project.Ray_Tracer.Scripts
             width = scaleFactor * width;
             height = scaleFactor * height;
             
-            Texture2D image = new Texture2D(width, height, TextureFormat.RGBA32, false);
+            image = new Texture2D(width, height, TextureFormat.RGBA32, false);
             
             // Calculate the other variables.
             float halfScreenHeight = camera.ScreenDistance * Mathf.Tan(Mathf.Deg2Rad * camera.FieldOfView / 2.0f);
@@ -523,6 +528,7 @@ namespace _Project.Ray_Tracer.Scripts
             Vector3 origin = camera.transform.position;
 
             // Trace a ray for each pixel.
+            int percentage = 0;
             float start = Time.realtimeSinceStartup;
             for (int y = 0; y < height; ++y)
             {
@@ -553,11 +559,19 @@ namespace _Project.Ray_Tracer.Scripts
                     color.a = 1.0f;
                     image.SetPixel(x, y, ClampColor(color));
                 }
+
+                // Update progress bar
+                if (100 * y / height > percentage) // Update only when the percentage changes to limit yields.
+                {
+                    percentage = 100 * y / height;
+                    renderedImageWindow.UpdateProgressBar(percentage);
+                    yield return null; // yield to update UI
+                }
             }
+            Debug.Log(Time.realtimeSinceStartup - start);
 
             image.Apply(); // Very important.
-            Debug.Log(Time.realtimeSinceStartup - start);
-            return image;
+            yield return null;
         }
 
         private Color TraceImage(Vector3 origin, Vector3 direction, int depth)
@@ -605,8 +619,8 @@ namespace _Project.Ray_Tracer.Scripts
 
                     if (!fullyVisible)
                     {
-                        int samples = areaLightSamples * areaLightSamples;
-                        foreach (Vector3 p in arealight.RandomPointsOnLight(areaLightSamples))
+                        int samples = arealight.LightSamples * arealight.LightSamples;
+                        foreach (Vector3 p in arealight.SampleLight())
                         {
                             Vector3 point = p;
                             Vector3 lightVector = (point - hit.point).normalized;

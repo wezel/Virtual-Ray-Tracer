@@ -30,6 +30,8 @@ namespace _Project.UI.Scripts.Control_Panel
         private FloatEdit diffuseEdit;
         [SerializeField]
         private FloatEdit specularEdit;
+        [SerializeField]
+        private PowerEdit lightSamplesEdit;
 
         [SerializeField]
         private TMP_Dropdown typeDropdown;
@@ -44,6 +46,14 @@ namespace _Project.UI.Scripts.Control_Panel
             this.light = light;
 
             positionEdit.Value = light.Position;
+            if (light.Type == RTLight.RTLightType.Area)
+            {
+                rotationEdit.Value = ((RTAreaLight)light).Rotation;
+                scaleEdit.Value = ((RTAreaLight)light).Scale;
+                lightSamplesEdit.Value = Mathf.Pow(((RTAreaLight)light).LightSamples, 2);
+            }
+
+            typeDropdown.value = typeDropdown.options.FindIndex(option => option.text == light.Type.ToString());
             colorEdit.Color = light.Color;
             ambientEdit.Value = light.Ambient;
             diffuseEdit.Value = light.Diffuse;
@@ -58,15 +68,28 @@ namespace _Project.UI.Scripts.Control_Panel
             gameObject.SetActive(false);
             light = null;
         }
-        
+
+        private void ChangeObjectType(RTLight.RTLightType type)
+        {
+            rotationEdit.gameObject.SetActive(type == RTLight.RTLightType.Area);
+            scaleEdit.gameObject.SetActive(type == RTLight.RTLightType.Area);
+            //light.ChangeLightType(type);
+            Show(light);
+        }
 
         private void Awake()
         {
             positionEdit.OnValueChanged += value => light.Position = value;
+            rotationEdit.OnValueChanged += value => light.Rotation = value;
+            scaleEdit.OnValueChanged += value => { light.Scale = value; };
+
             colorEdit.OnValueChanged += value => light.Color = value;
             ambientEdit.OnValueChanged += (value) => { light.Ambient = value; };
             diffuseEdit.OnValueChanged += (value) => { light.Diffuse = value; };
             specularEdit.OnValueChanged += (value) => { light.Specular = value; };
+
+            lightSamplesEdit.OnValueChanged += value => light.LightSamples = (int)Mathf.Sqrt(value);
+            typeDropdown.onValueChanged.AddListener(type => ChangeObjectType((RTLight.RTLightType)type));
         }
 
         private void Update()

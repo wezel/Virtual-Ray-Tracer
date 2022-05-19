@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2869057598925096033}
   - component: {fileID: 1415938711584125191}
   m_Layer: 8
-  m_Name: RT Light
+  m_Name: RT PointLight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -50,10 +50,10 @@ MonoBehaviour:
   ambient: 0
   diffuse: 1
   specular: 1
-  light: {fileID: 2869057598925096033}
   label: {fileID: 4415559385507083291}
   outline: {fileID: 2936163527658708494}
   canvas: {fileID: 1104547694093982553}
+  light: {fileID: 2869057598925096033}
 --- !u!108 &2869057598925096033
 Light:
   m_ObjectHideFlags: 0
@@ -127,7 +127,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.256, y: 0.256, z: 0.01}
+  m_Size: {x: 0.256, y: 0.256, z: 0.256}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &3904491717560610861
 GameObject:

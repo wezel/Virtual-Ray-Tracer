@@ -19,6 +19,14 @@ namespace _Project.UI.Scripts.Render_Image_Window
         private TextMeshProUGUI empty;
         [SerializeField]
         private UIZoomImage zoomImage;
+        [SerializeField]
+        private Button closeButton;
+        [SerializeField]
+        private GameObject progressBar;
+        [SerializeField]
+        private GameObject progressFill;
+        [SerializeField]
+        private TextMeshProUGUI taskProgress;
 
         private Texture2D texture;
         private Sprite sprite;
@@ -39,6 +47,7 @@ namespace _Project.UI.Scripts.Render_Image_Window
             
             // hide loading message, show image and reset zoom. This order is important the other way around it breaks
             loading.gameObject.SetActive(false);
+            progressBar.gameObject.SetActive(false);
             renderedImage.gameObject.SetActive(true);
             zoomImage.ResetZoom();
             
@@ -75,6 +84,16 @@ namespace _Project.UI.Scripts.Render_Image_Window
             empty.gameObject.SetActive(false);
             renderedImage.gameObject.SetActive(false);
             loading.gameObject.SetActive(true);
+            progressFill.GetComponent<RectTransform>().sizeDelta = new Vector2(0, 0);
+            taskProgress.text = "0%";
+            progressBar.SetActive(true);
+        }
+
+        public void UpdateProgressBar(int percentage)
+        {
+            progressFill.GetComponent<RectTransform>().sizeDelta = 
+                new Vector2(progressBar.GetComponent<RectTransform>().rect.width / 100 * percentage, 0);
+            taskProgress.text = percentage.ToString() + "%";
         }
 
         /// <summary>
@@ -84,7 +103,7 @@ namespace _Project.UI.Scripts.Render_Image_Window
         {
             gameObject.SetActive(true);
             UIManager.Get().EnableBlocker();
-            UIManager.Get().AddEscapable(Hide);
+            UIManager.Get().AddEscapable(closeButton.onClick.Invoke);
         }
 
         /// <summary>
@@ -93,7 +112,7 @@ namespace _Project.UI.Scripts.Render_Image_Window
         public void Hide()
         {
             UIManager.Get().DisableBlocker();
-            UIManager.Get().RemoveEscapable(Hide);
+            UIManager.Get().RemoveEscapable(closeButton.onClick.Invoke);
             gameObject.SetActive(false);
         }
 
@@ -111,6 +130,7 @@ namespace _Project.UI.Scripts.Render_Image_Window
         {
             loading.gameObject.SetActive(false);
             renderedImage.gameObject.SetActive(false);
+            progressBar.gameObject.SetActive(false);
         }
     }
 }

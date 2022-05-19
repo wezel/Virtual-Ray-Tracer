@@ -66,7 +66,7 @@ namespace _Project.UI.Scripts.Control_Panel
             set
             {
                 // Set the value.
-                this.value = value;
+                this.value = CorrectValue(value);
 
                 // Update the text of the input fields if we are not already changing the text directly.
                 if (!changingInputText)
@@ -78,6 +78,59 @@ namespace _Project.UI.Scripts.Control_Panel
 
                 // Notify listeners of the change.
                 OnValueChanged?.Invoke(this.value);
+            }
+        }
+
+        /// <summary>
+        /// Correct <paramref name="value"/> to fit within the restrictions of this <see cref="Vector3Edit"/>. This involves
+        /// rounding <paramref name="value"/> to the number of digits specified by <see cref="Digits"/> and clamping it
+        /// between <see cref="MinValue"/> and <see cref="MaxValue"/>.
+        /// </summary>
+        /// <param name="value"> The vector3 value to correct. </param>
+        /// <returns> <paramref name="value"/> rounded and clamped. </returns>
+        private Vector3 CorrectValue(Vector3 value)
+        {
+            return new Vector3(Mathf.Clamp(value.x, MinValue, MaxValue),
+                               Mathf.Clamp(value.y, MinValue, MaxValue),
+                               Mathf.Clamp(value.z, MinValue, MaxValue));
+        }
+
+        [SerializeField]
+        private float minValue = Mathf.NegativeInfinity;
+        /// <summary>
+        /// The minimum value this <see cref="FloatEdit"/> can take on. When set, <see cref="Value"/> will be recalculated
+        /// and if it is below the new minimum it will be clamped.
+        /// </summary>
+        public float MinValue
+        {
+            get { return minValue; }
+            set
+            {
+                minValue = value;
+                // Update the value if it is below the new minimum.
+                Value = new Vector3(Value.x < minValue ? minValue : Value.x,
+                                    Value.y < minValue ? minValue : Value.y,
+                                    Value.z < minValue ? minValue : Value.z);
+            }
+        }
+
+        [SerializeField]
+        private float maxValue = Mathf.Infinity;
+        /// <summary>
+        /// The maximum value this <see cref="FloatEdit"/> can take on. When set, <see cref="Value"/> will be recalculated
+        /// and if it is above the new maximum it will be clamped.
+        /// </summary>
+        public float MaxValue
+        {
+            get { return maxValue; }
+            set
+            {
+                maxValue = value;
+                minValue = value;
+                // Update the value if it is above the new maximum.
+                Value = new Vector3(Value.x > maxValue ? maxValue : Value.x,
+                                    Value.y > maxValue ? maxValue : Value.y,
+                                    Value.z > maxValue ? maxValue : Value.z);
             }
         }
 

@@ -111,8 +111,7 @@ Shader "Custom/LightShader"
                 float3 lightColor = unpackData(_LightColor0.r,_LightColor0.g);
                 float3 ambDifSpec = unpackData(_LightColor0.b,_LightColor0.a);
 
-                //float3 ambientColor =                                 ambDifSpec.x * lightColor * _Color.rgb;
-                float3 ambientColor =                     _Ambient  * ambDifSpec.x * _Color.rgb;
+                float3 ambientColor =                                 ambDifSpec.x * lightColor * _Color.rgb;
                 float3 diffuseColor =  diffuseStrength  * _Diffuse  * ambDifSpec.y * lightColor * _Color.rgb;
                 float3 specularColor = specularStrength * _Specular * ambDifSpec.z * lightColor * _Color.rgb;
 
@@ -122,10 +121,12 @@ Shader "Custom/LightShader"
                 #ifdef SPOT // Attenuate arealighting (currently made of spotlights)
                 float3 lightDirection = normalize(mul(float3(0, 0, -1), (float3x3)unity_WorldToLight));
                 float angle = dot(lightDirection, light);
-                if (angle < 0.04)
-                    result *= angle;
+                if (angle <= 0.0)
+                    result *= 0;
+                else if (angle < 0.04)
+                    result *= angle * angle * 10;
                 else
-                    result *= pow(angle, 0.6);
+                    result *= angle;
                 #endif
 
                 return float4(result * attenuation, 0);

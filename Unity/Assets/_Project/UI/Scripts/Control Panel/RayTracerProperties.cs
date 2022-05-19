@@ -67,11 +67,12 @@ namespace _Project.UI.Scripts.Control_Panel
         [SerializeField]
         private BoolEdit renderAreaLightsEdit;
         [SerializeField]
-        private FloatEdit areaLightSamplesEdit;
-        [SerializeField]
         private Button renderImageButton;
         [SerializeField]
         private Button openImageButton;
+
+        [HideInInspector]
+        private IEnumerator renderEnumerator;
 
         /// <summary>
         /// Show the ray tracer properties for the current <see cref="UnityRayTracer"/> and <see cref="RayManager"/>.
@@ -87,7 +88,6 @@ namespace _Project.UI.Scripts.Control_Panel
             renderShadowsEdit.IsOn = rayTracer.RenderShadows;
             renderPointLightsEdit.IsOn = rayTracer.RenderPointLights;
             renderAreaLightsEdit.IsOn = rayTracer.RenderAreaLights;
-            areaLightSamplesEdit.Value = rayTracer.AreaLightSamples;
             recursionDepthEdit.Value = rayTracer.MaxDepth;
             backgroundColorEdit.Color = rayTracer.BackgroundColor;
 
@@ -123,8 +123,8 @@ namespace _Project.UI.Scripts.Control_Panel
         private IEnumerator RunRenderImage()
         {
             yield return new WaitForFixedUpdate();
-            Texture2D render = rayTracer.RenderImage();
-            uiManager.RenderedImageWindow.SetImageTexture(render);
+            yield return rayTracer.RenderImage();
+            uiManager.RenderedImageWindow.SetImageTexture(rayTracer.Image);
             yield return null;
         }
 
@@ -132,8 +132,13 @@ namespace _Project.UI.Scripts.Control_Panel
         {
             uiManager.RenderedImageWindow.Show();
             uiManager.RenderedImageWindow.SetLoading();
-            StartCoroutine(RunRenderImage());
+            StartCoroutine(renderEnumerator = RunRenderImage());
         }
+
+        //public void StopRendering()
+        //{
+        //    StopCoroutine(renderEnumerator);
+        //}
 
         private void ToggleImage()
         {
@@ -174,7 +179,6 @@ namespace _Project.UI.Scripts.Control_Panel
 
             superSamplingFactorEdit.OnValueChanged += (value) => { rayTracer.SuperSamplingFactor = (int)value; };
             superSamplingVisualEdit.OnValueChanged += (value) => { rayTracer.SuperSamplingVisual = value; };
-            areaLightSamplesEdit.OnValueChanged += (value) => { rayTracer.AreaLightSamples = (int)value; };
             renderImageButton.onClick.AddListener(RenderImage);
             openImageButton.onClick.AddListener(ToggleImage);
         }

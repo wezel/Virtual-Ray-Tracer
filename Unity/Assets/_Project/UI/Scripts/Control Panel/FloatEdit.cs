@@ -164,7 +164,7 @@ namespace _Project.UI.Scripts.Control_Panel
         /// </summary>
         /// <param name="value"> The floating point value to correct. </param>
         /// <returns> <paramref name="value"/> rounded and clamped. </returns>
-        private float CorrectValue(float value)
+        protected virtual float CorrectValue(float value)
         {
             float correctedValue = (float)Math.Round(value, Digits);
             return Mathf.Clamp(correctedValue, MinValue, MaxValue);

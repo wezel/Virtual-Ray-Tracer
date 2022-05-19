@@ -79,7 +79,27 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Point_Light
         private new Light light;
         
         public LightShadows Shadows { get => light.shadows; set => light.shadows = value; }
-                
+
+//        public override void ChangeLightType(RTLightType type)
+//        {
+//            if (Type == type) return;
+
+//#if UNITY_EDITOR
+//            DestroyImmediate(light.gameObject);
+//#else
+//            Destroy(light.gameObject);
+//#endif
+//            light = null;
+
+//            base.ChangeLightType(type);
+//        }
+
+        protected override void Awake()
+        {
+            Type = RTLightType.Point;
+            base.Awake();
+        }
+
         private void LateUpdate()
         {
             #if UNITY_EDITOR

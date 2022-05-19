@@ -79,10 +79,12 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
         /// <param name="light"> The <see cref="RTLight"/> object to add. </param>
         public void AddLight(RTLight light)
         {
-            if (light.GetType() == typeof(RTLight))
+            if (light.Type == RTLight.RTLightType.Point)
                 PointLights.Add(light as RTPointLight);
-            else // (light.GetType() == typeof(RTAreaLight))
+            else if (light.Type == RTLight.RTLightType.Area)
                 AreaLights.Add(light as RTAreaLight);
+            else
+                return;
 
             light.OnLightChanged += SceneObjectChanged;
             OnSceneChanged?.Invoke();
@@ -94,10 +96,12 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
         /// <param name="light"> The <see cref="RTLight"/> object to remove. </param>
         public void RemoveLight(RTLight light)
         {
-            if (light.GetType() == typeof(RTLight))
+            if (light.Type == RTLight.RTLightType.Point)
                 PointLights.Remove(light as RTPointLight);
-            else // (light.GetType() == typeof(RTAreaLight))
+            else if (light.Type == RTLight.RTLightType.Area)
                 AreaLights.Remove(light as RTAreaLight);
+            else
+                return;
 
             light.OnLightChanged -= SceneObjectChanged;
             OnSceneChanged?.Invoke();

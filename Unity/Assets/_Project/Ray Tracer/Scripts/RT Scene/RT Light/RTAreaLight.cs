@@ -28,17 +28,15 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
             get => color;
             set
             {
-                Color color = value;
-                value /= lightSamples;
-                value.a = 1f;
+                Color subColor = value / LightSamples;
 
                 Color lightData = lights[0].color;
-                lightData.r = Mathf.Floor(value.r * 256) + value.g / 2;
-                lightData.g = value.b;
+                lightData.r = Mathf.Floor(subColor.r * 256) + subColor.g / 2;
+                lightData.g = subColor.b;
                 foreach (Light light in lights)
                     light.color = lightData;
 
-                base.Color = color;
+                base.Color = value;
             }
         }
 
@@ -47,11 +45,10 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
             get => ambient;
             set
             {
-                float ambient = value;
-                value /= (lightSamples);
+                float subAmbient = value / (LightSamples * LightSamples);
 
                 Color lightData = lights[0].color;
-                lightData.b = lightData.b % 1 + Mathf.Floor(value * 256);
+                lightData.b = lightData.b % 1 + Mathf.Floor(subAmbient * 256);
                 foreach (Light light in lights)
                     light.color = lightData;
 
@@ -64,35 +61,30 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
             get => diffuse;
             set
             {
-                float diffuse = value;
-                value /= (lightSamples);
+                float subDiffuse = value / LightSamples;
 
                 Color lightData = lights[0].color;
-                lightData.b = Mathf.Floor(lightData.b) + value / 2;
+                lightData.b = Mathf.Floor(lightData.b) + subDiffuse / 2;
                 foreach (Light light in lights)
                     light.color = lightData;
 
-                base.Diffuse = diffuse;
+                base.Diffuse = value;
             }
         }
-
-        //[SerializeField, Range(0, 1)]
-        //private float specular;
 
         public override float Specular
         {
             get => specular;
             set
             {
-                float specular = value;
-                value /= (lightSamples);
+                float subSpecular = value / LightSamples;
 
                 Color lightData = lights[0].color;
-                lightData.a = value;
+                lightData.a = subSpecular;
                 foreach (Light light in lights)
                     light.color = lightData;
 
-                base.Specular = specular;
+                base.Specular = value;
             }
         }
 
@@ -103,32 +95,6 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
 
         private RectTransform rectTransform { get => GetComponent<RectTransform>(); }
 
-        /// <summary>
-        /// The rotation of the mesh.
-        /// </summary>
-        public Vector3 Rotation
-        {
-            get => transform.eulerAngles;
-            set
-            {
-                transform.eulerAngles = value;
-                OnLightChangedInvoke();
-            }
-        }
-
-        /// <summary>
-        /// The scale of the mesh.
-        /// </summary>
-        public Vector3 Scale
-        {
-            get => transform.localScale;
-            set
-            {
-                transform.localScale = value;
-                OnLightChangedInvoke();
-            }
-        }
-
         private readonly System.Random rnd = new System.Random();
 
         /// <summary>
@@ -136,20 +102,20 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
         /// </summary>
         /// <param name="samples"> The square root of how many points should be sampled </param>
         /// <returns> <paramref name="samples"/>^2 points on the arealight. </returns>
-        public Vector3[] RandomPointsOnLight(int samples)
+        public Vector3[] SampleLight()
         {
-            Vector3[] points = new Vector3[samples * samples];
+            Vector3[] points = new Vector3[LightSamples * LightSamples];
             Vector3[] corners = new Vector3[4];
             rectTransform.GetWorldCorners(corners);  // clockwise corners
 
-            Vector3 step_1 = (corners[1] - corners[0]) / samples; // corner 0 to corner 1
-            Vector3 step_2 = (corners[3] - corners[0]) / samples; // corner 0 to corner 3
+            Vector3 step_1 = (corners[1] - corners[0]) / LightSamples; // corner 0 to corner 1
+            Vector3 step_2 = (corners[3] - corners[0]) / LightSamples; // corner 0 to corner 3
 
 
-            for (int i = 0; i < samples * samples; i++)
+            for (int i = 0; i < LightSamples * LightSamples; i++)
                 points[i] = corners[0]
-                        + (i / samples) * step_1 + (float)rnd.NextDouble() * step_1
-                        + (i % samples) * step_2 + (float)rnd.NextDouble() * step_2;
+                        + (i / LightSamples) * step_1 + (float)rnd.NextDouble() * step_1
+                        + (i % LightSamples) * step_2 + (float)rnd.NextDouble() * step_2;
 
             return points;
         }
@@ -197,36 +163,70 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
 
 
         [SerializeField]
-        [Range(2, 16)]
+        [Range(2, 10)]
         private int lightSamples;
+
+        /// <summary>
+        /// The square root of the numer of samples this light uses to estimate an area light.
+        /// </summary>
+        public override int LightSamples
+        { 
+            get { return lightSamples; } 
+            set 
+            { 
+                if (value >= 2 && value <= 10)
+                    lightSamples = value; 
+            }
+        }
 
         [SerializeField]
         private GameObject pointLightPrefab;
 
         private bool update = false;
+//        public override void ChangeLightType(RTLightType type)
+//        {
+//            if (Type == type) return;
+
+//            foreach (Light light in GetComponentsInChildren<Light>())
+//#if UNITY_EDITOR
+//                DestroyImmediate(light.gameObject);
+//#else
+//                Destroy(light.gameObject);
+//#endif
+//            lights = null;
+
+//            base.ChangeLightType(type);
+//        }
+
+        protected override void Awake()
+        {
+            Type = RTLightType.Area;
+            base.Awake();
+        }
 
         private void Update()
         {
             // Update label; black at the back; light color at the front
 #if UNITY_EDITOR
+            Vector3 cameraPos;
             if (!Application.isPlaying)
-                if (Vector3.Dot(transform.forward, (transform.position - UnityEditor.SceneView.lastActiveSceneView.camera.transform.position).normalized) > 0)
-                    label.color = Color.black;
-                else
-                    label.color = Color;
+                cameraPos = UnityEditor.SceneView.lastActiveSceneView.camera.transform.position;
             else
+                cameraPos = Camera.main.transform.position;
+#else
+            Vector3 cameraPos = Camera.main.transform.position;
 #endif
-                if (Vector3.Dot(transform.forward, (transform.position - Camera.main.transform.position).normalized) > 0)
-                    label.color = Color.black;
-                else
-                    label.color = Color;
+            if (Vector3.Dot(transform.forward, (transform.position - cameraPos).normalized) > 0)
+                label.color = Color.black;
+            else
+                label.color = Color;
 
             // Update the (amount of) lights
 #if UNITY_EDITOR
             if (PrefabStageUtility.GetCurrentPrefabStage() != null) // In Prefab Mode
                 return;                                             // Don't add lights to the prefab
 #endif
-            if (!update && lights != null && lights.Length == lightSamples * lightSamples)
+            if (!update && lights != null && lights.Length == LightSamples * LightSamples)
                 return;
 
             foreach (Light light in GetComponentsInChildren<Light>())
@@ -235,17 +235,17 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
 #else
                 Destroy(light.gameObject);
 #endif
-            lights = new Light[lightSamples * lightSamples];
-            float stepx = rectTransform.rect.width / (lightSamples - 1);
-            float stepy = rectTransform.rect.height / (lightSamples - 1);
+            lights = new Light[LightSamples * LightSamples];
+            float stepx = rectTransform.rect.width / (LightSamples - 1);
+            float stepy = rectTransform.rect.height / (LightSamples - 1);
             Vector3 start = new Vector3(0f, 0f, 0f);
             start.x -= rectTransform.rect.width / 2;
             start.y -= rectTransform.rect.height / 2;
-            float maxBias = 2 * (lightSamples - 1);
+            float maxBias = 2 * (LightSamples - 1);
 
-            for (int i = 0; i < lightSamples; i++)
+            for (int i = 0; i < LightSamples; i++)
             {
-                for (int j = 0; j < lightSamples; j++)
+                for (int j = 0; j < LightSamples; j++)
                 {
                     Light light = Instantiate(pointLightPrefab, transform).GetComponent<Light>();
                     Vector3 pos = start;
@@ -253,7 +253,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
                     pos.y += j * stepy;
                     light.transform.localPosition = pos;
                     light.shadowBias = (i + j)/ maxBias * 0.035f + 0.005f;
-                    lights[i * lightSamples + j] = light;
+                    lights[i * LightSamples + j] = light;
                 }
             }
 

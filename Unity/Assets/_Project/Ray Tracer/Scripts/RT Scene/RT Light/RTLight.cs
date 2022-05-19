@@ -85,7 +85,47 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
                 OnLightChanged?.Invoke();
             }
         }
-        
+
+
+        /// <summary>
+        /// The rotation of the mesh.
+        /// </summary>
+        public Vector3 Rotation
+        {
+            get => transform.eulerAngles;
+            set
+            {
+                transform.eulerAngles = value;
+                OnLightChangedInvoke();
+            }
+        }
+
+        /// <summary>
+        /// The scale of the mesh.
+        /// </summary>
+        public Vector3 Scale
+        {
+            get => transform.localScale;
+            set
+            {
+                if (value.x <= 0f || value.y <= 0f || value.z <= 0f) return;
+                transform.localScale = value;
+                OnLightChangedInvoke();
+            }
+        }
+
+        public enum RTLightType
+        {
+            Area,
+            Point
+        }
+
+        /// <summary>
+        /// Whether the light is a point or an area.
+        /// </summary>
+        [HideInInspector]
+        public RTLightType Type;
+
         [SerializeField]
         protected Image label;
         
@@ -100,8 +140,18 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
         public void Higlight(Color value) => outline.color = value;
 
         public void ResetHighlight() => outline.color = defaultOutline;
-        
-        protected void Awake()
+
+        //public virtual void ChangeLightType(RTLightType type)
+        //{
+        //    if (Type == type) return;
+
+        //    Type = type;
+        //    OnLightChanged?.Invoke();
+        //}
+
+        public virtual int LightSamples { get; set; }
+
+        protected virtual void Awake()
         {
             defaultOutline = outline.color;
         }

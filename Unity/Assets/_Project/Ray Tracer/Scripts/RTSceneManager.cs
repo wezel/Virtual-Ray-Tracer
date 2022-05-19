@@ -134,7 +134,7 @@ namespace _Project.Ray_Tracer.Scripts
                     if (value == null) return;
                     selected = value;
 
-                    Type = value.GetType();
+                    Type = value.Type == RTLight.RTLightType.Point ? typeof(RTPointLight) : typeof(RTAreaLight);
                     Transform = value.transform;
                     Empty = false;
                 }
@@ -469,24 +469,16 @@ namespace _Project.Ray_Tracer.Scripts
         {
             
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            Debug.Log(1);
 
             // If we hit a handle we do nothing
             if (Physics.Raycast(ray, Mathf.Infinity, LayerMask.GetMask("Gizmos"))) return;
-            Debug.Log(2);
 
             // If we don't hit a handle we try to select the first object we did hit.
-            int mask = LayerMask.GetMask("Ray Tracer Objects", "Camera and PointLights");
+            int mask = LayerMask.GetMask("Ray Tracer Objects", "Camera and Lights");
             if (Physics.Raycast(ray, out var hit, Mathf.Infinity, mask))
-            {
-                Debug.Log(3);
                 Select(hit.transform);
-                return;
-            }
-
-            Debug.Log(4);
-            // If nothing was hit deselect all.
-            Deselect();
+            else  // If nothing was hit deselect all.
+                Deselect();
         }
         
         private void Update()
