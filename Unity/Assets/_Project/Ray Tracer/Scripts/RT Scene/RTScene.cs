@@ -30,6 +30,8 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             get { return camera; }
             set
             {
+                if (camera == value) return;
+
                 if (camera != null)
                     camera.OnCameraChanged -= SceneObjectChanged;
 

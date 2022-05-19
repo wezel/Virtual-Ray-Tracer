@@ -173,9 +173,11 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
         { 
             get { return lightSamples; } 
             set 
-            { 
+            {
+                if (value == lightSamples) return;
                 if (value >= 2 && value <= 10)
-                    lightSamples = value; 
+                    lightSamples = value;
+                OnLightChangedInvoke();
             }
         }
 

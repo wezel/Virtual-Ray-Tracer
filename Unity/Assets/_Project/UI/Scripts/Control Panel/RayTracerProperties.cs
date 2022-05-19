@@ -135,11 +135,6 @@ namespace _Project.UI.Scripts.Control_Panel
             StartCoroutine(renderEnumerator = RunRenderImage());
         }
 
-        //public void StopRendering()
-        //{
-        //    StopCoroutine(renderEnumerator);
-        //}
-
         private void ToggleImage()
         {
             uiManager.RenderedImageWindow.Toggle();

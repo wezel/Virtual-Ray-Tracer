@@ -22,7 +22,12 @@ namespace _Project.Ray_Tracer.Scripts
         public float RayHideThreshold
         {
             get { return rayHideThreshold; }
-            set { rayHideThreshold = value; }
+            set
+            {
+                if (value == rayHideThreshold) return;
+                rayHideThreshold = value;
+                shouldUpdateRays = true;
+            }
         }
 
         [SerializeField]
@@ -33,7 +38,12 @@ namespace _Project.Ray_Tracer.Scripts
         public bool RayTransparencyEnabled
         {
             get { return rayTransparencyEnabled; }
-            set { rayTransparencyEnabled = value; }
+            set
+            {
+                if (value == rayTransparencyEnabled) return;
+                rayTransparencyEnabled = value;
+                shouldUpdateRays = true;
+            }
         }
 
         [SerializeField, Range(0.00f, 2.00f)]
@@ -44,7 +54,12 @@ namespace _Project.Ray_Tracer.Scripts
         public float RayTransExponent
         {
             get { return rayTransExponent; }
-            set { rayTransExponent = value; }
+            set
+            {
+                if (value == rayTransExponent) return;
+                rayTransExponent = value;
+                shouldUpdateRays = true;
+            }
         }
 
         //[SerializeField, Range(0.00f, 1.00f)]
@@ -77,7 +92,12 @@ namespace _Project.Ray_Tracer.Scripts
         public bool RayColorContributionEnabled
         {
             get { return rayColorContributionEnabled; }
-            set { rayColorContributionEnabled = value; }
+            set 
+            {
+                if (value == rayColorContributionEnabled) return;
+                rayColorContributionEnabled = value;
+                shouldUpdateRays = true;
+            }
         }
 
         [SerializeField, Range(0.001f, 0.1f)]
@@ -294,10 +314,13 @@ namespace _Project.Ray_Tracer.Scripts
         {
             if (RayTransparencyEnabled)
             {
+                Material mat;
                 if (RayColorContributionEnabled)
-                    return GetRayColorMaterialTransparent(color.r, color.g, color.b, Mathf.Pow(contribution, RayTransExponent));
+                    mat = GetRayColorMaterialTransparent(color.r, color.g, color.b);
                 else
-                    return GetRayTypeMaterialTransparent(type, Mathf.Pow(contribution, RayTransExponent));
+                    mat = GetRayTypeMaterialTransparent(type);
+                mat.SetFloat("_Ambient", Mathf.Pow(contribution, RayTransExponent));
+                return mat;
             }
             else
             {
@@ -330,7 +353,7 @@ namespace _Project.Ray_Tracer.Scripts
                     return normalMaterial;
                 case RTRay.RayType.Shadow:
                     return shadowMaterial;
-                case RTRay.RayType.Light:
+                case RTRay.RayType.PointLight:
                     return lightMaterial;
                 default:
                     Debug.LogError("Unrecognized ray type " + type + "!");
@@ -346,28 +369,40 @@ namespace _Project.Ray_Tracer.Scripts
         /// <returns>
         /// The transparent <see cref="Material"/> for <paramref name="type"/>.
         /// </returns>
-        private Material GetRayTypeMaterialTransparent(RTRay.RayType type, float transparency)
+        private Material GetRayTypeMaterialTransparent(RTRay.RayType type)
         {
-            if (transparency > 1.0f)
-                Debug.LogError("Transparency bigger than 1: " + transparency.ToString());
-
             switch (type)
             {
                 case RTRay.RayType.NoHit:
                     return noHitMaterial;
                 case RTRay.RayType.Reflect:
-                    return reflectMaterialTransparentArray[Mathf.RoundToInt(transparency * (transparencyRange - 1))];
+                    return reflectMaterialTransparent;
                 case RTRay.RayType.Refract:
-                    return refractMaterialTransparentArray[Mathf.RoundToInt(transparency * (transparencyRange - 1))];
+                    return refractMaterialTransparent;
                 case RTRay.RayType.Normal:
-                    return normalMaterialTransparentArray[Mathf.RoundToInt(transparency * (transparencyRange - 1))];
+                    return normalMaterialTransparent;
                 case RTRay.RayType.Shadow:
-                    return shadowMaterialTransparentArray[Mathf.RoundToInt(transparency * (transparencyRange - 1))];
-                case RTRay.RayType.Light:
-                    return lightMaterialTransparentArray[Mathf.RoundToInt(transparency * (transparencyRange - 1))];
+                    return shadowMaterialTransparent;
+                case RTRay.RayType.PointLight:
+                    return lightMaterialTransparent;
                 default:
                     Debug.LogError("Unrecognized ray type " + type + "!");
                     return errorMaterial;
+                //case RTRay.RayType.NoHit:
+                //    return noHitMaterial;
+                //case RTRay.RayType.Reflect:
+                //    return reflectMaterialTransparentArray[Mathf.RoundToInt(transparency * (transparencyRange - 1))];
+                //case RTRay.RayType.Refract:
+                //    return refractMaterialTransparentArray[Mathf.RoundToInt(transparency * (transparencyRange - 1))];
+                //case RTRay.RayType.Normal:
+                //    return normalMaterialTransparentArray[Mathf.RoundToInt(transparency * (transparencyRange - 1))];
+                //case RTRay.RayType.Shadow:
+                //    return shadowMaterialTransparentArray[Mathf.RoundToInt(transparency * (transparencyRange - 1))];
+                //case RTRay.RayType.PointLight:
+                //    return lightMaterialTransparentArray[Mathf.RoundToInt(transparency * (transparencyRange - 1))];
+                //default:
+                //    Debug.LogError("Unrecognized ray type " + type + "!");
+                //    return errorMaterial;
             }
         }
 
@@ -382,17 +417,20 @@ namespace _Project.Ray_Tracer.Scripts
         /// </returns>
         private Material GetRayColorMaterial(float r, float g, float b)
         {
-            int idxr = Mathf.RoundToInt(r * (colorN - 1));
-            int idxg = Mathf.RoundToInt(g * (colorN - 1));
-            int idxb = Mathf.RoundToInt(b * (colorN - 1));
+            return new Material(colorRayMaterial) { color = new Color(r, g, b, 1f) };
 
-            // To optimize loading-performance, these materials are constucted on-demand.
-            // To optimize runtime-performance, once they're made, they're saved
-            if (!colorRayMaterialArray[idxr, idxg, idxb])
-                colorRayMaterialArray[idxr, idxg, idxb] = new Material(colorRayMaterial)
-                { color = new Color(idxr * colorStep, idxg * colorStep, idxb * colorStep, 1f) };
 
-            return colorRayMaterialArray[idxr, idxg, idxb];
+            //int idxr = Mathf.RoundToInt(r * (colorN - 1));
+            //int idxg = Mathf.RoundToInt(g * (colorN - 1));
+            //int idxb = Mathf.RoundToInt(b * (colorN - 1));
+
+            //// To optimize loading-performance, these materials are constucted on-demand.
+            //// To optimize runtime-performance, once they're made, they're saved
+            //if (!colorRayMaterialArray[idxr, idxg, idxb])
+            //    colorRayMaterialArray[idxr, idxg, idxb] = new Material(colorRayMaterial)
+            //    { color = new Color(idxr * colorStep, idxg * colorStep, idxb * colorStep, 1f) };
+
+            //return colorRayMaterialArray[idxr, idxg, idxb];
         }
 
         /// <summary>
@@ -405,23 +443,26 @@ namespace _Project.Ray_Tracer.Scripts
         /// <returns> 
         /// The transparent <see cref="Material"/> for <paramref name="r"/>, <paramref name="g"/> and <paramref name="b"/>.
         /// </returns>
-        private Material GetRayColorMaterialTransparent(float r, float g, float b, float transparency)
+        private Material GetRayColorMaterialTransparent(float r, float g, float b)
         {
-            int idxr = Mathf.RoundToInt(r * (colorN - 1));
-            int idxg = Mathf.RoundToInt(g * (colorN - 1));
-            int idxb = Mathf.RoundToInt(b * (colorN - 1));
-            int idxa = Mathf.RoundToInt(transparency * (transparencyRange - 1));
 
-            // To optimize loading-performance, these materials are constucted on-demand.
-            // To optimize runtime-performance, once they're made, they're saved
-            if (!colorRayMaterialTransparentArray[idxr, idxg, idxb, idxa])
-            {
-                colorRayMaterialTransparentArray[idxr, idxg, idxb, idxa] = new Material(colorRayMaterialTransparent)
-                { color = new Color(idxr * colorStep, idxg * colorStep, idxb * colorStep, colorRayMaterialTransparent.color.a) };
-                colorRayMaterialTransparentArray[idxr, idxg, idxb, idxa].SetFloat("_Ambient", (idxa + 1) * (1f / transparencyRange));
-            }
+            return new Material(colorRayMaterialTransparent) { color = new Color(r, g, b, colorRayMaterialTransparent.color.a) };
 
-            return colorRayMaterialTransparentArray[idxr, idxg, idxb, idxa];
+            //int idxr = Mathf.RoundToInt(r * (colorN - 1));
+            //int idxg = Mathf.RoundToInt(g * (colorN - 1));
+            //int idxb = Mathf.RoundToInt(b * (colorN - 1));
+            //int idxa = Mathf.RoundToInt(transparency * (transparencyRange - 1));
+
+            //// To optimize loading-performance, these materials are constucted on-demand.
+            //// To optimize runtime-performance, once they're made, they're saved
+            //if (!colorRayMaterialTransparentArray[idxr, idxg, idxb, idxa])
+            //{
+            //    colorRayMaterialTransparentArray[idxr, idxg, idxb, idxa] = new Material(colorRayMaterialTransparent)
+            //    { color = new Color(idxr * colorStep, idxg * colorStep, idxb * colorStep, colorRayMaterialTransparent.color.a) };
+            //    colorRayMaterialTransparentArray[idxr, idxg, idxb, idxa].SetFloat("_Ambient", (idxa + 1) * (1f / transparencyRange));
+            //}
+
+            //return colorRayMaterialTransparentArray[idxr, idxg, idxb, idxa];
         }
 
         public void SelectRay(Vector2Int rayCoordinates)
@@ -446,11 +487,11 @@ namespace _Project.Ray_Tracer.Scripts
         {
             rays = new List<TreeNode<RTRay>>();
             // Generate range of transparent materials
-            MakeTransparentMaterials(ref reflectMaterialTransparent, ref reflectMaterialTransparentArray);
-            MakeTransparentMaterials(ref refractMaterialTransparent, ref refractMaterialTransparentArray);
-            MakeTransparentMaterials(ref normalMaterialTransparent, ref normalMaterialTransparentArray);
-            MakeTransparentMaterials(ref shadowMaterialTransparent, ref shadowMaterialTransparentArray);
-            MakeTransparentMaterials(ref lightMaterialTransparent, ref lightMaterialTransparentArray);
+            //MakeTransparentMaterials(ref reflectMaterialTransparent, ref reflectMaterialTransparentArray);
+            //MakeTransparentMaterials(ref refractMaterialTransparent, ref refractMaterialTransparentArray);
+            //MakeTransparentMaterials(ref normalMaterialTransparent, ref normalMaterialTransparentArray);
+            //MakeTransparentMaterials(ref shadowMaterialTransparent, ref shadowMaterialTransparentArray);
+            //MakeTransparentMaterials(ref lightMaterialTransparent, ref lightMaterialTransparentArray);
 
             rayObjectPool = new RayObjectPool(rayPrefab, initialRayPoolSize, transform);
             Reset = true;

@@ -18,7 +18,8 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
             Refract,
             Normal,
             Shadow,
-            Light
+            PointLight,
+            AreaLight
         }
 
         /// <summary>
@@ -97,5 +98,16 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
         /// <param name="distance"> The distance to travel along this ray. </param>
         /// <returns> A <see cref="Vector3"/> point <paramref name="distance"/> along this ray. </returns>
         public Vector3 At(float distance) => Origin + distance * Direction;
+
+        public bool Equals(RTRay other)
+        {
+            if (other == null) return false;
+            return Origin == other.Origin
+                && Direction == other.Direction
+                && Length == other.Length
+                && Color == other.Color
+                && Type == other.Type
+                && Contribution == other.Contribution;
+        }
     }
 }

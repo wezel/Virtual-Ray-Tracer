@@ -22,6 +22,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
             set
             {
                 value.a = 1;
+                if (value == color) return;
                 color = value;
                 label.color = value;                
                 OnLightChanged?.Invoke();
@@ -35,6 +36,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
             get => ambient;
             set
             {
+                if (value == ambient) return;
                 ambient = value;                
                 OnLightChanged?.Invoke();
             }
@@ -48,6 +50,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
             get => diffuse;
             set
             {
+                if (value == diffuse) return;
                 diffuse = value;
                 OnLightChanged?.Invoke();
             }
@@ -61,6 +64,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
             get => specular;
             set
             {
+                if (value == specular) return;
                 specular = value;
                 OnLightChanged?.Invoke();
             }
@@ -71,6 +75,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
         /// An event invoked whenever a property of this light is changed.
         /// </summary>
         public event LightChanged OnLightChanged;
+
         protected void OnLightChangedInvoke() => OnLightChanged?.Invoke();
 
         /// <summary>
@@ -81,6 +86,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
             get { return transform.position; }
             set
             {
+                if (value == transform.position) return;
                 transform.position = value;
                 OnLightChanged?.Invoke();
             }
@@ -95,8 +101,9 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
             get => transform.eulerAngles;
             set
             {
+                if (value == transform.eulerAngles) return;
                 transform.eulerAngles = value;
-                OnLightChangedInvoke();
+                OnLightChanged?.Invoke();
             }
         }
 
@@ -109,8 +116,9 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
             set
             {
                 if (value.x <= 0f || value.y <= 0f || value.z <= 0f) return;
+                if (value == transform.localScale) return;
                 transform.localScale = value;
-                OnLightChangedInvoke();
+                OnLightChanged?.Invoke();
             }
         }
 

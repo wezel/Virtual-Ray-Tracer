@@ -8,6 +8,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
     [RequireComponent(typeof(RayRenderer))]
     public class RayObject : MonoBehaviour
     {
+        private static int cnt = 0;
         private RTRay ray;
         /// <summary>
         /// The <see cref="RTRay"/> produced by the ray tracer that this ray object represents.
@@ -15,7 +16,12 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
         public RTRay Ray 
         { 
             get { return ray; }
-            set { ray = value; Reset(); }
+            set
+            {
+                if (value.Equals(ray)) return;
+                ray = value;
+                Reset();
+            }
         }
 
         /// <summary>

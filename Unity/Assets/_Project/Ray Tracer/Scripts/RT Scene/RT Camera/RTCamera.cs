@@ -47,6 +47,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Camera
             get { return transform.position; }
             set
             {
+                if (value == transform.position) return;
                 transform.position = value;
                 OnCameraChanged?.Invoke();
             }
@@ -60,6 +61,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Camera
             get { return transform.eulerAngles; }
             set
             {
+                if (value == transform.eulerAngles) return;
                 transform.eulerAngles = value;
                 OnCameraChanged?.Invoke();
             }
@@ -76,6 +78,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Camera
             get { return fieldOfView; }
             set
             {
+                if (value == fieldOfView) return;
                 fieldOfView = value;
                 Recalculate();
                 OnCameraChanged?.Invoke();
@@ -93,6 +96,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Camera
             get { return screenWidth; }
             set 
             {
+                if (value == screenWidth) return;
                 screenWidth = value;
                 Recalculate();
                 OnCameraChanged?.Invoke();
@@ -110,6 +114,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Camera
             get { return screenHeight; }
             set
             {
+                if (value == screenHeight) return;
                 screenHeight = value;
                 Recalculate();
                 OnCameraChanged?.Invoke();
@@ -127,6 +132,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Camera
             get { return screenDistance; }
             set 
             {
+                if (value == screenDistance) return;
                 screenDistance = value;
                 Recalculate();
                 OnCameraChanged?.Invoke();

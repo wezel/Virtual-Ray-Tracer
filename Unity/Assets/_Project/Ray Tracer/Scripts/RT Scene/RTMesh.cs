@@ -46,6 +46,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             get => transform.position;
             set
             {
+                if (value == transform.position) return;
                 transform.position = value;
                 OnMeshChanged?.Invoke();
             }
@@ -59,6 +60,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             get => transform.eulerAngles;
             set
             {
+                if (value == transform.eulerAngles) return;
                 transform.eulerAngles = value;
                 OnMeshChanged?.Invoke();
             }
@@ -72,6 +74,8 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             get => transform.localScale;
             set
             {
+
+                if (value == transform.localScale) return;
                 transform.localScale = value;
                 OnMeshChanged?.Invoke();
             }
@@ -85,6 +89,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             get => Material.color;
             set
             {
+                if (value == Material.color) return;
                 Material.color = value;
                 OnMeshChanged?.Invoke();
             }
@@ -98,6 +103,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             get => Material.GetFloat(ambient);
             set
             {
+                if (value == Material.GetFloat(ambient)) return;
                 Material.SetFloat(ambient, value);
                 OnMeshChanged?.Invoke();
             }
@@ -111,6 +117,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             get => Material.GetFloat(diffuse);
             set
             {
+                if (value == Material.GetFloat(diffuse)) return;
                 Material.SetFloat(diffuse, value);
                 OnMeshChanged?.Invoke();
             }
@@ -124,6 +131,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             get => Material.GetFloat(specular);
             set
             {
+                if (value == Material.GetFloat(specular)) return;
                 Material.SetFloat(specular, value);
                 OnMeshChanged?.Invoke();
             }
@@ -137,6 +145,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             get => Material.GetFloat(shininess);
             set
             {
+                if (value == Material.GetFloat(shininess)) return;
                 Material.SetFloat(shininess, value);
                 OnMeshChanged?.Invoke();
             }
@@ -150,6 +159,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             get => Material.GetFloat(refractiveIndex);
             set
             {
+                if (value == Material.GetFloat(refractiveIndex)) return;
                 Material.SetFloat(refractiveIndex, value);
                 OnMeshChanged?.Invoke();
             }
@@ -179,6 +189,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             get => shadeSmooth;
             private set 
             { 
+                if (value == shadeSmooth) return;
                 shadeSmooth = value;
                 OnMeshChanged?.Invoke();
             }
