@@ -163,7 +163,8 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
 
         private void OnRenderObject()
         {
-            canvas.transform.forward = UnityEditor.SceneView.lastActiveSceneView.camera.transform.forward;
+            if (UnityEditor.SceneView.lastActiveSceneView != null)
+                canvas.transform.forward = UnityEditor.SceneView.lastActiveSceneView.camera.transform.forward;
         }
 #endif
         
