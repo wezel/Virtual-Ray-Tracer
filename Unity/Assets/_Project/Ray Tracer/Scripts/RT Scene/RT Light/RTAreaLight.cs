@@ -1,5 +1,7 @@
 using System;
+#if UNITY_EDITOR
 using UnityEditor.Experimental.SceneManagement;
+#endif
 using UnityEngine;
 using UnityEngine.UI;
 using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light;
