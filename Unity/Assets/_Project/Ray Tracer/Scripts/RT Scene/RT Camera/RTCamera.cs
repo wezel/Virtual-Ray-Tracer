@@ -45,12 +45,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Camera
         public Vector3 Position
         {
             get { return transform.position; }
-            set
-            {
-                if (value == transform.position) return;
-                transform.position = value;
-                OnCameraChanged?.Invoke();
-            }
+            set { transform.position = value; }
         }
 
         /// <summary>
@@ -59,12 +54,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Camera
         public Vector3 Rotation
         {
             get { return transform.eulerAngles; }
-            set
-            {
-                if (value == transform.eulerAngles) return;
-                transform.eulerAngles = value;
-                OnCameraChanged?.Invoke();
-            }
+            set { transform.eulerAngles = value; }
         }
 
         [SerializeField, Range(0.0f, 180.0f)]
@@ -180,6 +170,8 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Camera
             // In update we only move around existing lines to match the camera's transform.
             RecalculateFrustum();
             Screen.RecalculateLines();
+            if (transform.hasChanged) OnCameraChanged?.Invoke();
+            transform.hasChanged = false;
         }
 
         /// <summary>

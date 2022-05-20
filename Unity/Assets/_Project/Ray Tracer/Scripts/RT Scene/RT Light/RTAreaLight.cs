@@ -194,7 +194,6 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
         [SerializeField]
         private GameObject pointLightPrefab;
 
-        private bool update = false;
 //        public override void ChangeLightType(RTLightType type)
 //        {
 //            if (Type == type) return;
@@ -216,7 +215,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
             base.Awake();
         }
 
-        private void Update()
+        private new void Update()
         {
             // Update label; black at the back; light color at the front
 #if UNITY_EDITOR
@@ -234,47 +233,50 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
                 label.color = Color;
 
             // Update the (amount of) lights
+            if (lights != null && lights.Length == LightSamples * LightSamples)
+                base.Update();
 #if UNITY_EDITOR
-            if (PrefabStageUtility.GetCurrentPrefabStage() != null) // In Prefab Mode
-                return;                                             // Don't add lights to the prefab
+            else if (PrefabStageUtility.GetCurrentPrefabStage() != null) // In Prefab Mode
+                return;                                                  // Don't add lights to the prefab
 #endif
-            if (!update && lights != null && lights.Length == LightSamples * LightSamples)
-                return;
+            else
+            {
 
-            foreach (Light light in GetComponentsInChildren<Light>())
+
+                foreach (Light light in GetComponentsInChildren<Light>())
 #if UNITY_EDITOR
-                DestroyImmediate(light.gameObject);
+                    DestroyImmediate(light.gameObject);
 #else
                 Destroy(light.gameObject);
 #endif
-            lights = new Light[LightSamples * LightSamples];
-            float stepx = rectTransform.rect.width / (LightSamples - 1);
-            float stepy = rectTransform.rect.height / (LightSamples - 1);
-            Vector3 start = new Vector3(0f, 0f, 0f);
-            start.x -= rectTransform.rect.width / 2;
-            start.y -= rectTransform.rect.height / 2;
-            float maxBias = 2 * (LightSamples - 1);
+                lights = new Light[LightSamples * LightSamples];
+                float stepx = rectTransform.rect.width / (LightSamples - 1);
+                float stepy = rectTransform.rect.height / (LightSamples - 1);
+                Vector3 start = new Vector3(0f, 0f, 0f);
+                start.x -= rectTransform.rect.width / 2;
+                start.y -= rectTransform.rect.height / 2;
+                float maxBias = 2 * (LightSamples - 1);
 
-            for (int i = 0; i < LightSamples; i++)
-            {
-                for (int j = 0; j < LightSamples; j++)
+                for (int i = 0; i < LightSamples; i++)
                 {
-                    Light light = Instantiate(pointLightPrefab, transform).GetComponent<Light>();
-                    Vector3 pos = start;
-                    pos.x += i * stepx;
-                    pos.y += j * stepy;
-                    light.transform.localPosition = pos;
-                    light.shadowBias = (i + j)/ maxBias * 0.035f + 0.005f;
-                    lights[i * LightSamples + j] = light;
+                    for (int j = 0; j < LightSamples; j++)
+                    {
+                        Light light = Instantiate(pointLightPrefab, transform).GetComponent<Light>();
+                        Vector3 pos = start;
+                        pos.x += i * stepx;
+                        pos.y += j * stepy;
+                        light.transform.localPosition = pos;
+                        light.shadowBias = (i + j) / maxBias * 0.035f + 0.005f;
+                        lights[i * LightSamples + j] = light;
+                    }
                 }
-            }
 
-            // 'Call' these funtions to set the all the lights correctly
-            Color = Color;
-            Ambient = Ambient;
-            Diffuse = Diffuse;
-            Specular = Specular;
-            update = false;
+                // 'Call' these funtions to set the all the lights correctly. Invokes Change as well.
+                Color = Color;
+                Ambient = Ambient;
+                Diffuse = Diffuse;
+                Specular = Specular;
+            }
         }
                 
     }

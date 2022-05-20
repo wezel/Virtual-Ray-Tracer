@@ -380,10 +380,10 @@ namespace _Project.Ray_Tracer.Scripts
             
             // Cameras should not be scaled and lights should not be scaled or rotated. We default to translation.
             bool selectedCamera = selection.Type == typeof(RTCamera);
-            bool selectedLight = selection.Type.BaseType == typeof(RTLight);
-            if (type == HandleType.ROTATION && selectedLight)
+            bool selectedPointLight = selection.Type == typeof(RTPointLight);
+            if (type == HandleType.ROTATION && selectedPointLight)
                 type = HandleType.POSITION;
-            if (type == HandleType.SCALE && (selectedCamera || selectedLight))
+            if (type == HandleType.SCALE && (selectedCamera || selectedPointLight))
                 type = HandleType.POSITION;
 
             // Update the dropdown text if necessary. Changing triggers a callback.
