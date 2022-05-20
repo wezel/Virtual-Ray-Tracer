@@ -60,7 +60,7 @@ namespace _Project.Ray_Tracer.Scripts
             {
                 if (value == rayTransparencyEnabled) return;
                 rayTransparencyEnabled = value;
-                ReloadMaterials = true;
+                ReloadMaterials();
             }
         }
 
@@ -76,7 +76,7 @@ namespace _Project.Ray_Tracer.Scripts
             {
                 if (value == rayTransExponent) return;
                 rayTransExponent = value;
-                ReloadMaterials = true;
+                ReloadMaterials();
             }
         }
 
@@ -119,7 +119,7 @@ namespace _Project.Ray_Tracer.Scripts
             {
                 if (value == rayColorContributionEnabled) return;
                 rayColorContributionEnabled = value;
-                ReloadMaterials = true;
+                ReloadMaterials();
             }
         }
 
@@ -219,21 +219,10 @@ namespace _Project.Ray_Tracer.Scripts
             }
         }
 
-        private bool reloadMaterials = true;
-
         /// <summary>
         /// Whether this ray manager should reload the rays' materials.
-        /// </summary>
-        private bool ReloadMaterials
-        {
-            get => reloadMaterials;
-            set
-            {
-                if (value == reloadMaterials) return;
-                reloadMaterials = value;
-                if (value) redraw = true;
-            }
-        }
+        /// </summary>            
+        private void ReloadMaterials() => rayObjectPool.ReloadMaterials();
 
         //public const int transparencyRange = 50;
         [SerializeField] private Material noHitMaterial;
@@ -589,8 +578,8 @@ namespace _Project.Ray_Tracer.Scripts
             rtSceneManager = RTSceneManager.Get();
             rayTracer = UnityRayTracer.Get();
 
-            rtSceneManager.Scene.OnSceneChanged += () => { ShouldUpdateRays = true; ReloadMaterials = true; };
-            rayTracer.OnRayTracerChanged += () => { ShouldUpdateRays = true; ReloadMaterials = true; };
+            rtSceneManager.Scene.OnSceneChanged += () => { ShouldUpdateRays = true; ReloadMaterials(); };
+            rayTracer.OnRayTracerChanged += () => { ShouldUpdateRays = true; ReloadMaterials(); };
         }
 
         //private void MakeTransparentMaterials(ref Material baseMaterial, ref Material[] arrayMaterial)
@@ -699,8 +688,6 @@ namespace _Project.Ray_Tracer.Scripts
                     foreach (var ray in pixel.Children) // Skip the zero-length base-ray 
                         DrawRayTree(ray);
             }
-
-            ReloadMaterials = false;
         }
 
         private void DrawRayTree(TreeNode<RTRay> rayTree)
@@ -711,8 +698,8 @@ namespace _Project.Ray_Tracer.Scripts
 
             RayObject rayObject = rayObjectPool.GetRayObject();
             rayObject.Ray = rayTree.Data;
-            if (ReloadMaterials)
-                rayObject.ReloadMaterial();
+            //if (ReloadMaterials)
+            //    rayObject.ReloadMaterial();
             rayObject.Draw(GetRayRadius(rayTree));
 
             if (!rayTree.IsLeaf())
@@ -784,7 +771,7 @@ namespace _Project.Ray_Tracer.Scripts
             else
                 DrawRays();
 
-            ReloadMaterials = false;
+            //ReloadMaterials = false;
         }
 
         private bool DrawRayTreeAnimated(TreeNode<RTRay> rayTree, float distance)
@@ -795,8 +782,8 @@ namespace _Project.Ray_Tracer.Scripts
 
             RayObject rayObject = rayObjectPool.GetRayObject();
             rayObject.Ray = rayTree.Data;
-            if (ReloadMaterials)
-                rayObject.ReloadMaterial();
+            //if (ReloadMaterials)
+            //    rayObject.ReloadMaterial();
             rayObject.Draw(GetRayRadius(rayTree), distance);
 
             float leftover = distance - rayObject.DrawLength;

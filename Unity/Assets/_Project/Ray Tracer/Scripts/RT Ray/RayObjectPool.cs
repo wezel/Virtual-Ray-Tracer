@@ -88,6 +88,13 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
             currentlyUsed = 0;
         }
 
+        public void ReloadMaterials()
+        {
+            foreach (RayObject rayObject in rayObjects)
+                if (rayObject.gameObject.activeSelf)
+                    rayObject.ReloadMaterial();
+        }
+
         /// <summary>
         /// Get an unused <see cref="RayObject"/> from the pool and, if necessary, activate it. If there are no unused
         /// objects in the pool a new one will be instantiated and returned.

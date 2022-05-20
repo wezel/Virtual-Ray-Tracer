@@ -77,7 +77,7 @@ namespace _Project.UI.Scripts.Control_Panel
         /// These properties can be changed via the shown UI.
         /// </summary>
         public void Show()
-        {
+        {            
             gameObject.SetActive(true);
             rayTracer = UnityRayTracer.Get();
             rayManager = RayManager.Get();
