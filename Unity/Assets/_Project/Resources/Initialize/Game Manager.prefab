@@ -46,17 +46,28 @@ MonoBehaviour:
   FPSEnabled: 0
   Unlimited: 0
   TutorialTasks:
-  - optionalTasksStart: 15
+  - optionalTasksStart: 16
     tasks:
     - identifier: 
       name: Introduction
       description: Welcome to the Virtual Ray Tracer! These tutorial tasks will guide
         you through the program. Below this text, a progress bar is shown, which
-        displays your progress in the current level. There are 7 levels in total.
-        Press the second button next to the progress bar to continue to the next
+        displays your progress in the current level.  There are 7 levels in total.
+        Press the button to the right of the progress bar to continue to the next
         task.
       skippable: 1
       points: 95
+    - identifier: 
+      name: Introduction
+      description: 'As you can see, you have now made a little progress in the current
+        level. You may also have noticed that you have earned some points. They are
+        shown to the left of the progress bar. These points will help you unlock
+        cool objects in the final level! Start earning more points by continuing
+        to the next task.
+
+'
+      skippable: 1
+      points: 86
     - identifier: help
       name: Help Menu
       description: We'll first start by going over the controls and the various interface
