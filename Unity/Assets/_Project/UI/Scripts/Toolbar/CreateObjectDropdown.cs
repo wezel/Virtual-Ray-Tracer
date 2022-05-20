@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using _Project.Ray_Tracer.Scripts;
+using _Project.Scripts;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -32,6 +34,8 @@ namespace _Project.UI.Scripts.Toolbar
         private Button openButton;
         [SerializeField]
         private VerticalLayoutGroup items;
+
+        private List<Button> buttons = new List<Button>();
         
         public bool DropDownHovered { get; set; }
 
@@ -42,6 +46,22 @@ namespace _Project.UI.Scripts.Toolbar
         {
             openButton.gameObject.SetActive(false);
             items.gameObject.SetActive(true);
+
+            // Check if this object is unlocked or not
+            int idx = 0;
+            Array objectTypes = Enum.GetValues(typeof(RTSceneManager.ObjectType));
+            foreach (RTSceneManager.ObjectType objectType in objectTypes)
+            {
+                Button itemButton = buttons[idx++];
+                if (GlobalSettings.TutorialPoints >= (int)objectType)
+                {
+                    var transforms = itemButton.GetComponentsInChildren<RectTransform>();
+                    if (transforms.Length > 2) transforms[2].gameObject.SetActive(false); // remove unlock panel
+                    itemButton.interactable = true; // make interactable
+                }
+                else itemButton.interactable = false; // disable interaction
+            }
+
         }
 
         /// <summary>
@@ -91,11 +111,14 @@ namespace _Project.UI.Scripts.Toolbar
             {
                 itemButton = Instantiate(itemPrefab, items.transform);
                 itemButton.GetComponentInChildren<TextMeshProUGUI>().text = objectType.ToString();
-                //foreach (RectTransform transform in itemButton.GetComponentsInChildren<RectTransform>())
-                //    Debug.Log(transform.gameObject.name);
+
+                // Set object unlock price
+                itemButton.GetComponentsInChildren<TextMeshProUGUI>()[1].text = ((int)objectType).ToString();
+
                 itemButton.onClick.AddListener(() => OnClick(objectType));
+                buttons.Add(itemButton);
             }
-            items.GetComponent<RectTransform>().sizeDelta = new Vector2(160, 30 * (objectTypes.Length + 1));
+            items.GetComponent<RectTransform>().sizeDelta = new Vector2(120, 30 * (objectTypes.Length + 1));
         }
 
         private void Update()

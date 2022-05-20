@@ -83,6 +83,16 @@ namespace _Project.Scripts
         {
             instance = this;
             DontDestroyOnLoad(gameObject);
+
+#if true
+            int required = 0, optional = 0;
+            foreach (Tasks tasks in TutorialTasks)
+            {
+                required += tasks.GetRequiredTasksPoints();
+                optional += tasks.GetOptionalTasksPoints();
+            }
+            Debug.Log("Total required points = " + required + ". Total optional points = " + optional + ". Total points = " + (required + optional));
+#endif
         }
     }
 }

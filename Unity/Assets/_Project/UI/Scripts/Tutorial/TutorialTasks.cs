@@ -215,6 +215,30 @@ namespace _Project.UI.Scripts.Tutorial
             index--;
             return true;
         }
+
+        /// <summary>
+        /// Counts the amount of required tasks points
+        /// </summary>
+        /// <returns>The amount of required tasks points</returns>
+        public int GetRequiredTasksPoints()
+        {
+            int total = 0;
+            for (int i = 0; i < optionalTasksStart && i < tasks.Count; i++)
+                total += tasks[i].Points;
+            return total;
+        }
+
+        /// <summary>
+        /// Counts the amount of optional tasks points
+        /// </summary>
+        /// <returns>The amount of optional tasks points</returns>
+        public int GetOptionalTasksPoints()
+        {
+            int total = 0;
+            for (int i = optionalTasksStart; i < tasks.Count; i++)
+                total += tasks[i].Points;
+            return total;
+        }
     }
 }
 

@@ -75,12 +75,12 @@ namespace _Project.Ray_Tracer.Scripts
         public enum ObjectType
         {
             Sphere = 0,
-            Cube,
-            Cylinder,
-            Capsule,
-            Prism,
-            Goat,
-            Light = 10000
+            Cube = 5000,
+            Cylinder = 6000,
+            Capsule = 7000,
+            Prism = 8000,
+            Goat = 9000,
+            Light = 11000
         }
 
         /// <summary>
