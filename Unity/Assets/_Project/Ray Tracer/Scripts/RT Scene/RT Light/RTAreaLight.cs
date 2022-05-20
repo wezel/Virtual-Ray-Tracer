@@ -39,6 +39,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
                     light.color = lightData;
 
                 base.Color = value;
+                UpdateLabelColor();
             }
         }
 
@@ -209,15 +210,8 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
 //            base.ChangeLightType(type);
 //        }
 
-        protected override void Awake()
+        private void UpdateLabelColor()
         {
-            Type = RTLightType.Area;
-            base.Awake();
-        }
-
-        private new void Update()
-        {
-            // Update label; black at the back; light color at the front
 #if UNITY_EDITOR
             Vector3 cameraPos;
             if (!Application.isPlaying)
@@ -231,6 +225,18 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
                 label.color = Color.black;
             else
                 label.color = Color;
+        }
+
+        protected override void Awake()
+        {
+            Type = RTLightType.Area;
+            base.Awake();
+        }
+
+        private new void Update()
+        {
+            // Update label; black at the back; light color at the front
+            UpdateLabelColor();
 
             // Update the (amount of) lights
             if (lights != null && lights.Length == LightSamples * LightSamples)
