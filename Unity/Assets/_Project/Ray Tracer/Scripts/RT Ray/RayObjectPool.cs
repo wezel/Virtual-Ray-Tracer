@@ -91,7 +91,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
         public void ReloadMaterials()
         {
             foreach (RayObject rayObject in rayObjects)
-                if (rayObject.gameObject.activeSelf)
+                if (rayObject.Ray != null)
                     rayObject.ReloadMaterial();
         }
 
