@@ -16,6 +16,7 @@ namespace _Project.UI.Scripts.Control_Panel
         private UnityRayTracer rayTracer;
         private RayManager rayManager;
         private UIManager uiManager;
+        private RTSceneManager rtSceneManager;
 
         [SerializeField]
         private BoolEdit renderShadowsEdit;
@@ -63,16 +64,13 @@ namespace _Project.UI.Scripts.Control_Panel
         [SerializeField]
         private BoolEdit superSamplingVisualEdit;
         [SerializeField]
-        private BoolEdit renderPointLightsEdit;
+        private BoolEdit enablePointLightsEdit;
         [SerializeField]
-        private BoolEdit renderAreaLightsEdit;
+        private BoolEdit enableAreaLightsEdit;
         [SerializeField]
         private Button renderImageButton;
         [SerializeField]
         private Button openImageButton;
-
-        [HideInInspector]
-        private IEnumerator renderEnumerator;
 
         /// <summary>
         /// Show the ray tracer properties for the current <see cref="UnityRayTracer"/> and <see cref="RayManager"/>.
@@ -84,10 +82,11 @@ namespace _Project.UI.Scripts.Control_Panel
             rayTracer = UnityRayTracer.Get();
             rayManager = RayManager.Get();
             uiManager = UIManager.Get();
+            rtSceneManager = RTSceneManager.Get();
 
             renderShadowsEdit.IsOn = rayTracer.RenderShadows;
-            renderPointLightsEdit.IsOn = rayTracer.RenderPointLights;
-            renderAreaLightsEdit.IsOn = rayTracer.RenderAreaLights;
+            enablePointLightsEdit.IsOn = rtSceneManager.Scene.EnablePointLights;
+            enableAreaLightsEdit.IsOn = rtSceneManager.Scene.EnableAreaLights;
             recursionDepthEdit.Value = rayTracer.MaxDepth;
             backgroundColorEdit.Color = rayTracer.BackgroundColor;
 
@@ -132,7 +131,7 @@ namespace _Project.UI.Scripts.Control_Panel
         {
             uiManager.RenderedImageWindow.Show();
             uiManager.RenderedImageWindow.SetLoading();
-            StartCoroutine(renderEnumerator = RunRenderImage());
+            StartCoroutine(RunRenderImage());
         }
 
         private void ToggleImage()
@@ -150,8 +149,8 @@ namespace _Project.UI.Scripts.Control_Panel
         private void Awake()
         {
             renderShadowsEdit.OnValueChanged += (value) => { rayTracer.RenderShadows = value; };
-            renderPointLightsEdit.OnValueChanged += (value) => { rayTracer.RenderPointLights = value; };
-            renderAreaLightsEdit.OnValueChanged += (value) => { rayTracer.RenderAreaLights = value; };
+            enablePointLightsEdit.OnValueChanged += (value) => { rtSceneManager.Scene.EnablePointLights = value; };
+            enableAreaLightsEdit.OnValueChanged += (value) => { rtSceneManager.Scene.EnableAreaLights = value; };
             recursionDepthEdit.OnValueChanged += (value) => { rayTracer.MaxDepth = (int)value; };
             backgroundColorEdit.OnValueChanged += (value) => { rayTracer.BackgroundColor = value; };
 

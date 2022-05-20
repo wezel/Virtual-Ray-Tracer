@@ -41,15 +41,65 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             }
         }
 
+        private bool enablePointLights = true;
+        public bool EnablePointLights
+        {
+            get { return enablePointLights; }
+            set
+            {
+                if (value == enablePointLights) return;
+                enablePointLights = value;
+
+                foreach (RTPointLight pointLight in pointLights)
+                    pointLight.gameObject.SetActive(value);
+
+                OnSceneChanged?.Invoke();
+            }
+        }
+
+        private bool enableAreaLights = true;
+        public bool EnableAreaLights
+        {
+            get { return enableAreaLights; }
+            set
+            {
+                if (value == enableAreaLights) return;
+                enableAreaLights = value;
+
+                foreach (RTAreaLight areaLight in areaLights)
+                    areaLight.gameObject.SetActive(value);
+
+                OnSceneChanged?.Invoke();
+            }
+        }
+
+        private List<RTPointLight> pointLights;
         /// <summary>
         /// This ray tracers scene's list of lights.
-        /// </summary>
-        public List<RTPointLight> PointLights { get; }
+        /// </summary>        
+        public List<RTPointLight> PointLights
+        {
+            get
+            {
+                if (EnablePointLights) return pointLights;
+                return new List<RTPointLight>();
+            }
+            private set => pointLights = value;
+        }
 
+        private List<RTAreaLight> areaLights;
         /// <summary>
         /// This ray tracers scene's list of area lights.
         /// </summary>
-        public List<RTAreaLight> AreaLights { get; }
+        public List<RTAreaLight> AreaLights
+        {
+            get
+            {
+                if (EnableAreaLights) return areaLights;
+                return new List<RTAreaLight>();
+            }
+            private set => areaLights = value;
+        }
 
         /// <summary>
         /// This ray tracers scene's list of meshes.

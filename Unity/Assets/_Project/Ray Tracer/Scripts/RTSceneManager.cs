@@ -16,7 +16,7 @@ using UnityEngine.EventSystems;
 namespace _Project.Ray_Tracer.Scripts
 {
     /// <summary>
-    /// Manages a ray tracer scene. On <see cref="Start"/> it will find all objects in the Unity scene with
+    /// Manages a ray tracer scene. On <see cref="Awake"/> it will find all objects in the Unity scene with
     /// <see cref="RTCamera"/>, <see cref="RTMesh"/> and <see cref="RTPointLight"/> components and construct an
     /// <see cref="RTScene"/> from them.
     /// </summary>
@@ -419,7 +419,8 @@ namespace _Project.Ray_Tracer.Scripts
                     Select(Scene.Camera.transform);
                     break;
                 case ControlPanel.SignalType.Object:
-                    if (previousTransform != null)
+                    // Lights can be disabled, check if previousTransform's gameObject is active
+                    if (previousTransform != null && previousTransform.gameObject.activeInHierarchy)
                         Select(previousTransform);
                     else
                     {
@@ -432,9 +433,12 @@ namespace _Project.Ray_Tracer.Scripts
 
         public void SetShadows(bool value)
         {
-            LightShadows shadowType = value ? LightShadows.Hard : LightShadows.None;
-            
+            LightShadows shadowType = value ? LightShadows.Hard : LightShadows.None;            
             foreach (var sceneLight in Scene.PointLights) 
+                sceneLight.Shadows = shadowType;
+
+            shadowType = value ? LightShadows.Soft : LightShadows.None;
+            foreach (var sceneLight in Scene.AreaLights)
                 sceneLight.Shadows = shadowType;
         }
 
@@ -442,24 +446,24 @@ namespace _Project.Ray_Tracer.Scripts
         {
             instance = this;
             Image = new RTImage(1, 1);
-        }
 
-        private void Start()
-        {
             transformHandle.gameObject.SetActive(false);
-            
+
             HandleTypeDropdown.onValueChanged.AddListener(type => SetHandleType((HandleType)type));
             HandleSpaceDropdown.onValueChanged.AddListener(space => SetHandleSpace((HandleSpace)space));
-            
+
             // Find the first camera and all lights and meshes in the Unity scene.
             RTCamera camera = FindObjectOfType<RTCamera>();
             List<RTPointLight> pointLights = new List<RTPointLight>(FindObjectsOfType<RTPointLight>());
             List<RTAreaLight> areaLights = new List<RTAreaLight>(FindObjectsOfType<RTAreaLight>());
             List<RTMesh> meshes = new List<RTMesh>(FindObjectsOfType<RTMesh>());
-            
+
             // Construct the ray tracer scene with the found objects.
             Scene = new RTScene(camera, pointLights, areaLights, meshes);
-            
+        }
+
+        private void Start()
+        {
             ControlPanel.Subscribe(OnEvent);
         }
 

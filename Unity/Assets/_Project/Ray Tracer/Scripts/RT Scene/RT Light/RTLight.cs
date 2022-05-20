@@ -156,6 +156,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
         //    Type = type;
         //    OnLightChanged?.Invoke();
         //}
+        public virtual LightShadows Shadows { get; set; }
 
         public virtual int LightSamples { get; set; }
 

@@ -1,4 +1,5 @@
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -94,6 +95,11 @@ namespace _Project.UI.Scripts.Render_Image_Window
             progressFill.GetComponent<RectTransform>().sizeDelta = 
                 new Vector2(progressBar.GetComponent<RectTransform>().rect.width / 100 * percentage, 0);
             taskProgress.text = percentage.ToString() + "%";
+
+            //taskProgress.ForceMeshUpdate();
+            //progressFill.GetComponent<RectTransform>().ForceUpdateRectTransforms();            
+            //Canvas.ForceUpdateCanvases();
+            //SceneView.RepaintAll();
         }
 
         /// <summary>

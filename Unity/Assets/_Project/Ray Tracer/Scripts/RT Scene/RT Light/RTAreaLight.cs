@@ -92,6 +92,14 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
         /// The underlying <see cref="UnityEngine.Light"/>s used by the light.
         /// </summary>
         private Light[] lights;
+        public override LightShadows Shadows
+        {
+            get => lights[0].shadows;
+            set
+            {
+                foreach (Light light in lights) light.shadows = value;
+            }
+        }
 
         private RectTransform rectTransform { get => GetComponent<RectTransform>(); }
 

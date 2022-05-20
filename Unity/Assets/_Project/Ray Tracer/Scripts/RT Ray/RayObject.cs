@@ -8,13 +8,12 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
     [RequireComponent(typeof(RayRenderer))]
     public class RayObject : MonoBehaviour
     {
-        private static int cnt = 0;
         private RTRay ray;
         /// <summary>
         /// The <see cref="RTRay"/> produced by the ray tracer that this ray object represents.
         /// </summary>
-        public RTRay Ray 
-        { 
+        public RTRay Ray
+        {
             get { return ray; }
             set
             {
@@ -66,10 +65,15 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
             rayRenderer.Origin = Ray.Origin;
             rayRenderer.Direction = Ray.Direction;
             rayRenderer.Length = 0.0f;
+            ReloadMaterial();
+        }
+
+        public void ReloadMaterial()
+        {
             rayRenderer.Material = rayManager.GetRayMaterial(Ray.Contribution, Ray.Type, Ray.Color);
         }
 
-        private void DetermineDrawLength()
+    private void DetermineDrawLength()
         {
             DrawLength = float.IsInfinity(Ray.Length) ? rayManager.InfiniteRayDrawLength : Ray.Length;
         }

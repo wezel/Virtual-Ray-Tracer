@@ -526,8 +526,8 @@ MonoBehaviour:
   speedEdit: {fileID: 6844460738945339778}
   superSamplingFactorEdit: {fileID: 2314355464099288989}
   superSamplingVisualEdit: {fileID: 6249257480873754840}
-  renderPointLightsEdit: {fileID: 8998361572431310664}
-  renderAreaLightsEdit: {fileID: 8701378118434141367}
+  enablePointLightsEdit: {fileID: 8998361572431310664}
+  enableAreaLightsEdit: {fileID: 8701378118434141367}
   renderImageButton: {fileID: 3732788281652070722}
   openImageButton: {fileID: 5108153677351434190}
 --- !u!1 &7427373468633447990
@@ -5265,15 +5265,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 590595068916426999, guid: c187dcb58b1f9ff82b34253c7b41ce48, type: 3}
       propertyPath: m_text
-      value: Render Area Lights
+      value: Enable Area Lights
       objectReference: {fileID: 0}
     - target: {fileID: 590595068916426999, guid: c187dcb58b1f9ff82b34253c7b41ce48, type: 3}
       propertyPath: m_fontSize
-      value: 15
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 590595068916426999, guid: c187dcb58b1f9ff82b34253c7b41ce48, type: 3}
       propertyPath: m_fontSizeBase
-      value: 15
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 590595069432362180, guid: c187dcb58b1f9ff82b34253c7b41ce48, type: 3}
       propertyPath: m_Pivot.x
@@ -5361,7 +5361,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 590595069432362181, guid: c187dcb58b1f9ff82b34253c7b41ce48, type: 3}
       propertyPath: m_Name
-      value: RenderAreaLightsEdit
+      value: EnableAreaLightsEdit
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214101846051817954, guid: c187dcb58b1f9ff82b34253c7b41ce48, type: 3}
+      propertyPath: Content
+      value: Enables/Disables area lights.
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c187dcb58b1f9ff82b34253c7b41ce48, type: 3}
@@ -5536,15 +5540,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 590595068916426999, guid: c187dcb58b1f9ff82b34253c7b41ce48, type: 3}
       propertyPath: m_text
-      value: Render Point Lights
+      value: Enable Point Lights
       objectReference: {fileID: 0}
     - target: {fileID: 590595068916426999, guid: c187dcb58b1f9ff82b34253c7b41ce48, type: 3}
       propertyPath: m_fontSize
-      value: 15
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 590595068916426999, guid: c187dcb58b1f9ff82b34253c7b41ce48, type: 3}
       propertyPath: m_fontSizeBase
-      value: 15
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 590595069432362180, guid: c187dcb58b1f9ff82b34253c7b41ce48, type: 3}
       propertyPath: m_Pivot.x
@@ -5632,7 +5636,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 590595069432362181, guid: c187dcb58b1f9ff82b34253c7b41ce48, type: 3}
       propertyPath: m_Name
-      value: RenderPointLightsEdit
+      value: EnablePointLightsEdit
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214101846051817954, guid: c187dcb58b1f9ff82b34253c7b41ce48, type: 3}
+      propertyPath: Content
+      value: Enables/Disables point lights.
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c187dcb58b1f9ff82b34253c7b41ce48, type: 3}

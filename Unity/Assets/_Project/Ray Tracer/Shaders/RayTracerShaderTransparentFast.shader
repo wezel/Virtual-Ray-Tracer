@@ -21,7 +21,7 @@ Shader "Custom/RayTracerShaderTransparentFast"
         // We render both the inside and the outside of objects. This way you can enter them if you want.
         Cull Off
 
-        Blend OneMinusDstColor OneMinusSrcAlpha
+        Blend SrcAlpha OneMinusSrcAlpha // Traditional transparency
 
         Pass
         {

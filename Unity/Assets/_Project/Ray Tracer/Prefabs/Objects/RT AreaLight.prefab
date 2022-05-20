@@ -226,7 +226,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 4}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 1, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &8100249073368088931
 MonoBehaviour:
@@ -248,7 +248,7 @@ MonoBehaviour:
   label: {fileID: 9142056303369678339}
   outline: {fileID: 5935705926004890677}
   canvas: {fileID: 551413664047874153}
-  lightSamples: 6
+  lightSamples: 4
   pointLightPrefab: {fileID: 8750512382897571081, guid: 5d98d613692e89440adcaefe45055b31, type: 3}
 --- !u!222 &8661944374056115377
 CanvasRenderer:

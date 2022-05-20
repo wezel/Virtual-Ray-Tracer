@@ -59,37 +59,37 @@ namespace _Project.Ray_Tracer.Scripts
             }
         }
 
-        [SerializeField]
-        private bool renderPointLights = true;
-        /// <summary>
-        /// Whether this ray tracer renders point lights.
-        /// </summary>
-        public bool RenderPointLights
-        {
-            get { return renderPointLights; }
-            set
-            {
-                if (value == renderPointLights) return;
-                renderPointLights = value;
-                OnRayTracerChanged?.Invoke();
-            }
-        }
+        //[SerializeField]
+        //private bool renderPointLights = true;
+        ///// <summary>
+        ///// Whether this ray tracer renders point lights.
+        ///// </summary>
+        //public bool RenderPointLights
+        //{
+        //    get { return renderPointLights; }
+        //    set
+        //    {
+        //        if (value == renderPointLights) return;
+        //        renderPointLights = value;
+        //        OnRayTracerChanged?.Invoke();
+        //    }
+        //}
 
-        [SerializeField]
-        private bool renderAreaLights = true;
-        /// <summary>
-        /// Whether this ray tracer renders area lights.
-        /// </summary>
-        public bool RenderAreaLights
-        {
-            get { return renderAreaLights; }
-            set
-            {
-                if (value == renderAreaLights) return;
-                renderAreaLights = value;
-                OnRayTracerChanged?.Invoke();
-            }
-        }
+        //[SerializeField]
+        //private bool renderAreaLights = true;
+        ///// <summary>
+        ///// Whether this ray tracer renders area lights.
+        ///// </summary>
+        //public bool RenderAreaLights
+        //{
+        //    get { return renderAreaLights; }
+        //    set
+        //    {
+        //        if (value == renderAreaLights) return;
+        //        renderAreaLights = value;
+        //        OnRayTracerChanged?.Invoke();
+        //    }
+        //}
 
         [SerializeField]
         private int maxDepth = 3;
@@ -399,53 +399,55 @@ namespace _Project.Ray_Tracer.Scripts
             Color color = hitInfo.Ambient * hitInfo.Color;
 
             // Add diffuse and specular components.
-            if (RenderPointLights)
-                foreach (RTPointLight light in scene.PointLights)
-                {
-                    Vector3 lightVector = (light.transform.position - hit.point).normalized;
+            foreach (RTPointLight light in scene.PointLights)
+            {
+                Vector3 lightVector = (light.transform.position - hit.point).normalized;
 
-                    if (Vector3.Dot(hitInfo.Normal,lightVector) >= 0.0f) 
-                        rayTree.AddChild(TraceLight(ref lightVector, light.transform.position, light, in hitInfo));
-                }
+                if (Vector3.Dot(hitInfo.Normal,lightVector) >= 0.0f) 
+                    rayTree.AddChild(TraceLight(ref lightVector, light.transform.position, light, in hitInfo));
+            }
 
-            if (RenderAreaLights)
-                foreach (RTAreaLight arealight in scene.AreaLights)
+            foreach (RTAreaLight arealight in scene.AreaLights)
+            {
+                bool fullyVisible = true;
+                foreach (Vector3 edgePoint in arealight.GetEdgePoints(16))
                 {
-                    bool fullyVisible = true;
-                    foreach (Vector3 edgePoint in arealight.GetEdgePoints(16))
+                    Vector3 lightVector = (edgePoint - hit.point).normalized;
+                    if (Vector3.Dot(hitInfo.Normal, lightVector) >= 0.0f)
                     {
-                        Vector3 lightVector = (edgePoint - hit.point).normalized;
-                        if (Vector3.Dot(hitInfo.Normal, lightVector) >= 0.0f)
+                        Vector3 shadowOrigin = hitInfo.Point + Epsilon * hitInfo.Normal;
+                        float lightDistance = Vector3.Dot(lightVector, edgePoint - hitInfo.Point);
+                        if (Physics.Raycast(shadowOrigin, lightVector, out _, lightDistance, rayTracerLayer))
                         {
-                            Vector3 shadowOrigin = hitInfo.Point + Epsilon * hitInfo.Normal;
-                            float lightDistance = Vector3.Dot(lightVector, edgePoint - hitInfo.Point);
-                            if (Physics.Raycast(shadowOrigin, lightVector, out _, lightDistance, rayTracerLayer))
-                            {
-                                fullyVisible = false;
-                                break;
-                            }
+                            fullyVisible = false;
+                            break;
                         }
                     }
+                }
 
-                    if (!fullyVisible)
+                if (!fullyVisible)
+                {
+                    int samples = arealight.LightSamples * arealight.LightSamples;
+                    foreach (Vector3 point in arealight.SampleLight())
                     {
-                        int samples = arealight.LightSamples * arealight.LightSamples;
-                        foreach (Vector3 point in arealight.SampleLight())
-                        {
-                            Vector3 lightVector = (point - hit.point).normalized;
-
-                            if (Vector3.Dot(hitInfo.Normal, lightVector) >= 0.0f)
-                                rayTree.AddChild(TraceLight(ref lightVector, point, arealight, in hitInfo));
-                        }
-                    }
-                    else
-                    {
-                        Vector3 lightVector = (arealight.transform.position - hit.point).normalized;
+                        Vector3 lightVector = (point - hit.point).normalized;
 
                         if (Vector3.Dot(hitInfo.Normal, lightVector) >= 0.0f)
-                            rayTree.AddChild(TraceLight(ref lightVector, arealight.transform.position, arealight, in hitInfo));
+                        {
+                            RTRay child = TraceLight(ref lightVector, point, arealight, in hitInfo);
+                            child.Color /= samples;
+                            rayTree.AddChild(child);
+                        }
                     }
                 }
+                else
+                {
+                    Vector3 lightVector = (arealight.transform.position - hit.point).normalized;
+
+                    if (Vector3.Dot(hitInfo.Normal, lightVector) >= 0.0f)
+                        rayTree.AddChild(TraceLight(ref lightVector, arealight.transform.position, arealight, in hitInfo));
+                }
+            }
 
             // Cast reflection and refraction rays.
             if (depth > 0)
@@ -635,55 +637,53 @@ namespace _Project.Ray_Tracer.Scripts
             Color color = hitInfo.Ambient * hitInfo.Color;
 
             // Add diffuse and specular components.
-            if (RenderPointLights)
-                foreach (RTPointLight light in scene.PointLights)
-                {
-                    Vector3 lightVector = (light.transform.position - hit.point).normalized;
+            foreach (RTPointLight light in scene.PointLights)
+            {
+                Vector3 lightVector = (light.transform.position - hit.point).normalized;
 
+                if (Vector3.Dot(hitInfo.Normal, lightVector) >= 0.0f)
+                    color += TraceLightImage(ref lightVector, light, in hitInfo);
+            }
+
+            foreach (RTAreaLight arealight in scene.AreaLights)
+            {
+                bool fullyVisible = true;
+                foreach (Vector3 edgePoint in arealight.GetEdgePoints(16))
+                {
+                    Vector3 lightVector = (edgePoint - hit.point).normalized;
                     if (Vector3.Dot(hitInfo.Normal, lightVector) >= 0.0f)
-                        color += TraceLightImage(ref lightVector, light, in hitInfo);
+                    {
+                        Vector3 shadowOrigin = hitInfo.Point + Epsilon * hitInfo.Normal;
+                        float lightDistance = Vector3.Dot(lightVector, edgePoint - hitInfo.Point);
+                        if (Physics.Raycast(shadowOrigin, lightVector, out _, lightDistance, rayTracerLayer))
+                        {
+                            fullyVisible = false;
+                            break;
+                        }
+                    }
                 }
 
-            if (RenderAreaLights)
-                foreach (RTAreaLight arealight in scene.AreaLights)
+                if (!fullyVisible)
                 {
-                    bool fullyVisible = true;
-                    foreach (Vector3 edgePoint in arealight.GetEdgePoints(16))
+                    int samples = arealight.LightSamples * arealight.LightSamples;
+                    foreach (Vector3 p in arealight.SampleLight())
                     {
-                        Vector3 lightVector = (edgePoint - hit.point).normalized;
-                        if (Vector3.Dot(hitInfo.Normal, lightVector) >= 0.0f)
-                        {
-                            Vector3 shadowOrigin = hitInfo.Point + Epsilon * hitInfo.Normal;
-                            float lightDistance = Vector3.Dot(lightVector, edgePoint - hitInfo.Point);
-                            if (Physics.Raycast(shadowOrigin, lightVector, out _, lightDistance, rayTracerLayer))
-                            {
-                                fullyVisible = false;
-                                break;
-                            }
-                        }
-                    }
-
-                    if (!fullyVisible)
-                    {
-                        int samples = arealight.LightSamples * arealight.LightSamples;
-                        foreach (Vector3 p in arealight.SampleLight())
-                        {
-                            Vector3 point = p;
-                            Vector3 lightVector = (point - hit.point).normalized;
-
-                            if (Vector3.Dot(hitInfo.Normal, lightVector) >= 0.0f)
-                                color += TraceAreaLightImage(ref lightVector, ref point, arealight, in hitInfo) / samples;
-                        }
-                    }
-                    else
-                    {
-                        Vector3 point = arealight.Position;
+                        Vector3 point = p;
                         Vector3 lightVector = (point - hit.point).normalized;
 
                         if (Vector3.Dot(hitInfo.Normal, lightVector) >= 0.0f)
-                            color += TraceAreaLightImage(ref lightVector, ref point, arealight, in hitInfo);
+                            color += TraceAreaLightImage(ref lightVector, ref point, arealight, in hitInfo) / samples;
                     }
                 }
+                else
+                {
+                    Vector3 point = arealight.Position;
+                    Vector3 lightVector = (point - hit.point).normalized;
+
+                    if (Vector3.Dot(hitInfo.Normal, lightVector) >= 0.0f)
+                        color += TraceAreaLightImage(ref lightVector, ref point, arealight, in hitInfo);
+                }
+            }
 
             // Cast reflection and refraction rays.
             if (depth > 0)

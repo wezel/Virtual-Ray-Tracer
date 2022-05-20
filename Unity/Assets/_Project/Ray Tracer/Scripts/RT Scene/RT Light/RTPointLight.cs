@@ -78,7 +78,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Point_Light
         [SerializeField]
         private new Light light;
         
-        public LightShadows Shadows { get => light.shadows; set => light.shadows = value; }
+        public override LightShadows Shadows { get => light.shadows; set => light.shadows = value; }
 
 //        public override void ChangeLightType(RTLightType type)
 //        {
