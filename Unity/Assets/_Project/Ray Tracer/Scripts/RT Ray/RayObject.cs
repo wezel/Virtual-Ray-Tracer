@@ -17,8 +17,9 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
             get { return ray; }
             set
             {
-                if (value.Equals(ray)) return;
+                //if (value.Equals(ray)) return;
                 ray = value;
+
                 Reset();
             }
         }
@@ -65,15 +66,22 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
             rayRenderer.Origin = Ray.Origin;
             rayRenderer.Direction = Ray.Direction;
             rayRenderer.Length = 0.0f;
+
             ReloadMaterial();
         }
 
+        private bool reloadMaterail = false;
+
         public void ReloadMaterial()
         {
+            reloadMaterail = true;
+            if (!isActiveAndEnabled) return;
+
             rayRenderer.Material = rayManager.GetRayMaterial(Ray.Contribution, Ray.Type, Ray.Color);
+            reloadMaterail = false;
         }
 
-    private void DetermineDrawLength()
+        private void DetermineDrawLength()
         {
             DrawLength = float.IsInfinity(Ray.Length) ? rayManager.InfiniteRayDrawLength : Ray.Length;
         }
@@ -91,6 +99,8 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
         private void OnEnable()
         {
             rayManager = RayManager.Get();
+            if (reloadMaterail)
+                ReloadMaterial();
         }
     }
 }

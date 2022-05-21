@@ -93,7 +93,7 @@ namespace _Project.UI.Scripts.Control_Panel
             refractiveIndexEdit.OnValueChanged += (value) => { mesh.RefractiveIndex = value; };
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
             // Update the UI based on external changes to the mesh transform (e.g. through the transformation gizmos).
             bool inUI = EventSystem.current.currentSelectedGameObject != null; // Only update if we are not in the UI.
@@ -103,8 +103,12 @@ namespace _Project.UI.Scripts.Control_Panel
                 positionEdit.Value = mesh.transform.position;
                 rotationEdit.Value = mesh.transform.eulerAngles;
                 scaleEdit.Value = mesh.transform.localScale;
-                mesh.transform.hasChanged = false;
             }
+        }
+
+        private void Update()
+        {
+            mesh.transform.hasChanged = false;   // Do this in Update to let other scripts also check
         }
     }
 }

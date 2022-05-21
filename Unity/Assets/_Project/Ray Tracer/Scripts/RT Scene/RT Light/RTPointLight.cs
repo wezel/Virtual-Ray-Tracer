@@ -94,10 +94,9 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Point_Light
 //            base.ChangeLightType(type);
 //        }
 
-        protected override void Awake()
+        private void Start()
         {
             Type = RTLightType.Point;
-            base.Awake();
         }
 
         private void LateUpdate()

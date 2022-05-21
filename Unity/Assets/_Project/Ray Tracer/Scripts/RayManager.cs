@@ -215,7 +215,8 @@ namespace _Project.Ray_Tracer.Scripts
             {
                 if (value == showRays) return;
                 showRays = value;
-                redraw = true;
+                if (!value) rayObjectPool.DeactivateAll();
+                else redraw = true;
             }
         }
 
@@ -337,16 +338,16 @@ namespace _Project.Ray_Tracer.Scripts
 
         private bool shouldUpdateRays = true;
 
-        private bool ShouldUpdateRays
-        {
-            get => shouldUpdateRays;
-            set
-            {
-                if (value == shouldUpdateRays) return;
-                shouldUpdateRays = value;
-                if (value) redraw = true;
-            }
-        }
+        //private bool ShouldUpdateRays
+        //{
+        //    get => shouldUpdateRays;
+        //    set
+        //    {
+        //        if (value == shouldUpdateRays) return;
+        //        shouldUpdateRays = value;
+        //        if (value) redraw = true;
+        //    }
+        //}
 
         /// <summary>
         /// Get the current <see cref="RayManager"/> instance.
@@ -372,6 +373,9 @@ namespace _Project.Ray_Tracer.Scripts
             return colors;
         }
 
+
+
+        //private static int cnt = 0;
         /// <summary>
         /// Get the material used to render rays of the given <see cref="RTRay.RayType"/>.
         /// </summary>
@@ -383,21 +387,25 @@ namespace _Project.Ray_Tracer.Scripts
         /// </returns>
         public Material GetRayMaterial(float contribution, RTRay.RayType type, Color color)
         {
+            //if (++cnt % 2000 == 0)
+            //    Debug.Log(cnt);
             if (RayTransparencyEnabled)
             {
                 Material mat;
-                contribution = Mathf.Clamp(contribution, 0.01f, 0.42f);
+                //contribution = Mathf.Clamp(contribution, 0.01f, 0.42f);
                 if (RayColorContributionEnabled)
                     mat = GetRayColorMaterialTransparent(color.r, color.g, color.b);
                 else
                     mat = GetRayTypeMaterialTransparent(type);
-                //mat.SetFloat("_Ambient", 0.5f + Mathf.Pow(contribution, RayTransExponent) / 2);
-                //mat.SetFloat("_Ambient", 1f);
-                mat.color = new Color(mat.color.r * (contribution / 2f + 0.5f),
-                                      mat.color.g * (contribution / 2f + 0.5f),
-                                      mat.color.b * (contribution / 2f + 0.5f),
-                                      Mathf.Pow(contribution, RayTransExponent));
-                return mat;
+
+                if (type == RTRay.RayType.NoHit)
+                {
+                    mat.color = new Color(mat.color.r, mat.color.g, mat.color.b,
+                                          mat.color.a * (contribution * 0.9f + 0.1f));
+                    return mat;
+                }
+                else
+                    return TranspariceMaterial(mat, contribution);
             }
             else
             {
@@ -406,6 +414,17 @@ namespace _Project.Ray_Tracer.Scripts
                 else
                     return GetRayTypeMaterial(type);
             }
+        }
+
+        private Material TranspariceMaterial(Material mat, float contribution)
+        {
+            float baseFactor = Mathf.Pow(contribution * 0.8f, RayTransExponent);
+            mat.SetFloat("_Ambient", baseFactor * 0.9f + 0.1f);
+            mat.color = new Color(mat.color.r * (0.6f + baseFactor * 0.4f),
+                                  mat.color.g * (0.6f + baseFactor * 0.4f),
+                                  mat.color.b * (0.6f + baseFactor * 0.4f),
+                                  mat.color.a * (baseFactor * 0.9f + 0.1f));
+            return mat;
         }
 
         /// <summary>
@@ -465,21 +484,6 @@ namespace _Project.Ray_Tracer.Scripts
                 default:
                     Debug.LogError("Unrecognized ray type " + type + "!");
                     return errorMaterial;
-                //case RTRay.RayType.NoHit:
-                //    return noHitMaterial;
-                //case RTRay.RayType.Reflect:
-                //    return reflectMaterialTransparentArray[Mathf.RoundToInt(transparency * (transparencyRange - 1))];
-                //case RTRay.RayType.Refract:
-                //    return refractMaterialTransparentArray[Mathf.RoundToInt(transparency * (transparencyRange - 1))];
-                //case RTRay.RayType.Normal:
-                //    return normalMaterialTransparentArray[Mathf.RoundToInt(transparency * (transparencyRange - 1))];
-                //case RTRay.RayType.Shadow:
-                //    return shadowMaterialTransparentArray[Mathf.RoundToInt(transparency * (transparencyRange - 1))];
-                //case RTRay.RayType.PointLight:
-                //    return lightMaterialTransparentArray[Mathf.RoundToInt(transparency * (transparencyRange - 1))];
-                //default:
-                //    Debug.LogError("Unrecognized ray type " + type + "!");
-                //    return errorMaterial;
             }
         }
 
@@ -495,19 +499,6 @@ namespace _Project.Ray_Tracer.Scripts
         private Material GetRayColorMaterial(float r, float g, float b)
         {
             return new Material(colorRayMaterial) { color = new Color(r, g, b, 1f) };
-
-
-            //int idxr = Mathf.RoundToInt(r * (colorN - 1));
-            //int idxg = Mathf.RoundToInt(g * (colorN - 1));
-            //int idxb = Mathf.RoundToInt(b * (colorN - 1));
-
-            //// To optimize loading-performance, these materials are constucted on-demand.
-            //// To optimize runtime-performance, once they're made, they're saved
-            //if (!colorRayMaterialArray[idxr, idxg, idxb])
-            //    colorRayMaterialArray[idxr, idxg, idxb] = new Material(colorRayMaterial)
-            //    { color = new Color(idxr * colorStep, idxg * colorStep, idxb * colorStep, 1f) };
-
-            //return colorRayMaterialArray[idxr, idxg, idxb];
         }
 
         /// <summary>
@@ -516,30 +507,12 @@ namespace _Project.Ray_Tracer.Scripts
         /// <param name="r"> The red component of the color </param>
         /// <param name="g"> The green component of the color </param>
         /// <param name="b"> The blue component of the color </param>
-        /// <param name="transparency"> How transparent the ray should be. </param>
         /// <returns> 
         /// The transparent <see cref="Material"/> for <paramref name="r"/>, <paramref name="g"/> and <paramref name="b"/>.
         /// </returns>
         private Material GetRayColorMaterialTransparent(float r, float g, float b)
         {
-
             return new Material(colorRayMaterialTransparent) { color = new Color(r, g, b, colorRayMaterialTransparent.color.a) };
-
-            //int idxr = Mathf.RoundToInt(r * (colorN - 1));
-            //int idxg = Mathf.RoundToInt(g * (colorN - 1));
-            //int idxb = Mathf.RoundToInt(b * (colorN - 1));
-            //int idxa = Mathf.RoundToInt(transparency * (transparencyRange - 1));
-
-            //// To optimize loading-performance, these materials are constucted on-demand.
-            //// To optimize runtime-performance, once they're made, they're saved
-            //if (!colorRayMaterialTransparentArray[idxr, idxg, idxb, idxa])
-            //{
-            //    colorRayMaterialTransparentArray[idxr, idxg, idxb, idxa] = new Material(colorRayMaterialTransparent)
-            //    { color = new Color(idxr * colorStep, idxg * colorStep, idxb * colorStep, colorRayMaterialTransparent.color.a) };
-            //    colorRayMaterialTransparentArray[idxr, idxg, idxb, idxa].SetFloat("_Ambient", (idxa + 1) * (1f / transparencyRange));
-            //}
-
-            //return colorRayMaterialTransparentArray[idxr, idxg, idxb, idxa];
         }
 
         public void SelectRay(Vector2Int rayCoordinates)
@@ -565,12 +538,6 @@ namespace _Project.Ray_Tracer.Scripts
         private void Start()
         {
             rays = new List<TreeNode<RTRay>>();
-            // Generate range of transparent materials
-            //MakeTransparentMaterials(ref reflectMaterialTransparent, ref reflectMaterialTransparentArray);
-            //MakeTransparentMaterials(ref refractMaterialTransparent, ref refractMaterialTransparentArray);
-            //MakeTransparentMaterials(ref normalMaterialTransparent, ref normalMaterialTransparentArray);
-            //MakeTransparentMaterials(ref shadowMaterialTransparent, ref shadowMaterialTransparentArray);
-            //MakeTransparentMaterials(ref lightMaterialTransparent, ref lightMaterialTransparentArray);
 
             rayObjectPool = new RayObjectPool(rayPrefab, initialRayPoolSize, transform);
             Reset = true;
@@ -578,54 +545,26 @@ namespace _Project.Ray_Tracer.Scripts
             rtSceneManager = RTSceneManager.Get();
             rayTracer = UnityRayTracer.Get();
 
-            rtSceneManager.Scene.OnSceneChanged += () => { ShouldUpdateRays = true; ReloadMaterials(); };
-            rayTracer.OnRayTracerChanged += () => { ShouldUpdateRays = true; ReloadMaterials(); };
+            rtSceneManager.Scene.OnSceneChanged += () => { UpdateRays(); /*ReloadMaterials();*/ };
+            rayTracer.OnRayTracerChanged += () => { UpdateRays(); /*ReloadMaterials();*/ };
+            UpdateRays();
         }
-
-        //private void MakeTransparentMaterials(ref Material baseMaterial, ref Material[] arrayMaterial)
-        //{
-        //    for (int i = 0; i < transparencyRange; i++)
-        //    {
-        //        arrayMaterial[i] = new Material(baseMaterial);
-        //        arrayMaterial[i].SetFloat("_Ambient", (i + 1) * (1f / transparencyRange));
-        //    }
-        //}
 
         private bool redraw = true;
+
         private void FixedUpdate()
         {
-            if (redraw || (Animate && (Reset || !animationDone || Loop)))
+            if (ShowRays && (redraw || (Animate && (Reset || !animationDone || Loop))))
+            {
                 Redraw();
-
-            //rayObjectPool.SetAllUnused();
-
-            //if (shouldUpdateRays)
-            //    UpdateRays();
-
-            //// Determine the selected ray.
-            //if (hasSelectedRay)
-            //{
-            //    int width = rtSceneManager.Scene.Camera.ScreenWidth;
-            //    int index = selectedRayCoordinates.x + width * selectedRayCoordinates.y;
-            //    selectedRay = rays[index];
-            //}
-
-            //if (Animate)
-            //    DrawRaysAnimated();
-            //else
-            //    DrawRays();
-
-            //rayObjectPool.DeactivateUnused();
+                redraw = false;
+            }
         }
 
-        //private int cnt = 0;
         private void Redraw()
         {
-            //Debug.Log(cnt++);
-            rayObjectPool.SetAllUnused();
-
-            if (ShouldUpdateRays)
-                UpdateRays();
+            //if (ShouldUpdateRays)
+            //    UpdateRays();
 
             // Determine the selected ray.
             if (hasSelectedRay)
@@ -639,9 +578,6 @@ namespace _Project.Ray_Tracer.Scripts
                 DrawRaysAnimated();
             else
                 DrawRays();
-
-            rayObjectPool.DeactivateUnused();
-            redraw = false;
         }
 
         /// <summary>
@@ -650,8 +586,10 @@ namespace _Project.Ray_Tracer.Scripts
         public void UpdateRays()
         {
             rays = rayTracer.Render();
+            rayObjectPool.MakeRayObjects(ref rays);
             rtSceneManager.UpdateImage(GetRayColors());
-            ShouldUpdateRays = false;
+            redraw = true;
+            //ShouldUpdateRays = false;
         }
 
         /// <summary>
@@ -672,22 +610,15 @@ namespace _Project.Ray_Tracer.Scripts
         /// </summary>
         private void DrawRays()
         {
-            if (!ShowRays)
-                return;
-
             // If we have selected a ray we only draw its ray tree.
             if (hasSelectedRay)
-            {
                 foreach (var ray in selectedRay.Children) // Skip the zero-length base-ray 
                     DrawRayTree(ray);
-            }
             // Otherwise we draw all ray trees.
             else
-            {
                 foreach (var pixel in rays)
                     foreach (var ray in pixel.Children) // Skip the zero-length base-ray 
                         DrawRayTree(ray);
-            }
         }
 
         private void DrawRayTree(TreeNode<RTRay> rayTree)
@@ -696,17 +627,12 @@ namespace _Project.Ray_Tracer.Scripts
                 (HideNegligibleRays && rayTree.Data.Contribution <= rayHideThreshold))
                 return;
 
-            RayObject rayObject = rayObjectPool.GetRayObject();
-            rayObject.Ray = rayTree.Data;
-            //if (ReloadMaterials)
-            //    rayObject.ReloadMaterial();
+            RayObject rayObject = rayObjectPool.GetRayObject(rayTree.Data.ObjectPoolIndex);
             rayObject.Draw(GetRayRadius(rayTree));
 
             if (!rayTree.IsLeaf())
-            {
                 foreach (var child in rayTree.Children)
                     DrawRayTree(child);
-            }
         }
 
         /// <summary>
@@ -714,12 +640,10 @@ namespace _Project.Ray_Tracer.Scripts
         /// </summary>
         private void DrawRaysAnimated()
         {
-            if (!ShowRays)
-                return;
-
             // Reset the animation if we are looping or if a reset was requested.
             if ((animationDone && Loop) || Reset)
             {
+                rayObjectPool.DeactivateAll();
                 distanceToDraw = 0.0f;
                 rayTreeToDraw = 0;
                 animationDone = false;
@@ -770,8 +694,6 @@ namespace _Project.Ray_Tracer.Scripts
             // Otherwise we can just draw all rays in full.
             else
                 DrawRays();
-
-            //ReloadMaterials = false;
         }
 
         private bool DrawRayTreeAnimated(TreeNode<RTRay> rayTree, float distance)
@@ -780,10 +702,7 @@ namespace _Project.Ray_Tracer.Scripts
                 (HideNegligibleRays && rayTree.Data.Contribution < rayHideThreshold))
                 return true;
 
-            RayObject rayObject = rayObjectPool.GetRayObject();
-            rayObject.Ray = rayTree.Data;
-            //if (ReloadMaterials)
-            //    rayObject.ReloadMaterial();
+            RayObject rayObject = rayObjectPool.GetRayObject(rayTree.Data.ObjectPoolIndex);
             rayObject.Draw(GetRayRadius(rayTree), distance);
 
             float leftover = distance - rayObject.DrawLength;

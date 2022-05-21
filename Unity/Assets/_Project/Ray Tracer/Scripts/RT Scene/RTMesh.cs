@@ -44,7 +44,11 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
         public Vector3 Position
         {
             get => transform.position;
-            set { transform.position = value; }
+            set
+            {
+                if (value == transform.position) return;
+                transform.position = value;
+            }
         }
 
         /// <summary>
@@ -53,7 +57,11 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
         public Vector3 Rotation
         {
             get => transform.eulerAngles;
-            set { transform.eulerAngles = value; }
+            set
+            {
+                if (value == transform.eulerAngles) return;
+                transform.eulerAngles = value;
+            }
         }
 
         /// <summary>
@@ -62,7 +70,11 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
         public Vector3 Scale
         {
             get => transform.localScale;
-            set { transform.localScale = value; }
+            set
+            {
+                if (value == transform.localScale) return;
+                transform.localScale = value;
+            }
         }
 
         /// <summary>
@@ -216,10 +228,14 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             OnMeshChanged?.Invoke();
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
             if (transform.hasChanged) OnMeshChanged?.Invoke();
-            transform.hasChanged = false;
+        }
+
+        private void Update()
+        {
+            transform.hasChanged = false;   // Do this in Update to let other scripts also check
         }
 
         private void Awake()

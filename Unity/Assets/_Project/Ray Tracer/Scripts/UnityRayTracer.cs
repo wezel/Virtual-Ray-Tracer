@@ -613,7 +613,7 @@ namespace _Project.Ray_Tracer.Scripts
                 {
                     percentage = 100 * y / height;
                     renderedImageWindow.UpdateProgressBar(percentage);
-                    yield return null; // yield to update UI
+                    yield return new WaitForFixedUpdate(); // yield to update UI
                 }
             }
             Debug.Log(Time.realtimeSinceStartup - start);

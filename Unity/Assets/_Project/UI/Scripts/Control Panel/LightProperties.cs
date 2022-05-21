@@ -79,11 +79,11 @@ namespace _Project.UI.Scripts.Control_Panel
 
         private void Awake()
         {
-            positionEdit.OnValueChanged += value => light.Position = value;
-            rotationEdit.OnValueChanged += value => light.Rotation = value;
+            positionEdit.OnValueChanged += value => { light.Position = value; };
+            rotationEdit.OnValueChanged += value => { light.Rotation = value; };
             scaleEdit.OnValueChanged += value => { light.Scale = value; };
-
-            colorEdit.OnValueChanged += value => light.Color = value;
+            
+            colorEdit.OnValueChanged += value => { light.Color = value; };
             ambientEdit.OnValueChanged += (value) => { light.Ambient = value; };
             diffuseEdit.OnValueChanged += (value) => { light.Diffuse = value; };
             specularEdit.OnValueChanged += (value) => { light.Specular = value; };
@@ -92,16 +92,22 @@ namespace _Project.UI.Scripts.Control_Panel
             typeDropdown.onValueChanged.AddListener(type => ChangeObjectType((RTLight.RTLightType)type));
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
             // Update the UI based on external changes to the light transform (e.g. through the transformation gizmos).
             bool inUI = EventSystem.current.currentSelectedGameObject != null; // Only update if we are not in the UI.
-            bool draggingEdit = positionEdit.IsDragging();
+            bool draggingEdit = positionEdit.IsDragging() || rotationEdit.IsDragging() || scaleEdit.IsDragging();
             if (light != null && light.transform.hasChanged && !inUI && !draggingEdit)
             {
                 positionEdit.Value = light.transform.position;
-                light.transform.hasChanged = false;
+                rotationEdit.Value = light.transform.eulerAngles;
+                scaleEdit.Value = light.transform.localScale;
             }
+        }
+
+        private void Update()
+        {
+            light.transform.hasChanged = false;   // Do this in Update to let other scripts also check
         }
     }
 }

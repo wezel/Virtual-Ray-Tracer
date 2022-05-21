@@ -84,7 +84,11 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
         public Vector3 Position
         {
             get { return transform.position; }
-            set { transform.position = value; }
+            set
+            {
+                if (value == transform.position) return;
+                transform.position = value;
+            }
         }
 
 
@@ -94,7 +98,11 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
         public Vector3 Rotation
         {
             get => transform.eulerAngles;
-            set { transform.eulerAngles = value; }
+            set
+            {
+                if (value == transform.eulerAngles) return;
+                transform.eulerAngles = value;
+            }
         }
 
         /// <summary>
@@ -103,7 +111,11 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
         public Vector3 Scale
         {
             get => transform.localScale;
-            set { transform.localScale = value; }
+            set
+            {
+                if (value == transform.localScale) return;
+                transform.localScale = value;
+            }
         }
 
         public enum RTLightType
@@ -144,10 +156,14 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
 
         public virtual int LightSamples { get; set; }
 
-        protected void Update()
+        protected void FixedUpdate()
         {
             if (transform.hasChanged) OnLightChanged?.Invoke();
-            transform.hasChanged = false;
+        }
+
+        protected void Update()
+        {
+            transform.hasChanged = false;   // Do this in Update to let other scripts also check
         }
 
         protected virtual void Awake()

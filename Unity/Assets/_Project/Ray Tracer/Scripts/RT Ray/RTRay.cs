@@ -92,6 +92,8 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
             Contribution = type == RayType.NoHit || type == RayType.Shadow ? 0.0f : 1.0f;
         }
 
+        public int ObjectPoolIndex { get; set; }
+
         /// <summary>
         /// Determine the position of a point a certain distance along this ray.
         /// </summary>
@@ -101,7 +103,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
 
         public bool Equals(RTRay other)
         {
-            if (other == null) return false;
+            if (other is null) return false;
             return Origin == other.Origin
                 && Direction == other.Direction
                 && Length == other.Length
@@ -109,5 +111,17 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
                 && Type == other.Type
                 && Contribution == other.Contribution;
         }
+
+        //public static bool operator ==(RTRay lhs, RTRay rhs)
+        //{
+        //    if (lhs is null) return false;
+        //    return lhs.Equals(rhs);
+        //}
+
+        //public static bool operator !=(RTRay lhs, RTRay rhs)
+        //{
+        //    if (lhs is null) return false;
+        //    return !lhs.Equals(rhs);
+        //}
     }
 }

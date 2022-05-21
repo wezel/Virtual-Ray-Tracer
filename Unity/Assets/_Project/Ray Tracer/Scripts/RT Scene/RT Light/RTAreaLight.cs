@@ -1,9 +1,7 @@
-using System;
 #if UNITY_EDITOR
 using UnityEditor.Experimental.SceneManagement;
 #endif
 using UnityEngine;
-using UnityEngine.UI;
 using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light;
 
 namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
@@ -227,28 +225,27 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
                 label.color = Color;
         }
 
-        protected override void Awake()
+        private void Start()
         {
             Type = RTLightType.Area;
-            base.Awake();
         }
 
         private new void Update()
         {
+            base.Update();
+
             // Update label; black at the back; light color at the front
             UpdateLabelColor();
 
             // Update the (amount of) lights
             if (lights != null && lights.Length == LightSamples * LightSamples)
-                base.Update();
+                return;
 #if UNITY_EDITOR
             else if (PrefabStageUtility.GetCurrentPrefabStage() != null) // In Prefab Mode
                 return;                                                  // Don't add lights to the prefab
 #endif
             else
             {
-
-
                 foreach (Light light in GetComponentsInChildren<Light>())
 #if UNITY_EDITOR
                     DestroyImmediate(light.gameObject);
