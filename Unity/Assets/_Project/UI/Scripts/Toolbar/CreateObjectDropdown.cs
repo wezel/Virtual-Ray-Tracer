@@ -52,16 +52,11 @@ namespace _Project.UI.Scripts.Toolbar
             Array objectTypes = Enum.GetValues(typeof(RTSceneManager.ObjectType));
             foreach (RTSceneManager.ObjectType objectType in objectTypes)
             {
-                Button itemButton = buttons[idx++];
-                if (GlobalSettings.TutorialPoints >= (int)objectType)
-                {
-                    var transforms = itemButton.GetComponentsInChildren<RectTransform>();
-                    if (transforms.Length > 2) transforms[2].gameObject.SetActive(false); // remove unlock panel
-                    itemButton.interactable = true; // make interactable
-                }
-                else itemButton.interactable = false; // disable interaction
+                bool enabled = GlobalSettings.TutorialPoints >= (int)objectType || GlobalSettings.Get().CheatMode;
+                var transforms = buttons[idx].GetComponentsInChildren<RectTransform>(true);
+                if (transforms.Length > 2) transforms[2].gameObject.SetActive(!enabled); // hide or show unlock panel
+                buttons[idx++].interactable = enabled;
             }
-
         }
 
         /// <summary>
