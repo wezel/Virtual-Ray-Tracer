@@ -95,6 +95,7 @@ namespace _Project.UI.Scripts.Tutorial
         /// <returns>Whether the required tasks are finished</returns>
         public bool AreRequiredTasksFinished()
         {
+            if (GlobalSettings.Get().CheatMode) return true;
             return completedIndex >= optionalTasksStart - 1;
         }
 
@@ -105,7 +106,8 @@ namespace _Project.UI.Scripts.Tutorial
         public bool IsSkippable()
         {
             if (index < completedIndex) return true;
-            if (index >= tasks.Count) return false;
+            if (index >= tasks.Count - 1) return false;
+            if (GlobalSettings.Get().CheatMode) return true;
             return tasks[index].Skippable;
         }
 

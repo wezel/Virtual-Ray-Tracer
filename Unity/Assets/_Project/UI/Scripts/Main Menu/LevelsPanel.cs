@@ -21,7 +21,8 @@ namespace _Project.UI.Scripts.Main_Menu
         [SerializeField]
         private Button exitButton;
 
-        private List<Button> levelsList = new List<Button>();
+        private List<Button> levelButtons = new List<Button>();
+
         private MainMenu mainMenu;
 
         /// <summary>
@@ -29,8 +30,13 @@ namespace _Project.UI.Scripts.Main_Menu
         /// </summary>
         public void Show()
         {
+            // make levels enabled/disabled
+            for (int i = 0; i < levelButtons.Count; i++)
+                levelButtons[i].interactable = Tutorial.TutorialManager.CanLevelBeLoaded(i + 1);
+
             gameObject.SetActive(true);
             UIManager.Get().AddEscapable(Hide);
+            Debug.Log("SHOW");
         }
 
         /// <summary>
@@ -65,7 +71,7 @@ namespace _Project.UI.Scripts.Main_Menu
             exitButton.onClick.AddListener(Hide);
             mainMenu = gameObject.GetComponentInParent<MainMenu>();
 
-            // Set up a button for each scene. We start the index at 2 because we skip the start and initialize scene.
+            // Set up a button for each scene. We start the index at 1 because we skip the start and initialize scene.
             int sceneCount = SceneManager.sceneCountInBuildSettings;
             for (int i = 1; i < sceneCount; i++)
             {
@@ -75,7 +81,7 @@ namespace _Project.UI.Scripts.Main_Menu
                 levelButton.interactable = Tutorial.TutorialManager.CanLevelBeLoaded(i);
                 levelButton.GetComponentInChildren<TextMeshProUGUI>().text = i + ". " + levelButton.name;
                 levelButton.onClick.AddListener(() => OnButtonClicked(levelButton));
-                levelsList.Add(levelButton);
+                levelButtons.Add(levelButton);
             }
         }
     }

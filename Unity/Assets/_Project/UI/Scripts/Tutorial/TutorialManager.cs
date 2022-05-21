@@ -205,7 +205,7 @@ namespace _Project.UI.Scripts.Tutorial
         /// <summary>
         /// Updates all UI elements.
         /// </summary>
-        private void UpdateTutorial()
+        public void UpdateTutorial()
         {
             // Set the fill width/percentage
             progressFill.GetComponent<RectTransform>().sizeDelta = new Vector2(progressBar.GetComponent<RectTransform>().rect.width * 
@@ -216,7 +216,7 @@ namespace _Project.UI.Scripts.Tutorial
 
             // Set the name and description
             if (currentTasks.GetName() == "") taskName.text = (currentTasks.IsRequiredTask() ? DEFAULT_REQUIRED_NAME : DEFAULT_OPTIONAL_NAME) + currentScene + "/" + lastScene + "!";
-            else taskName.text = currentScene + ". " + currentTasks.GetName();
+            else taskName.text = currentScene + "." + currentTasks.GetCurrentTaskindex() + " " + currentTasks.GetName();
 
             if (currentTasks.GetDescription() == "") taskDescription.text = currentTasks.IsRequiredTask() ? DEFAULT_REQUIRED_DESC : DEFAULT_OPTIONAL_DESC;
             else taskDescription.text = currentTasks.GetDescription();

@@ -33,7 +33,7 @@ namespace _Project.Scripts
         private static GlobalSettings instance = null;
 
         public bool FPSEnabled = false;
-        public bool Unlimited = false;
+        public bool CheatMode = false;
 
         public static bool TutorialExpanded = true;
         public static int TutorialPoints = 0;

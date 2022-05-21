@@ -14,7 +14,7 @@ namespace _Project.UI.Scripts.Main_Menu
         [SerializeField] 
         private Toggle fpsCounterToggle;
         [SerializeField] 
-        private Toggle unlimitedToggle;
+        private Toggle cheatModeToggle;
     
         [SerializeField] 
         private FPSCounter fpsCounter;
@@ -52,30 +52,30 @@ namespace _Project.UI.Scripts.Main_Menu
             GlobalSettings.Get().FPSEnabled = isOn;
         }
 
-        private void ToggleUnlimited(bool isOn)
-        {
-
-            GlobalSettings.Get().Unlimited = isOn;
-        }
-
         private void ToggleFullScreen(bool isOn)
         {
             Screen.fullScreen = isOn;
+        }
+
+        private void ToggleCheatMode(bool isOn)
+        {
+            GlobalSettings.Get().CheatMode = isOn;
+            Tutorial.TutorialManager.Get().UpdateTutorial();
         }
     
         private void Awake()
         {
             exitButton.onClick.AddListener(Hide);
             fpsCounterToggle.onValueChanged.AddListener(ToggleFpsCounter);
-            unlimitedToggle.onValueChanged.AddListener(ToggleUnlimited);
             fullScreenToggle.onValueChanged.AddListener(ToggleFullScreen);
+            cheatModeToggle.onValueChanged.AddListener(ToggleCheatMode);
         }
 
         private void OnEnable()
         {
             fpsCounterToggle.isOn = GlobalSettings.Get().FPSEnabled;
             fullScreenToggle.isOn = Screen.fullScreen;
-            unlimitedToggle.isOn = GlobalSettings.Get().Unlimited;
+            cheatModeToggle.isOn = GlobalSettings.Get().CheatMode;
         }
     }
 }
