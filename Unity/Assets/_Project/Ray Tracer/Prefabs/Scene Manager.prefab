@@ -107,6 +107,7 @@ MonoBehaviour:
   capsulePrefab: {fileID: 1943894928092703155, guid: 8ed94d4a50e2559b2a9a2ba4e0f2ffa1, type: 3}
   cylinderPrefab: {fileID: 1943894928092703155, guid: 902181a0761ad3f81814fd7ea054b8a4, type: 3}
   prismPrefab: {fileID: 1943894928092703155, guid: b62f3132fbd3a882b91608a7a0acbf5a, type: 3}
+  barrelPrefab: {fileID: 1943894928092703155, guid: d5b27bc15e5d1c444b2dfb8385966c1a, type: 3}
   meshPrefab: {fileID: 1943894928092703155, guid: bdace46ddc7698749b2ecb5e38179122, type: 3}
   SelectionColor: {r: 1, g: 0.35, b: 0, a: 1}
   ControlPanel: {fileID: 0}
@@ -116,3 +117,25 @@ MonoBehaviour:
   translationSnap: 0.25
   rotationSnap: 15
   scaleSnap: 0.25
+  deleteAllowed: 0
+  OnTranslationMode:
+    m_PersistentCalls:
+      m_Calls: []
+  OnRotationMode:
+    m_PersistentCalls:
+      m_Calls: []
+  OnScaleMode:
+    m_PersistentCalls:
+      m_Calls: []
+  OnLocalSpace:
+    m_PersistentCalls:
+      m_Calls: []
+  OnGlobalSpace:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDeselect:
+    m_PersistentCalls:
+      m_Calls: []
+  OnObjectDeleted:
+    m_PersistentCalls:
+      m_Calls: []

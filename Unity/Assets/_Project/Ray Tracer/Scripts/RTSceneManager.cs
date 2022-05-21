@@ -40,6 +40,7 @@ namespace _Project.Ray_Tracer.Scripts
         [SerializeField] private RTMesh capsulePrefab;
         [SerializeField] private RTMesh cylinderPrefab;
         [SerializeField] private RTMesh prismPrefab;
+        [SerializeField] private RTMesh barrelPrefab;
         [SerializeField] private RTMesh meshPrefab;
 
         [Header("UI")]
@@ -77,6 +78,7 @@ namespace _Project.Ray_Tracer.Scripts
             Sphere = 0,
             Cube = 5000,
             Cylinder = 6000,
+            Barrel = 6500,
             Capsule = 7000,
             Prism = 8000,
             Goat = 9000,
@@ -343,6 +345,9 @@ namespace _Project.Ray_Tracer.Scripts
                     break;
                 case ObjectType.Prism:
                     mesh = Instantiate(prismPrefab);
+                    break;
+                case ObjectType.Barrel:
+                    mesh = Instantiate(barrelPrefab);
                     break;
                 default:
                     return;
