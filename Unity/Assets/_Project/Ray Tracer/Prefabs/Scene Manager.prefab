@@ -108,6 +108,7 @@ MonoBehaviour:
   cylinderPrefab: {fileID: 1943894928092703155, guid: 902181a0761ad3f81814fd7ea054b8a4, type: 3}
   prismPrefab: {fileID: 1943894928092703155, guid: b62f3132fbd3a882b91608a7a0acbf5a, type: 3}
   barrelPrefab: {fileID: 1943894928092703155, guid: d5b27bc15e5d1c444b2dfb8385966c1a, type: 3}
+  wineglassPrefab: {fileID: 1943894928092703155, guid: d5f4366881026df47a7a4f8c2059c1e8, type: 3}
   meshPrefab: {fileID: 1943894928092703155, guid: bdace46ddc7698749b2ecb5e38179122, type: 3}
   SelectionColor: {r: 1, g: 0.35, b: 0, a: 1}
   ControlPanel: {fileID: 0}

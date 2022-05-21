@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 1943894928092703155}
   - component: {fileID: 6716819065396824742}
   m_Layer: 7
-  m_Name: Barrel
+  m_Name: Wineglass
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -42,7 +42,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5639910633907346642}
-  m_Mesh: {fileID: 8108563764783910780, guid: 8b1643a302b4293439e539ca37ff2129, type: 3}
+  m_Mesh: {fileID: 6726136065463557478, guid: d706140dc2194254ba2a42f803692275, type: 3}
 --- !u!23 &1938161596217203700
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -97,7 +97,7 @@ MeshCollider:
   serializedVersion: 4
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: 8108563764783910780, guid: 8b1643a302b4293439e539ca37ff2129, type: 3}
+  m_Mesh: {fileID: 6726136065463557478, guid: d706140dc2194254ba2a42f803692275, type: 3}
 --- !u!114 &1943894928092703155
 MonoBehaviour:
   m_ObjectHideFlags: 0
