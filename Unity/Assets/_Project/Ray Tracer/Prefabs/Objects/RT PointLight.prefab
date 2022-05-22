@@ -47,9 +47,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   color: {r: 1, g: 1, b: 1, a: 1}
+  intensity: 10
   ambient: 0
   diffuse: 1
   specular: 1
+  Type: 0
   label: {fileID: 4415559385507083291}
   outline: {fileID: 2936163527658708494}
   canvas: {fileID: 1104547694093982553}

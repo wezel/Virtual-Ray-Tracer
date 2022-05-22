@@ -29,6 +29,19 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
             }
         }
 
+        [SerializeField, Range(0.0f, 20.0f)]
+        protected float intensity;
+        public virtual float Intensity
+        {
+            get => intensity;
+            set
+            {
+                if (value == intensity) return;
+                intensity = value;
+                OnLightChanged?.Invoke();
+            }
+        }
+
         [SerializeField, Range(0,1)]
         protected float ambient;
         public virtual float Ambient

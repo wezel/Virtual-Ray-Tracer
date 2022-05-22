@@ -82,7 +82,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             get
             {
                 if (EnablePointLights) return pointLights;
-                return new List<RTPointLight>();
+                return new List<RTPointLight>(0);
             }
             private set => pointLights = value;
         }
@@ -96,7 +96,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             get
             {
                 if (EnableAreaLights) return areaLights;
-                return new List<RTAreaLight>();
+                return new List<RTAreaLight>(0);
             }
             private set => areaLights = value;
         }

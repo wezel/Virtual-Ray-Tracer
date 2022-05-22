@@ -336,7 +336,7 @@ namespace _Project.Ray_Tracer.Scripts
         private int rayTreeToDraw = 0; // Used when animating sequentially.
         private bool animationDone = false;
 
-        private bool shouldUpdateRays = true;
+        //private bool shouldUpdateRays = true;
 
         //private bool ShouldUpdateRays
         //{
@@ -373,9 +373,6 @@ namespace _Project.Ray_Tracer.Scripts
             return colors;
         }
 
-
-
-        //private static int cnt = 0;
         /// <summary>
         /// Get the material used to render rays of the given <see cref="RTRay.RayType"/>.
         /// </summary>
@@ -387,8 +384,6 @@ namespace _Project.Ray_Tracer.Scripts
         /// </returns>
         public Material GetRayMaterial(float contribution, RTRay.RayType type, Color color)
         {
-            //if (++cnt % 2000 == 0)
-            //    Debug.Log(cnt);
             if (RayTransparencyEnabled)
             {
                 Material mat;
@@ -545,9 +540,8 @@ namespace _Project.Ray_Tracer.Scripts
             rtSceneManager = RTSceneManager.Get();
             rayTracer = UnityRayTracer.Get();
 
-            rtSceneManager.Scene.OnSceneChanged += () => { UpdateRays(); /*ReloadMaterials();*/ };
-            rayTracer.OnRayTracerChanged += () => { UpdateRays(); /*ReloadMaterials();*/ };
-            UpdateRays();
+            rtSceneManager.Scene.OnSceneChanged += () => { UpdateRays(); };
+            rayTracer.OnRayTracerChanged += () => { UpdateRays(); };
         }
 
         private bool redraw = true;
@@ -563,9 +557,6 @@ namespace _Project.Ray_Tracer.Scripts
 
         private void Redraw()
         {
-            //if (ShouldUpdateRays)
-            //    UpdateRays();
-
             // Determine the selected ray.
             if (hasSelectedRay)
             {
@@ -586,10 +577,9 @@ namespace _Project.Ray_Tracer.Scripts
         public void UpdateRays()
         {
             rays = rayTracer.Render();
-            rayObjectPool.MakeRayObjects(ref rays);
+            rayObjectPool.MakeRayObjects(rays);
             rtSceneManager.UpdateImage(GetRayColors());
             redraw = true;
-            //ShouldUpdateRays = false;
         }
 
         /// <summary>

@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 namespace Editor.RT_Light
 {
     [CustomEditor(typeof(RTPointLight))]
-    public class RTLightInspector : UnityEditor.Editor
+    public class RTPointLightInspector : UnityEditor.Editor
     {
 
         private RTPointLight rtLight;
@@ -23,6 +23,7 @@ namespace Editor.RT_Light
         private void OnPreSceneGUI()
         {
             rtLight.Color = rtLight.Color;
+            rtLight.Intensity = rtLight.Intensity;
             rtLight.Ambient = rtLight.Ambient;
             rtLight.Diffuse = rtLight.Diffuse;
             rtLight.Specular = rtLight.Specular;

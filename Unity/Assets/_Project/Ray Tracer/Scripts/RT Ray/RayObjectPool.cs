@@ -11,10 +11,10 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
     /// </summary>
     public class RayObjectPool
     {
-        private List<RayObject> rayObjects;
-        private RayObject rayPrefab;
-        private Transform parent;
-        private int currentlyUsed;
+        private readonly List<RayObject> rayObjects;
+        private readonly RayObject rayPrefab;
+        private readonly Transform parent;
+        private int nextIndex;
 
         /// <summary>
         /// Construct a new pool of <see cref="RayObject"/>s. All instantiated objects start inactive.
@@ -28,20 +28,15 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
             this.parent = parent;
 
             rayObjects = new List<RayObject>(initialAmount);
-            RayObject ray;
+            nextIndex = 0;
+        }
 
-            for (int i = 0; i < initialAmount; ++i)
-            {
-                if (parent != null)
-                    ray = Object.Instantiate(rayPrefab, parent);
-                else
-                    ray = Object.Instantiate(rayPrefab);
-
-                ray.gameObject.SetActive(false);
-                rayObjects.Add(ray);
-            }
-
-            currentlyUsed = 0;
+        /// <summary>
+        /// Reloads the materials for all rays in this <see cref="RayObject"/>.
+        /// </summary>
+        public void ReloadMaterials()
+        {
+            rayObjects.ForEach(ray => ray.ReloadMaterial());
         }
 
         /// <summary>
@@ -49,10 +44,8 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
         /// </summary>
         public void DeactivateAll()
         {
-            for (int i = 0; i < rayObjects.Count; ++i)
-                rayObjects[i].gameObject.SetActive(false);
-
-            currentlyUsed = 0;
+            rayObjects.ForEach(rayObject => rayObject.gameObject.SetActive(false));
+            nextIndex = 0;
         }
 
         /// <summary>
@@ -60,17 +53,15 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
         /// </summary>
         private void CleanUp()
         {
-            for (int i = currentlyUsed; i < rayObjects.Count; ++i)
+            // Make sure to destroy in reverse, as rayObjects.Count changes
+            for (int i = rayObjects.Count - 1; i >= nextIndex; --i)
             {
-                if (!rayObjects[i].isActiveAndEnabled)
-                {
 #if UNITY_EDITOR
-                    Object.DestroyImmediate(rayObjects[i].gameObject);
+                Object.DestroyImmediate(rayObjects[i].gameObject);
 #else
-                    Object.Destroy(x.gameObject);
+                Object.Destroy(rayObjects[i].gameObject);
 #endif
-                    rayObjects.RemoveAt(i);
-                }
+                rayObjects.RemoveAt(i);
             }
         }
 
@@ -82,22 +73,14 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
         /// </summary>
         private void SetAllUnused()
         {
-            currentlyUsed = 0;
-        }
-
-        /// <summary>
-        /// Reloads the materials for all rays in this <see cref="RayObject"/>.
-        /// </summary>
-        public void ReloadMaterials()
-        {
-            rayObjects.ForEach(ray => { if (ray != null) ray.ReloadMaterial(); });
+            nextIndex = 0;
         }
 
         /// <summary>
         /// Make all rays objects for all the rays in <paramref name="rays"/>
         /// </summary>
         /// <param name="rays"> Rays that need to be turned into objects. </param>
-        public void MakeRayObjects(ref List<TreeNode<RTRay>> rays)
+        public void MakeRayObjects(List<TreeNode<RTRay>> rays)
         {
             SetAllUnused(); // Mark all rays as unused; Start all over
 
@@ -114,11 +97,11 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
         /// <param name="rayTree"> Rays that need to be turned into objects. </param>
         private void MakeRayTreeObjects(TreeNode<RTRay> rayTree)
         {
-            MakeRayObject();    // Make sure there's a rayObject at the index currentlyUsed
-            rayTree.Data.ObjectPoolIndex = currentlyUsed;
-            rayObjects[currentlyUsed].Ray = rayTree.Data;
-            rayObjects[currentlyUsed].gameObject.SetActive(false);
-            currentlyUsed++;
+            MakeRayObject();    // Make sure there's a rayObject at the nextIndex
+            rayTree.Data.ObjectPoolIndex = nextIndex;
+            rayObjects[nextIndex].Ray = rayTree.Data;
+            rayObjects[nextIndex].gameObject.SetActive(false);
+            ++nextIndex;
 
             if (!rayTree.IsLeaf())
                 foreach (TreeNode<RTRay> child in rayTree.Children)
@@ -132,13 +115,13 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
         /// <returns> An unused activated <see cref="RayObject"/> from the pool. </returns>
         private void MakeRayObject()
         {
-            // Otherwise we get the first unused ray object and activate it.
-            if (currentlyUsed < rayObjects.Count)
-                return;
+            // First we check if an unused ray object already exists.
+            if (nextIndex < rayObjects.Count) return;
 
+            // Else we add a new object to the pool.
             rayObjects.Add(Object.Instantiate(rayPrefab, parent));
         }
-
+    
         public RayObject GetRayObject(int index)
         {
             rayObjects[index].gameObject.SetActive(true);

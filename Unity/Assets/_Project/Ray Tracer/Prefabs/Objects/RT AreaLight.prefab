@@ -241,6 +241,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   color: {r: 1, g: 1, b: 1, a: 1}
+  intensity: 10
   ambient: 0
   diffuse: 1
   specular: 1
@@ -249,7 +250,7 @@ MonoBehaviour:
   outline: {fileID: 5935705926004890677}
   canvas: {fileID: 551413664047874153}
   lightSamples: 4
-  pointLightPrefab: {fileID: 8750512382897571081, guid: 5d98d613692e89440adcaefe45055b31, type: 3}
+  spotLightPrefab: {fileID: 8750512382897571081, guid: 5d98d613692e89440adcaefe45055b31, type: 3}
 --- !u!222 &8661944374056115377
 CanvasRenderer:
   m_ObjectHideFlags: 0

@@ -3,6 +3,7 @@ using UnityEditor.Experimental.SceneManagement;
 #endif
 using UnityEngine;
 using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light;
+using System.Collections.Generic;
 
 namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
 {
@@ -32,12 +33,27 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
 
                 Color lightData = lights[0].color;
                 lightData.r = Mathf.Floor(subColor.r * 256) + subColor.g / 2;
-                lightData.g = subColor.b;
+                lightData.g = lightData.g % 1 + Mathf.Floor(subColor.b * 256);
                 foreach (Light light in lights)
                     light.color = lightData;
 
                 base.Color = value;
                 UpdateLabelColor();
+            }
+        }
+
+        public override float Intensity
+        {
+            get => intensity;
+            set
+            {
+                // Besides dividing by 2, also divide by 20, as the range is 0 - 20.
+                Color lightData = lights[0].color;
+                lightData.g = Mathf.Floor(lightData.g) + value / 40;
+                foreach (Light light in lights)
+                    light.color = lightData;
+
+                base.Intensity = value;
             }
         }
 
@@ -179,9 +195,9 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
         /// The square root of the numer of samples this light uses to estimate an area light.
         /// </summary>
         public override int LightSamples
-        { 
-            get { return lightSamples; } 
-            set 
+        {
+            get { return lightSamples; }
+            set
             {
                 if (value == lightSamples) return;
                 if (value >= 2 && value <= 10)
@@ -191,22 +207,22 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
         }
 
         [SerializeField]
-        private GameObject pointLightPrefab;
+        private GameObject spotLightPrefab;
 
-//        public override void ChangeLightType(RTLightType type)
-//        {
-//            if (Type == type) return;
+        //        public override void ChangeLightType(RTLightType type)
+        //        {
+        //            if (Type == type) return;
 
-//            foreach (Light light in GetComponentsInChildren<Light>())
-//#if UNITY_EDITOR
-//                DestroyImmediate(light.gameObject);
-//#else
-//                Destroy(light.gameObject);
-//#endif
-//            lights = null;
+        //            foreach (Light light in GetComponentsInChildren<Light>())
+        //#if UNITY_EDITOR
+        //                DestroyImmediate(light.gameObject);
+        //#else
+        //                Destroy(light.gameObject);
+        //#endif
+        //            lights = null;
 
-//            base.ChangeLightType(type);
-//        }
+        //            base.ChangeLightType(type);
+        //        }
 
         private void UpdateLabelColor()
         {
@@ -223,6 +239,40 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
                 label.color = Color.black;
             else
                 label.color = Color;
+        }
+
+        private void UpdateLights()
+        {
+            foreach (Light light in GetComponentsInChildren<Light>())
+#if UNITY_EDITOR
+                DestroyImmediate(light.gameObject);
+#else
+                Destroy(light.gameObject);
+#endif
+            lights = new Light[LightSamples * LightSamples];
+            float stepx = rectTransform.rect.width / (LightSamples - 1);
+            float stepy = rectTransform.rect.height / (LightSamples - 1);
+            float startx = -rectTransform.rect.width / 2;
+            float starty = -rectTransform.rect.height / 2;
+            float maxBias = 2 * (LightSamples - 1);
+
+            for (int i = 0; i < LightSamples; i++)
+            {
+                for (int j = 0; j < LightSamples; j++)
+                {
+                    Light light = Instantiate(spotLightPrefab, transform).GetComponent<Light>();
+                    light.transform.localPosition = new Vector3(startx + i * stepx, starty + j * stepy, 0f);
+                    light.shadowBias = (i + j) / maxBias * 0.035f + 0.005f;
+                    lights[i * LightSamples + j] = light;
+                }
+            }
+
+            // 'Call' these funtions to set the all the lights correctly. Invokes Change as well.
+            Color = Color;
+            Intensity = Intensity;
+            Ambient = Ambient;
+            Diffuse = Diffuse;
+            Specular = Specular;
         }
 
         private void Start()
@@ -245,41 +295,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
                 return;                                                  // Don't add lights to the prefab
 #endif
             else
-            {
-                foreach (Light light in GetComponentsInChildren<Light>())
-#if UNITY_EDITOR
-                    DestroyImmediate(light.gameObject);
-#else
-                Destroy(light.gameObject);
-#endif
-                lights = new Light[LightSamples * LightSamples];
-                float stepx = rectTransform.rect.width / (LightSamples - 1);
-                float stepy = rectTransform.rect.height / (LightSamples - 1);
-                Vector3 start = new Vector3(0f, 0f, 0f);
-                start.x -= rectTransform.rect.width / 2;
-                start.y -= rectTransform.rect.height / 2;
-                float maxBias = 2 * (LightSamples - 1);
-
-                for (int i = 0; i < LightSamples; i++)
-                {
-                    for (int j = 0; j < LightSamples; j++)
-                    {
-                        Light light = Instantiate(pointLightPrefab, transform).GetComponent<Light>();
-                        Vector3 pos = start;
-                        pos.x += i * stepx;
-                        pos.y += j * stepy;
-                        light.transform.localPosition = pos;
-                        light.shadowBias = (i + j) / maxBias * 0.035f + 0.005f;
-                        lights[i * LightSamples + j] = light;
-                    }
-                }
-
-                // 'Call' these funtions to set the all the lights correctly. Invokes Change as well.
-                Color = Color;
-                Ambient = Ambient;
-                Diffuse = Diffuse;
-                Specular = Specular;
-            }
+                UpdateLights();
         }
                 
     }

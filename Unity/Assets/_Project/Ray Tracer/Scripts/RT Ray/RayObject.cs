@@ -14,14 +14,8 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
         /// </summary>
         public RTRay Ray
         {
-            get { return ray; }
-            set
-            {
-                //if (value.Equals(ray)) return;
-                ray = value;
-
-                Reset();
-            }
+            get => ray;
+            set { ray = value; Reset(); }
         }
 
         /// <summary>
@@ -70,15 +64,9 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
             ReloadMaterial();
         }
 
-        private bool reloadMaterail = false;
-
         public void ReloadMaterial()
         {
-            reloadMaterail = true;
-            if (!isActiveAndEnabled) return;
-
             rayRenderer.Material = rayManager.GetRayMaterial(Ray.Contribution, Ray.Type, Ray.Color);
-            reloadMaterail = false;
         }
 
         private void DetermineDrawLength()
@@ -99,8 +87,6 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
         private void OnEnable()
         {
             rayManager = RayManager.Get();
-            if (reloadMaterail)
-                ReloadMaterial();
         }
     }
 }

@@ -25,6 +25,8 @@ namespace _Project.UI.Scripts.Control_Panel
         [SerializeField]
         private ColorEdit colorEdit;
         [SerializeField]
+        private FloatEdit intensityEdit;
+        [SerializeField]
         private FloatEdit ambientEdit;
         [SerializeField]
         private FloatEdit diffuseEdit;
@@ -55,6 +57,7 @@ namespace _Project.UI.Scripts.Control_Panel
 
             typeDropdown.value = typeDropdown.options.FindIndex(option => option.text == light.Type.ToString());
             colorEdit.Color = light.Color;
+            intensityEdit.Value = light.Intensity;
             ambientEdit.Value = light.Ambient;
             diffuseEdit.Value = light.Diffuse;
             specularEdit.Value = light.Specular;
@@ -84,6 +87,7 @@ namespace _Project.UI.Scripts.Control_Panel
             scaleEdit.OnValueChanged += value => { light.Scale = value; };
             
             colorEdit.OnValueChanged += value => { light.Color = value; };
+            intensityEdit.OnValueChanged += value => { light.Intensity = value; };
             ambientEdit.OnValueChanged += (value) => { light.Ambient = value; };
             diffuseEdit.OnValueChanged += (value) => { light.Diffuse = value; };
             specularEdit.OnValueChanged += (value) => { light.Specular = value; };

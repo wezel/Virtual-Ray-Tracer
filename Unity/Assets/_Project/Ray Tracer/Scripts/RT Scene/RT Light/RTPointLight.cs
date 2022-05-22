@@ -23,13 +23,26 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Point_Light
         {
             get => color;
             set
-            {                
+            {
                 Color lightData = light.color;
                 lightData.r = Mathf.Floor(value.r * 256) + value.g / 2;
-                lightData.g = value.b;
+                lightData.g = lightData.g % 1 + Mathf.Floor(value.b * 256);
                 light.color = lightData;
-                
+
                 base.Color = value;
+            }
+        }
+
+        public override float Intensity
+        {
+            get => intensity;
+            set
+            {
+                // Besides dividing by 2, also divide by 20, as the range is 0 - 20.
+                Color lightData = light.color;
+                lightData.g = Mathf.Floor(lightData.g) + value / 40;
+                light.color = lightData;
+                base.Intensity = value;
             }
         }
 

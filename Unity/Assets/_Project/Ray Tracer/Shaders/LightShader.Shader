@@ -52,15 +52,29 @@ Shader "Custom/LightShader"
                 SHADOW_COORDS(1) // The 1 indicates we use TEXCOORD1 for this field.
             };
 
+            // This function decodes 2 floats to a vector of 4.
+            // The encoded floats can only have range(0,1).
+            // The formula for f1 = ( x * 256 + y / 2 ) the division by 2 is to make sure both values don't interfere with eachother.
+            // The formula for f2 = ( z * 256 + w / 2 ) the division by 2 is to make sure both values don't interfere with eachother.
+            float4 unpackData4(float f1, float f2)
+            {
+                float4 output;
+                output.x = floor(f1) / 256;
+                output.y = fmod(f1,1) * 2;
+                output.z = floor(f2) / 256;
+                output.w = fmod(f2, 1) * 2;
+                return output;
+            }
+
             // This function decodes 2 floats to a vector of 3.
-            // The encoded floats can only have range(1,0).
-            // The formula for f1 = ( x * 256 + y / 2 ) the devision by 2 is to make sure both values don't interfere with eachother.
+            // The encoded floats can only have range(0,1).
+            // The formula for f1 = ( x * 256 + y / 2 ) the division by 2 is to make sure both values don't interfere with eachother.
             // f2 is just z.
-            float3 unpackData(float f1, float f2)
+            float3 unpackData3(float f1, float f2)
             {
                 float3 output;
                 output.x = floor(f1) / 256;
-                output.y = fmod(f1,1) * 2;
+                output.y = fmod(f1, 1) * 2;
                 output.z = f2;
                 return output;
             }
@@ -88,8 +102,8 @@ Shader "Custom/LightShader"
             // The fragment shader.
             float4 frag(vertexOutput input, fixed facing : VFACE) : COLOR
             {
-                // For now we do the lighting calculation under the assumption that all lights are point light sources.
-                // We also ignore light attenuation. Such things should be added if they are added to the ray tracer.
+                // For now we do the lighting calculation under the assumption that all lights are point or spot light sources.
+                /**/// We also ignore light attenuation. Such things should be added if they are added to the ray tracer.
   
                 float3 normal = normalize(input.normal);
                 if(facing < 0) normal = -normal;
@@ -99,26 +113,28 @@ Shader "Custom/LightShader"
                 
                 float diffuseStrength = max(0.0, dot(light, normal));
 
-                 // return black if the angle is more than 90 degrees between the normal and the light vector.
+                 // return black if the angle is >= 90 degrees between the normal and the light vector.
                 if(diffuseStrength <= 0.0) return float4(0,0,0,0);
 
                 float specularStrength = pow(max(0.0, dot(reflect(-light, normal), view)), _Shininess);
                 
-                // We use the _lightColor0 to transfer the lightColor and the ambient, diffuse and specular light component.
-                // lightColor is encoded in .r and .g
+                // We use the _LightColor0 to transfer the lightColor, intensity, ambient, diffuse and specular components.
+                // lightColor and intensity are encoded in .r and .g
                 // ambDifSpec is encoded in .b and .a
-                // See the unpackData function for more info.
-                float3 lightColor = unpackData(_LightColor0.r,_LightColor0.g);
-                float3 ambDifSpec = unpackData(_LightColor0.b,_LightColor0.a);
+                // See the unpackData functions for more info.
+                float4 lightInfo  = unpackData4(_LightColor0.r, _LightColor0.g);
+                float3 lightColor = lightInfo.xyz;
+                float  intensity  = lightInfo.w * 20; // Intensity range is set to 0 - 20 but packed as 0 - 1.
+                float3 ambDifSpec = unpackData3(_LightColor0.b, _LightColor0.a);
 
-                float3 ambientColor =                                 ambDifSpec.x * lightColor * _Color.rgb;
-                float3 diffuseColor =  diffuseStrength  * _Diffuse  * ambDifSpec.y * lightColor * _Color.rgb;
+                float3 ambientColor  =                                ambDifSpec.x * lightColor * _Color.rgb;
+                float3 diffuseColor  = diffuseStrength  * _Diffuse  * ambDifSpec.y * lightColor * _Color.rgb;
                 float3 specularColor = specularStrength * _Specular * ambDifSpec.z * lightColor * _Color.rgb;
 
-                float3 result = ambientColor + diffuseColor + specularColor;
+                float3 result = diffuseColor + specularColor; // Add ambient at the end, as it's immune to attenuation
                 float attenuation = SHADOW_ATTENUATION(input); // Will be 1.0 for no shadow and 0.0 for full shadow.
 
-                #ifdef SPOT // Attenuate arealighting (currently made of spotlights)
+#ifdef SPOT     // Attenuate arealighting (currently made of spotlights)
                 float3 lightDirection = normalize(mul(float3(0, 0, -1), (float3x3)unity_WorldToLight));
                 float angle = dot(lightDirection, light);
                 if (angle <= 0.0)
@@ -127,9 +143,13 @@ Shader "Custom/LightShader"
                     result *= angle * angle * 10;
                 else
                     result *= angle;
-                #endif
+#endif
 
-                return float4(result * attenuation, 0);
+                // Light distance attenuation
+                float distance = length(vertexToLightSource);
+                result /= 0.4 + 1 * distance + 0.6 * (distance * distance);
+
+                return float4((ambientColor + result * attenuation) * intensity, 0);
             }
             ENDCG
         }

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3492925199536322426}
   - component: {fileID: 4149384614838445201}
   m_Layer: 8
-  m_Name: AreaPointLight
+  m_Name: AreaSpotLight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

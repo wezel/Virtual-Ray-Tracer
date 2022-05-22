@@ -498,7 +498,10 @@ namespace _Project.Ray_Tracer.Scripts
             color += Mathf.Pow(Mathf.Max(Vector3.Dot(reflectionVector, hitInfo.View), 0.0f), hitInfo.Shininess) *
                      hitInfo.Specular * light.Specular * light.Color; // Is
 
-            return new RTRay(hitInfo.Point, lightVector, lightDistance, ClampColor(color), RTRay.RayType.PointLight);
+            //Light distance attenuation
+            color /= 0.4f + 1f * lightDistance + 0.6f * (lightDistance * lightDistance);
+
+            return new RTRay(hitInfo.Point, lightVector, lightDistance, ClampColor(color * light.Intensity), RTRay.RayType.PointLight);
         }
 
         private List<TreeNode<RTRay>> TraceReflectionAndRefraction(int depth, in HitInfo hitInfo)
@@ -613,7 +616,7 @@ namespace _Project.Ray_Tracer.Scripts
                 {
                     percentage = 100 * y / height;
                     renderedImageWindow.UpdateProgressBar(percentage);
-                    yield return new WaitForFixedUpdate(); // yield to update UI
+                    yield return null; // yield to update UI and give the ability to cancel
                 }
             }
             Debug.Log(Time.realtimeSinceStartup - start);
@@ -642,7 +645,7 @@ namespace _Project.Ray_Tracer.Scripts
                 Vector3 lightVector = (light.transform.position - hit.point).normalized;
 
                 if (Vector3.Dot(hitInfo.Normal, lightVector) >= 0.0f)
-                    color += TraceLightImage(ref lightVector, light, in hitInfo);
+                    color += TraceLightImage(ref lightVector, light.Position, light, in hitInfo);
             }
 
             foreach (RTAreaLight arealight in scene.AreaLights)
@@ -666,13 +669,12 @@ namespace _Project.Ray_Tracer.Scripts
                 if (!fullyVisible)
                 {
                     int samples = arealight.LightSamples * arealight.LightSamples;
-                    foreach (Vector3 p in arealight.SampleLight())
+                    foreach (Vector3 point in arealight.SampleLight())
                     {
-                        Vector3 point = p;
                         Vector3 lightVector = (point - hit.point).normalized;
 
                         if (Vector3.Dot(hitInfo.Normal, lightVector) >= 0.0f)
-                            color += TraceAreaLightImage(ref lightVector, ref point, arealight, in hitInfo) / samples;
+                            color += TraceLightImage(ref lightVector, point, arealight, in hitInfo) / samples;
                     }
                 }
                 else
@@ -681,7 +683,7 @@ namespace _Project.Ray_Tracer.Scripts
                     Vector3 lightVector = (point - hit.point).normalized;
 
                     if (Vector3.Dot(hitInfo.Normal, lightVector) >= 0.0f)
-                        color += TraceAreaLightImage(ref lightVector, ref point, arealight, in hitInfo);
+                        color += TraceLightImage(ref lightVector, point, arealight, in hitInfo);
                 }
             }
 
@@ -692,35 +694,7 @@ namespace _Project.Ray_Tracer.Scripts
             return ClampColor(color);
         }
 
-        private Color TraceLightImage(ref Vector3 lightVector, RTPointLight light, in HitInfo hitInfo)
-        {
-            // Determine the distance to the light source. Note the clever use of the dot product.
-            float lightDistance = Vector3.Dot(lightVector, light.transform.position - hitInfo.Point);
-
-            // If we render shadows, check whether a shadow ray first meets the light or an object.
-            if (RenderShadows)
-            {
-                Vector3 shadowOrigin = hitInfo.Point + Epsilon * hitInfo.Normal;
-                
-                // Trace a ray until we reach the light source. If we hit something return a shadow ray.
-                if (Physics.Raycast(shadowOrigin, lightVector, out _, lightDistance, rayTracerLayer))
-                    return Color.black;
-            }
-
-            // We either don't render shadows or nothing is between the object and the light source.
-            
-            // Calculate the color influence of this light.
-            Vector3 reflectionVector = Vector3.Reflect(-lightVector, hitInfo.Normal);
-            Color color = light.Ambient * light.Color * hitInfo.Color;
-            color += Vector3.Dot(hitInfo.Normal, lightVector) * hitInfo.Diffuse * light.Diffuse *
-                          light.Color * hitInfo.Color; // Id
-            color += Mathf.Pow(Mathf.Max(Vector3.Dot(reflectionVector, hitInfo.View), 0.0f), hitInfo.Shininess) *
-                     hitInfo.Specular * light.Specular * light.Color; // Is
-
-            return ClampColor(color);
-        }
-
-        private Color TraceAreaLightImage(ref Vector3 lightVector, ref Vector3 point, RTAreaLight light, in HitInfo hitInfo)
+        private Color TraceLightImage(ref Vector3 lightVector, Vector3 point, RTLight light, in HitInfo hitInfo)
         {
             // Determine the distance to the light source. Note the clever use of the dot product.
             float lightDistance = Vector3.Dot(lightVector, point - hitInfo.Point);
@@ -745,7 +719,10 @@ namespace _Project.Ray_Tracer.Scripts
             color += Mathf.Pow(Mathf.Max(Vector3.Dot(reflectionVector, hitInfo.View), 0.0f), hitInfo.Shininess) *
                      hitInfo.Specular * light.Specular * light.Color; // Is
 
-            return ClampColor(color);
+            //Light distance attenuation
+            color /= 0.4f + 1f * lightDistance + 0.6f * (lightDistance * lightDistance);
+
+            return ClampColor(color) * light.Intensity;
         }
 
         private Color TraceReflectionAndRefractionImage(int depth, in HitInfo hitInfo)
