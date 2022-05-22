@@ -120,6 +120,8 @@ MonoBehaviour:
   specularEdit: {fileID: 4281986173060545608}
   lightSamplesEdit: {fileID: 7638855484293330058}
   typeDropdown: {fileID: 1294635326092428875}
+  pointLightPrefab: {fileID: 2869057598925096032, guid: aa7cec59df0025d4896ac99db41e4250, type: 3}
+  areaLightPrefab: {fileID: 8100249073368088931, guid: e9cde42be2a35d446aacd69fa4de0cb0, type: 3}
 --- !u!1001 &688692428172376578
 PrefabInstance:
   m_ObjectHideFlags: 0

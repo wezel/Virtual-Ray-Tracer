@@ -409,44 +409,32 @@ namespace _Project.Ray_Tracer.Scripts
 
             foreach (RTAreaLight arealight in scene.AreaLights)
             {
-                bool fullyVisible = true;
-                foreach (Vector3 edgePoint in arealight.GetEdgePoints(16))
+                // Check if point is in front of arealight
+                Vector3 lightVector = (arealight.Position - hit.point).normalized;
+                float angle = Vector3.Dot(arealight.transform.forward, -lightVector);
+                if (angle < 0.0f) continue;
+
+                int samples = arealight.LightSamples * arealight.LightSamples;
+                foreach (Vector3 point in arealight.SampleLight())
                 {
-                    Vector3 lightVector = (edgePoint - hit.point).normalized;
+                    lightVector = (point - hit.point).normalized;
+
                     if (Vector3.Dot(hitInfo.Normal, lightVector) >= 0.0f)
                     {
-                        Vector3 shadowOrigin = hitInfo.Point + Epsilon * hitInfo.Normal;
-                        float lightDistance = Vector3.Dot(lightVector, edgePoint - hitInfo.Point);
-                        if (Physics.Raycast(shadowOrigin, lightVector, out _, lightDistance, rayTracerLayer))
-                        {
-                            fullyVisible = false;
-                            break;
-                        }
+                        RTRay child = TraceLight(ref lightVector, point, arealight, in hitInfo);
+                        child.Color /= samples;
+
+                        // Spot light attenuation. Angle is always positive; position has been checked at start.
+                        angle = Vector3.Dot(arealight.transform.forward, -lightVector);
+                        if (angle < 0.04f)
+                            child.Color *= angle * angle * 10;
+                        else
+                            child.Color *= angle;
+
+                        rayTree.AddChild(child);
                     }
                 }
 
-                if (!fullyVisible)
-                {
-                    int samples = arealight.LightSamples * arealight.LightSamples;
-                    foreach (Vector3 point in arealight.SampleLight())
-                    {
-                        Vector3 lightVector = (point - hit.point).normalized;
-
-                        if (Vector3.Dot(hitInfo.Normal, lightVector) >= 0.0f)
-                        {
-                            RTRay child = TraceLight(ref lightVector, point, arealight, in hitInfo);
-                            child.Color /= samples;
-                            rayTree.AddChild(child);
-                        }
-                    }
-                }
-                else
-                {
-                    Vector3 lightVector = (arealight.transform.position - hit.point).normalized;
-
-                    if (Vector3.Dot(hitInfo.Normal, lightVector) >= 0.0f)
-                        rayTree.AddChild(TraceLight(ref lightVector, arealight.transform.position, arealight, in hitInfo));
-                }
             }
 
             // Cast reflection and refraction rays.
@@ -650,40 +638,29 @@ namespace _Project.Ray_Tracer.Scripts
 
             foreach (RTAreaLight arealight in scene.AreaLights)
             {
-                bool fullyVisible = true;
-                foreach (Vector3 edgePoint in arealight.GetEdgePoints(16))
-                {
-                    Vector3 lightVector = (edgePoint - hit.point).normalized;
-                    if (Vector3.Dot(hitInfo.Normal, lightVector) >= 0.0f)
-                    {
-                        Vector3 shadowOrigin = hitInfo.Point + Epsilon * hitInfo.Normal;
-                        float lightDistance = Vector3.Dot(lightVector, edgePoint - hitInfo.Point);
-                        if (Physics.Raycast(shadowOrigin, lightVector, out _, lightDistance, rayTracerLayer))
-                        {
-                            fullyVisible = false;
-                            break;
-                        }
-                    }
-                }
+                // Check if point is in front of arealight
+                Vector3 lightVector = (arealight.Position - hit.point).normalized;
+                float angle = Vector3.Dot(arealight.transform.forward, -lightVector);
+                if (angle < 0.0f) continue; // Hit is behind the arealight; so skip this arealight.
 
-                if (!fullyVisible)
+                int samples = arealight.LightSamples * arealight.LightSamples;
+                foreach (Vector3 point in arealight.SampleLight())
                 {
-                    int samples = arealight.LightSamples * arealight.LightSamples;
-                    foreach (Vector3 point in arealight.SampleLight())
-                    {
-                        Vector3 lightVector = (point - hit.point).normalized;
-
-                        if (Vector3.Dot(hitInfo.Normal, lightVector) >= 0.0f)
-                            color += TraceLightImage(ref lightVector, point, arealight, in hitInfo) / samples;
-                    }
-                }
-                else
-                {
-                    Vector3 point = arealight.Position;
-                    Vector3 lightVector = (point - hit.point).normalized;
+                    lightVector = (point - hit.point).normalized;
 
                     if (Vector3.Dot(hitInfo.Normal, lightVector) >= 0.0f)
-                        color += TraceLightImage(ref lightVector, point, arealight, in hitInfo);
+                    {
+                        Color sampleColor = TraceLightImage(ref lightVector, point, arealight, in hitInfo) / samples;
+
+                        // Spot light attenuation. Angle is always positive; position has been checked at start.
+                        angle = Vector3.Dot(arealight.transform.forward, -lightVector);
+                        if (angle < 0.04f)
+                            sampleColor *= angle * angle * 10;
+                        else
+                            sampleColor *= angle;
+
+                        color += sampleColor;
+                    }
                 }
             }
 

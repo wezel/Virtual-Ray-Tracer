@@ -156,6 +156,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
                 return;
 
             light.OnLightChanged -= SceneObjectChanged;
+
             OnSceneChanged?.Invoke();
         }
 

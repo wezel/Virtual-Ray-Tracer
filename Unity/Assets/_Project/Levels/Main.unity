@@ -288,6 +288,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxDepth: 3
   hideNoHitRays: 0
+  rayHideThreshold: 0.02
   animate: 0
   loop: 0
   sequentialAnimate: 0
@@ -1462,6 +1463,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxDepth: 4
   hideNoHitRays: 1
+  rayHideThreshold: 0.02
   animate: 1
   loop: 1
   sequentialAnimate: 1
@@ -2622,6 +2624,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxDepth: 3
   hideNoHitRays: 1
+  rayHideThreshold: 0.02
   animate: 1
   loop: 1
   sequentialAnimate: 0
@@ -2777,8 +2780,8 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 2869057598925096033, guid: aa7cec59df0025d4896ac99db41e4250, type: 3}
-      propertyPath: m_Range
-      value: 100
+      propertyPath: m_Color.g
+      value: 256.25
       objectReference: {fileID: 0}
     - target: {fileID: 2869057598925096034, guid: aa7cec59df0025d4896ac99db41e4250, type: 3}
       propertyPath: m_Name
@@ -2838,19 +2841,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3379506522100200911, guid: aa7cec59df0025d4896ac99db41e4250, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.99358904
+      value: 0.8639842
       objectReference: {fileID: 0}
     - target: {fileID: 3379506522100200911, guid: aa7cec59df0025d4896ac99db41e4250, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.11256354
+      value: 0.09917085
       objectReference: {fileID: 0}
     - target: {fileID: 3379506522100200911, guid: aa7cec59df0025d4896ac99db41e4250, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.010434012
+      value: 0.4904359
       objectReference: {fileID: 0}
     - target: {fileID: 3379506522100200911, guid: aa7cec59df0025d4896ac99db41e4250, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.0011820674
+      value: -0.056293786
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aa7cec59df0025d4896ac99db41e4250, type: 3}

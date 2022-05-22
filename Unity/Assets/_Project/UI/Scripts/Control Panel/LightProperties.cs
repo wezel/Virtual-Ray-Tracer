@@ -4,6 +4,8 @@ using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using _Project.Ray_Tracer.Scripts;
+using _Project.Ray_Tracer.Scripts.RT_Scene;
 
 namespace _Project.UI.Scripts.Control_Panel
 {
@@ -37,6 +39,9 @@ namespace _Project.UI.Scripts.Control_Panel
 
         [SerializeField]
         private TMP_Dropdown typeDropdown;
+
+        [SerializeField] private RTPointLight pointLightPrefab;
+        [SerializeField] private RTAreaLight areaLightPrefab;
 
         /// <summary>
         /// Show the light properties for <paramref name="light"/>. These properties can be changed via the shown UI.
@@ -74,9 +79,49 @@ namespace _Project.UI.Scripts.Control_Panel
 
         private void ChangeObjectType(RTLight.RTLightType type)
         {
+            if (type == light.Type) return;
+
             rotationEdit.gameObject.SetActive(type == RTLight.RTLightType.Area);
             scaleEdit.gameObject.SetActive(type == RTLight.RTLightType.Area);
-            //light.ChangeLightType(type);
+            lightSamplesEdit.gameObject.SetActive(type == RTLight.RTLightType.Area);
+
+            Vector3 position = light.Position;
+            Vector3 rotation = light.Rotation;
+            Vector3 scale = light.Scale;
+            Color color = light.Color;
+            float intensity = light.Intensity;
+            float ambient = light.Ambient;
+            float diffuse = light.Diffuse;
+            float specular = light.Specular;
+            int lightSamples = light.LightSamples;
+
+            RTSceneManager manager = RTSceneManager.Get();
+            manager.DeleteSelected();
+
+#if UNITY_EDITOR
+            DestroyImmediate(light.gameObject);
+#else
+            Destroy(light.gameObject);
+#endif
+
+            if (type == RTLight.RTLightType.Point)
+                light = Instantiate(pointLightPrefab);
+            else // type == RTLight.RTLightType.Area
+                light = Instantiate(areaLightPrefab);
+
+            light.gameObject.SetActive(true);
+            light.Position = position;
+            light.Rotation = rotation;  
+            light.Scale = scale;
+            light.Color = color;
+            light.Intensity = intensity;
+            light.Ambient = ambient;
+            light.Diffuse = diffuse;
+            light.Specular = specular;
+            light.LightSamples = lightSamples;
+
+            manager.Scene.AddLight(light);
+            manager.Select(light.transform);
             Show(light);
         }
 

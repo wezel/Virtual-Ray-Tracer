@@ -110,7 +110,14 @@ Shader "Custom/LightShader"
                 float3 view = normalize(_WorldSpaceCameraPos - input.worldPosition.xyz);
                 float3 vertexToLightSource = _WorldSpaceLightPos0.xyz - input.worldPosition.xyz;
                 float3 light = normalize(vertexToLightSource);
+#ifdef SPOT
+                float3 lightDirection = normalize(mul(float3(0, 0, -1), (float3x3)unity_WorldToLight));
+                float angle = dot(lightDirection, light);
                 
+                // return black if the point is behind the spot light.
+                if (angle <= 0.0) return float4(0, 0, 0, 0);
+#endif
+
                 float diffuseStrength = max(0.0, dot(light, normal));
 
                  // return black if the angle is >= 90 degrees between the normal and the light vector.
@@ -135,11 +142,7 @@ Shader "Custom/LightShader"
                 float attenuation = SHADOW_ATTENUATION(input); // Will be 1.0 for no shadow and 0.0 for full shadow.
 
 #ifdef SPOT     // Attenuate arealighting (currently made of spotlights)
-                float3 lightDirection = normalize(mul(float3(0, 0, -1), (float3x3)unity_WorldToLight));
-                float angle = dot(lightDirection, light);
-                if (angle <= 0.0)
-                    result *= 0;
-                else if (angle < 0.04)
+                if (angle < 0.04)   // Quick attenuation at the edges.
                     result *= angle * angle * 10;
                 else
                     result *= angle;
@@ -149,7 +152,7 @@ Shader "Custom/LightShader"
                 float distance = length(vertexToLightSource);
                 result /= 0.4 + 1 * distance + 0.6 * (distance * distance);
 
-                return float4((ambientColor + result * attenuation) * intensity, 0);
+                return float4(ambientColor + result * attenuation * intensity, 0);
             }
             ENDCG
         }

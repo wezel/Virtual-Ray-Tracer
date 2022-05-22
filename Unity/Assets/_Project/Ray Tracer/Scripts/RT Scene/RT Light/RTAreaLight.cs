@@ -118,7 +118,8 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
             }
         }
 
-        private RectTransform rectTransform { get => GetComponent<RectTransform>(); }
+        private RectTransform rectTransform;
+        private RectTransform RectTransform { get => GetComponent<RectTransform>(); }
 
         private readonly System.Random rnd = new System.Random();
 
@@ -131,7 +132,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
         {
             Vector3[] points = new Vector3[LightSamples * LightSamples];
             Vector3[] corners = new Vector3[4];
-            rectTransform.GetWorldCorners(corners);  // clockwise corners
+            RectTransform.GetWorldCorners(corners);  // clockwise corners
 
             Vector3 step_1 = (corners[1] - corners[0]) / LightSamples; // corner 0 to corner 1
             Vector3 step_2 = (corners[3] - corners[0]) / LightSamples; // corner 0 to corner 3
@@ -172,7 +173,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
         {
             int idx = 4;
             Vector3[] edgePoints = new Vector3[4 * (pointsBetweenCorners + 1)];
-            rectTransform.GetWorldCorners(edgePoints); // Corners clockwise
+            RectTransform.GetWorldCorners(edgePoints); // Corners clockwise
 
             foreach (Vector3 point in GetPointsBetween(pointsBetweenCorners, edgePoints[0], edgePoints[1]))
                 edgePoints[idx++] = point;
@@ -189,7 +190,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
 
         [SerializeField]
         [Range(2, 10)]
-        private int lightSamples;
+        private int lightSamples = 2;
 
         /// <summary>
         /// The square root of the numer of samples this light uses to estimate an area light.
@@ -250,10 +251,10 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
                 Destroy(light.gameObject);
 #endif
             lights = new Light[LightSamples * LightSamples];
-            float stepx = rectTransform.rect.width / (LightSamples - 1);
-            float stepy = rectTransform.rect.height / (LightSamples - 1);
-            float startx = -rectTransform.rect.width / 2;
-            float starty = -rectTransform.rect.height / 2;
+            float stepx = RectTransform.rect.width / (LightSamples - 1);
+            float stepy = RectTransform.rect.height / (LightSamples - 1);
+            float startx = -RectTransform.rect.width / 2;
+            float starty = -RectTransform.rect.height / 2;
             float maxBias = 2 * (LightSamples - 1);
 
             for (int i = 0; i < LightSamples; i++)
@@ -275,9 +276,12 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
             Specular = Specular;
         }
 
-        private void Start()
+        protected override void Awake()
         {
             Type = RTLightType.Area;
+            rectTransform = GetComponent<RectTransform>();
+            UpdateLights();
+            base.Awake();
         }
 
         private new void Update()
