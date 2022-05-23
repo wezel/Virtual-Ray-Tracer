@@ -202,6 +202,7 @@ namespace _Project.Ray_Tracer.Scripts
             }
         }
 
+        [SerializeField]
         private bool showRays = true;
 
         /// <summary>
@@ -542,6 +543,7 @@ namespace _Project.Ray_Tracer.Scripts
 
             rtSceneManager.Scene.OnSceneChanged += () => { UpdateRays(); };
             rayTracer.OnRayTracerChanged += () => { UpdateRays(); };
+            UpdateRays();   // This is needed for level-changes.
         }
 
         private bool redraw = true;

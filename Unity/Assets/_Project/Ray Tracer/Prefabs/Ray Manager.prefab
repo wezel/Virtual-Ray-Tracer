@@ -43,9 +43,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9cd2915fe113a26f2b04552e68a06761, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rayHideThreshold: 0.02
+  hideNegligibleRays: 0
   rayTransparencyEnabled: 1
-  rayTransThreshold: 1
   rayDynamicRadiusEnabled: 1
   rayColorContributionEnabled: 1
   rayRadius: 0.01
@@ -53,9 +52,7 @@ MonoBehaviour:
   rayMaxRadius: 0.025
   infiniteRayDrawLength: 10
   rayPrefab: {fileID: 3475852730852656632, guid: c002e298918eb804994048849f871225, type: 3}
-  HideNoHitRays: 0
-  ShowRays: 1
-  HideNegligibleRays: 0
+  showRays: 1
   noHitMaterial: {fileID: 2100000, guid: a98bb9836e3faab40afd0672bb18dc32, type: 2}
   reflectMaterial: {fileID: 2100000, guid: 3d44750ec9ccdc547af676ae26be4ef1, type: 2}
   reflectMaterialTransparent: {fileID: 2100000, guid: 280810bf45eb4a44096d286eeda64900, type: 2}

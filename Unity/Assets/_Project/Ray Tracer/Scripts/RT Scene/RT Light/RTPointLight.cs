@@ -38,9 +38,9 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Point_Light
             get => intensity;
             set
             {
-                // Besides dividing by 2, also divide by 20, as the range is 0 - 20.
+                // Besides dividing by 2, also divide by 30, as the range is 0 - 30.
                 Color lightData = light.color;
-                lightData.g = Mathf.Floor(lightData.g) + value / 40;
+                lightData.g = Mathf.Floor(lightData.g) + value / 30;
                 light.color = lightData;
                 base.Intensity = value;
             }

@@ -29,7 +29,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
             }
         }
 
-        [SerializeField, Range(0.0f, 20.0f)]
+        [SerializeField, Range(0.0f, 30.0f)]
         protected float intensity;
         public virtual float Intensity
         {

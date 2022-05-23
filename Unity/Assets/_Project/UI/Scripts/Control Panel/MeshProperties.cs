@@ -71,6 +71,7 @@ namespace _Project.UI.Scripts.Control_Panel
 
         private void ChangeObjectType(RTMesh.ObjectType type)
         {
+            if (type == mesh.Type) return;
             refractiveIndexEdit.gameObject.SetActive(type == RTMesh.ObjectType.Transparent);
             mesh.ChangeObjectType(type);
             Show(mesh);

@@ -35,6 +35,9 @@ namespace _Project.UI.Scripts.Animation_Tools
         private float maxAngle;
         [SerializeField]
         private float minAngle;
+        [SerializeField]
+        private int rayTypeChange;
+        private int rayTypesEnabled = 0;
 
         private float distance = 0.0f;
         
@@ -50,7 +53,7 @@ namespace _Project.UI.Scripts.Animation_Tools
             maxAngle = angle + maxAngle;
             objects[0].gameObject.SetActive(true);
             currentObject = objects.Count - 1;
-            
+
             // Store the distance to the target and camera rotation.
             distance = Vector3.Distance(cameraTransform.position, target.position);
 
@@ -87,8 +90,17 @@ namespace _Project.UI.Scripts.Animation_Tools
             scene.RemoveMesh(objects[currentObject]);
             currentObject++;
             if (currentObject == objects.Count) currentObject = 0;
-            scene.AddMesh(objects[currentObject]);
             objects[currentObject].gameObject.SetActive(true);
+            scene.AddMesh(objects[currentObject]);
+        }
+
+        private void ChangeRayType()
+        {
+            rayTypesEnabled = (rayTypesEnabled + 1) % 8;
+            RayManager rayManager = RayManager.Get();
+            rayManager.RayTransparencyEnabled = (1 << 0 & rayTypesEnabled) != 0;
+            rayManager.RayDynamicRadiusEnabled = (1 << 1 & rayTypesEnabled) != 0;
+            rayManager.RayColorContributionEnabled = (1 << 2 & rayTypesEnabled) != 0;
         }
     
         /// <summary>
@@ -97,6 +109,7 @@ namespace _Project.UI.Scripts.Animation_Tools
         private void FixedUpdate()
         {
             RotateCamera();
+            if ((rayTypeChange = (rayTypeChange + 1) % 100) == 0) ChangeRayType();
             if (!(angle >= maxAngle) && !(angle <= minAngle)) return;
         
             positive = !positive;

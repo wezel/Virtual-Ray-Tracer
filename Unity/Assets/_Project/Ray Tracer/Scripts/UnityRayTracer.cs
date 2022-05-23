@@ -424,13 +424,6 @@ namespace _Project.Ray_Tracer.Scripts
                         RTRay child = TraceLight(ref lightVector, point, arealight, in hitInfo);
                         child.Color /= samples;
 
-                        // Spot light attenuation. Angle is always positive; position has been checked at start.
-                        angle = Vector3.Dot(arealight.transform.forward, -lightVector);
-                        if (angle < 0.04f)
-                            child.Color *= angle * angle * 10;
-                        else
-                            child.Color *= angle;
-
                         rayTree.AddChild(child);
                     }
                 }
@@ -488,6 +481,16 @@ namespace _Project.Ray_Tracer.Scripts
 
             //Light distance attenuation
             color /= 0.4f + 1f * lightDistance + 0.6f * (lightDistance * lightDistance);
+
+            // Spotlight attenuation
+            if (light.Type == RTLight.RTLightType.Area)
+            {
+                // Angle is always positive; position has been checked at before funciton call.
+                float angle = Vector3.Dot(light.transform.forward, -lightVector);
+                color *= angle;
+                if (angle < 0.04f)
+                    color *= angle * 10; // Extra attenuation at edge to have the same as the Unity shader
+            }
 
             return new RTRay(hitInfo.Point, lightVector, lightDistance, ClampColor(color * light.Intensity), RTRay.RayType.PointLight);
         }
@@ -649,18 +652,7 @@ namespace _Project.Ray_Tracer.Scripts
                     lightVector = (point - hit.point).normalized;
 
                     if (Vector3.Dot(hitInfo.Normal, lightVector) >= 0.0f)
-                    {
-                        Color sampleColor = TraceLightImage(ref lightVector, point, arealight, in hitInfo) / samples;
-
-                        // Spot light attenuation. Angle is always positive; position has been checked at start.
-                        angle = Vector3.Dot(arealight.transform.forward, -lightVector);
-                        if (angle < 0.04f)
-                            sampleColor *= angle * angle * 10;
-                        else
-                            sampleColor *= angle;
-
-                        color += sampleColor;
-                    }
+                        color += TraceLightImage(ref lightVector, point, arealight, in hitInfo) / samples;
                 }
             }
 
@@ -696,8 +688,18 @@ namespace _Project.Ray_Tracer.Scripts
             color += Mathf.Pow(Mathf.Max(Vector3.Dot(reflectionVector, hitInfo.View), 0.0f), hitInfo.Shininess) *
                      hitInfo.Specular * light.Specular * light.Color; // Is
 
-            //Light distance attenuation
+            // Light distance attenuation
             color /= 0.4f + 1f * lightDistance + 0.6f * (lightDistance * lightDistance);
+
+            // Spotlight attenuation
+            if (light.Type == RTLight.RTLightType.Area)
+            {
+                // Angle is always positive; position has been checked at before funciton call.
+                float angle = Vector3.Dot(light.transform.forward, -lightVector);
+                color *= angle;
+                if (angle < 0.04f)
+                    color *= angle * 10; // Extra attenuation at edge to have the same as the Unity shader
+            }
 
             return ClampColor(color) * light.Intensity;
         }

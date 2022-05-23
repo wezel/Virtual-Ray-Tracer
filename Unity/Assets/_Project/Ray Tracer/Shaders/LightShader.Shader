@@ -131,7 +131,7 @@ Shader "Custom/LightShader"
                 // See the unpackData functions for more info.
                 float4 lightInfo  = unpackData4(_LightColor0.r, _LightColor0.g);
                 float3 lightColor = lightInfo.xyz;
-                float  intensity  = lightInfo.w * 20; // Intensity range is set to 0 - 20 but packed as 0 - 1.
+                float  intensity  = lightInfo.w * 30; // Intensity range is set to 0 - 30 but packed as 0 - 1.
                 float3 ambDifSpec = unpackData3(_LightColor0.b, _LightColor0.a);
 
                 float3 ambientColor  =                                ambDifSpec.x * lightColor * _Color.rgb;
