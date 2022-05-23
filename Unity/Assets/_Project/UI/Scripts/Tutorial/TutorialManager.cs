@@ -39,6 +39,9 @@ namespace _Project.UI.Scripts.Tutorial
         private Image previousImage;
 
         [SerializeField]
+        private GameObject Pointsbar, PointsImage;
+
+        [SerializeField]
         private Button expandCollapseButton;
         [SerializeField]
         private Image expandCollapseImage;
@@ -184,22 +187,15 @@ namespace _Project.UI.Scripts.Tutorial
         /// </summary>
         private void UpdateExpandCollapse()
         {
-            if (GlobalSettings.TutorialExpanded)
-            {
-                expandCollapseImage.sprite = expandedIcon;
-                GetComponent<LayoutElement>().preferredHeight = originalSize.y;
-                contents.GetComponent<RectTransform>().sizeDelta = new Vector2(originalSize.x, originalSize.y);
-                progressBar.gameObject.SetActive(true);
-                nextButton.gameObject.SetActive(true);
-            }
-            else
-            {
-                expandCollapseImage.sprite = collapsedIcon;
-                GetComponent<LayoutElement>().preferredHeight = 38;
-                contents.GetComponent<RectTransform>().sizeDelta = new Vector2(originalSize.x, 38);
-                progressBar.gameObject.SetActive(false);
-                nextButton.gameObject.SetActive(false);
-            }
+            bool expanded = GlobalSettings.TutorialExpanded;
+            expandCollapseImage.sprite = expanded ? expandedIcon : collapsedIcon;
+            GetComponent<LayoutElement>().preferredHeight = expanded ? originalSize.y : 38;
+            contents.GetComponent<RectTransform>().sizeDelta = new Vector2(originalSize.x, expanded ? originalSize.y : 38);
+            progressBar.gameObject.SetActive(expanded);
+            nextButton.gameObject.SetActive(expanded);
+            previousButton.gameObject.SetActive(expanded);
+            PointsImage.SetActive(expanded);
+            Pointsbar.SetActive(expanded);
         }
 
         /// <summary>
