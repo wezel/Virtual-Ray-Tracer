@@ -59,6 +59,7 @@ namespace _Project.Ray_Tracer.Scripts
 
         [Header("Objects")]
         [SerializeField] private bool deleteAllowed = false;
+        public bool DeleteAllowed { get => deleteAllowed; }
 
         private static RTSceneManager instance = null;
         private Selection selection = new Selection();

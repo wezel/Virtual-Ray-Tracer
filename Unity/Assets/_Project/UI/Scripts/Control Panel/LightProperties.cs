@@ -60,6 +60,11 @@ namespace _Project.UI.Scripts.Control_Panel
                 lightSamplesEdit.Value = Mathf.Pow(((RTAreaLight)light).LightSamples, 2);
             }
 
+            rotationEdit.gameObject.SetActive(light.Type == RTLight.RTLightType.Area);
+            scaleEdit.gameObject.SetActive(light.Type == RTLight.RTLightType.Area);
+            lightSamplesEdit.gameObject.SetActive(light.Type == RTLight.RTLightType.Area);
+            typeDropdown.gameObject.SetActive(RTSceneManager.Get().DeleteAllowed);
+
             typeDropdown.value = typeDropdown.options.FindIndex(option => option.text == light.Type.ToString());
             colorEdit.Color = light.Color;
             intensityEdit.Value = light.Intensity;
@@ -81,10 +86,6 @@ namespace _Project.UI.Scripts.Control_Panel
         {
             if (type == light.Type) return;
 
-            rotationEdit.gameObject.SetActive(type == RTLight.RTLightType.Area);
-            scaleEdit.gameObject.SetActive(type == RTLight.RTLightType.Area);
-            lightSamplesEdit.gameObject.SetActive(type == RTLight.RTLightType.Area);
-
             Vector3 position = light.Position;
             Vector3 rotation = light.Rotation;
             Vector3 scale = light.Scale;
@@ -99,9 +100,9 @@ namespace _Project.UI.Scripts.Control_Panel
             manager.DeleteSelected();
 
 #if UNITY_EDITOR
-            DestroyImmediate(light.gameObject);
+            DestroyImmediate(light);
 #else
-            Destroy(light.gameObject);
+            Destroy(light);
 #endif
 
             if (type == RTLight.RTLightType.Point)
