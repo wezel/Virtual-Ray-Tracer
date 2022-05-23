@@ -36,7 +36,6 @@ namespace _Project.UI.Scripts.Main_Menu
 
             gameObject.SetActive(true);
             UIManager.Get().AddEscapable(Hide);
-            Debug.Log("SHOW");
         }
 
         /// <summary>
@@ -63,7 +62,7 @@ namespace _Project.UI.Scripts.Main_Menu
         {
             // Hide main menu and loat the scene
             mainMenu.Toggle();
-            SceneManager.LoadSceneAsync(clickedButton.name);
+            SceneLoader.Get().LoadScene(int.Parse(clickedButton.name));
         }
 
         private void Awake()
@@ -76,10 +75,10 @@ namespace _Project.UI.Scripts.Main_Menu
             for (int i = 1; i < sceneCount; i++)
             {
                 Button levelButton = Instantiate(levelsPrefab, content.transform);
-                levelButton.name = System.IO.Path.GetFileNameWithoutExtension(SceneUtility.GetScenePathByBuildIndex(i));
+                levelButton.name = i.ToString();
 
                 levelButton.interactable = Tutorial.TutorialManager.CanLevelBeLoaded(i);
-                levelButton.GetComponentInChildren<TextMeshProUGUI>().text = i + ". " + levelButton.name;
+                levelButton.GetComponentInChildren<TextMeshProUGUI>().text = i + ". " + System.IO.Path.GetFileNameWithoutExtension(SceneUtility.GetScenePathByBuildIndex(i));
                 levelButton.onClick.AddListener(() => OnButtonClicked(levelButton));
                 levelButtons.Add(levelButton);
             }

@@ -88,7 +88,7 @@ namespace _Project.UI.Scripts.Tutorial
         public void NextLevel()
         {
             if (nextLevelButton.interactable && currentScene < lastScene)
-                SceneManager.LoadSceneAsync(++currentScene);
+                SceneLoader.Get().LoadScene(++currentScene);
         }
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace _Project.UI.Scripts.Tutorial
         public void PreviousLevel()
         {
             if (previousLevelButton.interactable && currentScene > 1)
-                SceneManager.LoadSceneAsync(--currentScene);
+                SceneLoader.Get().LoadScene(--currentScene);
         }
 
         /// <summary>

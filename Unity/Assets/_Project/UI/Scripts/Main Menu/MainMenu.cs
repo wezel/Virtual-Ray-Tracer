@@ -56,7 +56,7 @@ namespace _Project.UI.Scripts.Main_Menu
 
         public void GoHome()
         {
-            SceneManager.LoadSceneAsync(0);
+            SceneLoader.Get().LoadScene(0);
         }
 
         public void ToggleSettings()
@@ -67,7 +67,8 @@ namespace _Project.UI.Scripts.Main_Menu
 
         public void LoadNextLevel()
         {
-            if (currentScene < lastScene) SceneManager.LoadSceneAsync(++currentScene);
+            if (currentScene < lastScene)
+                SceneLoader.Get().LoadScene(++currentScene);
         }
 
         private void Awake()
