@@ -354,7 +354,7 @@ namespace _Project.Ray_Tracer.Scripts
             // Add the ambient component once, regardless of the number of lights.
             Color color = hitInfo.Ambient * hitInfo.Color;
 
-            // Add diffuse and specular components.
+            // Add diffuse and specular components from all lights.
             foreach (RTPointLight light in scene.PointLights)
             {
                 Vector3 lightVector = (light.transform.position - hit.point).normalized;
@@ -365,37 +365,20 @@ namespace _Project.Ray_Tracer.Scripts
 
             foreach (RTSpotLight spotLight in scene.SpotLights)
             {
-                // Check if point is in spotLight cone
-                Vector3 lightVector = (spotLight.Position - hit.point).normalized;
-                float angle = Vector3.Dot(spotLight.transform.forward, -lightVector);
-                if (angle < Mathf.Cos(spotLight.SpotAngle * Mathf.PI / 360f)) continue;
-
-                lightVector = (spotLight.transform.position - hit.point).normalized;
+                Vector3 lightVector = (spotLight.transform.position - hit.point).normalized;
                 if (Vector3.Dot(hitInfo.Normal, lightVector) >= 0.0f)
                     rayTree.AddChild(TraceLight(ref lightVector, spotLight.transform.position, spotLight, in hitInfo));
             }
 
             foreach (RTAreaLight arealight in scene.AreaLights)
             {
-                // Check if point is in front of arealight
-                Vector3 lightVector = (arealight.Position - hit.point).normalized;
-                float angle = Vector3.Dot(arealight.transform.forward, -lightVector);
-                if (angle < 0.0f) continue;
-
                 int samples = arealight.LightSamples * arealight.LightSamples;
                 foreach (Vector3 point in arealight.SampleLight())
                 {
-                    lightVector = (point - hit.point).normalized;
-
+                    Vector3 lightVector = (point - hit.point).normalized;
                     if (Vector3.Dot(hitInfo.Normal, lightVector) >= 0.0f)
-                    {
-                        RTRay child = TraceLight(ref lightVector, point, arealight, in hitInfo);
-                        child.Color /= samples;
-
-                        rayTree.AddChild(child);
-                    }
+                        rayTree.AddChild(TraceLight(ref lightVector, point, arealight, in hitInfo) / samples);
                 }
-
             }
 
             // Cast reflection and refraction rays.
@@ -435,6 +418,14 @@ namespace _Project.Ray_Tracer.Scripts
                 // Trace a ray until we reach the light source. If we hit something return a shadow ray.
                 if (Physics.Raycast(shadowOrigin, lightVector, out RaycastHit shadowHit, lightDistance, rayTracerLayer))
                     return new RTRay(hitInfo.Point, lightVector, shadowHit.distance, Color.black, RTRay.RayType.Shadow);
+            }
+
+            // If we don't render shadows, we still have to check if the object is outside the range of a spot/arealight
+            if (light.Type != RTLight.RTLightType.Point)
+            {
+                float angle = Vector3.Dot(light.transform.forward, -lightVector);
+                if (angle < Mathf.Cos(light.SpotAngle * Mathf.PI / 360f))
+                    return new RTRay(hitInfo.Point, lightVector, lightDistance - 0.01f, Color.black, RTRay.RayType.Shadow);
             }
 
             // We either don't render shadows or nothing is between the object and the light source.
@@ -614,27 +605,17 @@ namespace _Project.Ray_Tracer.Scripts
 
             foreach (RTSpotLight spotLight in scene.SpotLights)
             {
-                // Check if point is in spotLight cone. Divide by 2 because the spotAngle is the total angle, not wrt the normal.
                 Vector3 lightVector = (spotLight.Position - hit.point).normalized;
-                float angle = Vector3.Dot(spotLight.transform.forward, -lightVector);
-                if (angle < Mathf.Cos(spotLight.SpotAngle * Mathf.PI / 360f)) continue;
-
-                lightVector = (spotLight.Position - hit.point).normalized;
                 if (Vector3.Dot(hitInfo.Normal, lightVector) >= 0.0f)
                     color += TraceLightImage(ref lightVector, spotLight.Position, spotLight, in hitInfo);
             }
 
             foreach (RTAreaLight arealight in scene.AreaLights)
             {
-                // Check if point is in front of arealight
-                Vector3 lightVector = (arealight.Position - hit.point).normalized;
-                float angle = Vector3.Dot(arealight.transform.forward, -lightVector);
-                if (angle < 0.0f) continue; // Hit is behind the arealight; so skip this arealight.
-
                 int samples = arealight.LightSamples * arealight.LightSamples;
                 foreach (Vector3 point in arealight.SampleLight())
                 {
-                    lightVector = (point - hit.point).normalized;
+                    Vector3 lightVector = (point - hit.point).normalized;
 
                     if (Vector3.Dot(hitInfo.Normal, lightVector) >= 0.0f)
                         color += TraceLightImage(ref lightVector, point, arealight, in hitInfo) / samples;
@@ -661,6 +642,13 @@ namespace _Project.Ray_Tracer.Scripts
                 // Trace a ray until we reach the light source. If we hit something return a shadow ray.
                 if (Physics.Raycast(shadowOrigin, lightVector, out _, lightDistance, rayTracerLayer))
                     return Color.black;
+            }
+
+            // If we don't render shadows, we still have to check if the object is outside the range of a spot/arealight
+            if (light.Type != RTLight.RTLightType.Point)
+            {
+                float angle = Vector3.Dot(light.transform.forward, -lightVector);
+                if (angle < Mathf.Cos(light.SpotAngle * Mathf.PI / 360f)) return Color.black;
             }
 
             // We either don't render shadows or nothing is between the object and the light source.

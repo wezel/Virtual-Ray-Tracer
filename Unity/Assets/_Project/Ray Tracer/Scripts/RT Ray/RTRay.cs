@@ -100,5 +100,17 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
         /// <param name="distance"> The distance to travel along this ray. </param>
         /// <returns> A <see cref="Vector3"/> point <paramref name="distance"/> along this ray. </returns>
         public Vector3 At(float distance) => Origin + distance * Direction;
+
+        /// <summary>
+        /// Divides the <paramref name="ray"/>'s Color by <paramref name="div"/>
+        /// </summary>
+        /// <param name="ray"> The ray of which the color needs to be divided. </param>
+        /// <param name="div"> The divisor for the color. </param>
+        /// <returns> The original <paramref name="ray"/> </returns>
+        public static RTRay operator /(RTRay ray, int div)
+        {
+            ray.Color /= div;
+            return ray;
+        }
     }
 }

@@ -187,7 +187,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
         {
             if (light.Type == RTLight.RTLightType.Point)
                 pointLights.Remove(light as RTPointLight);
-            else if (light.Type == RTLight.RTLightType.Area)
+            else if (light.Type == RTLight.RTLightType.Spot)
                 spotLights.Remove(light as RTSpotLight);
             else if (light.Type == RTLight.RTLightType.Area)
                 areaLights.Remove(light as RTAreaLight);

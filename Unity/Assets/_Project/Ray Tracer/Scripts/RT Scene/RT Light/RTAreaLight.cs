@@ -78,7 +78,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
         private int lightSamples = 4;
 
         /// <summary>
-        /// The square root of the numer of samples this light uses to estimate an area light.
+        /// The square root of the number of samples this light uses to estimate an area light.
         /// </summary>
         public override int LightSamples
         {

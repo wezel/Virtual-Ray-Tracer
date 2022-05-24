@@ -89,7 +89,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
             }
         }
 
-        public virtual float SpotAngle { get; set; }
+        public virtual float SpotAngle { get; set; } = 90;
 
         [SerializeField]
         protected bool lightDistanceAttenuation = true;
@@ -185,7 +185,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
 
         public virtual LightShadows Shadows { get; set; }
 
-        public virtual int LightSamples { get; set; }
+        public virtual int LightSamples { get; set; } = 4;
 
         protected void FixedUpdate()
         {

@@ -51,12 +51,12 @@ MonoBehaviour:
   ambient: 0
   diffuse: 1
   specular: 1
+  lightDistanceAttenuation: 1
   Type: 1
   label: {fileID: 4415559385507083291}
   outline: {fileID: 2936163527658708494}
   canvas: {fileID: 1104547694093982553}
-  spotAngle: 117
-  lightDistanceAttenuation: 1
+  spotAngle: 90
   light: {fileID: 2869057598925096033}
 --- !u!108 &2869057598925096033
 Light:
