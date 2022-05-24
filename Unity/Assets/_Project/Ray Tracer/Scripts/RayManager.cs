@@ -226,31 +226,20 @@ namespace _Project.Ray_Tracer.Scripts
         /// </summary>            
         private void ReloadMaterials() => rayObjectPool.ReloadMaterials();
 
-        //public const int transparencyRange = 50;
         [SerializeField] private Material noHitMaterial;
         [SerializeField] private Material reflectMaterial;
         [SerializeField] private Material reflectMaterialTransparent;
-        //private Material[] reflectMaterialTransparentArray = new Material[transparencyRange];
         [SerializeField] private Material refractMaterial;
         [SerializeField] private Material refractMaterialTransparent;
-        //private Material[] refractMaterialTransparentArray = new Material[transparencyRange];
         [SerializeField] private Material normalMaterial;
         [SerializeField] private Material normalMaterialTransparent;
-        //private Material[] normalMaterialTransparentArray = new Material[transparencyRange];
         [SerializeField] private Material shadowMaterial;
         [SerializeField] private Material shadowMaterialTransparent;
-        //private Material[] shadowMaterialTransparentArray = new Material[transparencyRange];
         [SerializeField] private Material lightMaterial;
         [SerializeField] private Material lightMaterialTransparent;
-        //private Material[] lightMaterialTransparentArray = new Material[transparencyRange];
         [SerializeField] private Material errorMaterial;
-
-        //private const int colorN = 18;
-        //private const float colorStep = 1f / (colorN - 1);
         [SerializeField] private Material colorRayMaterial;
         [SerializeField] private Material colorRayMaterialTransparent;
-        //private static Material[,,] colorRayMaterialArray = new Material[colorN, colorN, colorN];
-        //private static Material[,,,] colorRayMaterialTransparentArray = new Material[colorN, colorN, colorN, transparencyRange];
 
         [Header("Animation Settings")]
 
@@ -397,7 +386,7 @@ namespace _Project.Ray_Tracer.Scripts
                 if (type == RTRay.RayType.NoHit)
                 {
                     mat.color = new Color(mat.color.r, mat.color.g, mat.color.b,
-                                          mat.color.a * (contribution * 0.9f + 0.1f));
+                                          mat.color.a * (contribution * 0.7f + 0.3f));
                     return mat;
                 }
                 else
@@ -414,12 +403,12 @@ namespace _Project.Ray_Tracer.Scripts
 
         private Material TranspariceMaterial(Material mat, float contribution)
         {
-            float baseFactor = Mathf.Pow(contribution * 0.8f, RayTransExponent);
-            mat.SetFloat("_Ambient", baseFactor * 0.9f + 0.1f);
-            mat.color = new Color(mat.color.r * (0.6f + baseFactor * 0.4f),
-                                  mat.color.g * (0.6f + baseFactor * 0.4f),
-                                  mat.color.b * (0.6f + baseFactor * 0.4f),
-                                  mat.color.a * (baseFactor * 0.9f + 0.1f));
+            float baseFactor = Mathf.Pow(contribution * 0.8f + 0.2f, RayTransExponent);
+            mat.SetFloat("_Ambient", baseFactor * 0.4f + 0.6f);
+            mat.color = new Color(mat.color.r * (0.7f + baseFactor * 0.3f),
+                                  mat.color.g * (0.7f + baseFactor * 0.3f),
+                                  mat.color.b * (0.7f + baseFactor * 0.3f),
+                                  mat.color.a * baseFactor * 0.5f);
             return mat;
         }
 

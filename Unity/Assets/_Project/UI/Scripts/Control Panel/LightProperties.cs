@@ -39,6 +39,8 @@ namespace _Project.UI.Scripts.Control_Panel
         private PowerEdit lightSamplesEdit;
         [SerializeField]
         private FloatEdit spotAngleEdit;
+        [SerializeField]
+        private BoolEdit distanceAttenuationEdit;
 
         [SerializeField]
         private TMP_Dropdown typeDropdown;
@@ -81,6 +83,8 @@ namespace _Project.UI.Scripts.Control_Panel
             ambientEdit.Value = light.Ambient;
             diffuseEdit.Value = light.Diffuse;
             specularEdit.Value = light.Specular;
+            spotAngleEdit.Value = light.SpotAngle;
+            distanceAttenuationEdit.IsOn = light.LightDistanceAttenuation;
         }
 
         /// <summary>
@@ -94,9 +98,6 @@ namespace _Project.UI.Scripts.Control_Panel
 
         private void ChangeObjectType(RTLight.RTLightType type)
         {
-            Debug.Log(type);
-            Debug.Log(light.Type);
-
             if (type == light.Type) return;
 
             Vector3 position = light.Position;
@@ -107,7 +108,9 @@ namespace _Project.UI.Scripts.Control_Panel
             float ambient = light.Ambient;
             float diffuse = light.Diffuse;
             float specular = light.Specular;
+            float spotAngle = light.SpotAngle;
             int lightSamples = light.LightSamples;
+            bool distanceAttenuation = light.LightDistanceAttenuation;
 
             RTSceneManager manager = RTSceneManager.Get();
             manager.DeleteSelected();
@@ -134,7 +137,9 @@ namespace _Project.UI.Scripts.Control_Panel
             light.Ambient = ambient;
             light.Diffuse = diffuse;
             light.Specular = specular;
+            light.SpotAngle = spotAngle;
             light.LightSamples = lightSamples;
+            light.LightDistanceAttenuation = distanceAttenuation;
 
             manager.Scene.AddLight(light);
             manager.Select(light.transform);
@@ -155,6 +160,7 @@ namespace _Project.UI.Scripts.Control_Panel
 
             lightSamplesEdit.OnValueChanged += value => light.LightSamples = (int)Mathf.Sqrt(value);
             spotAngleEdit.OnValueChanged += value => light.SpotAngle = value;
+            distanceAttenuationEdit.OnValueChanged += value => light.LightDistanceAttenuation = value;
             typeDropdown.onValueChanged.AddListener(type => ChangeObjectType((RTLight.RTLightType)type));
         }
 

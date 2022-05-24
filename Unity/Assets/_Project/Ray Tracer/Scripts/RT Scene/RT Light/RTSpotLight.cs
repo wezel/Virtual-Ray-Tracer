@@ -19,89 +19,30 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Spot_Light
     [RequireComponent(typeof(Light))]
     public class RTSpotLight : RTLight
     {
-        public override Color Color
-        {
-            get => color;
-            set
-            {
-                Color lightData = light.color;
-                lightData.r = Mathf.Floor(value.r * 256) + value.g / 2;
-                lightData.g = lightData.g % 1 + Mathf.Floor(value.b * 256);
-                light.color = lightData;
-
-                base.Color = value;
-            }
-        }
-
-        public override float Intensity
-        {
-            get => intensity;
-            set
-            {
-                // Besides dividing by 2, also divide by 30, as the range is 0 - 30.
-                Color lightData = light.color;
-                lightData.g = Mathf.Floor(lightData.g) + value / intensityDivisor;
-                light.color = lightData;
-                base.Intensity = value;
-            }
-        }
-
-        public override float Ambient
-        {
-            get => ambient;
-            set
-            {                
-                Color lightData = light.color;
-                lightData.b = lightData.b % 1 + Mathf.Floor(value * 256);
-                light.color = lightData;
-
-                base.Ambient = value;
-            }
-        }
-
-        public override float Diffuse
-        {
-            get => diffuse;
-            set
-            {
-                Color lightData = light.color;
-                lightData.b = Mathf.Floor(lightData.b) + value / 2;
-                light.color = lightData;
-
-                base.Diffuse = value;
-            }
-        }
-
-        public override float Specular
-        {
-            get => specular;
-            set
-            {
-                Color lightData = light.color;
-                lightData.a = lightData.a % 1 + Mathf.Floor(value * 256);
-                light.color = lightData;
-
-                base.Specular = value;
-            }
-        }
-
         [SerializeField, Range(0, 170)]
-        protected float spotAngle;
+        private float spotAngle;
         public override float SpotAngle
         {
             get => spotAngle;
             set
             {
-                // Covert the angle from degrees to radians and take the cosine of half of that.
-                Color lightData = light.color;
-                lightData.a = Mathf.Floor(lightData.a) + Mathf.Clamp01(Mathf.Cos(value * Mathf.PI / 360f)) / 2f;
-                light.color = lightData;
-                light.spotAngle = value;
+                UpdateLightData();
+                light.spotAngle = value; // Do this always for Editor purposes.
+                if (value == spotAngle) return;
 
-                if (value == spotAngle) return; // Do this after setting light.spotAngle for Editor purposes.
                 spotAngle = value;
                 OnLightChangedInvoke();
             }
+        }
+
+        public override void UpdateLightData()
+        {
+            Color lightData;
+            lightData.r = Mathf.Floor(color.r * 256)  + color.g / 2;
+            lightData.g = Mathf.Floor(color.b * 256)  + (intensity / intensityDivisor);
+            lightData.b = Mathf.Floor(ambient * 256)  + diffuse / 2;
+            lightData.a = Mathf.Floor(specular * 256) + Mathf.Clamp01(Mathf.Cos(spotAngle * Mathf.PI / 360f)) / 2f + (lightDistanceAttenuation ? 512 : 0);
+            light.color = lightData;
         }
 
         /// <summary>
@@ -116,15 +57,6 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Spot_Light
         {
             Type = RTLightType.Spot;
             base.Awake();
-        }
-
-        private new void Update()
-        {
-            base.Update();
-#if UNITY_EDITOR
-            if (light != null && light.spotAngle != spotAngle)
-                SpotAngle = spotAngle;
-#endif
         }
 
         private void LateUpdate()

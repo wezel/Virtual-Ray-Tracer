@@ -98,6 +98,13 @@ Shader "Custom/LightShader"
                 float3 vertexToLightSource = _WorldSpaceLightPos0.xyz - input.worldPosition.xyz;
                 float3 light = normalize(vertexToLightSource);
                 float4 ambDifSpecAngle = unpackData4(_LightColor0.b, _LightColor0.a);
+
+                bool lightDistanceAttenuation = false;
+                if (ambDifSpecAngle.z > 1)
+                {
+                    lightDistanceAttenuation = true;
+                    ambDifSpecAngle.z -= 2;
+                }
 #ifdef SPOT
                 float3 lightDirection = normalize(mul(float3(0, 0, -1), (float3x3)unity_WorldToLight)); // Direction the light points towards
                 float angle = dot(lightDirection, light);
@@ -127,7 +134,7 @@ Shader "Custom/LightShader"
                 float3 specularColor = specularStrength * _Specular * ambDifSpec.z * lightColor * _Color.rgb;
 
                 float3 result = diffuseColor + specularColor; // Add ambient at the end, as it's immune to attenuation
-                float attenuation = SHADOW_ATTENUATION(input); // Will be 1.0 for no shadow and 0.0 for full shadow.
+                float attenuation = SHADOW_ATTENUATION(input);
 
 #ifdef SPOT     // Attenuate arealighting (currently made of spotlights)
                 if (angle < 0.04)   // Quick attenuation at the edges.
@@ -137,8 +144,15 @@ Shader "Custom/LightShader"
 #endif
 
                 // Light distance attenuation
-                float distance = length(vertexToLightSource);
-                result /= 0.4 + 1 * distance + 0.6 * (distance * distance);
+                if (lightDistanceAttenuation)
+                {
+                    float distance = length(vertexToLightSource);
+                    result /= 0.4 + 1 * distance + 0.6 * (distance * distance);
+                }
+                else
+                {
+                    intensity /= 10;
+                }
 
                 return float4(ambientColor + result * attenuation * intensity, 0);
             }

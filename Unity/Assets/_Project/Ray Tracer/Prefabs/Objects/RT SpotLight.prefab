@@ -56,6 +56,7 @@ MonoBehaviour:
   outline: {fileID: 2936163527658708494}
   canvas: {fileID: 1104547694093982553}
   spotAngle: 117
+  lightDistanceAttenuation: 1
   light: {fileID: 2869057598925096033}
 --- !u!108 &2869057598925096033
 Light:

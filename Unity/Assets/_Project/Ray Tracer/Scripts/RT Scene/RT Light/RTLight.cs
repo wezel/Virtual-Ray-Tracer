@@ -24,7 +24,8 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
                 value.a = 1;
                 if (value == color) return;
                 color = value;
-                label.color = value;                
+                label.color = value;
+                UpdateLightData();
                 OnLightChanged?.Invoke();
             }
         }
@@ -39,6 +40,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
             {
                 if (value == intensity) return;
                 intensity = value;
+                UpdateLightData();
                 OnLightChanged?.Invoke();
             }
         }
@@ -51,7 +53,8 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
             set
             {
                 if (value == ambient) return;
-                ambient = value;                
+                ambient = value;
+                UpdateLightData();
                 OnLightChanged?.Invoke();
             }
         }
@@ -66,6 +69,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
             {
                 if (value == diffuse) return;
                 diffuse = value;
+                UpdateLightData();
                 OnLightChanged?.Invoke();
             }
         }
@@ -80,11 +84,26 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
             {
                 if (value == specular) return;
                 specular = value;
+                UpdateLightData();
                 OnLightChanged?.Invoke();
             }
         }
 
         public virtual float SpotAngle { get; set; }
+
+        [SerializeField]
+        protected bool lightDistanceAttenuation = true;
+        public bool LightDistanceAttenuation
+        {
+            get => lightDistanceAttenuation;
+            set
+            {
+                if (value == lightDistanceAttenuation) return;
+                lightDistanceAttenuation = value;
+                UpdateLightData();
+                OnLightChanged?.Invoke();
+            }
+        }
 
         public delegate void LightChanged();
         /// <summary>
@@ -158,17 +177,12 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
 
         protected Color defaultOutline;
 
+        public virtual void UpdateLightData() { }
+
         public void Higlight(Color value) => outline.color = value;
 
         public void ResetHighlight() => outline.color = defaultOutline;
 
-        //public virtual void ChangeLightType(RTLightType type)
-        //{
-        //    if (Type == type) return;
-
-        //    Type = type;
-        //    OnLightChanged?.Invoke();
-        //}
         public virtual LightShadows Shadows { get; set; }
 
         public virtual int LightSamples { get; set; }

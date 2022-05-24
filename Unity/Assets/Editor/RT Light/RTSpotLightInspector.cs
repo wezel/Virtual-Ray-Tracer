@@ -22,12 +22,7 @@ namespace Editor.RT_Light
 
         private void OnPreSceneGUI()
         {
-            rtLight.Color = rtLight.Color;
-            rtLight.Intensity = rtLight.Intensity;
-            rtLight.Ambient = rtLight.Ambient;
-            rtLight.Diffuse = rtLight.Diffuse;
-            rtLight.Specular = rtLight.Specular;
-            rtLight.SpotAngle = rtLight.SpotAngle;
+            rtLight.UpdateLightData();
         }
     }
 }

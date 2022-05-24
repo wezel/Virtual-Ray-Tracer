@@ -20,106 +20,8 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
     [ExecuteAlways]
     public class RTAreaLight : RTLight
     {
-        /// <summary>
-        /// This function encodes the color data. By encoding the color data we have extra room to send other data to
-        /// the graphic renderer.
-        /// </summary>
-        public override Color Color
-        {
-            get => color;
-            set
-            {
-                Color subColor = value / LightSamples;
-
-                Color lightData = lights[0].color;
-                lightData.r = Mathf.Floor(subColor.r * 256) + subColor.g / 2;
-                lightData.g = lightData.g % 1 + Mathf.Floor(subColor.b * 256);
-                foreach (Light light in lights)
-                    light.color = lightData;
-
-                base.Color = value;
-                UpdateLabelColor();
-            }
-        }
-
-        public override float Intensity
-        {
-            get => intensity;
-            set
-            {
-                // Besides dividing by 2, also divide by 30, as the range is 0 - 30.
-                Color lightData = lights[0].color;
-                lightData.g = Mathf.Floor(lightData.g) + value / intensityDivisor;
-                foreach (Light light in lights)
-                    light.color = lightData;
-
-                base.Intensity = value;
-            }
-        }
-
-        public override float Ambient
-        {
-            get => ambient;
-            set
-            {
-                float subAmbient = value / (LightSamples * LightSamples);
-
-                Color lightData = lights[0].color;
-                lightData.b = lightData.b % 1 + Mathf.Floor(subAmbient * 256);
-                foreach (Light light in lights)
-                    light.color = lightData;
-
-                base.Ambient = ambient;
-            }
-        }
-
-        public override float Diffuse
-        {
-            get => diffuse;
-            set
-            {
-                float subDiffuse = value / LightSamples;
-
-                Color lightData = lights[0].color;
-                lightData.b = Mathf.Floor(lightData.b) + subDiffuse / 2;
-                foreach (Light light in lights)
-                    light.color = lightData;
-
-                base.Diffuse = value;
-            }
-        }
-
-        public override float Specular
-        {
-            get => specular;
-            set
-            {
-                float subSpecular = value / LightSamples;
-
-                Color lightData = lights[0].color;
-                lightData.a = lightData.a % 1 + Mathf.Floor(subSpecular * 256);
-                foreach (Light light in lights)
-                    light.color = lightData;
-
-                base.Specular = value;
-            }
-        }
-
         private const float areaSpotAngle = 175f;
-        public override float SpotAngle
-        {
-            get => areaSpotAngle;
-            set
-            {
-                // Covert the angle from degrees to radians and take the cosine of half of that.
-                Color lightData = lights[0].color;
-                lightData.a = Mathf.Floor(lightData.a) + Mathf.Clamp01(Mathf.Cos(areaSpotAngle * Mathf.PI / 360f)) / 2f;
-                foreach (Light light in lights)
-                    light.color = lightData;
-
-                OnLightChangedInvoke();
-            }
-        }
+        public override float SpotAngle { get => areaSpotAngle; }
 
         /// <summary>
         /// The underlying <see cref="UnityEngine.Light"/>s used by the light.
@@ -134,8 +36,19 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
             }
         }
 
+        public override void UpdateLightData()
+        {
+            Color lightData;
+            lightData.r = Mathf.Floor(color.r / LightSamples * 256) + color.g / LightSamples / 2;
+            lightData.g = Mathf.Floor(color.b / LightSamples * 256) + (intensity / intensityDivisor);
+            lightData.b = Mathf.Floor(ambient / (LightSamples * LightSamples) * 256) + diffuse / LightSamples / 2;
+            lightData.a = Mathf.Floor(specular / LightSamples * 256) + Mathf.Clamp01(Mathf.Cos(areaSpotAngle * Mathf.PI / 360f)) / 2f + (lightDistanceAttenuation ? 512 : 0);
+            foreach (Light light in lights)
+                light.color = lightData;
+        }
+
         private RectTransform rectTransform;
-        private RectTransform RectTransform { get => GetComponent<RectTransform>(); }
+        private RectTransform RectTransform { get => rectTransform; }
 
         private readonly System.Random rnd = new System.Random();
 
@@ -153,7 +66,6 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
             Vector3 step_1 = (corners[1] - corners[0]) / LightSamples; // corner 0 to corner 1
             Vector3 step_2 = (corners[3] - corners[0]) / LightSamples; // corner 0 to corner 3
 
-
             for (int i = 0; i < LightSamples * LightSamples; i++)
                 points[i] = corners[0]
                         + (i / LightSamples) * step_1 + (float)rnd.NextDouble() * step_1
@@ -162,49 +74,8 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
             return points;
         }
 
-        /// <summary>
-        /// Returns <paramref name="n"/> points between point <paramref name="p1"/> and <paramref name="p2"/>.
-        /// </summary>
-        /// <param name="n"> The numer of points requested. </param>
-        /// <param name="p1"> The first point. </param>
-        /// <param name="p2"> The second point. </param>
-        /// <returns> n points between p1 and p2 </returns>
-        private Vector3[] GetPointsBetween(int n, Vector3 p1, Vector3 p2)
-        {
-            Vector3[] points = new Vector3[n];
-            Vector3 step = (p2 - p1) / (n + 1);
-
-            for (int i = 0; i < n; ++i)
-                points[i] = p1 + (i + 1) * step;
-
-            return points;
-        }
-
-        /// <summary>
-        /// Returns points on the edges of the arealight, with <paramref name="pointsBetweenCorners"/> between each corner.
-        /// </summary>
-        /// <param name="pointsBetweenCorners"> The numer of point between the corners. </param>
-        /// <returns> Points on the edges of the arealight, including the corners. </returns>
-        public Vector3[] GetEdgePoints(int pointsBetweenCorners)
-        {
-            int idx = 4;
-            Vector3[] edgePoints = new Vector3[4 * (pointsBetweenCorners + 1)];
-            RectTransform.GetWorldCorners(edgePoints); // Corners clockwise
-
-            foreach (Vector3 point in GetPointsBetween(pointsBetweenCorners, edgePoints[0], edgePoints[1]))
-                edgePoints[idx++] = point;
-            foreach (Vector3 point in GetPointsBetween(pointsBetweenCorners, edgePoints[1], edgePoints[2]))
-                edgePoints[idx++] = point;
-            foreach (Vector3 point in GetPointsBetween(pointsBetweenCorners, edgePoints[2], edgePoints[3]))
-                edgePoints[idx++] = point;
-            foreach (Vector3 point in GetPointsBetween(pointsBetweenCorners, edgePoints[0], edgePoints[3]))
-                edgePoints[idx++] = point;
-
-            return edgePoints;
-        }
-
         [SerializeField, Range(2, 10)]
-        private int lightSamples = 2;
+        private int lightSamples = 4;
 
         /// <summary>
         /// The square root of the numer of samples this light uses to estimate an area light.
@@ -268,13 +139,9 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
                 }
             }
 
-            // 'Call' these funtions to set the all the lights correctly. Invokes Change as well.
-            Color = Color;
-            Intensity = Intensity;
-            Ambient = Ambient;
-            Diffuse = Diffuse;
-            Specular = Specular;
-            SpotAngle = SpotAngle;
+            // Set all lights to the correct data.
+            UpdateLightData();
+            OnLightChangedInvoke();
         }
 
         protected override void Awake()
