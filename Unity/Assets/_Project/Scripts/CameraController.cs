@@ -253,6 +253,7 @@ namespace _Project.Scripts
 
         public void FlyToRTCamera()
         {
+            RayManager.Get().ShowRays = false;
             flytocam = true;
         }
 

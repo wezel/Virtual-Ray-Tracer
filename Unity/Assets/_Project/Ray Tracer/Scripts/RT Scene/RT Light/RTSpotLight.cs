@@ -63,11 +63,11 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Spot_Light
         {
             #if UNITY_EDITOR
                 if(!Application.isPlaying) return;
-            #endif
+#endif
             // Make the label face the camera. We do this in LateUpdate to make sure the camera has finished its moving.
             // From: https://answers.unity.com/questions/52656/how-i-can-create-an-sprite-that-always-look-at-the.html
-            //canvas.transform.forward = transform.rotation * Camera.main.transform.forward;
-            canvas.transform.LookAt(transform.position + transform.up);
+
+            canvas.transform.rotation = Quaternion.Euler(0f, 0f, canvas.transform.eulerAngles.z + 0.5f);
         }
 
 #if UNITY_EDITOR
@@ -77,14 +77,8 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Spot_Light
             // Fix maximize window errors
             if (UnityEditor.SceneView.lastActiveSceneView == null) 
                 return;
-            //Vector3 camDirection = Vector3.Normalize(UnityEditor.SceneView.lastActiveSceneView.camera.transform.position - transform.position);
-            //float angle = Vector3.Dot(camDirection, canvas.transform.right);
 
-            canvas.transform.LookAt(transform.position + transform.up);
-            //canvas.transform.rotation = canvas.transform.rotation * Quaternion.AngleAxis(Vector3.Angle(camDirection, canvas.transform.forward), canvas.transform.forward);
-            //canvas.transform.Rotate(canvas.transform.forward, Vector3.Angle(camDirection, canvas.transform.right));
-            //canvas.transform.Rotate(Vector3.forward, Vector3.Angle(camDirection, canvas.transform.up));
-            //Debug.Log(canvas.transform.right);
+            canvas.transform.rotation = Quaternion.Euler(0f, 0f, canvas.transform.eulerAngles.z + 1);
         }
 #endif
     }
