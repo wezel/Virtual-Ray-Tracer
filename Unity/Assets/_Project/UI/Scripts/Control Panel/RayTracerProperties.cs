@@ -73,6 +73,9 @@ namespace _Project.UI.Scripts.Control_Panel
         private Button renderImageButton;
         [SerializeField]
         private Button openImageButton;
+        [SerializeField]
+        private Button flyRoRTCameraButton;
+
 
         /// <summary>
         /// Show the ray tracer properties for the current <see cref="UnityRayTracer"/> and <see cref="RayManager"/>.
@@ -179,6 +182,7 @@ namespace _Project.UI.Scripts.Control_Panel
             superSamplingVisualEdit.OnValueChanged += (value) => { rayTracer.SuperSamplingVisual = value; };
             renderImageButton.onClick.AddListener(RenderImage);
             openImageButton.onClick.AddListener(ToggleImage);
+            flyRoRTCameraButton.onClick.AddListener(() => { showRaysEdit.IsOn = false; });
         }
     }
 }

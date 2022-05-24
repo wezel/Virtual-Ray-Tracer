@@ -533,6 +533,7 @@ MonoBehaviour:
   enableAreaLightsEdit: {fileID: 8701378118434141367}
   renderImageButton: {fileID: 3732788281652070722}
   openImageButton: {fileID: 5108153677351434190}
+  flyRoRTCameraButton: {fileID: 792725456027293782}
 --- !u!1 &5495664825329268716
 GameObject:
   m_ObjectHideFlags: 0
@@ -598,7 +599,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Magic
+  m_text: Fly to virtual camera
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -851,7 +852,7 @@ GameObject:
   - component: {fileID: 8093746241253853828}
   - component: {fileID: 792725456027293782}
   m_Layer: 5
-  m_Name: MagicButton
+  m_Name: FlyToRTCameraButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

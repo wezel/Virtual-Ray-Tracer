@@ -76,7 +76,6 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Spot_Light
             // Fix maximize window errors
             if (UnityEditor.SceneView.lastActiveSceneView == null) 
                 return;
-
         }
 #endif
     }
