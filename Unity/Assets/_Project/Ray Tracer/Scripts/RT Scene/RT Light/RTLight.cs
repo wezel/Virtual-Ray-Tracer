@@ -123,6 +123,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
             {
                 if (value == transform.position) return;
                 transform.position = value;
+                OnLightChanged?.Invoke();
             }
         }
 
@@ -137,6 +138,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
             {
                 if (value == transform.eulerAngles) return;
                 transform.eulerAngles = value;
+                OnLightChanged?.Invoke();
             }
         }
 
@@ -150,6 +152,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
             {
                 if (value == transform.localScale) return;
                 transform.localScale = value;
+                OnLightChanged?.Invoke();
             }
         }
 
