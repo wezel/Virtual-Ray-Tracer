@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using _Project.Ray_Tracer.Scripts;
 using _Project.Ray_Tracer.Scripts.RT_Scene;
+using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Spot_Light;
 
 namespace _Project.UI.Scripts.Control_Panel
 {
@@ -36,11 +37,14 @@ namespace _Project.UI.Scripts.Control_Panel
         private FloatEdit specularEdit;
         [SerializeField]
         private PowerEdit lightSamplesEdit;
+        [SerializeField]
+        private FloatEdit spotAngleEdit;
 
         [SerializeField]
         private TMP_Dropdown typeDropdown;
 
-        [SerializeField] private RTPointLight pointLightPrefab;
+        [SerializeField] private RTPointLight pointLightPrefab; 
+        [SerializeField] private RTSpotLight spotLightPrefab;
         [SerializeField] private RTAreaLight areaLightPrefab;
 
         /// <summary>
@@ -59,10 +63,16 @@ namespace _Project.UI.Scripts.Control_Panel
                 scaleEdit.Value = ((RTAreaLight)light).Scale;
                 lightSamplesEdit.Value = Mathf.Pow(((RTAreaLight)light).LightSamples, 2);
             }
+            if (light.Type == RTLight.RTLightType.Spot)
+            {
+                rotationEdit.Value = ((RTSpotLight)light).Rotation;
+                spotAngleEdit.Value = ((RTSpotLight)light).SpotAngle;
+            }
 
-            rotationEdit.gameObject.SetActive(light.Type == RTLight.RTLightType.Area);
+            rotationEdit.gameObject.SetActive(light.Type == RTLight.RTLightType.Area || light.Type == RTLight.RTLightType.Spot);
             scaleEdit.gameObject.SetActive(light.Type == RTLight.RTLightType.Area);
             lightSamplesEdit.gameObject.SetActive(light.Type == RTLight.RTLightType.Area);
+            spotAngleEdit.gameObject.SetActive(light.Type == RTLight.RTLightType.Spot);
             typeDropdown.gameObject.SetActive(RTSceneManager.Get().DeleteAllowed);
 
             typeDropdown.value = typeDropdown.options.FindIndex(option => option.text == light.Type.ToString());
@@ -84,6 +94,9 @@ namespace _Project.UI.Scripts.Control_Panel
 
         private void ChangeObjectType(RTLight.RTLightType type)
         {
+            Debug.Log(type);
+            Debug.Log(light.Type);
+
             if (type == light.Type) return;
 
             Vector3 position = light.Position;
@@ -107,6 +120,8 @@ namespace _Project.UI.Scripts.Control_Panel
 
             if (type == RTLight.RTLightType.Point)
                 light = Instantiate(pointLightPrefab);
+            else if (type == RTLight.RTLightType.Spot)
+                light = Instantiate(spotLightPrefab);
             else // type == RTLight.RTLightType.Area
                 light = Instantiate(areaLightPrefab);
 
@@ -139,6 +154,7 @@ namespace _Project.UI.Scripts.Control_Panel
             specularEdit.OnValueChanged += (value) => { light.Specular = value; };
 
             lightSamplesEdit.OnValueChanged += value => light.LightSamples = (int)Mathf.Sqrt(value);
+            spotAngleEdit.OnValueChanged += value => light.SpotAngle = value;
             typeDropdown.onValueChanged.AddListener(type => ChangeObjectType((RTLight.RTLightType)type));
         }
 

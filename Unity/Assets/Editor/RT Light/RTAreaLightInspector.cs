@@ -28,6 +28,7 @@ namespace Editor.RT_Light
             rtAreaLight.Ambient = rtAreaLight.Ambient;
             rtAreaLight.Diffuse = rtAreaLight.Diffuse;
             rtAreaLight.Specular = rtAreaLight.Specular;
+            rtAreaLight.SpotAngle = rtAreaLight.SpotAngle;
         }
     }
 }

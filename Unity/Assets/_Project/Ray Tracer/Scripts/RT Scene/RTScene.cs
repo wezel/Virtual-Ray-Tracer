@@ -3,6 +3,7 @@ using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light;
 using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Camera;
 using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light;
 using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Point_Light;
+using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Spot_Light;
 using UnityEngine;
 
 namespace _Project.Ray_Tracer.Scripts.RT_Scene
@@ -57,6 +58,22 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             }
         }
 
+        private bool enableSpotLights = true;
+        public bool EnableSpotLights
+        {
+            get { return enableSpotLights; }
+            set
+            {
+                if (value == enableSpotLights) return;
+                enableSpotLights = value;
+
+                foreach (RTSpotLight spotLight in spotLights)
+                    spotLight.gameObject.SetActive(value);
+
+                OnSceneChanged?.Invoke();
+            }
+        }
+
         private bool enableAreaLights = true;
         public bool EnableAreaLights
         {
@@ -87,6 +104,20 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             private set => pointLights = value;
         }
 
+        private List<RTSpotLight> spotLights;
+        /// <summary>
+        /// This ray tracers scene's list of lights.
+        /// </summary>        
+        public List<RTSpotLight> SpotLights
+        {
+            get
+            {
+                if (EnableSpotLights) return spotLights;
+                return new List<RTSpotLight>(0);
+            }
+            private set => spotLights = value;
+        }
+
         private List<RTAreaLight> areaLights;
         /// <summary>
         /// This ray tracers scene's list of area lights.
@@ -106,15 +137,19 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
         /// </summary>
         public List<RTMesh> Meshes { get; }
 
-        public RTScene(RTCamera camera) : this(camera, new List<RTPointLight>(), new List<RTAreaLight>(), new List<RTMesh>()) { }
+        public RTScene(RTCamera camera) : this(camera, new List<RTPointLight>(), new List<RTSpotLight>(), new List<RTAreaLight>(), new List<RTMesh>()) { }
 
-        public RTScene(RTCamera camera, List<RTPointLight> lights, List<RTAreaLight> arealights, List<RTMesh> meshes)
+        public RTScene(RTCamera camera, List<RTPointLight> pointlights, List<RTSpotLight> spotlights, List<RTAreaLight> arealights, List<RTMesh> meshes)
         {
             Camera = camera;
             
-            PointLights = lights;
-            foreach (var light in lights)
-                light.OnLightChanged += SceneObjectChanged;
+            PointLights = pointlights;
+            foreach (var pointlight in pointlights)
+                pointlight.OnLightChanged += SceneObjectChanged;
+
+            SpotLights = spotlights;
+            foreach (var spotlight in spotlights)
+                spotlight.OnLightChanged += SceneObjectChanged;
 
             AreaLights = arealights;
             foreach (var arealight in arealights)
@@ -132,9 +167,11 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
         public void AddLight(RTLight light)
         {
             if (light.Type == RTLight.RTLightType.Point)
-                PointLights.Add(light as RTPointLight);
+                pointLights.Add(light as RTPointLight);
+            else if (light.Type == RTLight.RTLightType.Spot)
+                spotLights.Add(light as RTSpotLight);
             else if (light.Type == RTLight.RTLightType.Area)
-                AreaLights.Add(light as RTAreaLight);
+                areaLights.Add(light as RTAreaLight);
             else
                 return;
 
@@ -149,9 +186,11 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
         public void RemoveLight(RTLight light)
         {
             if (light.Type == RTLight.RTLightType.Point)
-                PointLights.Remove(light as RTPointLight);
+                pointLights.Remove(light as RTPointLight);
             else if (light.Type == RTLight.RTLightType.Area)
-                AreaLights.Remove(light as RTAreaLight);
+                spotLights.Remove(light as RTSpotLight);
+            else if (light.Type == RTLight.RTLightType.Area)
+                areaLights.Remove(light as RTAreaLight);
             else
                 return;
 
@@ -194,7 +233,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             }
             camera = null;
 
-            foreach (var light in PointLights)
+            foreach (var light in pointLights)
             {
                 if (light != null)
                 {
@@ -202,7 +241,27 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
                     Object.Destroy(light.gameObject);
                 }
             }
-            PointLights.Clear();
+            pointLights.Clear();
+
+            foreach (var light in spotLights)
+            {
+                if (light != null)
+                {
+                    light.OnLightChanged -= SceneObjectChanged;
+                    Object.Destroy(light.gameObject);
+                }
+            }
+            spotLights.Clear();
+
+            foreach (var light in areaLights)
+            {
+                if (light != null)
+                {
+                    light.OnLightChanged -= SceneObjectChanged;
+                    Object.Destroy(light.gameObject);
+                }
+            }
+            areaLights.Clear();
 
             foreach (var mesh in Meshes)
             {

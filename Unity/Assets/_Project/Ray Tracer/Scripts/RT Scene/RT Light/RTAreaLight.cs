@@ -49,7 +49,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
             {
                 // Besides dividing by 2, also divide by 30, as the range is 0 - 30.
                 Color lightData = lights[0].color;
-                lightData.g = Mathf.Floor(lightData.g) + value / 60;
+                lightData.g = Mathf.Floor(lightData.g) + value / intensityDivisor;
                 foreach (Light light in lights)
                     light.color = lightData;
 
@@ -97,11 +97,27 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
                 float subSpecular = value / LightSamples;
 
                 Color lightData = lights[0].color;
-                lightData.a = subSpecular;
+                lightData.a = lightData.a % 1 + Mathf.Floor(subSpecular * 256);
                 foreach (Light light in lights)
                     light.color = lightData;
 
                 base.Specular = value;
+            }
+        }
+
+        private const float areaSpotAngle = 175f;
+        public override float SpotAngle
+        {
+            get => areaSpotAngle;
+            set
+            {
+                // Covert the angle from degrees to radians and take the cosine of half of that.
+                Color lightData = lights[0].color;
+                lightData.a = Mathf.Floor(lightData.a) + Mathf.Clamp01(Mathf.Cos(areaSpotAngle * Mathf.PI / 360f)) / 2f;
+                foreach (Light light in lights)
+                    light.color = lightData;
+
+                OnLightChangedInvoke();
             }
         }
 
@@ -187,9 +203,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
             return edgePoints;
         }
 
-
-        [SerializeField]
-        [Range(2, 10)]
+        [SerializeField, Range(2, 10)]
         private int lightSamples = 2;
 
         /// <summary>
@@ -209,21 +223,6 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
 
         [SerializeField]
         private GameObject spotLightPrefab;
-
-        //        public override void ChangeLightType(RTLightType type)
-        //        {
-        //            if (Type == type) return;
-
-        //            foreach (Light light in GetComponentsInChildren<Light>())
-        //#if UNITY_EDITOR
-        //                DestroyImmediate(light.gameObject);
-        //#else
-        //                Destroy(light.gameObject);
-        //#endif
-        //            lights = null;
-
-        //            base.ChangeLightType(type);
-        //        }
 
         private void UpdateLabelColor()
         {
@@ -264,6 +263,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
                     Light light = Instantiate(spotLightPrefab, transform).GetComponent<Light>();
                     light.transform.localPosition = new Vector3(startx + i * stepx, starty + j * stepy, 0f);
                     light.shadowBias = (i + j) / maxBias * 0.035f + 0.005f;
+                    light.spotAngle = 175;
                     lights[i * LightSamples + j] = light;
                 }
             }
@@ -274,6 +274,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
             Ambient = Ambient;
             Diffuse = Diffuse;
             Specular = Specular;
+            SpotAngle = SpotAngle;
         }
 
         protected override void Awake()

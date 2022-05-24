@@ -12,6 +12,7 @@ using RuntimeHandle;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Spot_Light;
 
 namespace _Project.Ray_Tracer.Scripts
 {
@@ -35,6 +36,7 @@ namespace _Project.Ray_Tracer.Scripts
         [Header("Scene Objects")]
         [SerializeField] private RTCamera cameraPrefab;
         [SerializeField] private RTPointLight pointLightPrefab;
+        [SerializeField] private RTSpotLight spotLightPrefab;
         [SerializeField] private RTAreaLight areaLightPrefab;
         [SerializeField] private RTMesh goatPrefab;
         [SerializeField] private RTMesh spherePrefab;
@@ -70,6 +72,7 @@ namespace _Project.Ray_Tracer.Scripts
         public enum ObjectType
         {
             PointLight,
+            SpotLight,
             AreaLight,
             Goat,
             Sphere,
@@ -127,6 +130,7 @@ namespace _Project.Ray_Tracer.Scripts
                 get
                 {
                     if (Type == typeof(RTPointLight)) return (RTPointLight)selected;
+                    if (Type == typeof(RTSpotLight)) return (RTSpotLight)selected;
                     if (Type == typeof(RTAreaLight)) return (RTAreaLight)selected;
                     return null;
                 }
@@ -135,7 +139,10 @@ namespace _Project.Ray_Tracer.Scripts
                     if (value == null) return;
                     selected = value;
 
-                    Type = value.Type == RTLight.RTLightType.Point ? typeof(RTPointLight) : typeof(RTAreaLight);
+                    if (value.Type == RTLight.RTLightType.Point)
+                        Type = typeof(RTPointLight);
+                    else
+                        Type = value.Type == RTLight.RTLightType.Spot ? typeof(RTSpotLight) : typeof(RTAreaLight);
                     Transform = value.transform;
                     Empty = false;
                 }
@@ -304,6 +311,11 @@ namespace _Project.Ray_Tracer.Scripts
                     Scene.AddLight(pointLight);
                     Select(pointLight.transform);
                     return;
+                case ObjectType.SpotLight:
+                    RTSpotLight spotLight = Instantiate(spotLightPrefab);
+                    Scene.AddLight(spotLight);
+                    Select(spotLight.transform);
+                    return;
                 case ObjectType.AreaLight:
                     RTAreaLight areaLight = Instantiate(areaLightPrefab);
                     Scene.AddLight(areaLight);
@@ -367,6 +379,9 @@ namespace _Project.Ray_Tracer.Scripts
             result.Light = selection.GetComponent<RTPointLight>();
             if (!result.Empty) return result;
 
+            result.Light = selection.GetComponent<RTSpotLight>();
+            if (!result.Empty) return result;
+
             result.Light = selection.GetComponent<RTAreaLight>();
             if (!result.Empty) return result;
 
@@ -382,9 +397,10 @@ namespace _Project.Ray_Tracer.Scripts
             // Cameras should not be scaled and lights should not be scaled or rotated. We default to translation.
             bool selectedCamera = selection.Type == typeof(RTCamera);
             bool selectedPointLight = selection.Type == typeof(RTPointLight);
+            bool selectedSpotLight = selection.Type == typeof(RTSpotLight);
             if (type == HandleType.ROTATION && selectedPointLight)
                 type = HandleType.POSITION;
-            if (type == HandleType.SCALE && (selectedCamera || selectedPointLight))
+            if (type == HandleType.SCALE && (selectedCamera || selectedPointLight || selectedSpotLight))
                 type = HandleType.POSITION;
 
             // Update the dropdown text if necessary. Changing triggers a callback.
@@ -434,8 +450,10 @@ namespace _Project.Ray_Tracer.Scripts
 
         public void SetShadows(bool value)
         {
-            LightShadows shadowType = value ? LightShadows.Hard : LightShadows.None;            
+            LightShadows shadowType = value ? LightShadows.Hard : LightShadows.None;
             foreach (var sceneLight in Scene.PointLights) 
+                sceneLight.Shadows = shadowType;
+            foreach (var sceneLight in Scene.SpotLights)
                 sceneLight.Shadows = shadowType;
 
             shadowType = value ? LightShadows.Soft : LightShadows.None;
@@ -456,11 +474,12 @@ namespace _Project.Ray_Tracer.Scripts
             // Find the first camera and all lights and meshes in the Unity scene.
             RTCamera camera = FindObjectOfType<RTCamera>();
             List<RTPointLight> pointLights = new List<RTPointLight>(FindObjectsOfType<RTPointLight>());
+            List<RTSpotLight> spotLights = new List<RTSpotLight>(FindObjectsOfType<RTSpotLight>());
             List<RTAreaLight> areaLights = new List<RTAreaLight>(FindObjectsOfType<RTAreaLight>());
             List<RTMesh> meshes = new List<RTMesh>(FindObjectsOfType<RTMesh>());
 
             // Construct the ray tracer scene with the found objects.
-            Scene = new RTScene(camera, pointLights, areaLights, meshes);
+            Scene = new RTScene(camera, pointLights, spotLights, areaLights, meshes);
         }
 
         private void Start()

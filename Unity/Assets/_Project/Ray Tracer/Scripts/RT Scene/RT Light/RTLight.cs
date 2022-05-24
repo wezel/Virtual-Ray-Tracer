@@ -29,6 +29,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
             }
         }
 
+        protected const int intensityDivisor = 60;
         [SerializeField, Range(0.0f, 30.0f)]
         protected float intensity;
         public virtual float Intensity
@@ -82,7 +83,9 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
                 OnLightChanged?.Invoke();
             }
         }
-        
+
+        public virtual float SpotAngle { get; set; }
+
         public delegate void LightChanged();
         /// <summary>
         /// An event invoked whenever a property of this light is changed.
@@ -133,8 +136,9 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
 
         public enum RTLightType
         {
-            Area,
-            Point
+            Point,
+            Spot,
+            Area
         }
 
         /// <summary>

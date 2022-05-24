@@ -66,6 +66,8 @@ namespace _Project.UI.Scripts.Control_Panel
         [SerializeField]
         private BoolEdit enablePointLightsEdit;
         [SerializeField]
+        private BoolEdit enableSpotLightsEdit;
+        [SerializeField]
         private BoolEdit enableAreaLightsEdit;
         [SerializeField]
         private Button renderImageButton;
@@ -86,6 +88,7 @@ namespace _Project.UI.Scripts.Control_Panel
 
             renderShadowsEdit.IsOn = rayTracer.RenderShadows;
             enablePointLightsEdit.IsOn = rtSceneManager.Scene.EnablePointLights;
+            enableSpotLightsEdit.IsOn = rtSceneManager.Scene.EnableSpotLights;
             enableAreaLightsEdit.IsOn = rtSceneManager.Scene.EnableAreaLights;
             recursionDepthEdit.Value = rayTracer.MaxDepth;
             backgroundColorEdit.Color = rayTracer.BackgroundColor;
@@ -150,6 +153,7 @@ namespace _Project.UI.Scripts.Control_Panel
         {
             renderShadowsEdit.OnValueChanged += (value) => { rayTracer.RenderShadows = value; };
             enablePointLightsEdit.OnValueChanged += (value) => { rtSceneManager.Scene.EnablePointLights = value; };
+            enableSpotLightsEdit.OnValueChanged += (value) => { rtSceneManager.Scene.EnableSpotLights = value; };
             enableAreaLightsEdit.OnValueChanged += (value) => { rtSceneManager.Scene.EnableAreaLights = value; };
             recursionDepthEdit.OnValueChanged += (value) => { rayTracer.MaxDepth = (int)value; };
             backgroundColorEdit.OnValueChanged += (value) => { rayTracer.BackgroundColor = value; };

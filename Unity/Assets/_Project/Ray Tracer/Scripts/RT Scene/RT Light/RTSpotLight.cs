@@ -3,7 +3,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Point_Light
+namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Spot_Light
 {
     /// <summary>
     /// Represents a light in the ray tracer scene. Requires that the attached game object has a 
@@ -17,7 +17,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Point_Light
     /// </summary>
     [ExecuteAlways]
     [RequireComponent(typeof(Light))]
-    public class RTPointLight : RTLight
+    public class RTSpotLight : RTLight
     {
         public override Color Color
         {
@@ -78,13 +78,32 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Point_Light
             set
             {
                 Color lightData = light.color;
-                lightData.a = specular;
+                lightData.a = lightData.a % 1 + Mathf.Floor(value * 256);
                 light.color = lightData;
 
                 base.Specular = value;
             }
         }
-        
+
+        [SerializeField, Range(0, 170)]
+        protected float spotAngle;
+        public override float SpotAngle
+        {
+            get => spotAngle;
+            set
+            {
+                // Covert the angle from degrees to radians and take the cosine of half of that.
+                Color lightData = light.color;
+                lightData.a = Mathf.Floor(lightData.a) + Mathf.Clamp01(Mathf.Cos(value * Mathf.PI / 360f)) / 2f;
+                light.color = lightData;
+                light.spotAngle = value;
+
+                if (value == spotAngle) return; // Do this after setting light.spotAngle for Editor purposes.
+                spotAngle = value;
+                OnLightChangedInvoke();
+            }
+        }
+
         /// <summary>
         /// The underlying <see cref="UnityEngine.Light"/> used by the light.
         /// </summary>
@@ -95,8 +114,17 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Point_Light
 
         protected override void Awake()
         {
-            Type = RTLightType.Point;
+            Type = RTLightType.Spot;
             base.Awake();
+        }
+
+        private new void Update()
+        {
+            base.Update();
+#if UNITY_EDITOR
+            if (light != null && light.spotAngle != spotAngle)
+                SpotAngle = spotAngle;
+#endif
         }
 
         private void LateUpdate()

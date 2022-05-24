@@ -9,7 +9,8 @@ namespace Editor.RT_Light
     {
         public override void OnInspectorGUI()
         {
-            DrawPropertiesExcluding(serializedObject, "m_Color", "m_Intensity");
+            DrawPropertiesExcluding(serializedObject, "m_Color", "m_Intensity", "m_SpotAngle", "m_InnerSpotAngle");
+            serializedObject.ApplyModifiedProperties();
         }
     }
 }

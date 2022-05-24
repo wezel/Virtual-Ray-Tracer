@@ -10,6 +10,7 @@ using _Project.UI.Scripts;
 using _Project.UI.Scripts.Render_Image_Window;
 using System.Collections;
 using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light;
+using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Spot_Light;
 
 namespace _Project.Ray_Tracer.Scripts
 {
@@ -59,38 +60,6 @@ namespace _Project.Ray_Tracer.Scripts
             }
         }
 
-        //[SerializeField]
-        //private bool renderPointLights = true;
-        ///// <summary>
-        ///// Whether this ray tracer renders point lights.
-        ///// </summary>
-        //public bool RenderPointLights
-        //{
-        //    get { return renderPointLights; }
-        //    set
-        //    {
-        //        if (value == renderPointLights) return;
-        //        renderPointLights = value;
-        //        OnRayTracerChanged?.Invoke();
-        //    }
-        //}
-
-        //[SerializeField]
-        //private bool renderAreaLights = true;
-        ///// <summary>
-        ///// Whether this ray tracer renders area lights.
-        ///// </summary>
-        //public bool RenderAreaLights
-        //{
-        //    get { return renderAreaLights; }
-        //    set
-        //    {
-        //        if (value == renderAreaLights) return;
-        //        renderAreaLights = value;
-        //        OnRayTracerChanged?.Invoke();
-        //    }
-        //}
-
         [SerializeField]
         private int maxDepth = 3;
         /// <summary>
@@ -106,21 +75,6 @@ namespace _Project.Ray_Tracer.Scripts
                 OnRayTracerChanged?.Invoke();
             }
         }
-
-        //[SerializeField]
-        //private int areaLightSamples = 2;
-        ///// <summary>
-        ///// The square root of samples taken per lightray per area light.
-        ///// </summary>
-        //public int AreaLightSamples
-        //{
-        //    get { return areaLightSamples; }
-        //    set
-        //    {
-        //        areaLightSamples = value;
-        //        OnRayTracerChanged?.Invoke();
-        //    }
-        //}
 
         [SerializeField]
         private int superSamplingFactor = 1;
@@ -293,6 +247,8 @@ namespace _Project.Ray_Tracer.Scripts
         /// <returns> The list of ray trees that were traced to render the image. </returns>
         public List<TreeNode<RTRay>> Render()
         {
+            image.EncodeToPNG();
+            image.EncodeToJPG();
             List<TreeNode<RTRay>> rayTrees = new List<TreeNode<RTRay>>();
             scene = rtSceneManager.Scene;
             camera = scene.Camera;
@@ -407,6 +363,18 @@ namespace _Project.Ray_Tracer.Scripts
                     rayTree.AddChild(TraceLight(ref lightVector, light.transform.position, light, in hitInfo));
             }
 
+            foreach (RTSpotLight spotLight in scene.SpotLights)
+            {
+                // Check if point is in spotLight cone
+                Vector3 lightVector = (spotLight.Position - hit.point).normalized;
+                float angle = Vector3.Dot(spotLight.transform.forward, -lightVector);
+                if (angle < Mathf.Cos(spotLight.SpotAngle * Mathf.PI / 360f)) continue;
+
+                lightVector = (spotLight.transform.position - hit.point).normalized;
+                if (Vector3.Dot(hitInfo.Normal, lightVector) >= 0.0f)
+                    rayTree.AddChild(TraceLight(ref lightVector, spotLight.transform.position, spotLight, in hitInfo));
+            }
+
             foreach (RTAreaLight arealight in scene.AreaLights)
             {
                 // Check if point is in front of arealight
@@ -492,7 +460,8 @@ namespace _Project.Ray_Tracer.Scripts
                     color *= angle * 10; // Extra attenuation at edge to have the same as the Unity shader
             }
 
-            return new RTRay(hitInfo.Point, lightVector, lightDistance, ClampColor(color * light.Intensity), RTRay.RayType.PointLight);
+            // Shorten the distance so it doesn't actually hit the light
+            return new RTRay(hitInfo.Point, lightVector, lightDistance - 0.01f, ClampColor(color * light.Intensity), RTRay.RayType.PointLight);
         }
 
         private List<TreeNode<RTRay>> TraceReflectionAndRefraction(int depth, in HitInfo hitInfo)
@@ -637,6 +606,18 @@ namespace _Project.Ray_Tracer.Scripts
 
                 if (Vector3.Dot(hitInfo.Normal, lightVector) >= 0.0f)
                     color += TraceLightImage(ref lightVector, light.Position, light, in hitInfo);
+            }
+
+            foreach (RTSpotLight spotLight in scene.SpotLights)
+            {
+                // Check if point is in spotLight cone. Divide by 2 because the spotAngle is the total angle, not wrt the normal.
+                Vector3 lightVector = (spotLight.Position - hit.point).normalized;
+                float angle = Vector3.Dot(spotLight.transform.forward, -lightVector);
+                if (angle < Mathf.Cos(spotLight.SpotAngle * Mathf.PI / 360f)) continue;
+
+                lightVector = (spotLight.Position - hit.point).normalized;
+                if (Vector3.Dot(hitInfo.Normal, lightVector) >= 0.0f)
+                    color += TraceLightImage(ref lightVector, spotLight.Position, spotLight, in hitInfo);
             }
 
             foreach (RTAreaLight arealight in scene.AreaLights)

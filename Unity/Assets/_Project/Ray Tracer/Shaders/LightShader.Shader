@@ -66,19 +66,6 @@ Shader "Custom/LightShader"
                 return output;
             }
 
-            // This function decodes 2 floats to a vector of 3.
-            // The encoded floats can only have range(0,1).
-            // The formula for f1 = ( x * 256 + y / 2 ) the division by 2 is to make sure both values don't interfere with eachother.
-            // f2 is just z.
-            float3 unpackData3(float f1, float f2)
-            {
-                float3 output;
-                output.x = floor(f1) / 256;
-                output.y = fmod(f1, 1) * 2;
-                output.z = f2;
-                return output;
-            }
-
             // The vertex shader.
             vertexOutput vert(vertexInput input)
             {
@@ -110,12 +97,13 @@ Shader "Custom/LightShader"
                 float3 view = normalize(_WorldSpaceCameraPos - input.worldPosition.xyz);
                 float3 vertexToLightSource = _WorldSpaceLightPos0.xyz - input.worldPosition.xyz;
                 float3 light = normalize(vertexToLightSource);
+                float4 ambDifSpecAngle = unpackData4(_LightColor0.b, _LightColor0.a);
 #ifdef SPOT
-                float3 lightDirection = normalize(mul(float3(0, 0, -1), (float3x3)unity_WorldToLight));
+                float3 lightDirection = normalize(mul(float3(0, 0, -1), (float3x3)unity_WorldToLight)); // Direction the light points towards
                 float angle = dot(lightDirection, light);
                 
-                // return black if the point is behind the spot light.
-                if (angle <= 0.0) return float4(0, 0, 0, 0);
+                // return black if the point is behind the spot light. <= because the angle is clamped from 0-1.
+                if (angle <= ambDifSpecAngle.w) return float4(0, 0, 0, 0);
 #endif
 
                 float diffuseStrength = max(0.0, dot(light, normal));
@@ -132,7 +120,7 @@ Shader "Custom/LightShader"
                 float4 lightInfo  = unpackData4(_LightColor0.r, _LightColor0.g);
                 float3 lightColor = lightInfo.xyz;
                 float  intensity  = lightInfo.w * 30; // Intensity range is set to 0 - 30 but packed as 0 - 1.
-                float3 ambDifSpec = unpackData3(_LightColor0.b, _LightColor0.a);
+                float3 ambDifSpec = ambDifSpecAngle.xyz;
 
                 float3 ambientColor  =                                ambDifSpec.x * lightColor * _Color.rgb;
                 float3 diffuseColor  = diffuseStrength  * _Diffuse  * ambDifSpec.y * lightColor * _Color.rgb;
