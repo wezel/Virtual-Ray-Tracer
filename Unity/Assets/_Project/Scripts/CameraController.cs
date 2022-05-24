@@ -275,7 +275,10 @@ namespace _Project.Scripts
                 if (transform.position == RTCam.Position && transform.eulerAngles == RTCam.transform.eulerAngles)
                 {
                     flytocam = false;
-                    distance = Vector3.Magnitude(RTCam.Position - transform.position);
+                    distance = Vector3.Distance(Target.position, RTCam.transform.position);
+                    xDegrees = transform.rotation.eulerAngles.y;
+                    yDegrees = transform.rotation.eulerAngles.x;
+                    Target.position = transform.position + (transform.rotation * Vector3.forward * distance);
                 }
                 else
                     FlyToRTCameraStep();
@@ -297,7 +300,7 @@ namespace _Project.Scripts
 
             // Update the position based on our rotation and the distance to the target.
             transform.position = Target.position - (transform.rotation * Vector3.forward * distance);
-        
+
         }
 
         private static float ClampAngle(float angle, float min, float max)
