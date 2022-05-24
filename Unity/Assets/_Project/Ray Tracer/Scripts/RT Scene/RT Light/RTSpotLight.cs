@@ -67,7 +67,6 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Spot_Light
             // Make the label face the camera. We do this in LateUpdate to make sure the camera has finished its moving.
             // From: https://answers.unity.com/questions/52656/how-i-can-create-an-sprite-that-always-look-at-the.html
 
-            canvas.transform.rotation = Quaternion.Euler(0f, 0f, canvas.transform.eulerAngles.z + 0.5f);
         }
 
 #if UNITY_EDITOR
@@ -78,7 +77,6 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Spot_Light
             if (UnityEditor.SceneView.lastActiveSceneView == null) 
                 return;
 
-            canvas.transform.rotation = Quaternion.Euler(0f, 0f, canvas.transform.eulerAngles.z + 1);
         }
 #endif
     }
