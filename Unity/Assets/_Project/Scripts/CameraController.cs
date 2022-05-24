@@ -1,3 +1,6 @@
+using _Project.Ray_Tracer.Scripts;
+using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Camera;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -248,13 +251,44 @@ namespace _Project.Scripts
             }
         }
 
+        private static bool flytocam = false;
+
+        public void FlyToRTCamera()
+        {
+            flytocam = true;
+        }
+
+        private void FlyToRTCameraStep()
+        {
+            Vector3 RTCamPos = RTSceneManager.Get().Scene.Camera.Position;
+            Quaternion RTCamRot = RTSceneManager.Get().Scene.Camera.transform.rotation;
+
+            transform.position = Vector3.Lerp(transform.position, RTCamPos, 0.1f);
+            transform.rotation = Quaternion.Lerp(transform.rotation, RTCamRot, 0.1f);
+        }
+
+        private void FixedUpdate()
+        {
+            RTCamera RTCam = RTSceneManager.Get().Scene.Camera;
+            if (flytocam)
+            {
+                if (transform.position == RTCam.Position && transform.eulerAngles == RTCam.transform.eulerAngles)
+                {
+                    flytocam = false;
+                    distance = Vector3.Magnitude(RTCam.Position - transform.position);
+                }
+                else
+                    FlyToRTCameraStep();
+            }
+        }
+
         void Update()
         {
+            if (flytocam)
+                return;
         
             // If we are over the ui we don't allow the user to start any of these actions.
-
             OnlyOneInputPicker();
-
 
             // TODO Allow for free zoom movement not clamped and not as a function of distance just a fixed step amount.
             // TODO Add function to focus on objects and have zoom like it is now.
