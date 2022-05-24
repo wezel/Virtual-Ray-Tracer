@@ -446,13 +446,14 @@ namespace _Project.Ray_Tracer.Scripts
                 intensity /= 10;
 
             // Spotlight attenuation
-            if (light.Type == RTLight.RTLightType.Area)
+            if (light.Type != RTLight.RTLightType.Point)
             {
                 // Angle is always positive; position has been checked at before funciton call.
                 float angle = Vector3.Dot(light.transform.forward, -lightVector);
-                color *= angle;
-                if (angle < 0.04f)
-                    color *= angle * 10; // Extra attenuation at edge to have the same as the Unity shader
+                //color *= angle;
+                //if (angle < 0.04f)
+                //    color *= angle * 10; // Extra attenuation at edge to have the same as the Unity shader
+                color *= Mathf.Pow(angle, 0.1f / (angle - Mathf.Cos(light.SpotAngle * Mathf.PI / 360f)));
             }
 
             // Shorten the distance so it doesn't actually hit the light
@@ -669,13 +670,14 @@ namespace _Project.Ray_Tracer.Scripts
                 intensity /= 10;
 
             // Spotlight attenuation
-            if (light.Type == RTLight.RTLightType.Area)
+            if (light.Type != RTLight.RTLightType.Point)
             {
                 // Angle is always positive; position has been checked at before funciton call.
                 float angle = Vector3.Dot(light.transform.forward, -lightVector);
-                color *= angle;
-                if (angle < 0.04f)
-                    color *= angle * 10; // Extra attenuation at edge to have the same as the Unity shader
+                //color *= angle;
+                //if (angle < 0.04f)
+                //    color *= angle * 10; // Extra attenuation at edge to have the same as the Unity shader
+                color *= Mathf.Pow(angle, 0.1f / (angle - Mathf.Cos(light.SpotAngle * Mathf.PI / 360f)));
             }
 
             return ClampColor(color * intensity);
