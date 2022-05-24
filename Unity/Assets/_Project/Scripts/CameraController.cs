@@ -1,6 +1,4 @@
 using _Project.Ray_Tracer.Scripts;
-using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Camera;
-using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -260,22 +258,21 @@ namespace _Project.Scripts
 
         private void FlyToRTCameraStep()
         {
-            Vector3 RTCamPos = RTSceneManager.Get().Scene.Camera.Position;
-            Quaternion RTCamRot = RTSceneManager.Get().Scene.Camera.transform.rotation;
+            Transform RTCamTransform = RTSceneManager.Get().Scene.Camera.transform;
 
-            transform.position = Vector3.Lerp(transform.position, RTCamPos, 0.1f);
-            transform.rotation = Quaternion.Lerp(transform.rotation, RTCamRot, 0.1f);
+            transform.position = Vector3.Lerp(transform.position, RTCamTransform.position, 0.1f);
+            transform.rotation = Quaternion.Lerp(transform.rotation, RTCamTransform.rotation, 0.1f);
         }
 
         private void FixedUpdate()
         {
-            RTCamera RTCam = RTSceneManager.Get().Scene.Camera;
             if (flytocam)
             {
-                if (transform.position == RTCam.Position && transform.eulerAngles == RTCam.transform.eulerAngles)
+                Transform RTCamTransform = RTSceneManager.Get().Scene.Camera.transform;
+                if (transform.position == RTCamTransform.position && transform.eulerAngles == RTCamTransform.eulerAngles)
                 {
                     flytocam = false;
-                    distance = Vector3.Distance(Target.position, RTCam.transform.position);
+                    distance = Vector3.Distance(Target.position, RTCamTransform.position);
                     xDegrees = transform.rotation.eulerAngles.y;
                     yDegrees = transform.rotation.eulerAngles.x;
                     Target.position = transform.position + (transform.rotation * Vector3.forward * distance);
