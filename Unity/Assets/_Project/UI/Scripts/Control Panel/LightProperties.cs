@@ -158,6 +158,7 @@ namespace _Project.UI.Scripts.Control_Panel
             light.SpotAngle = spotAngle;
             light.LightSamples = lightSamples;
             light.LightDistanceAttenuation = distanceAttenuation;
+            light.UpdateLightData(); // Call this explicitly in case all of the above are the same as prefab
 
             manager.Scene.AddLight(light);
             manager.Select(light.transform);

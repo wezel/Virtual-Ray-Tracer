@@ -5,7 +5,7 @@ using UnityEngine.UI;
 namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
 {
     /// <summary>
-    /// Base class of the RTPointLight and RTAreaLight
+    /// Base class of the RTLights
     /// </summary>
     [ExecuteAlways]
     public class RTLight : MonoBehaviour
