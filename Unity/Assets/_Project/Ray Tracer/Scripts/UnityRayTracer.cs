@@ -252,6 +252,7 @@ namespace _Project.Ray_Tracer.Scripts
             List<TreeNode<RTRay>> rayTrees = new List<TreeNode<RTRay>>();
             scene = rtSceneManager.Scene;
             camera = scene.Camera;
+            RayManager raymanager = RayManager.Get();
 
             int width = camera.ScreenWidth;
             int height = camera.ScreenHeight;
@@ -261,7 +262,7 @@ namespace _Project.Ray_Tracer.Scripts
             float pixelWidth = halfScreenWidth * 2.0f / width;
             float pixelHeight = halfScreenHeight * 2.0f / height;
             int ssFactor = superSamplingVisual ? SuperSamplingFactor : 1;
-            int superSamplingSquared = ssFactor * ssFactor;
+            int ssSquared = ssFactor * ssFactor;
             Vector3 origin = camera.transform.position;
 
             // Trace a ray for each pixel. 
@@ -306,15 +307,15 @@ namespace _Project.Ray_Tracer.Scripts
                             subRayTree.Data.Length += pixelDistance;
 
                             // Add the ray as a child of the main ray of the pixel.
-                            subRayTree.Data.Contribution = 1.0f / superSamplingSquared;
+                            subRayTree.Data.Contribution = 1.0f / ssSquared;
                             rayTree.AddChild(subRayTree);
 
                             color += subRayTree.Data.Color;
                         }
                     }
 
-                    // Divide by supersamplingFactor squared and set alpha levels back to 1. It should always be 1!
-                    color /= superSamplingSquared;
+                    // Divide by superSamplingFactorSquared and set alpha levels back to 1. It should always be 1!
+                    color /= ssSquared;
                     color.a = 1.0f;
 
                     rayTree.Data.Color = color;
@@ -421,12 +422,10 @@ namespace _Project.Ray_Tracer.Scripts
             }
 
             // If we don't render shadows, we still have to check if the object is outside the range of a spot/arealight
+            float angle = Vector3.Dot(light.transform.forward, -lightVector);
             if (light.Type != RTLight.RTLightType.Point)
-            {
-                float angle = Vector3.Dot(light.transform.forward, -lightVector);
                 if (angle < Mathf.Cos(light.SpotAngle * Mathf.PI / 360f))
-                    return new RTRay(hitInfo.Point, lightVector, lightDistance - 0.01f, Color.black, RTRay.RayType.Shadow);
-            }
+                    return new RTRay(hitInfo.Point, lightVector, lightDistance - 0.05f, Color.black, RTRay.RayType.Shadow);
 
             // We either don't render shadows or nothing is between the object and the light source.
 
@@ -444,17 +443,14 @@ namespace _Project.Ray_Tracer.Scripts
 
             // Spotlight attenuation
             if (light.Type != RTLight.RTLightType.Point)
-            {
-                // Angle is always positive; position has been checked at before funciton call.
-                float angle = Vector3.Dot(light.transform.forward, -lightVector);
+                // Angle is always positive; position has been checked before.
                 color *= Mathf.Pow(angle, 0.04f / (angle - Mathf.Cos(light.SpotAngle * Mathf.PI / 360f)));
-            }
 
             // Lastly add ambient so it doesn't get attenuated
             color += light.Ambient * light.Color * hitInfo.Color;
 
             // Shorten the distance so it doesn't actually hit the light
-            return new RTRay(hitInfo.Point, lightVector, lightDistance - 0.01f, ClampColor(color), RTRay.RayType.PointLight);
+            return new RTRay(hitInfo.Point, lightVector, lightDistance - 0.05f, ClampColor(color), RTRay.RayType.PointLight);
         }
 
         private List<TreeNode<RTRay>> TraceReflectionAndRefraction(int depth, in HitInfo hitInfo)

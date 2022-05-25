@@ -51,6 +51,7 @@ MonoBehaviour:
   ambient: 0
   diffuse: 1
   specular: 1
+  lightDistanceAttenuation: 1
   Type: 0
   label: {fileID: 4415559385507083291}
   outline: {fileID: 2936163527658708494}
@@ -158,7 +159,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3904491717560610861}
-  m_LocalRotation: {x: 0.27414727, y: 0.21723528, z: -0.06371768, w: 0.9346615}
+  m_LocalRotation: {x: 0.133139, y: -0.7989212, z: 0.19192137, w: 0.55422485}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.001, y: 0.001, z: 0.001}
   m_Children:
