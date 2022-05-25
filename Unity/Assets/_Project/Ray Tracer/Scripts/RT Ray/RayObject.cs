@@ -36,7 +36,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
         /// <param name="radius"> The drawn radius of the cylinder. </param>
         public void Draw(float radius)
         {
-            rayRenderer.Radius = radius;
+            rayRenderer.Radius = ray.Type == RTRay.RayType.AreaLight ? 1f : radius; ;
             rayRenderer.Length = DrawLength;
         }
 
@@ -49,8 +49,9 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
         /// <param name="length"> The drawn length of the cylinder. Clamped between 0 and <see cref="DrawLength"/> </param>
         public void Draw(float radius, float length)
         {
-            rayRenderer.Radius = radius;
-            rayRenderer.Length = Mathf.Clamp(length, 0.0f, DrawLength);
+            length = Mathf.Clamp(length, 0.0f, DrawLength);
+            rayRenderer.Radius = ray.Type == RTRay.RayType.AreaLight ? 1f * length/DrawLength : radius;
+            rayRenderer.Length = length;
         }
 
         private void Reset()
@@ -61,8 +62,12 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
             rayRenderer.Direction = Ray.Direction;
             rayRenderer.Length = 0.0f;
 
+            if (ray.Type == RTRay.RayType.AreaLight) rayRenderer.SetAreaLightRay(ray.AreaLightPoints);
+
             ReloadMaterial();
         }
+
+        //public void SetAreaLightRay() => rayRenderer.SetAreaLightRay(ray.AreaLightPoints);
 
         public void ReloadMaterial()
         {

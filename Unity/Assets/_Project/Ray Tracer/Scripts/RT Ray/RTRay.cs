@@ -60,6 +60,8 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
             set { contribution = value; }
         }
 
+        public Vector3[] AreaLightPoints { get; set; }
+
         /// <summary>
         /// Construct a default ray. The resulting ray is technically valid, but should only be used in the
         /// construction of a proper ray.
@@ -90,6 +92,13 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
             Color = color;
             Type = type;
             Contribution = type == RayType.NoHit || type == RayType.Shadow ? 0.0f : 1.0f;
+        }
+
+        public RTRay(Vector3 origin, Vector3 direction, float length, Color color, RayType type, Vector3[] areaLightPoints)
+        :
+            this(origin, direction, length, color, type)
+        {            
+            AreaLightPoints = areaLightPoints;
         }
 
         public int ObjectPoolIndex { get; set; }

@@ -52,6 +52,7 @@ MonoBehaviour:
   rayMaxRadius: 0.025
   infiniteRayDrawLength: 10
   rayPrefab: {fileID: 3475852730852656632, guid: c002e298918eb804994048849f871225, type: 3}
+  areaRayPrefab: {fileID: 3475852730852656632, guid: c41b63091c4709445aa74fe42f3298cc, type: 3}
   showRays: 1
   noHitMaterial: {fileID: 2100000, guid: a98bb9836e3faab40afd0672bb18dc32, type: 2}
   reflectMaterial: {fileID: 2100000, guid: 3d44750ec9ccdc547af676ae26be4ef1, type: 2}

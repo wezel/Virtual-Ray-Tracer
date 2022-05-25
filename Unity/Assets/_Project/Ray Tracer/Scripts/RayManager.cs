@@ -184,6 +184,8 @@ namespace _Project.Ray_Tracer.Scripts
 
         [SerializeField]
         private RayObject rayPrefab;
+        [SerializeField]
+        private RayObject areaRayPrefab;
         [Range(0, 1024)]
         private int initialRayPoolSize = 64;
 
@@ -524,7 +526,7 @@ namespace _Project.Ray_Tracer.Scripts
         {
             rays = new List<TreeNode<RTRay>>();
 
-            rayObjectPool = new RayObjectPool(rayPrefab, initialRayPoolSize, transform);
+            rayObjectPool = new RayObjectPool(rayPrefab, areaRayPrefab, initialRayPoolSize, transform);
             Reset = true;
 
             rtSceneManager = RTSceneManager.Get();

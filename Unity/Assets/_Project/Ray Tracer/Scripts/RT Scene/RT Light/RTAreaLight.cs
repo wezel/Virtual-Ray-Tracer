@@ -47,6 +47,13 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
         private RectTransform rectTransform;
         private RectTransform RectTransform { get => rectTransform; }
 
+        public Vector3[] GetWorldCorners()
+        {
+            Vector3[] worldCorners = new Vector3[4];
+            rectTransform.GetWorldCorners(worldCorners);
+            return worldCorners;
+        }
+
         private readonly System.Random rnd = new System.Random();
 
         /// <summary>

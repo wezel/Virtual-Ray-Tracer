@@ -13,6 +13,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
     {
         private readonly List<RayObject> rayObjects;
         private readonly RayObject rayPrefab;
+        private readonly RayObject areaRayPrefab;
         private readonly Transform parent;
         private int nextIndex;
 
@@ -22,9 +23,10 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
         /// <param name="rayPrefab"> The <see cref="RayObject"/> prefab to be instantiated by this pool. </param>
         /// <param name="initialAmount"> The initial amount of <see cref="RayObject"/>s to instantiate. </param>
         /// <param name="parent"> The parent object of all <see cref="RayObject"/>s instantiated by this pool. </param>
-        public RayObjectPool(RayObject rayPrefab, int initialAmount, Transform parent)
+        public RayObjectPool(RayObject rayPrefab, RayObject areaRayPrefab, int initialAmount, Transform parent)
         {
             this.rayPrefab = rayPrefab;
+            this.areaRayPrefab = areaRayPrefab;
             this.parent = parent;
 
             rayObjects = new List<RayObject>(initialAmount);
@@ -97,7 +99,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
         /// <param name="rayTree"> Rays that need to be turned into objects. </param>
         private void MakeRayTreeObjects(TreeNode<RTRay> rayTree)
         {
-            MakeRayObject(/*rayTree.Data.Type*/);    // Make sure there's a rayObject at the nextIndex
+            MakeRayObject(rayTree.Data.Type);    // Make sure there's a rayObject at the nextIndex
             rayTree.Data.ObjectPoolIndex = nextIndex;
             rayObjects[nextIndex].Ray = rayTree.Data;
             rayObjects[nextIndex].gameObject.SetActive(false);
@@ -113,13 +115,13 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
         /// objects in the pool a new one will be instantiated and returned.
         /// </summary>
         /// <returns> An unused activated <see cref="RayObject"/> from the pool. </returns>
-        private void MakeRayObject()
+        private void MakeRayObject(RTRay.RayType type)
         {
             // First we check if an unused ray object already exists.
             if (nextIndex < rayObjects.Count) return;
 
             // Else we add a new object to the pool.
-            rayObjects.Add(Object.Instantiate(rayPrefab, parent));
+            rayObjects.Add(Object.Instantiate(type == RTRay.RayType.AreaLight ? areaRayPrefab : rayPrefab, parent));
         }
     
         public RayObject GetRayObject(int index)
