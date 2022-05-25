@@ -252,7 +252,6 @@ namespace _Project.Ray_Tracer.Scripts
             List<TreeNode<RTRay>> rayTrees = new List<TreeNode<RTRay>>();
             scene = rtSceneManager.Scene;
             camera = scene.Camera;
-            RayManager raymanager = RayManager.Get();
 
             int width = camera.ScreenWidth;
             int height = camera.ScreenHeight;

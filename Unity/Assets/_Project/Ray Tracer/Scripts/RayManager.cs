@@ -554,6 +554,7 @@ namespace _Project.Ray_Tracer.Scripts
                 int width = rtSceneManager.Scene.Camera.ScreenWidth;
                 int index = selectedRayCoordinates.x + width * selectedRayCoordinates.y;
                 selectedRay = rays[index];
+                rayObjectPool.DeactivateAll();
             }
 
             if (Animate)
