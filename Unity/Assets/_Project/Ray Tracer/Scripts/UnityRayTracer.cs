@@ -436,7 +436,7 @@ namespace _Project.Ray_Tracer.Scripts
             color += Mathf.Pow(Mathf.Max(Vector3.Dot(reflectionVector, hitInfo.View), 0.0f), hitInfo.Shininess) *
                      hitInfo.Specular * light.Specular * light.Color * light.Intensity; // Is
 
-            //Light distance attenuation
+            // Light distance attenuation
             if (light.LightDistanceAttenuation)
                 color /= 0.4f + 1f * lightDistance + 0.6f * (lightDistance * lightDistance);
 

@@ -97,7 +97,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
         /// <param name="rayTree"> Rays that need to be turned into objects. </param>
         private void MakeRayTreeObjects(TreeNode<RTRay> rayTree)
         {
-            MakeRayObject();    // Make sure there's a rayObject at the nextIndex
+            MakeRayObject(/*rayTree.Data.Type*/);    // Make sure there's a rayObject at the nextIndex
             rayTree.Data.ObjectPoolIndex = nextIndex;
             rayObjects[nextIndex].Ray = rayTree.Data;
             rayObjects[nextIndex].gameObject.SetActive(false);

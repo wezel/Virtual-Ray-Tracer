@@ -77,10 +77,15 @@ namespace _Project.UI.Scripts.Control_Panel
             scaleEdit.gameObject.SetActive(light.Type == RTLight.RTLightType.Area);
             lightSamplesEdit.gameObject.SetActive(light.Type == RTLight.RTLightType.Area);
             spotAngleEdit.gameObject.SetActive(light.Type == RTLight.RTLightType.Spot);
-            SetTypeDropdown();
-            typeDropdown.gameObject.SetActive(RTSceneManager.Get().DeleteAllowed);
-
-            //typeDropdown.value = typeDropdown.options.FindIndex(option => option.text == light.Type.ToString());
+            
+            if (RTSceneManager.Get().DeleteAllowed)
+            {   // The dropdown should only be available when the original light may be deleted.
+                typeDropdown.gameObject.SetActive(true);
+                SetTypeDropdown();
+                typeDropdown.value = typeDropdown.options.FindIndex(option => option.text == light.Type.ToString());
+            }
+            else
+                typeDropdown.gameObject.SetActive(false);
 
             colorEdit.Color = light.Color;
             intensityEdit.Value = light.Intensity;
