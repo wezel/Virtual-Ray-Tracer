@@ -89,55 +89,51 @@ Shader "Custom/LightShader"
             // The fragment shader.
             float4 frag(vertexOutput input, fixed facing : VFACE) : COLOR
             {
-                // For now we do the lighting calculation under the assumption that all lights are point or spot light sources.
-                /**/// We also ignore light attenuation. Such things should be added if they are added to the ray tracer.
-  
+                // For now we do the lighting calculation under the assumption that all lights are point or spot light sources.  
+                // We use the _LightColor0 to transfer the lightColor, intensity, spotAngle, ambient, diffuse and specular components.
+                // lightColor and intensity are encoded in .r and .g
+                // ambDifSpec and spotAngle are encoded in .b and .a
+                // See the unpackData4 function for more info.
                 float3 normal = normalize(input.normal);
-                if(facing < 0) normal = -normal;
+                if (facing < 0) normal = -normal;
                 float3 view = normalize(_WorldSpaceCameraPos - input.worldPosition.xyz);
                 float3 vertexToLightSource = _WorldSpaceLightPos0.xyz - input.worldPosition.xyz;
                 float3 light = normalize(vertexToLightSource);
                 float4 ambDifSpecAngle = unpackData4(_LightColor0.b, _LightColor0.a);
 
+#ifdef SPOT
+                float spotAngle = ambDifSpecAngle.w; // The angle after which the spotlight does not shine any furter wrt it's direction
+                float3 spotLightDirection = normalize(mul(float3(0, 0, 1), (float3x3)unity_WorldToLight)); // Direction the spotlight points towards
+                float angle = dot(spotLightDirection, -light); // The angle between the spotlight's direction and the vector to the fragment
+                
+                // return black if the point is outside the scope of the spot light.
+                if (angle < spotAngle) return float4(0, 0, 0, 0);
+#endif
+
+                float diffuseStrength = max(0.0, dot(light, normal));
+                 // return black if the angle is >= 90 degrees between the normal and the light vector.
+                if (diffuseStrength <= 0.0) return float4(0,0,0,0);
+
+                float specularStrength = pow(max(0.0, dot(reflect(-light, normal), view)), _Shininess);                
+                // lightDistanceAttenuation bool is packed in with specular. If its bigger than 1, it's enabled. Added 2 to not interfere.
                 bool lightDistanceAttenuation = false;
                 if (ambDifSpecAngle.z > 1)
                 {
                     lightDistanceAttenuation = true;
                     ambDifSpecAngle.z -= 2;
                 }
-#ifdef SPOT
-                float3 lightDirection = normalize(mul(float3(0, 0, -1), (float3x3)unity_WorldToLight)); // Direction the light points towards
-                float angle = dot(lightDirection, light);
-                
-                // return black if the point is behind the spot light. <= because the angle is clamped from 0-1.
-                if (angle <= ambDifSpecAngle.w) return float4(0, 0, 0, 0);
-#endif
-
-                float diffuseStrength = max(0.0, dot(light, normal));
-
-                 // return black if the angle is >= 90 degrees between the normal and the light vector.
-                if(diffuseStrength <= 0.0) return float4(0,0,0,0);
-
-                float specularStrength = pow(max(0.0, dot(reflect(-light, normal), view)), _Shininess);
-                
-                // We use the _LightColor0 to transfer the lightColor, intensity, ambient, diffuse and specular components.
-                // lightColor and intensity are encoded in .r and .g
-                // ambDifSpec is encoded in .b and .a
-                // See the unpackData functions for more info.
                 float4 lightInfo  = unpackData4(_LightColor0.r, _LightColor0.g);
                 float3 lightColor = lightInfo.xyz;
                 float  intensity  = lightInfo.w * 30; // Intensity range is set to 0 - 30 but packed as 0 - 1.
-                float3 ambDifSpec = ambDifSpecAngle.xyz;
 
-                float3 ambientColor  =                                ambDifSpec.x * lightColor * _Color.rgb;
-                float3 diffuseColor  = diffuseStrength  * _Diffuse  * ambDifSpec.y * lightColor * _Color.rgb;
-                float3 specularColor = specularStrength * _Specular * ambDifSpec.z * lightColor * _Color.rgb;
+                float3 ambientColor  = ambDifSpecAngle.x * lightColor * _Color.rgb;
+                float3 diffuseColor  = ambDifSpecAngle.y * lightColor * _Color.rgb * diffuseStrength  * _Diffuse;
+                float3 specularColor = ambDifSpecAngle.z * lightColor * _Color.rgb * specularStrength * _Specular;
 
                 float3 result = diffuseColor + specularColor; // Add ambient at the end, as it's immune to attenuation
-                float attenuation = SHADOW_ATTENUATION(input);
 
 #ifdef SPOT     // Spotlight attenuation
-                result *= pow(angle, 0.1 / (angle - ambDifSpecAngle.w));
+                result *= pow(angle, 0.04 / (angle - spotAngle));
 #endif
 
                 // Light distance attenuation
@@ -147,6 +143,7 @@ Shader "Custom/LightShader"
                     result /= 0.4 + 1 * distance + 0.6 * (distance * distance);
                 }
 
+                float attenuation = SHADOW_ATTENUATION(input); // Will be 1.0 for no shadow and 0.0 for full shadow.
                 return float4(ambientColor + result * attenuation * intensity, 0);
             }
             ENDCG

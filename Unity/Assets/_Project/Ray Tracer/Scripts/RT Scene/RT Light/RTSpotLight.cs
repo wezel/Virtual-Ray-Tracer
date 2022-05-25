@@ -26,11 +26,12 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Spot_Light
             get => spotAngle;
             set
             {
-                UpdateLightData();
+                if (value < 0 || value > 170) return;
                 light.spotAngle = value; // Do this always for Editor purposes.
                 if (value == spotAngle) return;
 
                 spotAngle = value;
+                UpdateLightData();
                 OnLightChangedInvoke();
             }
         }
@@ -41,12 +42,12 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Spot_Light
             lightData.r = Mathf.Floor(color.r * 256)  + color.g / 2;
             lightData.g = Mathf.Floor(color.b * 256)  + (intensity / intensityDivisor);
             lightData.b = Mathf.Floor(ambient * 256)  + diffuse / 2;
-            lightData.a = Mathf.Floor(specular * 256) + Mathf.Clamp01(Mathf.Cos(spotAngle * Mathf.PI / 360f)) / 2f + (lightDistanceAttenuation ? 512 : 0);
+            lightData.a = Mathf.Floor(specular * 256) + Mathf.Cos(spotAngle * Mathf.PI / 360f) / 2f + (lightDistanceAttenuation ? 512 : 0);
             light.color = lightData;
         }
 
         /// <summary>
-        /// The underlying <see cref="UnityEngine.Light"/> used by the light.
+        /// The underlying Spot<see cref="UnityEngine.Light"/> used by the spotlight.
         /// </summary>
         [SerializeField]
         private new Light light;

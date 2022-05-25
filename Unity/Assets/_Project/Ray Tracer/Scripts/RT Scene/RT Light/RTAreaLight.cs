@@ -30,10 +30,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
         public override LightShadows Shadows
         {
             get => lights[0].shadows;
-            set
-            {
-                foreach (Light light in lights) light.shadows = value;
-            }
+            set { foreach (Light light in lights) light.shadows = value; }
         }
 
         public override void UpdateLightData()
@@ -88,7 +85,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
                 if (value == lightSamples) return;
                 if (value >= 2 && value <= 10)
                     lightSamples = value;
-                OnLightChangedInvoke();
+                UpdateLights();
             }
         }
 
@@ -159,16 +156,15 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
             // Update label; black at the back; light color at the front
             UpdateLabelColor();
 
-            // Update the (amount of) lights
+#if UNITY_EDITOR // Update the (amount of) lights in the editor
             if (lights != null && lights.Length == LightSamples * LightSamples)
                 return;
-#if UNITY_EDITOR
             else if (PrefabStageUtility.GetCurrentPrefabStage() != null) // In Prefab Mode
                 return;                                                  // Don't add lights to the prefab
-#endif
             else
-                UpdateLights();
+                UpdateLights(); // Update lights as well in the editor
+#endif
         }
-                
+
     }
 }
