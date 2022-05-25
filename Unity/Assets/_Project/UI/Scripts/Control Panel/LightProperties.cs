@@ -7,6 +7,8 @@ using UnityEngine.EventSystems;
 using _Project.Ray_Tracer.Scripts;
 using _Project.Ray_Tracer.Scripts.RT_Scene;
 using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Spot_Light;
+using System;
+using System.Collections.Generic;
 
 namespace _Project.UI.Scripts.Control_Panel
 {
@@ -75,9 +77,11 @@ namespace _Project.UI.Scripts.Control_Panel
             scaleEdit.gameObject.SetActive(light.Type == RTLight.RTLightType.Area);
             lightSamplesEdit.gameObject.SetActive(light.Type == RTLight.RTLightType.Area);
             spotAngleEdit.gameObject.SetActive(light.Type == RTLight.RTLightType.Spot);
+            SetTypeDropdown();
             typeDropdown.gameObject.SetActive(RTSceneManager.Get().DeleteAllowed);
 
-            typeDropdown.value = typeDropdown.options.FindIndex(option => option.text == light.Type.ToString());
+            //typeDropdown.value = typeDropdown.options.FindIndex(option => option.text == light.Type.ToString());
+
             colorEdit.Color = light.Color;
             intensityEdit.Value = light.Intensity;
             ambientEdit.Value = light.Ambient;
@@ -85,6 +89,17 @@ namespace _Project.UI.Scripts.Control_Panel
             specularEdit.Value = light.Specular;
             spotAngleEdit.Value = light.SpotAngle;
             distanceAttenuationEdit.IsOn = light.LightDistanceAttenuation;
+        }
+
+        private void SetTypeDropdown()
+        {
+            RTScene scene = RTSceneManager.Get().Scene;
+            List<string> types = new List<string>(3);
+            if (scene.EnablePointLights) types.Add(RTLight.RTLightType.Point.ToString());
+            if (scene.EnableSpotLights) types.Add(RTLight.RTLightType.Spot.ToString());
+            if (scene.EnableAreaLights) types.Add(RTLight.RTLightType.Area.ToString());
+            typeDropdown.options.Clear();
+            typeDropdown.AddOptions(types);
         }
 
         /// <summary>
@@ -99,6 +114,10 @@ namespace _Project.UI.Scripts.Control_Panel
         private void ChangeObjectType(RTLight.RTLightType type)
         {
             if (type == light.Type) return;
+            RTSceneManager manager = RTSceneManager.Get();
+            if (type == RTLight.RTLightType.Point && !manager.Scene.EnablePointLights) return;
+            if (type == RTLight.RTLightType.Spot && !manager.Scene.EnableSpotLights) return;
+            if (type == RTLight.RTLightType.Area && !manager.Scene.EnableAreaLights) return;
 
             Vector3 position = light.Position;
             Vector3 rotation = light.Rotation;
@@ -112,7 +131,6 @@ namespace _Project.UI.Scripts.Control_Panel
             int lightSamples = light.LightSamples;
             bool distanceAttenuation = light.LightDistanceAttenuation;
 
-            RTSceneManager manager = RTSceneManager.Get();
             manager.DeleteSelected();
 
 #if UNITY_EDITOR
