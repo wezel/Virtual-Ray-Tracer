@@ -146,10 +146,6 @@ Shader "Custom/LightShader"
                     float distance = length(vertexToLightSource);
                     result /= 0.4 + 1 * distance + 0.6 * (distance * distance);
                 }
-                else
-                {
-                    intensity /= 10;
-                }
 
                 return float4(ambientColor + result * attenuation * intensity, 0);
             }

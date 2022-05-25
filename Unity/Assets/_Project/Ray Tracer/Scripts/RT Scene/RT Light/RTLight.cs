@@ -100,6 +100,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
             {
                 if (value == lightDistanceAttenuation) return;
                 lightDistanceAttenuation = value;
+                Intensity *= Mathf.Clamp(value ? 10f : 0.1f, 0f, 30f);    // Change intensity so it doesn't look horrible.
                 UpdateLightData();
                 OnLightChanged?.Invoke();
             }

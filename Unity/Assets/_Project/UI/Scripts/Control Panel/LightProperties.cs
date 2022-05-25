@@ -175,6 +175,9 @@ namespace _Project.UI.Scripts.Control_Panel
                 rotationEdit.Value = light.transform.eulerAngles;
                 scaleEdit.Value = light.transform.localScale;
             }
+            // Intensity can be changed by Distance-attenuation
+            if (intensityEdit.Value != light.Intensity)
+                intensityEdit.Value = light.Intensity;
         }
 
         private void Update()

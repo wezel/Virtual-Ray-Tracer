@@ -432,32 +432,29 @@ namespace _Project.Ray_Tracer.Scripts
 
             // Calculate the color influence of this light.
             Vector3 reflectionVector = Vector3.Reflect(-lightVector, hitInfo.Normal);
-            Color color = light.Ambient * light.Color * hitInfo.Color;
+            Color color = Color.black;
             color += Vector3.Dot(hitInfo.Normal, lightVector) * hitInfo.Diffuse * light.Diffuse *
-                          light.Color * hitInfo.Color; // Id
+                          light.Color * hitInfo.Color * light.Intensity; // Id
             color += Mathf.Pow(Mathf.Max(Vector3.Dot(reflectionVector, hitInfo.View), 0.0f), hitInfo.Shininess) *
-                     hitInfo.Specular * light.Specular * light.Color; // Is
+                     hitInfo.Specular * light.Specular * light.Color * light.Intensity; // Is
 
             //Light distance attenuation
-            float intensity = light.Intensity;
             if (light.LightDistanceAttenuation)
                 color /= 0.4f + 1f * lightDistance + 0.6f * (lightDistance * lightDistance);
-            else
-                intensity /= 10;
 
             // Spotlight attenuation
             if (light.Type != RTLight.RTLightType.Point)
             {
                 // Angle is always positive; position has been checked at before funciton call.
                 float angle = Vector3.Dot(light.transform.forward, -lightVector);
-                //color *= angle;
-                //if (angle < 0.04f)
-                //    color *= angle * 10; // Extra attenuation at edge to have the same as the Unity shader
                 color *= Mathf.Pow(angle, 0.1f / (angle - Mathf.Cos(light.SpotAngle * Mathf.PI / 360f)));
             }
 
+            // Lastly add ambient so it doesn't get attenuated
+            color += light.Ambient * light.Color * hitInfo.Color;
+
             // Shorten the distance so it doesn't actually hit the light
-            return new RTRay(hitInfo.Point, lightVector, lightDistance - 0.01f, ClampColor(color * intensity), RTRay.RayType.PointLight);
+            return new RTRay(hitInfo.Point, lightVector, lightDistance - 0.01f, ClampColor(color), RTRay.RayType.PointLight);
         }
 
         private List<TreeNode<RTRay>> TraceReflectionAndRefraction(int depth, in HitInfo hitInfo)
@@ -656,18 +653,15 @@ namespace _Project.Ray_Tracer.Scripts
 
             // Calculate the color influence of this light.
             Vector3 reflectionVector = Vector3.Reflect(-lightVector, hitInfo.Normal);
-            Color color = light.Ambient * light.Color * hitInfo.Color;
+            Color color = Color.black;
             color += Vector3.Dot(hitInfo.Normal, lightVector) * hitInfo.Diffuse * light.Diffuse *
-                          light.Color * hitInfo.Color; // Id
+                          light.Color * hitInfo.Color * light.Intensity; // Id
             color += Mathf.Pow(Mathf.Max(Vector3.Dot(reflectionVector, hitInfo.View), 0.0f), hitInfo.Shininess) *
-                     hitInfo.Specular * light.Specular * light.Color; // Is
+                     hitInfo.Specular * light.Specular * light.Color * light.Intensity; // Is
 
             // Light distance attenuation
-            float intensity = light.Intensity;
             if (light.LightDistanceAttenuation)
                 color /= 0.4f + 1f * lightDistance + 0.6f * (lightDistance * lightDistance);
-            else
-                intensity /= 10;
 
             // Spotlight attenuation
             if (light.Type != RTLight.RTLightType.Point)
@@ -680,7 +674,10 @@ namespace _Project.Ray_Tracer.Scripts
                 color *= Mathf.Pow(angle, 0.1f / (angle - Mathf.Cos(light.SpotAngle * Mathf.PI / 360f)));
             }
 
-            return ClampColor(color * intensity);
+            // Lastly add ambient so it doesn't get attenuated
+            color += light.Ambient * light.Color * hitInfo.Color;
+
+            return ClampColor(color);
         }
 
         private Color TraceReflectionAndRefractionImage(int depth, in HitInfo hitInfo)
