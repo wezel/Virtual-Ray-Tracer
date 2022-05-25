@@ -18,7 +18,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
             Refract,
             Normal,
             Shadow,
-            PointLight,
+            Light,
             AreaLight
         }
 

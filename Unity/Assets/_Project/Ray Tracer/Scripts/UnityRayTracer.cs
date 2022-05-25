@@ -449,7 +449,7 @@ namespace _Project.Ray_Tracer.Scripts
             color += light.Ambient * light.Color * hitInfo.Color;
 
             // Shorten the distance so it doesn't actually hit the light
-            return new RTRay(hitInfo.Point, lightVector, lightDistance - 0.05f, ClampColor(color), RTRay.RayType.PointLight);
+            return new RTRay(hitInfo.Point, lightVector, lightDistance - 0.05f, ClampColor(color), RTRay.RayType.Light);
         }
 
         private List<TreeNode<RTRay>> TraceReflectionAndRefraction(int depth, in HitInfo hitInfo)

@@ -434,7 +434,7 @@ namespace _Project.Ray_Tracer.Scripts
                     return normalMaterial;
                 case RTRay.RayType.Shadow:
                     return shadowMaterial;
-                case RTRay.RayType.PointLight:
+                case RTRay.RayType.Light:
                     return lightMaterial;
                 default:
                     Debug.LogError("Unrecognized ray type " + type + "!");
@@ -464,7 +464,7 @@ namespace _Project.Ray_Tracer.Scripts
                     return new Material(normalMaterialTransparent);
                 case RTRay.RayType.Shadow:
                     return new Material(shadowMaterialTransparent);
-                case RTRay.RayType.PointLight:
+                case RTRay.RayType.Light:
                     return new Material(lightMaterialTransparent);
                 default:
                     Debug.LogError("Unrecognized ray type " + type + "!");
