@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hideNegligibleRays: 0
+  rayHideThreshold: 0.02
   rayTransparencyEnabled: 1
   rayDynamicRadiusEnabled: 1
   rayColorContributionEnabled: 1
@@ -65,9 +66,11 @@ MonoBehaviour:
   shadowMaterialTransparent: {fileID: 2100000, guid: 763eee2706c4a51419a4e12a0a02340f, type: 2}
   lightMaterial: {fileID: 2100000, guid: ca1132ecbe5f8cd429367540678c7bb0, type: 2}
   lightMaterialTransparent: {fileID: 2100000, guid: a128415b4a4413e40943cf5c219ca694, type: 2}
-  errorMaterial: {fileID: 2100000, guid: 2476b30221d1a2f4fb658070ee52c5b5, type: 2}
+  areaLightMaterial: {fileID: 2100000, guid: f795e7bd46fee0d4898b0c67d443b30b, type: 2}
+  areaLightMaterialTransparent: {fileID: 2100000, guid: f795e7bd46fee0d4898b0c67d443b30b, type: 2}
   colorRayMaterial: {fileID: 2100000, guid: 79cae673e2b06ab4c967933347beb21b, type: 2}
   colorRayMaterialTransparent: {fileID: 2100000, guid: 69bd0e396dc160edfaaf3b6a2cfde5bb, type: 2}
+  errorMaterial: {fileID: 2100000, guid: 2476b30221d1a2f4fb658070ee52c5b5, type: 2}
   animate: 0
   animateSequentially: 0
   loop: 0

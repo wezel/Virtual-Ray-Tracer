@@ -19,6 +19,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
             Normal,
             Shadow,
             Light,
+            AreaShadow,
             AreaLight
         }
 
@@ -62,6 +63,8 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
 
         public Vector3[] AreaLightPoints { get; set; }
 
+        public bool AreaRay { get; set; } = false;
+
         /// <summary>
         /// Construct a default ray. The resulting ray is technically valid, but should only be used in the
         /// construction of a proper ray.
@@ -97,7 +100,8 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
         public RTRay(Vector3 origin, Vector3 direction, float length, Color color, RayType type, Vector3[] areaLightPoints)
         :
             this(origin, direction, length, color, type)
-        {            
+        {
+            AreaRay = true;
             AreaLightPoints = areaLightPoints;
         }
 

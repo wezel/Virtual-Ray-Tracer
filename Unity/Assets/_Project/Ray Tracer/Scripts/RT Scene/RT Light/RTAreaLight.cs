@@ -54,7 +54,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
             return worldCorners;
         }
 
-        private readonly System.Random rnd = new System.Random();
+        private static readonly System.Random rnd = new System.Random();
 
         /// <summary>
         /// Samples uniformly random points on the arealight

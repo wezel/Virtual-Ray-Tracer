@@ -133,7 +133,7 @@ Shader "Custom/LightShader"
                 float3 result = diffuseColor + specularColor; // Add ambient at the end, as it's immune to attenuation
 
 #ifdef SPOT     // Spotlight attenuation
-                result *= pow(angle, 0.04 / (angle - spotAngle));
+                result *= pow(angle, 0.01 / (angle - spotAngle));
 #endif
 
                 // Light distance attenuation

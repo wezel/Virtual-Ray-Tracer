@@ -358,22 +358,30 @@ namespace _Project.Ray_Tracer.Scripts
             // Arealights
             foreach (RTAreaLight arealight in scene.AreaLights)
             {
-                int samples = arealight.LightSamples * arealight.LightSamples;
-                foreach (Vector3 point in arealight.SampleLight())
+                Vector3 lightVector = (arealight.Position - hit.point).normalized;
+                float lightDistance = Vector3.Dot(lightVector, arealight.Position - hitInfo.Point);
+                float angle = Vector3.Dot(arealight.transform.forward, -lightVector);
+                if (angle > Mathf.Cos(arealight.SpotAngle * Mathf.PI / 360f))
                 {
-                    Vector3 lightVector = (point - hit.point).normalized;
-                    if (Vector3.Dot(hitInfo.Normal, lightVector) >= 0.0f) //TODO this check only needs to happen once!
+                    int samples = arealight.LightSamples * arealight.LightSamples;
+                    foreach (Vector3 point in arealight.SampleLight())
+                    {
+                        lightVector = (point - hit.point).normalized;
                         rayTree.AddChild(TraceLight(ref lightVector, point, arealight, in hitInfo) / samples);
+                    }
+                }
+                else
+                {
+                    rayTree.AddChild(new RTRay(hitInfo.Point, lightVector, lightDistance, Color.black, RTRay.RayType.AreaShadow, arealight.GetWorldCorners()));
                 }
 
-                // If all rays hit, turn all of them into a single arealightray
+                // If all rays are the same type, turn all of them into a single arealightray
                 if (rayTree.Children.TrueForAll(child => child.Data.Type == RTRay.RayType.Light))
                 {
                     Color childColor = Color.black;
                     rayTree.Children.ForEach(child => childColor += child.Data.Color);
-                    rayTree.Children.RemoveAll(child => child.Data.Type == RTRay.RayType.Light);
-                    Vector3 lightVector = (arealight.Position - hit.point).normalized;
-                    float lightDistance = Vector3.Dot(lightVector, arealight.Position - hitInfo.Point);
+                    rayTree.Children.Clear();
+                    lightVector = (arealight.Position - hit.point).normalized;
                     rayTree.AddChild(new RTRay(hitInfo.Point, lightVector, lightDistance, ClampColor(childColor), RTRay.RayType.AreaLight, arealight.GetWorldCorners()));
                 }
             }
@@ -390,8 +398,7 @@ namespace _Project.Ray_Tracer.Scripts
             foreach (RTPointLight light in scene.PointLights)
             {
                 Vector3 lightVector = (light.transform.position - hit.point).normalized;
-
-                if (Vector3.Dot(hitInfo.Normal,lightVector) >= 0.0f) 
+                if (Vector3.Dot(hitInfo.Normal, lightVector) >= 0.0f) 
                     rayTree.AddChild(TraceLight(ref lightVector, light.transform.position, light, in hitInfo));
             }
 
@@ -430,7 +437,7 @@ namespace _Project.Ray_Tracer.Scripts
                     return new RTRay(hitInfo.Point, lightVector, shadowHit.distance, Color.black, RTRay.RayType.Shadow);
             }
 
-            // If we don't render shadows, we still have to check if the object is outside the range of a spot/arealight
+            // If we don't render shadows, we still have to check if the object is outside the range of a spotlight
             float angle = Vector3.Dot(light.transform.forward, -lightVector);
             if (light.Type != RTLight.RTLightType.Point)
                 if (angle < Mathf.Cos(light.SpotAngle * Mathf.PI / 360f))
@@ -453,7 +460,7 @@ namespace _Project.Ray_Tracer.Scripts
             // Spotlight attenuation
             if (light.Type != RTLight.RTLightType.Point)
                 // Angle is always positive; position has been checked before.
-                color *= Mathf.Pow(angle, 0.04f / (angle - Mathf.Cos(light.SpotAngle * Mathf.PI / 360f)));
+                color *= Mathf.Pow(angle, 0.01f / (angle - Mathf.Cos(light.SpotAngle * Mathf.PI / 360f)));
 
             // Lastly add ambient so it doesn't get attenuated
             color += light.Ambient * light.Color * hitInfo.Color;
@@ -647,11 +654,9 @@ namespace _Project.Ray_Tracer.Scripts
             }
 
             // If we don't render shadows, we still have to check if the object is outside the range of a spot/arealight
+            float angle = Vector3.Dot(light.transform.forward, -lightVector);
             if (light.Type != RTLight.RTLightType.Point)
-            {
-                float angle = Vector3.Dot(light.transform.forward, -lightVector);
                 if (angle < Mathf.Cos(light.SpotAngle * Mathf.PI / 360f)) return Color.black;
-            }
 
             // We either don't render shadows or nothing is between the object and the light source.
 
@@ -669,11 +674,8 @@ namespace _Project.Ray_Tracer.Scripts
 
             // Spotlight attenuation
             if (light.Type != RTLight.RTLightType.Point)
-            {
-                // Angle is always positive; position has been checked at before funciton call.
-                float angle = Vector3.Dot(light.transform.forward, -lightVector);
-                color *= Mathf.Pow(angle, 0.04f / (angle - Mathf.Cos(light.SpotAngle * Mathf.PI / 360f)));
-            }
+                // Angle is always positive; position has been checked before.
+                color *= Mathf.Pow(angle, 0.01f / (angle - Mathf.Cos(light.SpotAngle * Mathf.PI / 360f)));
 
             // Lastly add ambient so it doesn't get attenuated
             color += light.Ambient * light.Color * hitInfo.Color;

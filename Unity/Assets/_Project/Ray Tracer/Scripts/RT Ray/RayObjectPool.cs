@@ -118,12 +118,22 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
         private void MakeRayObject(RTRay.RayType type)
         {
             // First we check if an unused ray object already exists.
-            if (nextIndex < rayObjects.Count) return;
+            if (nextIndex < rayObjects.Count)
+            {
+                if ((!type.ToString().Contains("Area") && !rayObjects[nextIndex].Ray.AreaRay) || rayObjects[nextIndex].Ray.Type == type) return;
+#if UNITY_EDITOR
+                Object.DestroyImmediate(rayObjects[nextIndex].gameObject);
+#else
+                Object.Destroy(rayObjects[nextIndex].gameObject);
+#endif
+                rayObjects[nextIndex] = Object.Instantiate(type.ToString().Contains("Area") ? areaRayPrefab : rayPrefab, parent);
+                return;
+            }
 
             // Else we add a new object to the pool.
             rayObjects.Add(Object.Instantiate(type == RTRay.RayType.AreaLight ? areaRayPrefab : rayPrefab, parent));
         }
-    
+
         public RayObject GetRayObject(int index)
         {
             rayObjects[index].gameObject.SetActive(true);

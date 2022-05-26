@@ -14,14 +14,12 @@ namespace _Project.Ray_Tracer.Scripts
     {
         [Header("Render Settings")]
 
-        [SerializeField, Range(0.00f, 1.00f)]
-
+        [SerializeField]
+        private bool hideNegligibleRays;
         /// <summary>
         /// Whether this ray manager hides negligible rays it would normally draw. When this is <c>false</c>, no ray
         /// will be hidden for contributing too little.
         /// </summary>
-        private bool hideNegligibleRays;
-
         public bool HideNegligibleRays
         {
             get => hideNegligibleRays;
@@ -33,6 +31,7 @@ namespace _Project.Ray_Tracer.Scripts
             }
         }
 
+        [SerializeField, Range(0.00f, 1.00f)]
         private float rayHideThreshold = 0.02f;
         /// <summary>
         /// The draw threshold of the rays this ray manager draws.
@@ -239,9 +238,9 @@ namespace _Project.Ray_Tracer.Scripts
         [SerializeField] private Material shadowMaterialTransparent;
         [SerializeField] private Material lightMaterial;
         [SerializeField] private Material lightMaterialTransparent;
-        [SerializeField] private Material errorMaterial;
         [SerializeField] private Material colorRayMaterial;
         [SerializeField] private Material colorRayMaterialTransparent;
+        [SerializeField] private Material errorMaterial;
 
         [Header("Animation Settings")]
 
@@ -374,25 +373,17 @@ namespace _Project.Ray_Tracer.Scripts
         /// <returns>
         /// The <see cref="Material"/> for <paramref name="contribution"/>, <paramref name="type"/> and <paramref name="color"/>.
         /// </returns>
-        public Material GetRayMaterial(float contribution, RTRay.RayType type, Color color)
+        public Material GetRayMaterial(float contribution, RTRay.RayType type, Color color, bool areaLight)
         {
-            if (RayTransparencyEnabled)
+            if (RayTransparencyEnabled || areaLight)
             {
                 Material mat;
-                //contribution = Mathf.Clamp(contribution, 0.01f, 0.42f);
                 if (RayColorContributionEnabled)
                     mat = GetRayColorMaterialTransparent(color.r, color.g, color.b);
                 else
                     mat = GetRayTypeMaterialTransparent(type);
 
-                if (type == RTRay.RayType.NoHit)
-                {
-                    mat.color = new Color(mat.color.r, mat.color.g, mat.color.b,
-                                          mat.color.a * (contribution * 0.7f + 0.3f));
-                    return mat;
-                }
-                else
-                    return TranspariceMaterial(mat, contribution);
+                return TranspariceMaterial(mat, contribution, areaLight);
             }
             else
             {
@@ -403,14 +394,15 @@ namespace _Project.Ray_Tracer.Scripts
             }
         }
 
-        private Material TranspariceMaterial(Material mat, float contribution)
+        private Material TranspariceMaterial(Material mat, float contribution, bool areaLight)
         {
             float baseFactor = Mathf.Pow(contribution * 0.8f + 0.2f, RayTransExponent);
             mat.SetFloat("_Ambient", baseFactor * 0.4f + 0.6f);
             mat.color = new Color(mat.color.r * (0.7f + baseFactor * 0.3f),
                                   mat.color.g * (0.7f + baseFactor * 0.3f),
                                   mat.color.b * (0.7f + baseFactor * 0.3f),
-                                  mat.color.a * baseFactor * 0.5f);
+                                  mat.color.a * (/*1 - */baseFactor) * (areaLight ? 0.2f : 0.5f));
+            if (areaLight) mat.renderQueue = 5000;
             return mat;
         }
 
@@ -465,8 +457,10 @@ namespace _Project.Ray_Tracer.Scripts
                 case RTRay.RayType.Normal:
                     return new Material(normalMaterialTransparent);
                 case RTRay.RayType.Shadow:
+                case RTRay.RayType.AreaShadow:
                     return new Material(shadowMaterialTransparent);
                 case RTRay.RayType.Light:
+                case RTRay.RayType.AreaLight:
                     return new Material(lightMaterialTransparent);
                 default:
                     Debug.LogError("Unrecognized ray type " + type + "!");

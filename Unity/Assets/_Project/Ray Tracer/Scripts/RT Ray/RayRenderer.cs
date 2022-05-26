@@ -102,52 +102,38 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
 
         public void SetAreaLightRay(Vector3[] areaLightVerts)
         {
-            for (int i = 0; i < areaLightVerts.Length; i++)
-                areaLightVerts[i] += Vector3.forward * 0.01f;
-            this.areaLightVerts = areaLightVerts;
-            gogo = true;    
-            //vertices = new Vector3[5];
-            //vertices[0] = transform.InverseTransformPoint(areaLightVerts[0]);
-            //vertices[1] = transform.InverseTransformPoint(GetComponent<MeshFilter>().mesh.vertices[1]);
-            //vertices[2] = transform.InverseTransformPoint(areaLightVerts[1]);
-            //vertices[3] = transform.InverseTransformPoint(areaLightVerts[2]);
-            //vertices[4] = transform.InverseTransformPoint(areaLightVerts[3]);
-            //GetComponent<MeshFilter>().mesh.vertices = vertices;
+            Vector3[] correctedVerts = new Vector3[areaLightVerts.Length];
+            for (int i = 0; i < areaLightVerts.Length; ++i) // Move a bit to prevent z-fighting and move away from light
+                correctedVerts[i] = areaLightVerts[i] + 0.001f * Random.insideUnitSphere;
+
+            transform.localScale = Vector3.one * 1.002f; // Set the scale so the ray stops just before the light.
+            Vector3[] newverts = new Vector3[5];
+            // This order doesn't correspond to the .obj, but somehow this is Unity's order.
+            newverts[0] = transform.InverseTransformPoint(correctedVerts[1]);
+            newverts[1] = transform.InverseTransformPoint(correctedVerts[0]);
+            newverts[2] = GetComponent<MeshFilter>().mesh.vertices[2];
+            newverts[3] = transform.InverseTransformPoint(correctedVerts[2]);
+            newverts[4] = transform.InverseTransformPoint(correctedVerts[3]);
+            GetComponent<MeshFilter>().mesh.vertices = newverts;
         }
-
-        private Vector3[] areaLightVerts;
-        private bool gogo = false;
-
-        private Vector3[] vertices;
 
         private void Awake()
         {
             meshRenderer = GetComponent<MeshRenderer>();
-            vertices = GetComponent<MeshFilter>().mesh.vertices;
         }
 
-        [SerializeField]
-        private bool printt;
+        //[SerializeField]
+        //private bool Print = false;
 
-        private void FixedUpdate()
-        {
-            if (printt)
-            {
-                foreach (var vert in vertices)
-                    Debug.Log(transform.TransformPoint(vert));
-                printt = false;
-            }
-
-            if (gogo)
-            {
-                Vector3[] newverts = new Vector3[vertices.Length];
-                newverts[0] = transform.InverseTransformPoint(areaLightVerts[0]);
-                newverts[1] = vertices[1];
-                newverts[2] = transform.InverseTransformPoint(areaLightVerts[1]);
-                newverts[3] = transform.InverseTransformPoint(areaLightVerts[2]);
-                newverts[4] = transform.InverseTransformPoint(areaLightVerts[3]);
-                GetComponent<MeshFilter>().mesh.vertices = newverts;
-            }
-        }
+        //private void Update()
+        //{
+        //    if (Print)
+        //    {
+        //        Vector3[] verts = GetComponent<MeshFilter>().mesh.vertices;
+        //        for (int i = 0; i < verts.Length; i++)
+        //            Debug.Log(verts[i]);
+        //        Print = false;
+        //    }
+        //}
     }
 }
