@@ -278,27 +278,33 @@ namespace _Project.Ray_Tracer.Scripts
         /// </summary>
         public void DeleteSelected()
         {
-            // make sure we can delete the object
+            // Make sure we can delete the object
             if (!deleteAllowed) return;
             if (selection.Empty) return;
-            if (selection.Type == typeof(RTCamera)) return; // Cameras can't be deleted, there must always be a camera.
+            if (selection.Type == typeof(RTCamera)) return; // Camera can't be deleted, there must always be a camera.
 
-            // delete the object in our database
+            // Deactive the object, so the raytracer doesn't see it anymore
+            selection.Transform.gameObject.SetActive(false);
+
+            // Delete the object in our database
             if (selection.Type.BaseType == typeof(RTLight))
                 Scene.RemoveLight(selection.Light);
             else if (selection.Type == typeof(RTMesh))
                 Scene.RemoveMesh(selection.Mesh);
             
-            // create a local reference
+            // Create a local reference
             GameObject gameObject = selection.Transform.gameObject;
             
-            // remove all connections
+            // Remove all connections
             previousTransform = null;
             Deselect();
             
             // Destroy
-            // Immediate is necessary because otherwise the object will still exist when the ray tracer updates next.
+#if UNITY_EDITOR
             DestroyImmediate(gameObject);
+#else
+            Destroy(gameObject);
+#endif
         }
 
         public void CreateObject(ObjectType type)
