@@ -14,7 +14,7 @@ namespace _Project.UI.Scripts.Tutorial
     {
         private static TutorialManager instance;
         private const string DEFAULT_REQUIRED_NAME = "You have completed all required tasks for level ";
-        private const string DEFAULT_OPTIONAL_NAME = "You have completed all optional tasks for level ";
+        private const string DEFAULT_OPTIONAL_NAME = "You have completed all tasks for level ";
         private const string DEFAULT_REQUIRED_DESC = "You may press \"Next Level\" now to move onto the next level or click the button next to the progress bar to continue with additional tasks.";
         private const string DEFAULT_OPTIONAL_DESC = "You may press \"Next Level\" now to move onto the next level or do some more exploring.";
 
