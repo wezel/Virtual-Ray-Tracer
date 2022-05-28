@@ -6,52 +6,36 @@ using UnityEngine;
 public class BadgeNotification : MonoBehaviour
 {
     [SerializeField]
-    GameObject notification;
-
-    [SerializeField]
     BadgeShowcase badgePrefab;
 
+    [SerializeField]
+    private Animator animator;
+
+    [SerializeField]
     private bool showingNotification = false;
+
     private List<Badge> badges;
 
     /// <summary>
-    /// Show a badge notification to the user.
-    /// </summary>
-    /// <param name="badge"></param>
-    private void ShowNotification(Badge badge)
-    {
-        showingNotification = true;
-        badge.Completed = true;
-        badgePrefab.UpdateUI(badge);
-
-        notification.SetActive(true);
-        StartCoroutine(HideNotification());
-    }
-
-    /// <summary>
-    /// Hide the badge notification after 5 seconds.
-    /// </summary>
-    /// <returns></returns>
-    IEnumerator HideNotification()
-    {
-        yield return new WaitForSeconds(5);
-
-        showingNotification = false;
-        notification.SetActive(false);
-    }
-
-    /// <summary>
     /// Check whether new badges are earned every frame.
+    /// If so, show them.
     /// </summary>
     void Update()
     {
         if (showingNotification)
             return;
 
-
         foreach (Badge b in badges)
+        {
             if (b.ShowNotification())
-                ShowNotification(b);
+            {
+                b.Completed = true;
+                badgePrefab.UpdateUI(b);
+                animator.SetTrigger("Show");
+                return;
+            }
+        }
+            
     }
 
     /// <summary>

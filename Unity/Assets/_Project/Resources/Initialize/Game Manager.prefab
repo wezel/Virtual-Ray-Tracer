@@ -609,7 +609,7 @@ MonoBehaviour:
     badgeDescription: Play with the Virtual Ray Tracer for 30 minutes
     actionTotal: 30
   - type: 0
-    badgeName: Rising Points
+    badgeName: Points Gatherer
     badgeDescription: Earn a total of 1000 points
     actionTotal: 1000
   - type: 0
