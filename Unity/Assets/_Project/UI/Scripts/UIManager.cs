@@ -100,7 +100,7 @@ namespace _Project.UI.Scripts
 
         private void Start()
         {
-            fpsCounter.gameObject.SetActive(GlobalSettings.Get().FPSEnabled);
+            fpsCounter.gameObject.SetActive(GlobalManager.Get().FPSEnabled);
           
             inOpeningScene = SceneManager.GetActiveScene().buildIndex == 0;
             

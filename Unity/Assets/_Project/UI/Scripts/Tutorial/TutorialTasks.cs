@@ -95,7 +95,7 @@ namespace _Project.UI.Scripts.Tutorial
         /// <returns>Whether the required tasks are finished</returns>
         public bool AreRequiredTasksFinished()
         {
-            if (GlobalSettings.Get().CheatMode) return true;
+            if (GlobalManager.Get().CheatMode) return true;
             return completedIndex >= optionalTasksStart - 1;
         }
 
@@ -107,7 +107,7 @@ namespace _Project.UI.Scripts.Tutorial
         {
             if (index < completedIndex) return true;
             if (index >= tasks.Count - 1) return false;
-            if (GlobalSettings.Get().CheatMode) return true;
+            if (GlobalManager.Get().CheatMode) return true;
             return tasks[index].Skippable;
         }
 
@@ -190,7 +190,7 @@ namespace _Project.UI.Scripts.Tutorial
 
             if (index == completedIndex)
             {
-                GlobalSettings.TutorialPoints += tasks[index].Points;
+                GlobalManager.TutorialPoints += tasks[index].Points;
                 completedIndex++;
             }
             index++;

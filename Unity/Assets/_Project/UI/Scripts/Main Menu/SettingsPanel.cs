@@ -49,7 +49,7 @@ namespace _Project.UI.Scripts.Main_Menu
         private void ToggleFpsCounter(bool isOn)
         {
             fpsCounter.gameObject.SetActive(isOn);
-            GlobalSettings.Get().FPSEnabled = isOn;
+            GlobalManager.Get().FPSEnabled = isOn;
         }
 
         private void ToggleFullScreen(bool isOn)
@@ -59,7 +59,7 @@ namespace _Project.UI.Scripts.Main_Menu
 
         private void ToggleCheatMode(bool isOn)
         {
-            GlobalSettings.Get().CheatMode = isOn;
+            GlobalManager.Get().CheatMode = isOn;
             Tutorial.TutorialManager.Get().UpdateTutorial();
         }
     
@@ -73,9 +73,9 @@ namespace _Project.UI.Scripts.Main_Menu
 
         private void OnEnable()
         {
-            fpsCounterToggle.isOn = GlobalSettings.Get().FPSEnabled;
+            fpsCounterToggle.isOn = GlobalManager.Get().FPSEnabled;
             fullScreenToggle.isOn = Screen.fullScreen;
-            cheatModeToggle.isOn = GlobalSettings.Get().CheatMode;
+            cheatModeToggle.isOn = GlobalManager.Get().CheatMode;
         }
     }
 }

@@ -112,11 +112,11 @@ namespace _Project.UI.Scripts.Tutorial
                 return true;
 
             // Check whether the tasks of the previous level exist
-            if (GlobalSettings.Get().TutorialTasks.Count <= level - 2)
+            if (GlobalManager.Get().TutorialTasks.Count <= level - 2)
                 return false;
 
             // Check whether the tasks of the previous level are finished
-            return GlobalSettings.Get().TutorialTasks[level - 2].AreRequiredTasksFinished();
+            return GlobalManager.Get().TutorialTasks[level - 2].AreRequiredTasksFinished();
         }
 
         /// <summary>
@@ -178,7 +178,7 @@ namespace _Project.UI.Scripts.Tutorial
         /// </summary>
         private void ExpandCollapse()
         {
-            GlobalSettings.TutorialExpanded = !GlobalSettings.TutorialExpanded;
+            GlobalManager.TutorialExpanded = !GlobalManager.TutorialExpanded;
             UpdateExpandCollapse();
         }
 
@@ -187,7 +187,7 @@ namespace _Project.UI.Scripts.Tutorial
         /// </summary>
         private void UpdateExpandCollapse()
         {
-            bool expanded = GlobalSettings.TutorialExpanded;
+            bool expanded = GlobalManager.TutorialExpanded;
             expandCollapseImage.sprite = expanded ? expandedIcon : collapsedIcon;
             GetComponent<LayoutElement>().preferredHeight = expanded ? originalSize.y : 38;
             contents.GetComponent<RectTransform>().sizeDelta = new Vector2(originalSize.x, expanded ? originalSize.y : 38);
@@ -229,7 +229,7 @@ namespace _Project.UI.Scripts.Tutorial
             previousImage.color = previousButton.interactable ? Color.white : new Color(0.3f, 0.3f, 0.3f);
 
             // Update the points
-            taskPoints.text = GlobalSettings.TutorialPoints.ToString();
+            taskPoints.text = GlobalManager.TutorialPoints.ToString();
         }
 
         /// <summary>
@@ -243,8 +243,8 @@ namespace _Project.UI.Scripts.Tutorial
             expandCollapseButton.onClick.AddListener(ExpandCollapse);
             
             int level = SceneManager.GetActiveScene().buildIndex - 1;
-            if (level < 0 || level >= GlobalSettings.Get().TutorialTasks.Count) currentTasks = new Tasks();
-            else currentTasks = GlobalSettings.Get().TutorialTasks[level];
+            if (level < 0 || level >= GlobalManager.Get().TutorialTasks.Count) currentTasks = new Tasks();
+            else currentTasks = GlobalManager.Get().TutorialTasks[level];
 
             UpdateTutorial();
             UpdateExpandCollapse();

@@ -21,7 +21,7 @@ namespace _Project.Scripts
     /// <summary>
     /// Manages the application in general.
     /// </summary>
-    public class GlobalSettings : MonoBehaviour
+    public class GlobalManager : MonoBehaviour
     {
         private Dictionary<CursorType, Texture2D> cursorTextures = new Dictionary<CursorType, Texture2D>();
 
@@ -30,7 +30,7 @@ namespace _Project.Scripts
         /// <summary>
         /// The cursor texture used when dragging certain UI components.
         /// </summary>
-        private static GlobalSettings instance = null;
+        private static GlobalManager instance = null;
 
         public bool FPSEnabled = false;
         public bool CheatMode = false;
@@ -43,10 +43,10 @@ namespace _Project.Scripts
         public List<Badge> Badges;
 
         /// <summary>
-        /// Get the current <see cref="GlobalSettings"/> instance.
+        /// Get the current <see cref="GlobalManager"/> instance.
         /// </summary>
-        /// <returns> The current <see cref="GlobalSettings"/> instance. </returns>
-        public static GlobalSettings Get()
+        /// <returns> The current <see cref="GlobalManager"/> instance. </returns>
+        public static GlobalManager Get()
         {
             return instance;
         }

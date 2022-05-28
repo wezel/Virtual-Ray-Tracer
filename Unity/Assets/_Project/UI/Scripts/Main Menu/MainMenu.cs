@@ -12,6 +12,8 @@ namespace _Project.UI.Scripts.Main_Menu
         private LevelsPanel levelsPanel;
         [SerializeField]
         private SettingsPanel settingsPanel;
+        [SerializeField]
+        private BadgesPanel badgesPanel;
         
         private int lastScene;
         private int currentScene;
@@ -28,6 +30,7 @@ namespace _Project.UI.Scripts.Main_Menu
         {
             levelsPanel.Hide();
             settingsPanel.Hide();
+            badgesPanel.Hide();
             
             UIManager uiManager = UIManager.Get();
             uiManager.RemoveEscapable(Hide);
@@ -46,6 +49,7 @@ namespace _Project.UI.Scripts.Main_Menu
         public void ToggleLevelSelector()
         {
             settingsPanel.Hide();
+            badgesPanel.Hide();
             levelsPanel.Toggle();
         }
         
@@ -62,7 +66,15 @@ namespace _Project.UI.Scripts.Main_Menu
         public void ToggleSettings()
         {
             levelsPanel.Hide();
+            badgesPanel.Hide();
             settingsPanel.Toggle();
+        }
+
+        public void ToggleBadges()
+        {
+            settingsPanel.Hide();
+            levelsPanel.Hide();
+            badgesPanel.Toggle();
         }
 
         public void LoadNextLevel()

@@ -69,7 +69,7 @@ namespace _Project.Scripts
         {
             if(zoom || panning || orbiting)
                 return;
-            GlobalSettings.Get().SetCursor(CursorType.ModeCursor);
+            GlobalManager.Get().SetCursor(CursorType.ModeCursor);
         }
 
         public void ResetCursor()
@@ -77,12 +77,12 @@ namespace _Project.Scripts
             if(zoom || panning || orbiting)
                 return;
         
-            GlobalSettings.Get().ResetCursor();
+            GlobalManager.Get().ResetCursor();
         }
 
         private void DisableBlocker()
         {
-            GlobalSettings globalSettings = GlobalSettings.Get();
+            GlobalManager globalSettings = GlobalManager.Get();
             if(mode) {
                 globalSettings.SetCursor(CursorType.ModeCursor);
                 return;
@@ -219,7 +219,7 @@ namespace _Project.Scripts
             if (mode && !Input.GetKey(KeyCode.LeftControl))
             {
                 inputBlocker.gameObject.SetActive(false);
-                GlobalSettings.Get().ResetCursor();
+                GlobalManager.Get().ResetCursor();
                 InputBlockerHovered = false;
                 mode = false;
             }
@@ -244,7 +244,7 @@ namespace _Project.Scripts
                 if (Input.GetMouseButtonDown(1))
                 {
                     zoom = true;
-                    GlobalSettings.Get().SetCursor(CursorType.ZoomCursor);
+                    GlobalManager.Get().SetCursor(CursorType.ZoomCursor);
                     return;
                 }
 
@@ -254,7 +254,7 @@ namespace _Project.Scripts
                     Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow))
                 {
                     orbiting = true;
-                    GlobalSettings.Get().SetCursor(CursorType.RotateCursor);
+                    GlobalManager.Get().SetCursor(CursorType.RotateCursor);
                     return;
                 }
             }
@@ -266,7 +266,7 @@ namespace _Project.Scripts
             {
                 inputBlocker.gameObject.SetActive(true);
                 panning = true;
-                GlobalSettings.Get().SetCursor(CursorType.GrabCursor);
+                GlobalManager.Get().SetCursor(CursorType.GrabCursor);
                 return;
             }
         }

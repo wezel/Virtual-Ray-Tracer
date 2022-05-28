@@ -462,7 +462,6 @@ MonoBehaviour:
   levelsPrefab: {fileID: 9141389481062274820}
   content: {fileID: 8704816776327916414}
   exitButton: {fileID: 4796505143940216259}
-  loadLevelButton: {fileID: 0}
 --- !u!114 &7304184493508992744
 MonoBehaviour:
   m_ObjectHideFlags: 0

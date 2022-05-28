@@ -178,7 +178,7 @@ namespace _Project.UI.Scripts.Control_Panel
         public void EnterDragArea()
         {
             if (Interactable)
-                GlobalSettings.Get().SetCursor(CursorType.DragCursor);
+                GlobalManager.Get().SetCursor(CursorType.DragCursor);
         }
 
         /// <summary>
@@ -186,7 +186,7 @@ namespace _Project.UI.Scripts.Control_Panel
         /// </summary>
         public void ExitDragArea()
         {
-            GlobalSettings.Get().ResetCursor();
+            GlobalManager.Get().ResetCursor();
         }
 
         /// <summary>

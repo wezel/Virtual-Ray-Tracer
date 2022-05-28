@@ -92,13 +92,13 @@ public class Badge
         switch (type)
         {
             case BadgeType.Points:
-                actionAmount = GlobalSettings.TutorialPoints;
+                actionAmount = GlobalManager.TutorialPoints;
                 break;
             case BadgeType.Playtime:
-                actionAmount = GlobalSettings.MiliSecondsPlayed / 1000 / 60;
+                actionAmount = GlobalManager.MiliSecondsPlayed / 1000 / 60;
                 break;
             case BadgeType.Objects:
-                actionAmount = GlobalSettings.ObjectsCreated;
+                actionAmount = GlobalManager.ObjectsCreated;
                 break;
         }
     }
