@@ -18,7 +18,7 @@ namespace _Project.UI.Scripts
         /// </summary>
         public void Show()
         {
-            return;
+            /*
             if (uiManager == null)
                 uiManager = UIManager.Get();
 
@@ -28,6 +28,7 @@ namespace _Project.UI.Scripts
 
             gameObject.SetActive(true);
             UIManager.Get().AddEscapable(Hide);
+            */
         }
 
         /// <summary>
