@@ -45,10 +45,21 @@ public class Badge
     /// <summary>
     /// The amount of actions that have been completed.
     /// </summary>
-    int actionAmount = 0;
     public int ActionAmount
     {
-        get { return actionAmount; }
+        get 
+        {        
+            switch (type)
+            {
+                case BadgeType.Points:
+                    return GlobalManager.TutorialPoints;
+                case BadgeType.Playtime:
+                    return (int)Time.realtimeSinceStartup / 60;
+                case BadgeType.Objects:
+                    return GlobalManager.ObjectsCreated;
+            }
+            return 0;
+        }
     }
 
     /// <summary>
@@ -61,14 +72,15 @@ public class Badge
         get { return actionTotal; }
     }
 
-    private bool completed = false;
 
+    private bool completed = false;
     /// <summary>
-    /// Set this badge to be completed.
+    /// Whether this badge has been completed.
     /// </summary>
-    public void SetCompleted()
+    public bool Completed
     {
-        completed = true;
+        get { return completed || ActionAmount >= ActionTotal; }
+        set { completed = value; }
     }
 
     /// <summary>
@@ -77,29 +89,6 @@ public class Badge
     /// <returns>Whether to show a notification for earning the badge</returns>
     public bool ShowNotification()
     {
-        return !completed && actionAmount >= actionTotal;
-    }
-
-    /// <summary>
-    /// Updates the amount of actions completed
-    /// </summary>
-    /// <param name="settings"></param>
-    /// <returns>Whether the badge was updated</returns>
-    public void UpdateBadge()
-    {
-        if (completed) return;
-
-        switch (type)
-        {
-            case BadgeType.Points:
-                actionAmount = GlobalManager.TutorialPoints;
-                break;
-            case BadgeType.Playtime:
-                actionAmount = GlobalManager.MiliSecondsPlayed / 1000 / 60;
-                break;
-            case BadgeType.Objects:
-                actionAmount = GlobalManager.ObjectsCreated;
-                break;
-        }
+        return !completed && ActionAmount >= ActionTotal;
     }
 }

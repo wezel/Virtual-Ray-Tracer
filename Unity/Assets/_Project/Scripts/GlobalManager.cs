@@ -37,7 +37,6 @@ namespace _Project.Scripts
 
         public static bool TutorialExpanded = true;
         public static int TutorialPoints = 0;
-        public static int MiliSecondsPlayed = 0;
         public static int ObjectsCreated = 0;
         public List<Tasks> TutorialTasks;
         public List<Badge> Badges;

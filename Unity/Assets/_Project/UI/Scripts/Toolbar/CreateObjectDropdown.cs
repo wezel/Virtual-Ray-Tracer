@@ -82,6 +82,7 @@ namespace _Project.UI.Scripts.Toolbar
         private void OnClick(RTSceneManager.ObjectType type)
         {
             RTSceneManager.Get().CreateObject(type);
+            GlobalManager.ObjectsCreated++;
             Close();
         }
 

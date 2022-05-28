@@ -1,20 +1,32 @@
+using _Project.Scripts;
 using _Project.UI.Scripts;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class BadgesPanel : MonoBehaviour
 {
-    //[SerializeField]
-    //private BadgePrefab badgePrefab;
+    [SerializeField]
+    private GameObject content;
+
+    [SerializeField]
+    private BadgeShowcase badgePrefab;
 
     [SerializeField]
     private Button exitButton;
+
+    private List<BadgeShowcase> badgePrefabs = new List<BadgeShowcase>();
 
     /// <summary>
     /// Show the badges panel.
     /// </summary>
     public void Show()
     {
+        // Update the badges
+        List<Badge> badges = GlobalManager.Get().Badges;
+        for (int i = 0; i < badgePrefabs.Count; i++)
+            badgePrefabs[i].UpdateUI(badges[i]);
+
         gameObject.SetActive(true);
         UIManager.Get().AddEscapable(Hide);
     }
@@ -39,27 +51,15 @@ public class BadgesPanel : MonoBehaviour
             Show();
     }
 
-    private void Update()
-    {
-        Debug.Log("UPDATE");
-    }
-
     private void Awake()
     {
         exitButton.onClick.AddListener(Hide);
 
-        /*
-        int sceneCount = SceneManager.sceneCountInBuildSettings;
-        for (int i = 1; i < sceneCount; i++)
+        foreach (Badge badge in GlobalManager.Get().Badges)
         {
-            Button levelButton = Instantiate(levelsPrefab, content.transform);
-            levelButton.name = i.ToString();
-
-            levelButton.interactable = Tutorial.TutorialManager.CanLevelBeLoaded(i);
-            levelButton.GetComponentInChildren<TextMeshProUGUI>().text = i + ". " + System.IO.Path.GetFileNameWithoutExtension(SceneUtility.GetScenePathByBuildIndex(i));
-            levelButton.onClick.AddListener(() => OnButtonClicked(levelButton));
-            levelButtons.Add(levelButton);
+            BadgeShowcase prefab = Instantiate(badgePrefab, content.transform);
+            prefab.UpdateUI(badge);
+            badgePrefabs.Add(prefab);
         }
-        */
     }
 }
