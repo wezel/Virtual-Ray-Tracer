@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   FPSEnabled: 0
-  Unlimited: 0
+  CheatMode: 0
   TutorialTasks:
   - optionalTasksStart: 16
     tasks:
@@ -591,3 +591,28 @@ MonoBehaviour:
       description: You are now able to create your own custom scenes. Go crazy!
       skippable: 0
       points: 0
+  Badges:
+  - type: 1
+    badgeName: Experimenter
+    badgeDescription: Play with the Virtual Ray Tracer for 3 minutes
+    actionTotal: 3
+  - type: 1
+    badgeName: Addicted
+    badgeDescription: Play with the Virtual Ray Tracer for 30 minutes
+    actionTotal: 30
+  - type: 0
+    badgeName: Rising Points
+    badgeDescription: Earn a total of 1000 points
+    actionTotal: 1000
+  - type: 0
+    badgeName: Points Galore
+    badgeDescription: Earn a total of 10000 points
+    actionTotal: 10000
+  - type: 2
+    badgeName: Builder
+    badgeDescription: Ceate 10 objects
+    actionTotal: 10
+  - type: 2
+    badgeName: Creator
+    badgeDescription: Create 100 objects
+    actionTotal: 100
