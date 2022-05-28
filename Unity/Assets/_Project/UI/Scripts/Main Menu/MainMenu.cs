@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
 namespace _Project.UI.Scripts.Main_Menu
@@ -8,6 +10,10 @@ namespace _Project.UI.Scripts.Main_Menu
     /// </summary>
     public class MainMenu : MonoBehaviour
     {
+        [Serializable]
+        public class Event : UnityEvent { }
+        public Event OnMainMenuShown;
+
         [SerializeField]
         private LevelsPanel levelsPanel;
         [SerializeField]
@@ -24,6 +30,7 @@ namespace _Project.UI.Scripts.Main_Menu
             uiManager.AddEscapable(Hide);
             gameObject.SetActive(true);
             uiManager.EnableBlocker();
+            OnMainMenuShown?.Invoke();
         }
 
         public void Hide()
@@ -42,8 +49,10 @@ namespace _Project.UI.Scripts.Main_Menu
         /// </summary>
         public void Toggle()
         {
-            if (gameObject.activeSelf) Hide();
-            else Show();
+            if (gameObject.activeSelf)
+                Hide();
+            else
+                Show();
         }
 
         public void ToggleLevelSelector()

@@ -2331,6 +2331,38 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6410858498583578752, guid: 60ed96064c5523b46b7a7bd67e36e6d7, type: 3}
+      propertyPath: OnMainMenuShown.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6410858498583578752, guid: 60ed96064c5523b46b7a7bd67e36e6d7, type: 3}
+      propertyPath: OnMainMenuShown.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6410858498583578752, guid: 60ed96064c5523b46b7a7bd67e36e6d7, type: 3}
+      propertyPath: OnMainMenuShown.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1457790366}
+    - target: {fileID: 6410858498583578752, guid: 60ed96064c5523b46b7a7bd67e36e6d7, type: 3}
+      propertyPath: OnMainMenuShown.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6410858498583578752, guid: 60ed96064c5523b46b7a7bd67e36e6d7, type: 3}
+      propertyPath: OnMainMenuShown.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: CompleteTask
+      objectReference: {fileID: 0}
+    - target: {fileID: 6410858498583578752, guid: 60ed96064c5523b46b7a7bd67e36e6d7, type: 3}
+      propertyPath: OnMainMenuShown.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: _Project.UI.Scripts.Tutorial.TutorialManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 6410858498583578752, guid: 60ed96064c5523b46b7a7bd67e36e6d7, type: 3}
+      propertyPath: OnMainMenuShown.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
+      value: mainMenu
+      objectReference: {fileID: 0}
+    - target: {fileID: 6410858498583578752, guid: 60ed96064c5523b46b7a7bd67e36e6d7, type: 3}
+      propertyPath: OnMainMenuShown.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 6451889568640819912, guid: 60ed96064c5523b46b7a7bd67e36e6d7, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0

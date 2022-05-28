@@ -46,7 +46,7 @@ MonoBehaviour:
   FPSEnabled: 0
   CheatMode: 0
   TutorialTasks:
-  - optionalTasksStart: 16
+  - optionalTasksStart: 17
     tasks:
     - identifier: 
       name: Introduction
@@ -62,8 +62,8 @@ MonoBehaviour:
       description: 'As you can see, you have now made a little progress in the current
         level. You may also have noticed that you have earned some points. They are
         shown to the left of the progress bar. These points will help you unlock
-        cool objects in the final level! Start earning more points by continuing
-        to the next task.
+        cool objects in the final level! Next to points, you will also earn badges
+        along the way.
 
 '
       skippable: 1
@@ -76,6 +76,14 @@ MonoBehaviour:
         any time by clicking the "Help" button in the top left or by pressing [F1].
       skippable: 0
       points: 153
+    - identifier: mainMenu
+      name: Main Menu
+      description: In the main menu you have options to go back to homescreen, switch
+        between levels (once they have been unlocked), see your earned badges, change
+        settings, and exit the program. Access the main menu by clicking the "Main
+        Menu" button in the top left or by pressing [ESC].
+      skippable: 0
+      points: 141
     - identifier: cameraPan
       name: Camera Panning
       description: Pan the camera by moving your mouse while holding down the middle
