@@ -618,9 +618,9 @@ MonoBehaviour:
     actionTotal: 10000
   - type: 2
     badgeName: Builder
-    badgeDescription: Ceate 10 objects
-    actionTotal: 10
+    badgeDescription: Ceate 5 objects
+    actionTotal: 5
   - type: 2
     badgeName: Creator
-    badgeDescription: Create 100 objects
-    actionTotal: 100
+    badgeDescription: Create 50 objects
+    actionTotal: 50

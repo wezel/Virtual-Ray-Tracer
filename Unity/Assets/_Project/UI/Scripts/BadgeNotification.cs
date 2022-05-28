@@ -1,10 +1,16 @@
 using _Project.Scripts;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class BadgeNotification : MonoBehaviour
 {
+    [Serializable]
+    public class Event : UnityEvent { }
+    public Event OnNotification;
+
     [SerializeField]
     BadgeShowcase badgePrefab;
 
@@ -29,6 +35,7 @@ public class BadgeNotification : MonoBehaviour
         {
             if (b.ShowNotification())
             {
+                OnNotification?.Invoke();
                 b.Completed = true;
                 badgePrefab.UpdateUI(b);
                 animator.SetTrigger("Show");
