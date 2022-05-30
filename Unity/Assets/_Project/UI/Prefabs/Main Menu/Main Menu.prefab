@@ -569,8 +569,8 @@ RectTransform:
   - {fileID: 1314700579768725666}
   - {fileID: 8976050448375109036}
   - {fileID: 913897422512619227}
-  - {fileID: 8432716202762945643}
   - {fileID: 598765937390268108}
+  - {fileID: 8432716202762945643}
   - {fileID: 7796758703097704936}
   - {fileID: 4139734635439326087}
   - {fileID: 5045742242593869878}
@@ -826,7 +826,7 @@ RectTransform:
   m_Children:
   - {fileID: 9003380940208224672}
   m_Father: {fileID: 5719704186118040312}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -1245,6 +1245,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 819b1243bf87482e8ae28c9d2a0c1ddd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnMainMenuShown:
+    m_PersistentCalls:
+      m_Calls: []
   levelsPanel: {fileID: 1910578910289506789}
   settingsPanel: {fileID: 6854843124097951868}
   badgesPanel: {fileID: 1566991547311698985}
@@ -1414,7 +1417,7 @@ RectTransform:
   m_Children:
   - {fileID: 5632279286577419365}
   m_Father: {fileID: 5719704186118040312}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
