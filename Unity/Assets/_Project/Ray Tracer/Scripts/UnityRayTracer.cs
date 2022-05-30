@@ -413,21 +413,22 @@ namespace _Project.Ray_Tracer.Scripts
                 if (arealight.LightSamples > AreaRayLimit && subRayTree.Children.TrueForAll(child => child.Data.Type == rayType))
                 {
                     Color childColor = Color.black;
-                    float distance = 0;
+                    float distance = 0f;
+
                     if (rayType == RTRay.RayType.Shadow)
                     {
                         rayType = RTRay.RayType.AreaShadow;
                         subRayTree.Children.ForEach(child => distance += child.Data.Length / subRayTree.Children.Count);
+                        distance /= lightDistance;
                     }
                     else
                     {
                         subRayTree.Children.ForEach(child => childColor += child.Data.Color);
                         rayType = RTRay.RayType.AreaLight;
-                        distance = lightDistance;
+                        distance = 1f;
                     }
 
                     subRayTree.Clear();
-
                     lightVector = (arealight.Position - hitInfo.Point).normalized;
                     subRayTree.AddChild(new RTRay(hitInfo.Point, lightVector, distance, ClampColor(childColor), rayType, arealight.GetWorldCorners()));
                 }

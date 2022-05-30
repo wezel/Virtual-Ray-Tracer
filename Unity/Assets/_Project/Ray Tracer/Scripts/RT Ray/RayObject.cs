@@ -37,7 +37,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
         public void Draw(float radius)
         {
             rayRenderer.Radius = Ray.AreaRay ? 1f : radius; ;
-            rayRenderer.Length = Ray.AreaRay ? 1f : DrawLength;
+            rayRenderer.Length = DrawLength;
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
         {
             length = Mathf.Clamp(length, 0.0f, DrawLength);
             rayRenderer.Radius = Ray.AreaRay ? length / DrawLength : radius;
-            rayRenderer.Length = Ray.AreaRay ? length / DrawLength : length;
+            rayRenderer.Length = length;
         }
 
         private void Reset()
@@ -62,7 +62,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
             rayRenderer.Direction = Ray.Direction;
             rayRenderer.Length = 0.0f;
 
-            if (Ray.AreaRay) rayRenderer.SetAreaLightRay(Ray.AreaLightPoints);
+            if (Ray.AreaRay) rayRenderer.SetAreaLightRay(Ray.AreaLightPoints, Ray.Length);
 
             ReloadMaterial();
         }
