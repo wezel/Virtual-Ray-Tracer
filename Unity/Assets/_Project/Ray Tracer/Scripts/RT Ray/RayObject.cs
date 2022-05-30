@@ -62,7 +62,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
             rayRenderer.Direction = Ray.Direction;
             rayRenderer.Length = 0.0f;
 
-            if (Ray.AreaRay) rayRenderer.SetAreaLightRay(Ray.AreaLightPoints, Ray.Length);
+            if (Ray.AreaRay) rayRenderer.SetAreaLightRay(Ray.AreaLightPoints);
 
             ReloadMaterial();
         }
