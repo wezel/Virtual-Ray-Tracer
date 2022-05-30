@@ -121,19 +121,5 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
         {
             meshRenderer = GetComponent<MeshRenderer>();
         }
-
-        //[SerializeField]
-        //private bool Print = false;
-
-        //private void Update()
-        //{
-        //    if (Print)
-        //    {
-        //        Vector3[] verts = GetComponent<MeshFilter>().mesh.vertices;
-        //        for (int i = 0; i < verts.Length; i++)
-        //            Debug.Log(verts[i]);
-        //        Print = false;
-        //    }
-        //}
     }
 }

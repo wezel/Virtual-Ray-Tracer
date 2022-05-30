@@ -375,7 +375,7 @@ namespace _Project.Ray_Tracer.Scripts
         /// </returns>
         public Material GetRayMaterial(float contribution, RTRay.RayType type, Color color, bool areaLight)
         {
-            if (RayTransparencyEnabled || areaLight)
+            if (RayTransparencyEnabled)
             {
                 Material mat;
                 if (RayColorContributionEnabled)
@@ -427,8 +427,10 @@ namespace _Project.Ray_Tracer.Scripts
                 case RTRay.RayType.Normal:
                     return normalMaterial;
                 case RTRay.RayType.Shadow:
+                case RTRay.RayType.AreaShadow:
                     return shadowMaterial;
                 case RTRay.RayType.Light:
+                case RTRay.RayType.AreaLight:
                     return lightMaterial;
                 default:
                     Debug.LogError("Unrecognized ray type " + type + "!");

@@ -50,7 +50,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
         public void Draw(float radius, float length)
         {
             length = Mathf.Clamp(length, 0.0f, DrawLength);
-            rayRenderer.Radius = Ray.AreaRay ? 1f * length/DrawLength : radius;
+            rayRenderer.Radius = Ray.AreaRay ? length / DrawLength : radius;
             rayRenderer.Length = Ray.AreaRay ? length / DrawLength : length;
         }
 
