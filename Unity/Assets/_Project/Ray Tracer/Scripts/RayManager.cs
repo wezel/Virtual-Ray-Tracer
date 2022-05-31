@@ -375,7 +375,7 @@ namespace _Project.Ray_Tracer.Scripts
         /// </returns>
         public Material GetRayMaterial(float contribution, RTRay.RayType type, Color color, bool areaLight)
         {
-            if (RayTransparencyEnabled)
+            if (RayTransparencyEnabled || areaLight)
             {
                 Material mat;
                 if (RayColorContributionEnabled)
@@ -397,11 +397,12 @@ namespace _Project.Ray_Tracer.Scripts
         private Material TranspariceMaterial(Material mat, float contribution, bool areaLight)
         {
             float baseFactor = Mathf.Pow(contribution * 0.8f + 0.2f, RayTransExponent);
+            float alphaFactor = baseFactor * (areaLight ? (RayTransparencyEnabled ? 0.2f : 0.7f) : 0.5f);
             mat.SetFloat("_Ambient", baseFactor * 0.4f + 0.6f);
             mat.color = new Color(mat.color.r * (0.7f + baseFactor * 0.3f),
                                   mat.color.g * (0.7f + baseFactor * 0.3f),
                                   mat.color.b * (0.7f + baseFactor * 0.3f),
-                                  mat.color.a * (/*1 - */baseFactor) * (areaLight ? 0.2f : 0.5f));
+                                  mat.color.a * alphaFactor);
             if (areaLight) mat.renderQueue = 5000;
             return mat;
         }
@@ -607,7 +608,7 @@ namespace _Project.Ray_Tracer.Scripts
                 (HideNegligibleRays && rayTree.Data.Contribution <= rayHideThreshold))
                 return;
 
-            RayObject rayObject = rayObjectPool.GetRayObject(rayTree.Data.ObjectPoolIndex);
+            RayObject rayObject = rayObjectPool.GetRayObject(rayTree.Data.ObjectPoolIndex, rayTree.Data.AreaRay);
             rayObject.Draw(GetRayRadius(rayTree));
 
             if (!rayTree.IsLeaf())
@@ -682,7 +683,7 @@ namespace _Project.Ray_Tracer.Scripts
                 (HideNegligibleRays && rayTree.Data.Contribution < rayHideThreshold))
                 return true;
 
-            RayObject rayObject = rayObjectPool.GetRayObject(rayTree.Data.ObjectPoolIndex);
+            RayObject rayObject = rayObjectPool.GetRayObject(rayTree.Data.ObjectPoolIndex, rayTree.Data.AreaRay);
             rayObject.Draw(GetRayRadius(rayTree), distance);
 
             float leftover = distance - rayObject.DrawLength;

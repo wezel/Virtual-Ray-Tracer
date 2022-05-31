@@ -330,70 +330,54 @@ namespace _Project.Ray_Tracer.Scripts
 
         private void SetContributions(TreeNode<RTRay> parent)
         {
-            foreach (TreeNode<RTRay> child in parent.Children)
+            parent.Children.ForEach(child =>
             {
                 child.Data.Contribution *= parent.Data.Contribution;
                 SetContributions(child);
-            }
+            });
         }
 
         private TreeNode<RTRay> Trace(Vector3 origin, Vector3 direction, int depth, RTRay.RayType type)
         {
-            RaycastHit hit;
-            bool intersected = Physics.Raycast(origin, direction, out hit, Mathf.Infinity, rayTracerLayer);
+            // If we did not hit anything we return a no hit ray whose result color is the backgroundcolor.
+            if (!Physics.Raycast(origin, direction, out RaycastHit hit, Mathf.Infinity, rayTracerLayer))
+                return new TreeNode<RTRay>(new RTRay(origin, direction, Mathf.Infinity, BackgroundColor, RTRay.RayType.NoHit));
+
             TreeNode<RTRay> rayTree = new TreeNode<RTRay>(new RTRay());
-
-            // If we did not hit anything we return a no hit ray whose result color is black.
-            if (!intersected)
-            {
-                rayTree.Data = new RTRay(origin, direction, Mathf.Infinity, BackgroundColor, RTRay.RayType.NoHit);
-                return rayTree;
-            }
-
             RTMesh mesh = hit.transform.GetComponent<RTMesh>();
             HitInfo hitInfo = new HitInfo(ref hit, ref direction, ref mesh);
             
             // Add the ambient component once, regardless of the number of lights.
             Color color = hitInfo.Ambient * hitInfo.Color;
 
-            // Add diffuse and specular components from all lights.
-            // Arealights
-            foreach (RTAreaLight arealight in scene.AreaLights)
-                TraceAreaLight(arealight, in hitInfo).Children.ForEach(child => rayTree.AddChild(child));
-
-            // Spotlights
-            foreach (RTSpotLight spotLight in scene.SpotLights)
-            {
-                Vector3 lightVector = (spotLight.transform.position - hit.point).normalized;
-                if (Vector3.Dot(hitInfo.Normal, lightVector) >= 0.0f)
-                    rayTree.AddChild(TraceLight(ref lightVector, spotLight.transform.position, spotLight, in hitInfo));
-            }
-
-            // Pointlights
-            foreach (RTPointLight light in scene.PointLights)
-            {
-                Vector3 lightVector = (light.transform.position - hit.point).normalized;
-                if (Vector3.Dot(hitInfo.Normal, lightVector) >= 0.0f) 
-                    rayTree.AddChild(TraceLight(ref lightVector, light.transform.position, light, in hitInfo));
-            }
+            // Add diffuse and specular components for area, spot and pointlights.
+            scene.AreaLights.ForEach(areaLight => TraceAreaLight(ref rayTree, areaLight, in hitInfo));
+            scene.SpotLights.ForEach(spotLight => TracePointSpotLight(ref rayTree, spotLight, hitInfo));
+            scene.PointLights.ForEach(pointLight => TracePointSpotLight(ref rayTree, pointLight, hitInfo));
 
             // Cast reflection and refraction rays.
             if (depth > 0)
                 TraceReflectionAndRefraction(depth, hitInfo).ForEach(newRay => rayTree.AddChild(newRay));
 
             // Add the child ray colors to the parent ray.
-            foreach (var child in rayTree.Children)
-                color += child.Data.Color;
+            rayTree.Children.ForEach(child => color += child.Data.Color);
 
             // Calculate contribution to the parent.
-            float rgb = color.r + color.b + color.g;
-            rayTree.Children.ForEach(ray => ray.Data.Contribution = rgb > 0f ? (ray.Data.Color.r + ray.Data.Color.g + ray.Data.Color.b) / rgb : 0f);
+            float rgb = ColorSumRGB(color);
+            rayTree.Children.ForEach(child => child.Data.Contribution = rgb > 0f ? ColorSumRGB(child.Data.Color) / rgb : 0f);
 
             rayTree.Data = new RTRay(origin, direction, hit.distance, ClampColor(color), type);
             return rayTree;
         }
 
-        private TreeNode<RTRay> TraceAreaLight(RTAreaLight arealight, in HitInfo hitInfo)
+        private void TracePointSpotLight(ref TreeNode<RTRay> rayTree, RTLight light, in HitInfo hitInfo)
+        {
+            Vector3 lightVector = (light.transform.position - hitInfo.Point).normalized;
+            if (Vector3.Dot(hitInfo.Normal, lightVector) >= 0.0f)
+                rayTree.AddChild(TraceLight(ref lightVector, light.transform.position, light, in hitInfo));
+        }
+
+        private void TraceAreaLight(ref TreeNode<RTRay> rayTree, RTAreaLight arealight, in HitInfo hitInfo)
         {
             Vector3 lightVector = (arealight.Position - hitInfo.Point).normalized;
             float lightDistance = Vector3.Dot(lightVector, arealight.Position - hitInfo.Point);
@@ -408,36 +392,33 @@ namespace _Project.Ray_Tracer.Scripts
                     subRayTree.AddChild(TraceLight(ref lightVector, point, arealight, in hitInfo) / samples);
                 }
 
-                // If all rays are the same type, turn all of them into a single arealightray
-                RTRay.RayType rayType = subRayTree.Children[0].Data.Type;
-                if (arealight.LightSamples > AreaRayLimit && subRayTree.Children.TrueForAll(child => child.Data.Type == rayType))
-                {
-                    Color childColor = Color.black;
-                    float distance = 0f;
-
-                    if (rayType == RTRay.RayType.Shadow)
-                    {
-                        rayType = RTRay.RayType.AreaShadow;
-                        subRayTree.Children.ForEach(child => distance += child.Data.Length / subRayTree.Children.Count);
-                        distance /= lightDistance;
-                    }
-                    else
-                    {
-                        subRayTree.Children.ForEach(child => childColor += child.Data.Color);
-                        rayType = RTRay.RayType.AreaLight;
-                        distance = 1f;
-                    }
-
-                    subRayTree.Clear();
-                    lightVector = (arealight.Position - hitInfo.Point).normalized;
-                    subRayTree.AddChild(new RTRay(hitInfo.Point, lightVector, distance, ClampColor(childColor), rayType, arealight.GetWorldCorners()));
+                // If all rays are the same type, turn all of them into a single arearay
+                if (arealight.LightSamples > AreaRayLimit &&
+                    subRayTree.Children.TrueForAll(child => child.Data.Type == RTRay.RayType.Light))
+                {   // All rays are light rays. Sum colors and make it a single arealightray
+                    Color color = Color.black;
+                    subRayTree.Children.ForEach(child => color += child.Data.Color);
+                    rayTree.AddChild(new RTRay(hitInfo.Point, lightVector, lightDistance, ClampColor(color),
+                                     RTRay.RayType.AreaLight, arealight.GetWorldCorners()));
                 }
-
-                return subRayTree;
+                else if (arealight.LightSamples > AreaRayLimit &&
+                         subRayTree.Children.TrueForAll(child => child.Data.Type == RTRay.RayType.Shadow))
+                {   // All rays are shadow rays. Take the minimal distance and make it a single areashadowray
+                    float distance = Mathf.Infinity;
+                    subRayTree.Children.ForEach(child => distance = Mathf.Min(distance, child.Data.Length));
+                    rayTree.AddChild(new RTRay(hitInfo.Point, lightVector, distance, Color.black,
+                                     RTRay.RayType.AreaShadow, arealight.GetWorldCorners()));
+                }
+                else
+                {   // There are different types of rays, add every one to the rayTree
+                    foreach (TreeNode<RTRay> child in subRayTree.Children)
+                        rayTree.AddChild(child);
+                }
             }
             else
             {   // The hitpoint is behind the arealight
-                return new TreeNode<RTRay>(new RTRay(hitInfo.Point, lightVector, lightDistance, Color.black, RTRay.RayType.AreaShadow, arealight.GetWorldCorners()));
+                rayTree.AddChild(new RTRay(hitInfo.Point, lightVector, lightDistance, Color.black,
+                                 RTRay.RayType.AreaShadow, arealight.GetWorldCorners()));
             }
         }
 
@@ -754,6 +735,11 @@ namespace _Project.Ray_Tracer.Scripts
             float g = Mathf.Clamp01(color.g);
             float b = Mathf.Clamp01(color.b);
             return new Color(r, g, b);
+        }
+
+        private float ColorSumRGB(Color color)
+        {
+            return color.r + color.g + color.b;
         }
 
         private void Awake()

@@ -12,10 +12,12 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
     public class RayObjectPool
     {
         private readonly List<RayObject> rayObjects;
+        private readonly List<RayObject> areaRayObjects;
         private readonly RayObject rayPrefab;
         private readonly RayObject areaRayPrefab;
         private readonly Transform parent;
         private int nextIndex;
+        private int nextAreaIndex;
 
         /// <summary>
         /// Construct a new pool of <see cref="RayObject"/>s. All instantiated objects start inactive.
@@ -30,7 +32,9 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
             this.parent = parent;
 
             rayObjects = new List<RayObject>(initialAmount);
+            areaRayObjects = new List<RayObject>(initialAmount / 16);
             nextIndex = 0;
+            nextAreaIndex = 0;
         }
 
         /// <summary>
@@ -39,6 +43,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
         public void ReloadMaterials()
         {
             rayObjects.ForEach(ray => ray.ReloadMaterial());
+            areaRayObjects.ForEach(areaRay => areaRay.ReloadMaterial());
         }
 
         /// <summary>
@@ -47,7 +52,9 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
         public void DeactivateAll()
         {
             rayObjects.ForEach(rayObject => rayObject.gameObject.SetActive(false));
+            areaRayObjects.ForEach(areaRayObject => areaRayObject.gameObject.SetActive(false));
             nextIndex = 0;
+            nextAreaIndex = 0;
         }
 
         /// <summary>
@@ -55,16 +62,22 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
         /// </summary>
         private void CleanUp()
         {
-            // Make sure to destroy in reverse, as rayObjects.Count changes
             for (int i = rayObjects.Count - 1; i >= nextIndex; --i)
-            {
+                DestroyObject(rayObjects[i].gameObject);
+            rayObjects.RemoveRange(nextIndex, rayObjects.Count - nextIndex);
+
+            for (int i = areaRayObjects.Count - 1; i >= nextAreaIndex; --i)
+                DestroyObject(areaRayObjects[i].gameObject);
+            areaRayObjects.RemoveRange(nextAreaIndex, areaRayObjects.Count - nextAreaIndex);
+        }
+
+        private void DestroyObject(GameObject obj)
+        {
 #if UNITY_EDITOR
-                Object.DestroyImmediate(rayObjects[i].gameObject);
+            Object.DestroyImmediate(obj);
 #else
-                Object.Destroy(rayObjects[i].gameObject);
+            Object.Destroy(obj);
 #endif
-                rayObjects.RemoveAt(i);
-            }
         }
 
         /// <summary>
@@ -76,6 +89,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
         private void SetAllUnused()
         {
             nextIndex = 0;
+            nextAreaIndex = 0;
         }
 
         /// <summary>
@@ -99,11 +113,8 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
         /// <param name="rayTree"> Rays that need to be turned into objects. </param>
         private void MakeRayTreeObjects(TreeNode<RTRay> rayTree)
         {
-            MakeRayObject(rayTree.Data.Type);    // Make sure there's a rayObject at the nextIndex
-            rayTree.Data.ObjectPoolIndex = nextIndex;
-            rayObjects[nextIndex].Ray = rayTree.Data;
-            rayObjects[nextIndex].gameObject.SetActive(false);
-            ++nextIndex;
+            // Make sure there's a rayObject at the nextIndex
+            rayTree.Data.ObjectPoolIndex = MakeRayObject(rayTree.Data);
 
             if (!rayTree.IsLeaf())
                 foreach (TreeNode<RTRay> child in rayTree.Children)
@@ -115,29 +126,57 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
         /// objects in the pool a new one will be instantiated and returned.
         /// </summary>
         /// <returns> An unused activated <see cref="RayObject"/> from the pool. </returns>
-        private void MakeRayObject(RTRay.RayType type)
+        private int MakeRayObject(RTRay ray)
         {
-            // First we check if an unused ray object already exists.
-            if (nextIndex < rayObjects.Count)
+            if (ray.AreaRay)
             {
-                if ((!type.ToString().Contains("Area") && !rayObjects[nextIndex].Ray.AreaRay) || rayObjects[nextIndex].Ray.Type == type) return;
-#if UNITY_EDITOR
-                Object.DestroyImmediate(rayObjects[nextIndex].gameObject);
-#else
-                Object.Destroy(rayObjects[nextIndex].gameObject);
-#endif
-                rayObjects[nextIndex] = Object.Instantiate(type.ToString().Contains("Area") ? areaRayPrefab : rayPrefab, parent);
-                return;
+                MakeAreaRayObject();
+                areaRayObjects[nextAreaIndex].Ray = ray;
+                areaRayObjects[nextAreaIndex].gameObject.SetActive(false);
+                return nextAreaIndex++;
             }
-
-            // Else we add a new object to the pool.
-            rayObjects.Add(Object.Instantiate(type == RTRay.RayType.AreaLight ? areaRayPrefab : rayPrefab, parent));
+            else
+            {
+                MakeRayObject();
+                rayObjects[nextIndex].Ray = ray;
+                rayObjects[nextIndex].gameObject.SetActive(false);
+                return nextIndex++;
+            }
         }
 
-        public RayObject GetRayObject(int index)
+        private void MakeRayObject()
+        {
+            // First we check if an unused ray object already exists.
+            if (nextIndex < rayObjects.Count) return;
+
+            // Else we add a new object to the pool.
+            rayObjects.Add(Object.Instantiate(rayPrefab, parent));
+        }
+
+        private void MakeAreaRayObject()
+        {
+            // First we check if an unused arearay object already exists.
+            if (nextAreaIndex < areaRayObjects.Count) return;
+
+            // Else we add a new arearay object to the areapool.
+            areaRayObjects.Add(Object.Instantiate(areaRayPrefab, parent));
+        }
+
+        public RayObject GetRayObject(int index, bool areaRay)
+        {
+           return areaRay ? GetAreaRayObject(index) : GetRayObject(index);
+        }
+
+        private RayObject GetRayObject(int index)
         {
             rayObjects[index].gameObject.SetActive(true);
             return rayObjects[index];
+        }
+
+        private RayObject GetAreaRayObject(int index)
+        {
+            areaRayObjects[index].gameObject.SetActive(true);
+            return areaRayObjects[index];
         }
     }
 }

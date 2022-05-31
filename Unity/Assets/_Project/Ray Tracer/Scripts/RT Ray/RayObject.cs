@@ -36,7 +36,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
         /// <param name="radius"> The drawn radius of the cylinder. </param>
         public void Draw(float radius)
         {
-            rayRenderer.Radius = Ray.AreaRay ? 1f : radius; ;
+            rayRenderer.Radius = Ray.AreaRay ? DrawLength : radius; // The arearay's radius is based on its length
             rayRenderer.Length = DrawLength;
         }
 
@@ -50,7 +50,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
         public void Draw(float radius, float length)
         {
             length = Mathf.Clamp(length, 0.0f, DrawLength);
-            rayRenderer.Radius = Ray.AreaRay ? length / DrawLength : radius;
+            rayRenderer.Radius = Ray.AreaRay ? length : radius; // The arearay's radius is based on its length
             rayRenderer.Length = length;
         }
 
