@@ -62,12 +62,13 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Spot_Light
 
         private void LateUpdate()
         {
-            #if UNITY_EDITOR
+#if UNITY_EDITOR
                 if(!Application.isPlaying) return;
 #endif
             // Make the label face the camera. We do this in LateUpdate to make sure the camera has finished its moving.
-            // From: https://answers.unity.com/questions/52656/how-i-can-create-an-sprite-that-always-look-at-the.html
-
+            // Only rotate in the z direction.
+            canvas.transform.up = Camera.main.transform.forward;
+            canvas.transform.localEulerAngles = new Vector3(0, 0, canvas.transform.localEulerAngles.z);
         }
 
 #if UNITY_EDITOR
@@ -77,6 +78,9 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Spot_Light
             // Fix maximize window errors
             if (UnityEditor.SceneView.lastActiveSceneView == null) 
                 return;
+            // Only rotate in the z direction.
+            canvas.transform.up = UnityEditor.SceneView.lastActiveSceneView.camera.transform.forward;
+            canvas.transform.localEulerAngles = new Vector3(0, 0, canvas.transform.localEulerAngles.z);
         }
 #endif
     }
