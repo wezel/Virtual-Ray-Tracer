@@ -66,8 +66,8 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Spot_Light
                 if(!Application.isPlaying) return;
 #endif
             // Make the label face the camera. We do this in LateUpdate to make sure the camera has finished its moving.
-            // Only rotate in the z direction.
-            canvas.transform.up = Camera.main.transform.forward;
+            // Only rotate the canvas towards the camera in the z rotation.
+            canvas.transform.up = (Camera.main.transform.position - Position).normalized;
             canvas.transform.localEulerAngles = new Vector3(0, 0, canvas.transform.localEulerAngles.z);
         }
 
@@ -78,8 +78,8 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Spot_Light
             // Fix maximize window errors
             if (UnityEditor.SceneView.lastActiveSceneView == null) 
                 return;
-            // Only rotate in the z direction.
-            canvas.transform.up = UnityEditor.SceneView.lastActiveSceneView.camera.transform.forward;
+            // Only rotate the canvas towards the camera in the z rotation.
+            canvas.transform.up = (UnityEditor.SceneView.lastActiveSceneView.camera.transform.position - Position).normalized;
             canvas.transform.localEulerAngles = new Vector3(0, 0, canvas.transform.localEulerAngles.z);
         }
 #endif
