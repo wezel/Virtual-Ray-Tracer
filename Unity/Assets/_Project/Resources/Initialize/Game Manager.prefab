@@ -610,11 +610,11 @@ MonoBehaviour:
     actionTotal: 30
   - type: 0
     badgeName: Points Gatherer
-    badgeDescription: Earn a total of 1000 points
+    badgeDescription: Earn at least 1000 points
     actionTotal: 1000
   - type: 0
     badgeName: Points Galore
-    badgeDescription: Earn a total of 10000 points
+    badgeDescription: Earn at least 10000 points
     actionTotal: 10000
   - type: 2
     badgeName: Builder
