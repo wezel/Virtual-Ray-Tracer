@@ -9,6 +9,7 @@ using _Project.Ray_Tracer.Scripts.RT_Scene;
 using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Spot_Light;
 using System;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 namespace _Project.UI.Scripts.Control_Panel
 {
@@ -24,6 +25,8 @@ namespace _Project.UI.Scripts.Control_Panel
         private Vector3Edit positionEdit;
         [SerializeField]
         private Vector3Edit rotationEdit;
+        [SerializeField]
+        private GameObject zRotationEdit; // Qucik access to disable it for spotlights
         [SerializeField]
         private Vector3Edit scaleEdit;
 
@@ -74,6 +77,7 @@ namespace _Project.UI.Scripts.Control_Panel
             }
 
             rotationEdit.gameObject.SetActive(light.Type == RTLight.RTLightType.Area || light.Type == RTLight.RTLightType.Spot);
+            zRotationEdit.gameObject.SetActive(light.Type == RTLight.RTLightType.Area);
             scaleEdit.gameObject.SetActive(light.Type == RTLight.RTLightType.Area);
             lightSamplesEdit.gameObject.SetActive(light.Type == RTLight.RTLightType.Area);
             spotAngleEdit.gameObject.SetActive(light.Type == RTLight.RTLightType.Spot);

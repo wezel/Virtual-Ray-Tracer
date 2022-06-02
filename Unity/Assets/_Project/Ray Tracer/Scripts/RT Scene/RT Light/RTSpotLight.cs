@@ -72,7 +72,6 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Spot_Light
         }
 
 #if UNITY_EDITOR
-
         private void OnRenderObject()
         {
             // Fix maximize window errors

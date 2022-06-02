@@ -380,6 +380,8 @@ namespace _Project.Ray_Tracer.Scripts
         private void TraceAreaLight(ref TreeNode<RTRay> rayTree, RTAreaLight arealight, in HitInfo hitInfo)
         {
             Vector3 lightVector = (arealight.Position - hitInfo.Point).normalized;
+            if (Vector3.Dot(hitInfo.Normal, lightVector) < 0.0f) return;
+
             float lightDistance = Vector3.Dot(lightVector, arealight.Position - hitInfo.Point);
             float angle = Vector3.Dot(arealight.transform.forward, -lightVector);
             if (angle > Mathf.Cos(arealight.SpotAngle * Mathf.PI / 360f) || arealight.LightSamples <= AreaRayLimit)
