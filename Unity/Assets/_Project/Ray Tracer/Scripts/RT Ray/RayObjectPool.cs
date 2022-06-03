@@ -98,6 +98,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
         /// <param name="rays"> Rays that need to be turned into objects. </param>
         public void MakeRayObjects(List<TreeNode<RTRay>> rays)
         {
+            DeactivateAll();
             SetAllUnused(); // Mark all rays as unused; Start all over
 
             foreach (TreeNode<RTRay> pixel in rays)                 // Make RayObjects for all rays
@@ -177,6 +178,12 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
         {
             areaRayObjects[index].gameObject.SetActive(true);
             return areaRayObjects[index];
+        }
+
+        public void HideRayObject(int index, bool areaRay)
+        {
+            if (areaRay) areaRayObjects[index].gameObject.SetActive(false);
+            else rayObjects[index].gameObject.SetActive(false);
         }
     }
 }

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using _Project.Ray_Tracer.Scripts;
 using _Project.Ray_Tracer.Scripts.RT_Scene;
+using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light;
 using _Project.Scripts;
 using UnityEngine;
 
@@ -18,13 +19,17 @@ namespace _Project.UI.Scripts.Animation_Tools
 
         [SerializeField] 
         private List<RTMesh> objects;
-        
+        [SerializeField]
+        private List<RTLight> lights;
+
         private int currentObject;
-    
+        private int currentLight;
+
         private Transform cameraTransform;
     
         private bool positive = true;
     
+        [SerializeField]
         private float angle;
     
         [SerializeField]
@@ -35,8 +40,15 @@ namespace _Project.UI.Scripts.Animation_Tools
         private float maxAngle;
         [SerializeField]
         private float minAngle;
-        [SerializeField]
+        [SerializeField, Range(60, 300)]
         private int rayTypeChange;
+        [SerializeField, Range(60, 300)]
+        private int lightChange;
+
+        private int rayChangeCnt = 0;
+        private int lightChangeCnt = 0;
+        private bool changedAttenuation = true;
+
         private int rayTypesEnabled = 0;
 
         private float distance = 0.0f;
@@ -53,6 +65,7 @@ namespace _Project.UI.Scripts.Animation_Tools
             maxAngle = angle + maxAngle;
             objects[0].gameObject.SetActive(true);
             currentObject = objects.Count - 1;
+            currentLight = 0;
 
             // Store the distance to the target and camera rotation.
             distance = Vector3.Distance(cameraTransform.position, target.position);
@@ -102,16 +115,41 @@ namespace _Project.UI.Scripts.Animation_Tools
             rayManager.RayDynamicRadiusEnabled = (1 << 1 & rayTypesEnabled) != 0;
             rayManager.RayColorContributionEnabled = (1 << 2 & rayTypesEnabled) != 0;
         }
-    
+
+        private void ChangeLight()
+        {
+            if (!changedAttenuation && Random.value > 0.7f)
+            {
+                lights[currentLight].LightDistanceAttenuation = !lights[currentLight].LightDistanceAttenuation;
+                changedAttenuation = true;  // Make sure it doesn't keep changing 
+            }
+            else
+            {
+                RTScene scene = RTSceneManager.Get().Scene;
+                lights[currentLight].gameObject.SetActive(false);
+                scene.RemoveLight(lights[currentLight]);
+                currentLight = (currentLight + 1) % lights.Count;
+                lights[currentLight].gameObject.SetActive(true);
+                scene.AddLight(lights[currentLight]);
+                changedAttenuation = false;
+            }
+        }
+
+
         /// <summary>
         /// Rotate the camera and if an endpoint is reach pick the next object to be shown.
         /// </summary>
         private void FixedUpdate()
         {
             RotateCamera();
-            if ((rayTypeChange = (rayTypeChange + 1) % 100) == 0) ChangeRayType();
+            if ((rayChangeCnt = (rayChangeCnt + 1) % rayTypeChange) == 0) ChangeRayType();
+            if ((lightChangeCnt = (lightChangeCnt + 1) % lightChange) == 0) ChangeLight();
             if (!(angle >= maxAngle) && !(angle <= minAngle)) return;
-        
+
+            // To not change multiple things quickly after each other, clamp the counts
+            rayChangeCnt = Mathf.Clamp(rayChangeCnt, 0, rayTypeChange - 50);
+            lightChangeCnt = Mathf.Clamp(lightChangeCnt, 0, lightChange - 50);
+
             positive = !positive;
             SwitchScene();
         }
