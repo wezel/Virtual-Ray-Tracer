@@ -1167,6 +1167,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3641045733115134028}
     m_Modifications:
+    - target: {fileID: -8408966102784059295, guid: c187dcb58b1f9ff82b34253c7b41ce48, type: 3}
+      propertyPath: tooltip
+      value: Enabled dynamic ray radius based on the ray's contribution
+      objectReference: {fileID: 0}
     - target: {fileID: 590595068916426999, guid: c187dcb58b1f9ff82b34253c7b41ce48, type: 3}
       propertyPath: m_text
       value: Dynamic Ray Radius
@@ -1476,6 +1480,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3641045733115134028}
     m_Modifications:
+    - target: {fileID: -8408966102784059295, guid: c187dcb58b1f9ff82b34253c7b41ce48, type: 3}
+      propertyPath: tooltip
+      value: Enables transparency for rays.
+      objectReference: {fileID: 0}
     - target: {fileID: 590595068916426999, guid: c187dcb58b1f9ff82b34253c7b41ce48, type: 3}
       propertyPath: m_text
       value: Ray Transparency
@@ -1654,6 +1662,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3641045733115134028}
     m_Modifications:
+    - target: {fileID: -8408966102784059295, guid: c187dcb58b1f9ff82b34253c7b41ce48, type: 3}
+      propertyPath: tooltip
+      value: (De)Activates all spot lights.
+      objectReference: {fileID: 0}
     - target: {fileID: 590595068916426999, guid: c187dcb58b1f9ff82b34253c7b41ce48, type: 3}
       propertyPath: m_text
       value: Enable Spot Lights
@@ -5049,6 +5061,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3641045733115134028}
     m_Modifications:
+    - target: {fileID: -8408966102784059295, guid: c187dcb58b1f9ff82b34253c7b41ce48, type: 3}
+      propertyPath: tooltip
+      value: Whether the supersampling should also be visualized or not.
+      objectReference: {fileID: 0}
     - target: {fileID: 590595068916426999, guid: c187dcb58b1f9ff82b34253c7b41ce48, type: 3}
       propertyPath: m_text
       value: SS Visualization
@@ -5276,7 +5292,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 590595069432362183, guid: 9c7e9f84e5dea9c40a41d59563b4d99b, type: 3}
       propertyPath: tooltip
-      value: The radius with which the rays are drawn.
+      value: The minimal radius with which the rays are drawn.
       objectReference: {fileID: 0}
     - target: {fileID: 590595069432362183, guid: 9c7e9f84e5dea9c40a41d59563b4d99b, type: 3}
       propertyPath: maxValue
@@ -5434,7 +5450,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 590595069432362183, guid: 9c7e9f84e5dea9c40a41d59563b4d99b, type: 3}
       propertyPath: tooltip
-      value: The radius with which the rays are drawn.
+      value: The maximum radius with which the rays are drawn.
       objectReference: {fileID: 0}
     - target: {fileID: 590595069432362183, guid: 9c7e9f84e5dea9c40a41d59563b4d99b, type: 3}
       propertyPath: maxValue
@@ -5486,6 +5502,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3641045733115134028}
     m_Modifications:
+    - target: {fileID: -8408966102784059295, guid: c187dcb58b1f9ff82b34253c7b41ce48, type: 3}
+      propertyPath: tooltip
+      value: Gives the ray the color that it contributes to the pixel
+      objectReference: {fileID: 0}
     - target: {fileID: 590595068916426999, guid: c187dcb58b1f9ff82b34253c7b41ce48, type: 3}
       propertyPath: m_text
       value: Contriution Based Ray Color
@@ -5692,6 +5712,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3641045733115134028}
     m_Modifications:
+    - target: {fileID: -8408966102784059295, guid: c187dcb58b1f9ff82b34253c7b41ce48, type: 3}
+      propertyPath: tooltip
+      value: (De)Activates all area lights.
+      objectReference: {fileID: 0}
     - target: {fileID: 590595068916426999, guid: c187dcb58b1f9ff82b34253c7b41ce48, type: 3}
       propertyPath: m_text
       value: Enable Area Lights
@@ -5922,6 +5946,10 @@ PrefabInstance:
       value: RayTransExponentEdit
       objectReference: {fileID: 0}
     - target: {fileID: 590595069432362183, guid: 9c7e9f84e5dea9c40a41d59563b4d99b, type: 3}
+      propertyPath: tooltip
+      value: Determines how transparent the transparent rays get
+      objectReference: {fileID: 0}
+    - target: {fileID: 590595069432362183, guid: 9c7e9f84e5dea9c40a41d59563b4d99b, type: 3}
       propertyPath: maxValue
       value: 2
       objectReference: {fileID: 0}
@@ -5967,6 +5995,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3641045733115134028}
     m_Modifications:
+    - target: {fileID: -8408966102784059295, guid: c187dcb58b1f9ff82b34253c7b41ce48, type: 3}
+      propertyPath: tooltip
+      value: (De)Activates all point lights.
+      objectReference: {fileID: 0}
     - target: {fileID: 590595068916426999, guid: c187dcb58b1f9ff82b34253c7b41ce48, type: 3}
       propertyPath: m_text
       value: Enable Point Lights

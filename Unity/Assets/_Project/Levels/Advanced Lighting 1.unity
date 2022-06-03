@@ -181,15 +181,16 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_text: "To make lighting look even more realistic, light can be attenuated. There
-    are two types of attuation in this program: spotlight attenuation and light-distance
-    attuation. Because light attenuation has a big impact on the light, lights now
-    also have a 'Light Intensity' setting.\n\nSpotlight attenuation is a spot- or
-    arealight's intensity decline if it does not look straight at a point, but at
-    an angle. A bigger angle means a lower intensity of the light.  \n\nLight-distance
-    attenuation is the effect where the further away a point is from the light, the
-    lower the intensity of the light will be. This can be enabled/disabled per light.
-    Because this makes a big difference, the light's intensity is automatically multiplied/divided
-    by a factor of 10 if light-distance attenuation is enabled/disabled respectively."
+    are two types of attenuation in this program: spotlight attenuation and light-distance
+    attuation. Because light attenuation has a big impact on the light's intensity
+    and therefore on the scene, lights now also have a 'Light Intensity' setting.\n\nSpotlight
+    attenuation is a spot- or arealight's intensity decline if it does not look straight
+    at a point, but at an angle. A bigger angle means a lower intensity of the light. 
+    \n\nLight-distance attenuation is the effect where the further away a point is
+    from the light, the lower the intensity of the light will be. This can be enabled/disabled
+    per light. Because this makes a big difference, the light's intensity is automatically
+    multiplied/divided by a factor of 10 if light-distance attenuation is enabled/disabled
+    respectively."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -501,11 +502,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3379506522100200911, guid: bcec7498edbc0334b80decfdf1557457, type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.8365717
+      value: -0.9981863
       objectReference: {fileID: 0}
     - target: {fileID: 3379506522100200911, guid: bcec7498edbc0334b80decfdf1557457, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.54785746
+      value: 0.060201377
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bcec7498edbc0334b80decfdf1557457, type: 3}
@@ -652,11 +653,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 155768727631332543, guid: 60ed96064c5523b46b7a7bd67e36e6d7, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 434735569063386944, guid: 60ed96064c5523b46b7a7bd67e36e6d7, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 498354669369260714, guid: 60ed96064c5523b46b7a7bd67e36e6d7, type: 3}
       propertyPath: m_AnchorMax.y
@@ -700,23 +701,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1372233506170463363, guid: 60ed96064c5523b46b7a7bd67e36e6d7, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1372233506170463363, guid: 60ed96064c5523b46b7a7bd67e36e6d7, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1372233506170463363, guid: 60ed96064c5523b46b7a7bd67e36e6d7, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 434
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1372233506170463363, guid: 60ed96064c5523b46b7a7bd67e36e6d7, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 217
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1372233506170463363, guid: 60ed96064c5523b46b7a7bd67e36e6d7, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -25
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1583991647067519795, guid: 60ed96064c5523b46b7a7bd67e36e6d7, type: 3}
       propertyPath: m_AnchorMax.y
@@ -2029,9 +2030,9 @@ PrefabInstance:
     - target: {fileID: 8814068479164366629, guid: 60ed96064c5523b46b7a7bd67e36e6d7, type: 3}
       propertyPath: m_text
       value: 'So far, the only type of light source has been a point light. But not
-        all lights can be estimated by point light sources. Therefore, we added two
-        other major types: Spot Light and Area Light. There are also toggles to quickly
-        enable/disable all lights of the same type.'
+        all lights can be approximated by point light sources. Therefore, we added
+        two other major types: Spot Light and Area Light. There are also toggles
+        to quickly enable/disable all lights of the same type.'
       objectReference: {fileID: 0}
     - target: {fileID: 8814068479164366629, guid: 60ed96064c5523b46b7a7bd67e36e6d7, type: 3}
       propertyPath: m_isRightToLeft
@@ -2892,7 +2893,7 @@ MonoBehaviour:
     to a point light in that the light comes from a single point, but this time it
     also has a direction and a ''Spot Angle''. The latter can be changed in the light''s
     properties. It works like a flash light. The spot angle defines how wide the
-    cone of the light is, and it''s direction specifies where the light points towards. '
+    cone of the light is, and its direction specifies where the light points towards. '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
