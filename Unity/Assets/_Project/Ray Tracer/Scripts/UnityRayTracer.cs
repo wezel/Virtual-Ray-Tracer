@@ -593,11 +593,9 @@ namespace _Project.Ray_Tracer.Scripts
 
         private Color TraceImage(Vector3 origin, Vector3 direction, int depth)
         {
-            RaycastHit hit;
-            bool intersected = Physics.Raycast(origin, direction, out hit, Mathf.Infinity, rayTracerLayer);
-
             // If we did not hit anything we return the background color.
-            if (!intersected) return BackgroundColor;
+            if (!Physics.Raycast(origin, direction, out RaycastHit hit, Mathf.Infinity, rayTracerLayer))
+                return BackgroundColor;
 
             RTMesh mesh = hit.transform.GetComponent<RTMesh>();
             HitInfo hitInfo = new HitInfo(ref hit, ref direction, ref mesh);
@@ -606,38 +604,39 @@ namespace _Project.Ray_Tracer.Scripts
             Color color = hitInfo.Ambient * hitInfo.Color;
 
             // Add diffuse and specular components.
-            foreach (RTPointLight light in scene.PointLights)
-            {
-                Vector3 lightVector = (light.transform.position - hit.point).normalized;
-
-                if (Vector3.Dot(hitInfo.Normal, lightVector) >= 0.0f)
-                    color += TraceLightImage(ref lightVector, light.Position, light, in hitInfo);
-            }
-
-            foreach (RTSpotLight spotLight in scene.SpotLights)
-            {
-                Vector3 lightVector = (spotLight.Position - hit.point).normalized;
-                if (Vector3.Dot(hitInfo.Normal, lightVector) >= 0.0f)
-                    color += TraceLightImage(ref lightVector, spotLight.Position, spotLight, in hitInfo);
-            }
-
-            foreach (RTAreaLight arealight in scene.AreaLights)
-            {
-                int samples = arealight.LightSamples * arealight.LightSamples;
-                foreach (Vector3 point in arealight.SampleLight())
-                {
-                    Vector3 lightVector = (point - hit.point).normalized;
-
-                    if (Vector3.Dot(hitInfo.Normal, lightVector) >= 0.0f)
-                        color += TraceLightImage(ref lightVector, point, arealight, in hitInfo) / samples;
-                }
-            }
+            scene.PointLights.ForEach(pointLight => color += TracePointSpotLightImage(pointLight, in hitInfo));
+            scene.SpotLights.ForEach(spotLight => color += TracePointSpotLightImage(spotLight, in hitInfo));
+            scene.AreaLights.ForEach(areaLight => color += TraceAreaLightImage(areaLight, in hitInfo));
 
             // Cast reflection and refraction rays.
             if (depth > 0)
                 color += TraceReflectionAndRefractionImage(depth, hitInfo);
             
             return ClampColor(color);
+        }
+
+        private Color TracePointSpotLightImage(RTLight light, in HitInfo hitInfo)
+        {
+            Vector3 lightVector = (light.transform.position - hitInfo.Point).normalized;
+            if (Vector3.Dot(hitInfo.Normal, lightVector) >= 0.0f)
+                return TraceLightImage(ref lightVector, light.Position, light, in hitInfo);
+            return Color.black;
+        }
+
+        private Color TraceAreaLightImage(RTAreaLight areaLight, in HitInfo hitInfo)
+        {
+            Color color = Color.black;
+            Vector3 lightVector = (areaLight.Position - hitInfo.Point).normalized;
+            if (Vector3.Dot(hitInfo.Normal, lightVector) < 0.0f) return color; // Do not trace if it's on the wrong side.
+
+            int samples = areaLight.LightSamples * areaLight.LightSamples;
+            foreach (Vector3 point in areaLight.SampleLight())
+            {
+                lightVector = (point - hitInfo.Point).normalized;
+                color += TraceLightImage(ref lightVector, point, areaLight, in hitInfo) / samples;
+            }
+
+            return color;
         }
 
         private Color TraceLightImage(ref Vector3 lightVector, Vector3 point, RTLight light, in HitInfo hitInfo)
