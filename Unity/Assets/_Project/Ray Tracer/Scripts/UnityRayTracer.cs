@@ -351,9 +351,9 @@ namespace _Project.Ray_Tracer.Scripts
             Color color = hitInfo.Ambient * hitInfo.Color;
 
             // Add diffuse and specular components for area, spot and pointlights.
-            scene.AreaLights.ForEach(areaLight => TraceAreaLight(ref rayTree, areaLight, in hitInfo));
-            scene.SpotLights.ForEach(spotLight => TracePointSpotLight(ref rayTree, spotLight, hitInfo));
             scene.PointLights.ForEach(pointLight => TracePointSpotLight(ref rayTree, pointLight, hitInfo));
+            scene.SpotLights.ForEach(spotLight => TracePointSpotLight(ref rayTree, spotLight, hitInfo));
+            scene.AreaLights.ForEach(areaLight => TraceAreaLight(ref rayTree, areaLight, in hitInfo));
 
             // Cast reflection and refraction rays.
             if (depth > 0)
@@ -440,7 +440,8 @@ namespace _Project.Ray_Tracer.Scripts
             }
 
             // If we don't render shadows, we still have to check if the object is outside the range of a area/spotlight
-            float angle = Vector3.Dot(light.transform.forward, -lightVector);
+            // Use the lightVector to the light's origin for arealights, such that all rays to the area or in or out of range
+            float angle = Vector3.Dot(light.transform.forward, (hitInfo.Point - light.Position).normalized);
             if (light.Type != RTLight.RTLightType.Point)
                 if (angle < Mathf.Cos(light.SpotAngle * Mathf.PI / 360f))
                     return new RTRay(hitInfo.Point, lightVector, lightDistance, Color.black, RTRay.RayType.Shadow);
