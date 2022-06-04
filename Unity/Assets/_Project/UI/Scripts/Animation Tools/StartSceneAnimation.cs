@@ -40,18 +40,24 @@ namespace _Project.UI.Scripts.Animation_Tools
         private float maxAngle;
         [SerializeField]
         private float minAngle;
-        [SerializeField, Range(60, 300)]
+        [SerializeField, Range(0, 1000)]
         private int rayTypeChange;
-        [SerializeField, Range(60, 300)]
+        [SerializeField, Range(0, 1000)]
         private int lightChange;
+        [SerializeField, Range(0, 1000)]
+        private int meshChange;
 
-        private int rayChangeCnt = 0;
-        private int lightChangeCnt = 0;
-        private bool changedAttenuation = true;
+        private int meshChangeCnt;
+        private int rayChangeCnt;
+        private int lightChangeCnt;
+        private bool changedAttenuation;
 
-        private int rayTypesEnabled = 0;
+        /// <summary>
+        /// Bitmask for all possible ways of visualizing rays
+        /// </summary>
+        private int rayTypesEnabled;
 
-        private float distance = 0.0f;
+        private float distance;
         
 
         /// <summary>
@@ -64,8 +70,14 @@ namespace _Project.UI.Scripts.Animation_Tools
             minAngle = angle - minAngle;
             maxAngle = angle + maxAngle;
             objects[0].gameObject.SetActive(true);
-            currentObject = objects.Count - 1;
+            lights[0].gameObject.SetActive(true);
+            currentObject = 0;
             currentLight = 0;
+            meshChangeCnt = 0;
+            rayChangeCnt = 0;
+            lightChangeCnt = 0;
+            changedAttenuation = true;
+            rayTypesEnabled = 0;
 
             // Store the distance to the target and camera rotation.
             distance = Vector3.Distance(cameraTransform.position, target.position);
@@ -118,7 +130,7 @@ namespace _Project.UI.Scripts.Animation_Tools
 
         private void ChangeLight()
         {
-            if (!changedAttenuation && Random.value > 0.7f)
+            if (!changedAttenuation && Random.value > 0.7f) // Small chance to flip attenuation. Prevent doing it twice in a row
             {
                 lights[currentLight].LightDistanceAttenuation = !lights[currentLight].LightDistanceAttenuation;
                 changedAttenuation = true;  // Make sure it doesn't keep changing 
@@ -135,23 +147,20 @@ namespace _Project.UI.Scripts.Animation_Tools
             }
         }
 
-
         /// <summary>
-        /// Rotate the camera and if an endpoint is reach pick the next object to be shown.
+        /// Rotate the camera and change raytype/light/mesh when the amount of ticks is reached.
         /// </summary>
         private void FixedUpdate()
         {
             RotateCamera();
-            if ((rayChangeCnt = (rayChangeCnt + 1) % rayTypeChange) == 0) ChangeRayType();
-            if ((lightChangeCnt = (lightChangeCnt + 1) % lightChange) == 0) ChangeLight();
-            if (!(angle >= maxAngle) && !(angle <= minAngle)) return;
-
-            // To not change multiple things quickly after each other, clamp the counts
-            rayChangeCnt = Mathf.Clamp(rayChangeCnt, 0, rayTypeChange - 50);
-            lightChangeCnt = Mathf.Clamp(lightChangeCnt, 0, lightChange - 50);
-
-            positive = !positive;
-            SwitchScene();
+            if ((rayChangeCnt = (rayChangeCnt + 1) % rayTypeChange) == 0)
+                ChangeRayType();
+            if ((lightChangeCnt = (lightChangeCnt + 1) % lightChange) == 0)
+                ChangeLight();
+            if ((meshChangeCnt = (meshChangeCnt + 1) % meshChange) == 0)
+                SwitchScene();
+            if (angle >= maxAngle || angle <= minAngle)
+                positive = !positive;
         }
     }
 }
