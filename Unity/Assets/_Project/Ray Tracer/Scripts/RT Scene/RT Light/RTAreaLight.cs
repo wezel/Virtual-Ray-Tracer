@@ -54,8 +54,6 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
             return worldCorners;
         }
 
-        private static readonly System.Random rnd = new System.Random();
-
         /// <summary>
         /// Samples uniformly random points on the arealight
         /// </summary>
@@ -72,8 +70,8 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
 
             for (int i = 0; i < LightSamples * LightSamples; i++)
                 points[i] = corners[0]
-                        + (i / LightSamples) * step_1 + (float)rnd.NextDouble() * step_1
-                        + (i % LightSamples) * step_2 + (float)rnd.NextDouble() * step_2;
+                        + (i / LightSamples) * step_1 + Random.value * step_1
+                        + (i % LightSamples) * step_2 + Random.value * step_2;
 
             return points;
         }

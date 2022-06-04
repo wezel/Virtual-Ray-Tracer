@@ -364,7 +364,7 @@ namespace _Project.Ray_Tracer.Scripts
 
             // Calculate contribution to the parent.
             float rgb = ColorSumRGB(color);
-            rayTree.Children.ForEach(child => child.Data.Contribution = rgb > 0f ? ColorSumRGB(child.Data.Color) / rgb : 0f);
+            rayTree.Children.ForEach(ray => ray.Data.Contribution = rgb > 0f ? ColorSumRGB(ray.Data.Color) / rgb : 0f);
 
             rayTree.Data = new RTRay(origin, direction, hit.distance, ClampColor(color), type);
             return rayTree;
@@ -380,7 +380,7 @@ namespace _Project.Ray_Tracer.Scripts
         private void TraceAreaLight(ref TreeNode<RTRay> rayTree, RTAreaLight arealight, in HitInfo hitInfo)
         {
             Vector3 lightVector = (arealight.Position - hitInfo.Point).normalized;
-            if (Vector3.Dot(hitInfo.Normal, lightVector) < 0.0f) return;
+            if (Vector3.Dot(hitInfo.Normal, lightVector) < 0.0f) return;    // Do not trace if it's on the wrong side.
 
             float lightDistance = Vector3.Dot(lightVector, arealight.Position - hitInfo.Point);
             float angle = Vector3.Dot(arealight.transform.forward, -lightVector);
