@@ -1,5 +1,6 @@
 using System.Collections;
 using _Project.Ray_Tracer.Scripts;
+using _Project.Scripts;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
@@ -182,7 +183,11 @@ namespace _Project.UI.Scripts.Control_Panel
             superSamplingVisualEdit.OnValueChanged += (value) => { rayTracer.SuperSamplingVisual = value; };
             renderImageButton.onClick.AddListener(RenderImage);
             openImageButton.onClick.AddListener(ToggleImage);
-            flyRoRTCameraButton.onClick.AddListener(() => { showRaysEdit.IsOn = false; });
+            flyRoRTCameraButton.onClick.AddListener(() =>
+            { 
+                showRaysEdit.IsOn = false; // This invokes the OnValueChanged event as well.
+                FindObjectOfType<CameraController>().FlyToRTCamera(); // There should only be 1 CamerController.
+            });
         }
     }
 }

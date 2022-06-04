@@ -89,7 +89,7 @@ Shader "Custom/LightShader"
             // The fragment shader.
             float4 frag(vertexOutput input, fixed facing : VFACE) : COLOR
             {
-                // For now we do the lighting calculation under the assumption that all lights are point or spot light sources.  
+                // For now we do the lighting calculation under the assumption that all unity-lights are point or spot light sources.  
                 // We use the _LightColor0 to transfer the lightColor, intensity, spotAngle, ambient, diffuse and specular components.
                 // lightColor and intensity are encoded in .r and .g
                 // ambDifSpec and spotAngle are encoded in .b and .a

@@ -15,7 +15,8 @@ namespace _Project.UI.Scripts.Animation_Tools
     /// </summary>
     public class StartSceneAnimation : MonoBehaviour
     {
-        [SerializeField] private CameraController cameraController;
+        [SerializeField]
+        private CameraController cameraController;
 
         [SerializeField] 
         private List<RTMesh> objects;

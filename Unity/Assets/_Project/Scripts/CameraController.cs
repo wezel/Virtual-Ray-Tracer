@@ -249,7 +249,7 @@ namespace _Project.Scripts
             }
         }
 
-        private static bool flytocam = false;
+        private bool flytocam = false;
 
         public void FlyToRTCamera()
         {

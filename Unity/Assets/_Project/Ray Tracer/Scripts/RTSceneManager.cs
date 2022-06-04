@@ -399,7 +399,6 @@ namespace _Project.Ray_Tracer.Scripts
         
         private void SetHandleType(HandleType type)
         {
-            
             // Cameras should not be scaled and lights should not be scaled or rotated. We default to translation.
             bool selectedCamera = selection.Type == typeof(RTCamera);
             bool selectedPointLight = selection.Type == typeof(RTPointLight);
