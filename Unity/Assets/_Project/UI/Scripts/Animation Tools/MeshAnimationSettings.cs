@@ -69,5 +69,15 @@ namespace _Project.UI.Scripts.Animation_Tools
         {
             if (update) mesh.Rotation += axis * rotationSpeed;
         }
+
+        /// <summary>
+        /// If the object should be rotated, set the transform.hasChanged to true.
+        /// Because of the OnEnable, this script has to run after default time and RTMesh checks
+        /// transform.hasChanged before the rotation. Set is back to true to let in update the next frame.
+        /// </summary>
+        private void Update()
+        {
+            if (update) mesh.transform.hasChanged = true;
+        }
     }
 }
