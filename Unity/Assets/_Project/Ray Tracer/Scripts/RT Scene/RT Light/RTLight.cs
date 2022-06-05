@@ -30,10 +30,11 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
             }
         }
 
-        protected const int intensityDivisor = 60;
+        // Important! The range is also hardcoded in the LightShader!
+        protected const int intensityDivisor = 60;  // 2 * max intensity
         [SerializeField, Range(0.0f, 30.0f)]
         protected float intensity;
-        public virtual float Intensity
+        public float Intensity
         {
             get => intensity;
             set
@@ -47,7 +48,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
 
         [SerializeField, Range(0,1)]
         protected float ambient;
-        public virtual float Ambient
+        public float Ambient
         {
             get => ambient;
             set
@@ -62,7 +63,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
         [SerializeField, Range(0,1)]
         protected float diffuse;
 
-        public virtual float Diffuse
+        public float Diffuse
         {
             get => diffuse;
             set
@@ -77,7 +78,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
         [SerializeField, Range(0,1)]
         protected float specular;
 
-        public virtual float Specular
+        public float Specular
         {
             get => specular;
             set

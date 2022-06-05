@@ -384,7 +384,7 @@ namespace _Project.Ray_Tracer.Scripts
 
             float lightDistance = Vector3.Dot(lightVector, arealight.Position - hitInfo.Point);
             float angle = Vector3.Dot(arealight.transform.forward, -lightVector);
-            if (angle > Mathf.Cos(arealight.SpotAngle * Mathf.PI / 360f) || arealight.LightSamples <= AreaRayLimit)
+            if (angle >= Mathf.Cos(arealight.SpotAngle * Mathf.PI / 360f) || arealight.LightSamples <= AreaRayLimit)
             {   // The hitpoint is in front of the arealight
                 TreeNode<RTRay> subRayTree = new TreeNode<RTRay>(new RTRay());
                 int samples = arealight.LightSamples * arealight.LightSamples;

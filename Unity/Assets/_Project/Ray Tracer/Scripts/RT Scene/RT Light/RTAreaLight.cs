@@ -26,11 +26,11 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
         /// <summary>
         /// The underlying <see cref="UnityEngine.Light"/>s used by the light.
         /// </summary>
-        private Light[] lights;
+        private List<Light> lights;
         public override LightShadows Shadows
         {
             get => lights[0].shadows;
-            set { foreach (Light light in lights) light.shadows = value; }
+            set => lights.ForEach(light => light.shadows = value);
         }
 
         public override void UpdateLightData()
@@ -40,8 +40,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
             lightData.g = Mathf.Floor(color.b / LightSamples * 256) + (intensity / intensityDivisor);
             lightData.b = Mathf.Floor(ambient / (LightSamples * LightSamples) * 256) + diffuse / LightSamples / 2;
             lightData.a = Mathf.Floor(specular / LightSamples * 256) + Mathf.Clamp01(Mathf.Cos(areaSpotAngle * Mathf.PI / 360f)) / 2f + (lightDistanceAttenuation ? 512 : 0);
-            foreach (Light light in lights)
-                light.color = lightData;
+            lights.ForEach(light => light.color = lightData);
         }
 
         private RectTransform rectTransform;
@@ -99,7 +98,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
 
         private void UpdateLabelColor()
         {
-#if UNITY_EDITOR
+#if UNITY_EDITOR    
             Vector3 cameraPos;
             if (!Application.isPlaying)
                 cameraPos = UnityEditor.SceneView.lastActiveSceneView.camera.transform.position;
@@ -116,13 +115,35 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
 
         private void UpdateLights()
         {
-            foreach (Light light in GetComponentsInChildren<Light>())
+            RemoveUnnecessaryLights();  // If the lightsamples went down, we have to remove lights
+            AddMissingLights();         // If the lightsamples went up,   we have to add    lights
+            PositionLights();           // Position the new lights correctly            
+            UpdateLightData();          // Set all lights to the correct data.
+            OnLightChangedInvoke();
+        }
+
+        private void RemoveUnnecessaryLights()
+        {
+            for (int i = lights.Count - 1; i >= LightSamples * LightSamples; --i)
+            {
 #if UNITY_EDITOR
-                DestroyImmediate(light.gameObject);
+                DestroyImmediate(lights[i].gameObject);
 #else
-                Destroy(light.gameObject);
+                Destroy(lights[i].gameObject);
 #endif
-            lights = new Light[LightSamples * LightSamples];
+                lights.RemoveAt(i);
+            }
+            lights.TrimExcess();
+        }
+
+        private void AddMissingLights()
+        {
+            for (int i = lights.Count; i < LightSamples * LightSamples; ++i)
+                lights.Add(Instantiate(spotLightPrefab, transform).GetComponent<Light>());
+        }
+
+        private void PositionLights()
+        {
             float stepx = RectTransform.rect.width / (LightSamples - 1);
             float stepy = RectTransform.rect.height / (LightSamples - 1);
             float startx = -RectTransform.rect.width / 2;
@@ -133,23 +154,20 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
             {
                 for (int j = 0; j < LightSamples; j++)
                 {
-                    Light light = Instantiate(spotLightPrefab, transform).GetComponent<Light>();
+                    Light light = lights[i * LightSamples + j];
                     light.transform.localPosition = new Vector3(startx + i * stepx, starty + j * stepy, 0f);
                     light.shadowBias = (i + j) / maxBias * 0.035f + 0.005f;
-                    light.spotAngle = 175;
-                    lights[i * LightSamples + j] = light;
+                    light.spotAngle = areaSpotAngle;
                 }
             }
-
-            // Set all lights to the correct data.
-            UpdateLightData();
-            OnLightChangedInvoke();
         }
 
         protected override void Awake()
         {
             Type = RTLightType.Area;
             rectTransform = GetComponent<RectTransform>();
+            lights = new List<Light>();
+            foreach (Light light in GetComponentsInChildren<Light>()) lights.Add(light);
             UpdateLights();
             base.Awake();
         }
@@ -162,7 +180,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
             UpdateLabelColor();
 
 #if UNITY_EDITOR // Update the (amount of) lights in the editor
-            if (lights != null && lights.Length == LightSamples * LightSamples)
+            if (lights != null && lights.Count == LightSamples * LightSamples)
                 return;
             else if (PrefabStageUtility.GetCurrentPrefabStage() != null) // In Prefab Mode
                 return;                                                  // Don't add lights to the prefab
