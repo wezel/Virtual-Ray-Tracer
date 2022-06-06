@@ -115,6 +115,7 @@ namespace _Project.UI.Scripts.Control_Panel
             speedEdit.Value = rayManager.Speed;
 
             superSamplingFactorEdit.Value = rayTracer.SuperSamplingFactor;
+            superSamplingVisualEdit.IsOn = rayTracer.SuperSamplingVisual;
         }
 
         /// <summary>
@@ -179,6 +180,7 @@ namespace _Project.UI.Scripts.Control_Panel
             speedEdit.OnValueChanged.AddListener((value) => { rayManager.Speed = value; });
 
             superSamplingFactorEdit.OnValueChanged.AddListener((value) => { rayTracer.SuperSamplingFactor = (int)value; });
+            superSamplingVisualEdit.OnValueChanged.AddListener((value) => { rayTracer.SuperSamplingVisual = value; });
             renderImageButton.onClick.AddListener(RenderImage);
             openImageButton.onClick.AddListener(ToggleImage);
             flyRoRTCameraButton.onClick.AddListener(() =>

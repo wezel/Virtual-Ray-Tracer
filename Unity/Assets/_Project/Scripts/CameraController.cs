@@ -184,7 +184,7 @@ namespace _Project.Scripts
         private void OnlyOneInputPicker()
         {
 
-            if (Input.GetKeyDown(KeyCode.LeftControl))
+            if (Input.GetKeyDown(KeyCode.LeftControl) || Input.GetKeyDown(KeyCode.LeftCommand))
             {
                 inputBlocker.gameObject.SetActive(true);
                 mode = true;
@@ -217,7 +217,7 @@ namespace _Project.Scripts
                 return;
             }
 
-            if (mode && !Input.GetKey(KeyCode.LeftControl))
+            if (mode && !(Input.GetKey(KeyCode.LeftControl) || Input.GetKeyDown(KeyCode.LeftCommand)))
             {
                 inputBlocker.gameObject.SetActive(false);
                 GlobalManager.Get().ResetCursor();
@@ -238,7 +238,7 @@ namespace _Project.Scripts
                 OnZoomChanged.Invoke();
 
             // If the left control is pressed and.... 
-            if (Input.GetKey(KeyCode.LeftControl))
+            if (Input.GetKey(KeyCode.LeftControl) || Input.GetKeyDown(KeyCode.LeftCommand))
             {
 
                 // The right mouse button we activate zoom.

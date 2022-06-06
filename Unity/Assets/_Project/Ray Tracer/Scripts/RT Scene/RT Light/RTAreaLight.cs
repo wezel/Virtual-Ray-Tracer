@@ -90,11 +90,14 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
                 if (value >= 2 && value <= 10)
                     lightSamples = value;
                 UpdateLights();
+                onLightSampleChanged?.Invoke();
             }
         }
 
         [SerializeField]
         private GameObject spotLightPrefab;
+
+        public LightChanged onLightSampleChanged;
 
         private void UpdateLabelColor()
         {

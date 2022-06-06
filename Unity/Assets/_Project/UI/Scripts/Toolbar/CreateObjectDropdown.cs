@@ -44,7 +44,6 @@ namespace _Project.UI.Scripts.Toolbar
         /// </summary>
         public void Open()
         {
-            CheckLights();
             openButton.gameObject.SetActive(false);
             items.gameObject.SetActive(true);
 
@@ -58,6 +57,7 @@ namespace _Project.UI.Scripts.Toolbar
                 if (transforms.Length > 2) transforms[2].gameObject.SetActive(!enabled); // hide or show unlock panel
                 buttons[idx++].interactable = enabled;
             }
+            CheckLights();  // There may be enough points, but if a lighttype is disabled, don't add it!
         }
 
         /// <summary>

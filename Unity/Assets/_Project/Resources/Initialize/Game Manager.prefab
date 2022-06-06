@@ -52,7 +52,7 @@ MonoBehaviour:
       name: Introduction
       description: Welcome to the Virtual Ray Tracer! These tutorial tasks will guide
         you through the program. Below this text, a progress bar is shown, which
-        displays your progress in the current level.  There are 7 levels in total.
+        displays your progress in the current level.  There are 11 levels in total.
         Press the button to the right of the progress bar to continue to the next
         task.
       skippable: 1
@@ -92,8 +92,9 @@ MonoBehaviour:
       points: 162
     - identifier: cameraOrbit
       name: Camera Orbiting
-      description: Orbit the camera by moving your mouse while holding down left-click
+      description: 'Orbit the camera by moving your mouse while holding down left-click
         and left control or by using the arrow keys while holding down left control.
+        (For Mac users: use left command)'
       skippable: 0
       points: 169
     - identifier: cameraZoom
@@ -466,6 +467,95 @@ MonoBehaviour:
       points: 0
   - optionalTasksStart: 9
     tasks:
+    - identifier: 
+      name: Ray Visualization
+      description: It is possible to get many rays in this program. In this level,
+        some new features of visualizing rays are available and will be explained
+        in the next tasks!
+      skippable: 1
+      points: 50
+    - identifier: editSuperSampling
+      name: Visualizing Super Sampling
+      description: As explained before, supsersampling is a technique where mulitple
+        rays are casted through a pixel to get a better approximation of the true
+        pixel color, not just the center of the pixel. This can also be visualized.
+        First, increase the "Super Sampling" factor in the ray tracer properties.
+      skippable: 0
+      points: 88
+    - identifier: visualSuperSampling
+      name: Visualizing Super Sampling
+      description: Excellent! Now enable "SS Visualization" (Super Sampling Visualization).
+      skippable: 0
+      points: 143
+    - identifier: 
+      name: Too many rays!
+      description: With supersampling, reflection and refraction, there may be too
+        many rays. To better see the rays and understand what they do, we added the
+        ability to hide negligible rays, make rays transparent, make their radius
+        dynamic and have the ray's color represent the color it adds to the pixel.
+      skippable: 1
+      points: 42
+    - identifier: hideRays
+      name: Hide Rays
+      description: 'There are now two toglles to hide rays: "Hide No Hit Rays" and
+        "Hide Neglibilbe Rays". The latter will hide rays that contribute less than
+        a set threshhold to the final pixel''s color. Enable "Hide Neglibilbe Rays"!'
+      skippable: 0
+      points: 86
+    - identifier: rayTransparency
+      name: Ray Transparency
+      description: You can make rays transparent with the toggle "Ray Transparency".
+        This will also reveal a slider "Ray Transparency Exponent", with which you
+        can define how transparent rays should be. Transparency is linked to the
+        ray's contribution, so important rays are more visible than negligible rays.
+        Enable "Ray Transparency".
+      skippable: 0
+      points: 98
+    - identifier: dynamicRadius
+      name: Dynamic Ray Radius
+      description: To better distinguish between important and non-important rays,
+        there is "Dyanmic Ray Radius" which will make negligible rays thin and important
+        rays thicker. The minimal and maximum radius can be changed by the "Ray Minimal
+        Radius" and "Ray Maximal Radius" sliders. Try it by enabling "Dyanmic Ray
+        Radius".
+      skippable: 0
+      points: 110
+    - identifier: colorContribution
+      name: Contribution Based Color
+      description: Lastly, be enabling "Contribution Based Ray Color" the ray's color
+        will not represent it's type, but the color it adds to the pixel color. Check
+        it out!
+      skippable: 0
+      points: 123
+    - identifier: 
+      name: 
+      description: 
+      skippable: 1
+      points: 0
+    - identifier: hideRayThreshold
+      name: Hide Rays
+      description: Change the "Ray Hide Threshold" and see negligible rays disappear!
+      skippable: 0
+      points: 60
+    - identifier: rayTransChange
+      name: Ray Transparency
+      description: Change the "Ray Transparency Exponent" using the slider and see
+        the transparency of the change!
+      skippable: 0
+      points: 78
+    - identifier: rayDynRadiusChange
+      name: Dynamic Ray Radius
+      description: Change the value of either "Ray Minimal Radius" or "Ray Maximum
+        Radius" and notice the rays change in size.
+      skippable: 0
+      points: 65
+    - identifier: 
+      name: 
+      description: 
+      skippable: 0
+      points: 0
+  - optionalTasksStart: 9
+    tasks:
     - identifier: selectCamera
       name: Transparent Interactions
       description: In this scene we will explore three different interactions the
@@ -572,6 +662,171 @@ MonoBehaviour:
     - identifier: 
       name: 
       description: 
+      skippable: 0
+      points: 0
+  - optionalTasksStart: 6
+    tasks:
+    - identifier: 
+      name: 'Advanced Lighting '
+      description: So far, the only type of light source has been the point light
+        source. But not all lights can be approximated by point light sources. Therefore
+        we will introduce 2 more types of light sources, starting with the Spot Light!
+      skippable: 1
+      points: 42
+    - identifier: spotLightSelect
+      name: Spot Light
+      description: A spotlight is simmiliar to a point light in that light comes
+        from a single point, but this time it also has a direction and a "Spot Angle".
+        Select the spotlight.
+      skippable: 0
+      points: 68
+    - identifier: spotAngleChange
+      name: Spot Light Angle
+      description: The spotlight's angle can be changed in the light's properties.
+        It works like a flash light. The angle defines how wide the cone of the light
+        is, and the light's direction specifies where the light points towards. Try
+        changing the light's "Spot Angle" and see for yourself!
+      skippable: 0
+      points: 145
+    - identifier: 
+      name: Light Attenuation
+      description: 'To make lighting look even more realistic, lights can be attenuated.
+        There are two types of attenuation in this program: spotlight attenuation
+        and light-distance attenuation. As this changed the light''s intensity, lights
+        now also have a "Light intensity" setting.'
+      skippable: 1
+      points: 0
+    - identifier: lightDistAtten
+      name: Light-Distance Attenuation
+      description: Light-distance attenuation can be toggled on/off per light in
+        this program. This will also change the intensity as the distance has a big
+        impact. Check it out by disabling and enabling the spotlight's "Distance
+        Attenuation"!
+      skippable: 0
+      points: 89
+    - identifier: 
+      name: 
+      description: 
+      skippable: 1
+      points: 0
+    - identifier: lightIntensity
+      name: Light Intensity
+      description: Light's now also have an intensity setting. This determines how
+        bright a light is. A bright light can still illuminate object from a for
+        distance, a dull light will not. See for yourself by changing the "Intensity"
+        setting of the spotlight.
+      skippable: 0
+      points: 89
+    - identifier: 
+      name: 
+      description: 
+      skippable: 0
+      points: 0
+  - optionalTasksStart: 8
+    tasks:
+    - identifier: 
+      name: Advanced Lighting 2
+      description: As said in the previous level, there are also arealights. This
+        level has an arealight. An arealight is very simmilar to a spotlight, except
+        that the light does not come from a single point, but from an area. This
+        can create soft shadows.
+      skippable: 1
+      points: 42
+    - identifier: 
+      name: Soft Shadows
+      description: 'So far we''ve only seen hard shadows: First there is no shadow,
+        and the next pixel there is a shadow. A soft shadow is a transition from
+        this no-shadow to full-shadow space. Arealights create soft shadows when
+        only a part of the arealight is visible from a point. '
+      skippable: 1
+      points: 46
+    - identifier: 
+      name: Arealight Sampling
+      description: 'But it''s extremely difficult to determine how much of the area
+        is visible from a certain point. To approximate that, we use an approach
+        called ''sampling'': We take some random points on the arealight and use
+        that to approximate how much of the area is visible. '
+      skippable: 1
+      points: 52
+    - identifier: lightSamplesChange
+      name: Arealight Sampling
+      description: To mimic this sampling behaviour, the arealight in this program
+        actually uses multiple spotlights, the same amount as light samples taken.
+        This is a setting that can be changed per arealight. Select the arealight
+        and change the number of "Light Samples".
+      skippable: 0
+      points: 123
+    - identifier: arealightRender
+      name: Arealight Rendering
+      description: The downside of only taking a few samples is that the result looks
+        unrealistic, although it renders quite fast. The effect is called 'noise'.
+        This appears because it takes too few samples to make a good approximation.
+        Set the samples very low and press "Render Image".
+      skippable: 0
+      points: 109
+    - identifier: arealightRender
+      name: Arealight Rendering
+      description: The downside of many samples is that it takes very long to render.
+        For example, when using 36 samples, the raytracer effectively renders 36
+        spotlights. Increase the light samples and press "Render Image" and expierence
+        the slowness...
+      skippable: 0
+      points: 134
+    - identifier: 
+      name: Arealight Rays
+      description: 'As you may have noticed, many lightsamples will also create many
+        rays: too many rays. Therefore, if a light uses 25 or maore samples and all
+        the rays are of the same type, it will only show a single a single square
+        cone. This ''area-ray'' is big and there always transparent. It is also unaffected
+        by the radius settings.'
+      skippable: 1
+      points: 42
+    - identifier: 
+      name: 
+      description: You may press "Next Level" now to move onto the next level or
+        do some more exploring.
+      skippable: 0
+      points: 0
+  - optionalTasksStart: 7
+    tasks:
+    - identifier: 
+      name: More Advanced Raytracing
+      description: You've reached the second-to-last level! In this level, we combined
+        everything you've seen in the previous levels. It contains a mirror, a transparent
+        object and various shapes and light sources.
+      skippable: 1
+      points: 42
+    - identifier: moveCapsule
+      name: Move the capsule
+      description: Now some small tests to see if you know your way around the program!
+        First, move the capsule.
+      skippable: 0
+      points: 78
+    - identifier: changeSpotAngle
+      name: Change the spotlight's spot angle
+      description: Now change the spotlight's spot angle.
+      skippable: 0
+      points: 98
+    - identifier: changeSpecFloor
+      name: Change floor's specular compenent
+      description: Next, change the floor's specular component.
+      skippable: 0
+      points: 65
+    - identifier: dynMaxRadiusChange
+      name: Maximum dynamic radius
+      description: Next up, change the maximum dynamic radius of the rays.
+      skippable: 0
+      points: 132
+    - identifier: areaSampleChange
+      name: Arealight samples
+      description: Last but not least, change the numer of light samples used by
+        the arealight.
+      skippable: 0
+      points: 106
+    - identifier: 
+      name: 
+      description: You may press "Next Level" now to move onto the next level or
+        do some more exploring.
       skippable: 0
       points: 0
   - optionalTasksStart: 4

@@ -28,6 +28,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
                 label.color = value;
                 UpdateLightData();
                 OnLightChanged?.Invoke();
+                OnLightColorChanged?.Invoke();
             }
         }
 
@@ -44,7 +45,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
                 intensity = value;
                 UpdateLightData();
                 OnLightChanged?.Invoke();
-                OnLightColorChanged?.Invoke();
+                OnIntensityChanged?.Invoke();
             }
         }
 
@@ -106,6 +107,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
                 Intensity *= Mathf.Clamp(value ? 10f : 0.1f, 0f, 30f);    // Change intensity so it doesn't look horrible.
                 UpdateLightData();
                 OnLightChanged?.Invoke();
+                OnDistAttenuationChanged?.Invoke();
             }
         }
 
@@ -114,7 +116,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
         /// <summary>
         /// An event invoked whenever a this light is changed.
         /// </summary>
-        public LightChanged OnLightSelected, OnLightChanged, OnLightColorChanged;
+        public LightChanged OnLightSelected, OnLightChanged, OnLightColorChanged, OnDistAttenuationChanged, OnIntensityChanged;
 
         protected void OnLightChangedInvoke() => OnLightChanged?.Invoke();
 

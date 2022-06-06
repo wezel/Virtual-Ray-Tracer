@@ -33,6 +33,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Spot_Light
                 spotAngle = value;
                 UpdateLightData();
                 OnLightChangedInvoke();
+                OnSpotAngleChanged?.Invoke();
             }
         }
 
@@ -51,7 +52,9 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Spot_Light
         /// </summary>
         [SerializeField]
         private new Light light;
-        
+
+        public LightChanged OnSpotAngleChanged;
+
         public override LightShadows Shadows { get => light.shadows; set => light.shadows = value; }
 
         protected override void Awake()
