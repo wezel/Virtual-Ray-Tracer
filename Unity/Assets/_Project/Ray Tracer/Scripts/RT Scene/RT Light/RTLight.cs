@@ -109,7 +109,6 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
             }
         }
 
-        public delegate void LightChanged();
         [Serializable]
         public class LightChanged : UnityEvent { };
         /// <summary>

@@ -172,19 +172,19 @@ namespace _Project.UI.Scripts.Control_Panel
 
         private void Awake()
         {
-            positionEdit.OnValueChanged += value => { light.Position = value; };
-            rotationEdit.OnValueChanged += value => { light.Rotation = value; };
-            scaleEdit.OnValueChanged += value => { light.Scale = value; };
-            
-            colorEdit.OnValueChanged += value => { light.Color = value; };
-            intensityEdit.OnValueChanged += value => { light.Intensity = value; };
-            ambientEdit.OnValueChanged += (value) => { light.Ambient = value; };
-            diffuseEdit.OnValueChanged += (value) => { light.Diffuse = value; };
-            specularEdit.OnValueChanged += (value) => { light.Specular = value; };
+            positionEdit.OnValueChanged.AddListener(value => { light.Position = value; });
+            rotationEdit.OnValueChanged.AddListener(value => { light.Rotation = value; });
+            scaleEdit.OnValueChanged.AddListener(value => { light.Scale = value; });
 
-            lightSamplesEdit.OnValueChanged += value => light.LightSamples = (int)Mathf.Sqrt(value);
-            spotAngleEdit.OnValueChanged += value => light.SpotAngle = value;
-            distanceAttenuationEdit.OnValueChanged += value => light.LightDistanceAttenuation = value;
+            colorEdit.OnValueChanged.AddListener(value => { light.Color = value; });
+            intensityEdit.OnValueChanged.AddListener(value => { light.Intensity = value; });
+            ambientEdit.OnValueChanged.AddListener((value) => { light.Ambient = value; });
+            diffuseEdit.OnValueChanged.AddListener((value) => { light.Diffuse = value; });
+            specularEdit.OnValueChanged.AddListener((value) => { light.Specular = value; });
+
+            lightSamplesEdit.OnValueChanged.AddListener(value => light.LightSamples = (int)Mathf.Sqrt(value));
+            spotAngleEdit.OnValueChanged.AddListener(value => light.SpotAngle = value);
+            distanceAttenuationEdit.OnValueChanged.AddListener(value => light.LightDistanceAttenuation = value);
             typeDropdown.onValueChanged.AddListener(type => ChangeObjectType((RTLight.RTLightType)type));
         }
 

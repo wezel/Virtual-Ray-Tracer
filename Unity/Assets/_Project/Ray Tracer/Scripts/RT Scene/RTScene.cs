@@ -145,15 +145,15 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             
             PointLights = pointlights;
             foreach (var pointlight in pointlights)
-                pointlight.OnLightChanged += SceneObjectChanged;
+                pointlight.OnLightChanged.AddListener(SceneObjectChanged);
 
             SpotLights = spotlights;
             foreach (var spotlight in spotlights)
-                spotlight.OnLightChanged += SceneObjectChanged;
+                spotlight.OnLightChanged.AddListener(SceneObjectChanged);
 
             AreaLights = arealights;
             foreach (var arealight in arealights)
-                arealight.OnLightChanged += SceneObjectChanged;
+                arealight.OnLightChanged.AddListener(SceneObjectChanged);
 
             Meshes = meshes;
             foreach (var mesh in meshes)
@@ -175,7 +175,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             else
                 return;
 
-            light.OnLightChanged += SceneObjectChanged;
+            light.OnLightChanged.AddListener(SceneObjectChanged);
             OnSceneChanged?.Invoke();
         }
 
@@ -194,7 +194,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             else
                 return;
 
-            light.OnLightChanged -= SceneObjectChanged;
+            light.OnLightChanged.RemoveListener(SceneObjectChanged);
 
             OnSceneChanged?.Invoke();
         }
@@ -247,7 +247,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             {
                 if (light != null)
                 {
-                    light.OnLightChanged -= SceneObjectChanged;
+                    light.OnLightChanged.RemoveListener(SceneObjectChanged);
                     Object.Destroy(light.gameObject);
                 }
             }
@@ -257,7 +257,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             {
                 if (light != null)
                 {
-                    light.OnLightChanged -= SceneObjectChanged;
+                    light.OnLightChanged.RemoveListener(SceneObjectChanged);
                     Object.Destroy(light.gameObject);
                 }
             }

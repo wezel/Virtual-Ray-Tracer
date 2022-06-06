@@ -154,24 +154,24 @@ namespace _Project.UI.Scripts.Control_Panel
         
         private void Awake()
         {
-            renderShadowsEdit.OnValueChanged += (value) => { rayTracer.RenderShadows = value; };
-            enablePointLightsEdit.OnValueChanged += (value) => { rtSceneManager.Scene.EnablePointLights = value; };
-            enableSpotLightsEdit.OnValueChanged += (value) => { rtSceneManager.Scene.EnableSpotLights = value; };
-            enableAreaLightsEdit.OnValueChanged += (value) => { rtSceneManager.Scene.EnableAreaLights = value; };
-            recursionDepthEdit.OnValueChanged += (value) => { rayTracer.MaxDepth = (int)value; };
-            backgroundColorEdit.OnValueChanged += (value) => { rayTracer.BackgroundColor = value; };
+            renderShadowsEdit.OnValueChanged.AddListener((value) => { rayTracer.RenderShadows = value; });
+            enablePointLightsEdit.OnValueChanged.AddListener((value) => { rtSceneManager.Scene.EnablePointLights = value; });
+            enableSpotLightsEdit.OnValueChanged.AddListener((value) => { rtSceneManager.Scene.EnableSpotLights = value; });
+            enableAreaLightsEdit.OnValueChanged.AddListener((value) => { rtSceneManager.Scene.EnableAreaLights = value; });
+            recursionDepthEdit.OnValueChanged.AddListener((value) => { rayTracer.MaxDepth = (int)value; });
+            backgroundColorEdit.OnValueChanged.AddListener((value) => { rayTracer.BackgroundColor = value; });
 
-            hideNoHitRaysEdit.OnValueChanged += (value) => { rayManager.HideNoHitRays = value; };
-            showRaysEdit.OnValueChanged += (value) => { rayManager.ShowRays = value; };
-            hideNegligibleRaysEdit.OnValueChanged += (value) => { rayManager.HideNegligibleRays = value; };
-            rayHideThresholdEdit.OnValueChanged += (value) => { rayManager.RayHideThreshold = value; };
-            rayTransparencyEnabled.OnValueChanged += (value) => { rayManager.RayTransparencyEnabled = value; };
-            rayDynamicRadiusEnabled.OnValueChanged += (value) => { rayManager.RayDynamicRadiusEnabled = value; };
-            rayColorContributionEnabled.OnValueChanged += (value) => { rayManager.RayColorContributionEnabled = value; };
-            rayTransExponentEdit.OnValueChanged += (value) => { rayManager.RayTransExponent = value; };
-            rayRadiusEdit.OnValueChanged += (value) => { rayManager.RayRadius = value; };
-            rayMinRadiusEdit.OnValueChanged += (value) => { rayManager.RayMinRadius = value; };
-            rayMaxRadiusEdit.OnValueChanged += (value) => { rayManager.RayMaxRadius = value; };
+            hideNoHitRaysEdit.OnValueChanged.AddListener((value) => { rayManager.HideNoHitRays = value; });
+            showRaysEdit.OnValueChanged.AddListener((value) => { rayManager.ShowRays = value; });
+            hideNegligibleRaysEdit.OnValueChanged.AddListener((value) => { rayManager.HideNegligibleRays = value; });
+            rayHideThresholdEdit.OnValueChanged.AddListener((value) => { rayManager.RayHideThreshold = value; });
+            rayTransparencyEnabled.OnValueChanged.AddListener((value) => { rayManager.RayTransparencyEnabled = value; });
+            rayDynamicRadiusEnabled.OnValueChanged.AddListener((value) => { rayManager.RayDynamicRadiusEnabled = value; });
+            rayColorContributionEnabled.OnValueChanged.AddListener((value) => { rayManager.RayColorContributionEnabled = value; });
+            rayTransExponentEdit.OnValueChanged.AddListener((value) => { rayManager.RayTransExponent = value; });
+            rayRadiusEdit.OnValueChanged.AddListener((value) => { rayManager.RayRadius = value; });
+            rayMinRadiusEdit.OnValueChanged.AddListener((value) => { rayManager.RayMinRadius = value; });
+            rayMaxRadiusEdit.OnValueChanged.AddListener((value) => { rayManager.RayMaxRadius = value; });
 
             animateEdit.OnValueChanged.AddListener((value) => { rayManager.Animate = value; });
             animateSequentiallyEdit.OnValueChanged.AddListener((value) => { rayManager.AnimateSequentially = value; });

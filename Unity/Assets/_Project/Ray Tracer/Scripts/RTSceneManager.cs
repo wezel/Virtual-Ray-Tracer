@@ -91,8 +91,8 @@ namespace _Project.Ray_Tracer.Scripts
             Goat = 9000,
             Wineglass = 10000,
             PointLight = 11000,
-            SpotLight = 11000,
-            AreaLight = 11000
+            SpotLight = 12000,
+            AreaLight = 13000
         }
 
         /// <summary>
@@ -555,6 +555,7 @@ namespace _Project.Ray_Tracer.Scripts
             // If we don't hit a handle we try to select the first object we did hit.
             int mask = LayerMask.GetMask("Ray Tracer Objects", "Camera and Lights");
             if (Physics.Raycast(ray, out var hit, Mathf.Infinity, mask))
+            {
                 Select(hit.transform);
                 return;
             }
