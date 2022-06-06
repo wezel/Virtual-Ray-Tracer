@@ -194,6 +194,8 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
 
         public void ChangeObjectType(ObjectType type)
         {
+            if (Type == type) return;
+
             switch (type)
             {
                 case ObjectType.Transparent:
