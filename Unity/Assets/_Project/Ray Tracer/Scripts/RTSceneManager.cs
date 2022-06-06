@@ -11,6 +11,7 @@ using _Project.UI.Scripts.Control_Panel;
 using RuntimeHandle;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Spot_Light;
 
@@ -44,6 +45,8 @@ namespace _Project.Ray_Tracer.Scripts
         [SerializeField] private RTMesh capsulePrefab;
         [SerializeField] private RTMesh cylinderPrefab;
         [SerializeField] private RTMesh prismPrefab;
+        [SerializeField] private RTMesh barrelPrefab;
+        [SerializeField] private RTMesh wineglassPrefab;
         [SerializeField] private RTMesh meshPrefab;
 
         [Header("UI")]
@@ -63,23 +66,33 @@ namespace _Project.Ray_Tracer.Scripts
         [SerializeField] private bool deleteAllowed = false;
         public bool DeleteAllowed { get => deleteAllowed; }
 
+        [Serializable]
+        public class Event : UnityEvent { };
+        public Event OnTranslationMode, OnRotationMode, OnScaleMode, OnLocalSpace, OnGlobalSpace, OnDeselect, OnObjectDeleted;
+
         private static RTSceneManager instance = null;
         private Selection selection = new Selection();
         private Transform previousTransform;
 
         private HandleSpace handleSpace = HandleSpace.WORLD;
         
+        /// <summary>
+        /// The object type. 
+        /// The value represents the amount of points to unlock the object in sandbox mode.
+        /// </summary>
         public enum ObjectType
         {
-            PointLight,
-            SpotLight,
-            AreaLight,
-            Goat,
-            Sphere,
-            Cube,
-            Capsule,
-            Cylinder,
-            Prism
+            Sphere = 0,
+            Cube = 5000,
+            Cylinder = 6000,
+            Barrel = 6500,
+            Capsule = 7000,
+            Prism = 8000,
+            Goat = 9000,
+            Wineglass = 10000,
+            PointLight = 11000,
+            SpotLight = 11000,
+            AreaLight = 11000
         }
 
         /// <summary>
@@ -209,8 +222,9 @@ namespace _Project.Ray_Tracer.Scripts
             // Do nothing if what we selected is already the selected object.
             if (selection.Transform == newSelection)
             {
-                if (selection.Type == typeof(RTMesh))
-                    selection.Mesh.OnMeshSelected?.Invoke();
+                selection.Mesh.OnMeshSelected?.Invoke();
+                selection.Camera?.OnCameraSelected?.Invoke();
+                selection.Light?.OnLightSelected?.Invoke();
 
                 return;
             }
@@ -228,12 +242,14 @@ namespace _Project.Ray_Tracer.Scripts
             {
                 ControlPanel.ShowCameraProperties(selection.Camera);
                 selection.Camera.Color = SelectionColor;
+                selection.Camera.OnCameraSelected?.Invoke();
             }
             else if (selection.Type.BaseType == typeof(RTLight))
             {
                 ControlPanel.ShowLightProperties(selection.Light);
                 selection.Light.Higlight(SelectionColor);
                 previousTransform = newSelection;
+                selection.Light.OnLightSelected?.Invoke();
             }
             else if (selection.Type == typeof(RTMesh))
             {
@@ -247,7 +263,7 @@ namespace _Project.Ray_Tracer.Scripts
             transformHandle.target = selection.Transform;
             SetHandleType(transformHandle.type);
             transformHandle.gameObject.SetActive(true);
-            UIManager.Get().AddEscapable(Deselect);
+            UIManager.Get().AddEscapable(DeselectAndInvoke);
         }
         
         public bool HasSelection()
@@ -276,7 +292,13 @@ namespace _Project.Ray_Tracer.Scripts
             selection = new Selection();
 
             transformHandle.gameObject.SetActive(false);
-            UIManager.Get().RemoveEscapable(Deselect);
+            UIManager.Get().RemoveEscapable(DeselectAndInvoke);
+        }
+
+        public void DeselectAndInvoke()
+        {
+            Deselect();
+            OnDeselect?.Invoke();
         }
 
         /// <summary>
@@ -312,6 +334,8 @@ namespace _Project.Ray_Tracer.Scripts
 #else
             Destroy(gameObject);
 #endif
+            // Invoke listeners
+            OnObjectDeleted?.Invoke();
         }
 
         public void CreateObject(ObjectType type)
@@ -351,6 +375,12 @@ namespace _Project.Ray_Tracer.Scripts
                     break;
                 case ObjectType.Prism:
                     mesh = Instantiate(prismPrefab);
+                    break;
+                case ObjectType.Barrel:
+                    mesh = Instantiate(barrelPrefab);
+                    break;
+                case ObjectType.Wineglass:
+                    mesh = Instantiate(wineglassPrefab);
                     break;
                 default:
                     return;
@@ -424,7 +454,15 @@ namespace _Project.Ray_Tracer.Scripts
                 HandleSpaceDropdown.interactable = false;
             else
                 HandleSpaceDropdown.interactable = true;
-            
+
+            // Invoke transformation type changed listeners
+            if (type == HandleType.POSITION)
+                OnTranslationMode?.Invoke();
+            else if (type == HandleType.ROTATION)
+                OnRotationMode?.Invoke();
+            else
+                OnScaleMode?.Invoke();
+
             transformHandle.type = type;
         }
 
@@ -432,6 +470,11 @@ namespace _Project.Ray_Tracer.Scripts
         {
             handleSpace = space;
             transformHandle.space = space;
+
+            if (space == HandleSpace.LOCAL)
+                OnLocalSpace?.Invoke();
+            else 
+                OnGlobalSpace?.Invoke();
 
             if (HandleSpaceDropdown.value != (int)space)
                 HandleSpaceDropdown.value = (int)space;
@@ -513,8 +556,11 @@ namespace _Project.Ray_Tracer.Scripts
             int mask = LayerMask.GetMask("Ray Tracer Objects", "Camera and Lights");
             if (Physics.Raycast(ray, out var hit, Mathf.Infinity, mask))
                 Select(hit.transform);
-            else  // If nothing was hit deselect all.
-                Deselect();
+                return;
+            }
+
+            // If nothing was hit deselect all.
+            DeselectAndInvoke();
         }
         
         private void Update()

@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
@@ -43,6 +44,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
                 intensity = value;
                 UpdateLightData();
                 OnLightChanged?.Invoke();
+                OnLightColorChanged?.Invoke();
             }
         }
 
@@ -108,10 +110,12 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
         }
 
         public delegate void LightChanged();
+        [Serializable]
+        public class LightChanged : UnityEvent { };
         /// <summary>
-        /// An event invoked whenever a property of this light is changed.
+        /// An event invoked whenever a this light is changed.
         /// </summary>
-        public event LightChanged OnLightChanged;
+        public LightChanged OnLightSelected, OnLightChanged, OnLightColorChanged;
 
         protected void OnLightChangedInvoke() => OnLightChanged?.Invoke();
 

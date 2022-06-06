@@ -115,7 +115,6 @@ namespace _Project.UI.Scripts.Control_Panel
             speedEdit.Value = rayManager.Speed;
 
             superSamplingFactorEdit.Value = rayTracer.SuperSamplingFactor;
-            superSamplingVisualEdit.IsOn = rayTracer.SuperSamplingVisual;
         }
 
         /// <summary>
@@ -150,7 +149,7 @@ namespace _Project.UI.Scripts.Control_Panel
         // TODO code wise. Objects should ideally set there own values on awake and do everything else on start.
         private void Start()
         {
-            renderShadowsEdit.OnValueChanged += (value) => { RTSceneManager.Get().SetShadows(value); };
+            renderShadowsEdit.OnValueChanged.AddListener((value) => { RTSceneManager.Get().SetShadows(value); });
         }
         
         private void Awake()
@@ -174,13 +173,12 @@ namespace _Project.UI.Scripts.Control_Panel
             rayMinRadiusEdit.OnValueChanged += (value) => { rayManager.RayMinRadius = value; };
             rayMaxRadiusEdit.OnValueChanged += (value) => { rayManager.RayMaxRadius = value; };
 
-            animateEdit.OnValueChanged += (value) => { rayManager.Animate = value; };
-            animateSequentiallyEdit.OnValueChanged += (value) => { rayManager.AnimateSequentially = value; };
-            loopEdit.OnValueChanged += (value) => { rayManager.Loop = value; };
-            speedEdit.OnValueChanged += (value) => { rayManager.Speed = value; };
+            animateEdit.OnValueChanged.AddListener((value) => { rayManager.Animate = value; });
+            animateSequentiallyEdit.OnValueChanged.AddListener((value) => { rayManager.AnimateSequentially = value; });
+            loopEdit.OnValueChanged.AddListener((value) => { rayManager.Loop = value; });
+            speedEdit.OnValueChanged.AddListener((value) => { rayManager.Speed = value; });
 
-            superSamplingFactorEdit.OnValueChanged += (value) => { rayTracer.SuperSamplingFactor = (int)value; };
-            superSamplingVisualEdit.OnValueChanged += (value) => { rayTracer.SuperSamplingVisual = value; };
+            superSamplingFactorEdit.OnValueChanged.AddListener((value) => { rayTracer.SuperSamplingFactor = (int)value; });
             renderImageButton.onClick.AddListener(RenderImage);
             openImageButton.onClick.AddListener(ToggleImage);
             flyRoRTCameraButton.onClick.AddListener(() =>

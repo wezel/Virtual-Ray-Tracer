@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System;
 using UnityEngine;
+using _Project.Scripts;
 
 namespace _Project.UI.Scripts.Tutorial
 {
@@ -8,6 +9,7 @@ namespace _Project.UI.Scripts.Tutorial
     /// Simple class that describes a tutorial task.
     /// </summary>
     [Serializable]
+    
     public class Task
     {
         /// <summary>
@@ -18,7 +20,6 @@ namespace _Project.UI.Scripts.Tutorial
         public string Identifier
         {
             get { return identifier; }
-            set { identifier = value; }
         }
 
         /// <summary>
@@ -29,34 +30,43 @@ namespace _Project.UI.Scripts.Tutorial
         public string Name
         {
             get { return name; }
-            set { name = value; }
         }
 
         /// <summary>
         /// Description of this task that has to be completed by the user.
         /// </summary>
+        [TextArea(10, 20)]
         [SerializeField]
         private string description;
         public string Description
         {
             get { return description; }
-            set { description = value; }
         }
 
         /// <summary>
-        /// Whether the task is completed.
+        /// Whether this task is skippable (by pressing a skip button)
+        /// Used for when there is no task involved, just an explanation text.
         /// </summary>
-        private bool completed = false;
-        public bool Completed
+        [SerializeField]
+        private bool skippable;
+        public bool Skippable
         {
-            get { return completed; }
-            set { completed = value; }
+            get { return skippable; }
         }
 
+        /// <summary>
+        /// The amount of points earned for completing this task.
+        /// </summary>
+        [SerializeField]
+        private int points;
+        public int Points
+        {
+            get { return points; }
+        }
     }
 
     /// <summary>
-    /// Class that manages the tutorial tasks
+    /// Class that manages the tutorial tasks.
     /// </summary>
     [Serializable]
     public class Tasks
@@ -68,83 +78,168 @@ namespace _Project.UI.Scripts.Tutorial
         private List<Task> tasks = new List<Task>();
 
         private int index = 0;
+        private int completedIndex = 0;
 
-        public bool IsRequired()
+        /// <summary>
+        /// Whether the current task is a required one.
+        /// </summary>
+        /// <returns>Whether the current task is a required one</returns>
+        public bool IsRequiredTask()
         {
             return index < optionalTasksStart;
         }
 
-        public bool RequiredTasksFinished()
+        /// <summary>
+        /// Whether the required tasks are finished.
+        /// </summary>
+        /// <returns>Whether the required tasks are finished</returns>
+        public bool AreRequiredTasksFinished()
         {
-            return index >= optionalTasksStart - 1;
+            if (GlobalManager.Get().CheatMode) return true;
+            return completedIndex >= optionalTasksStart - 1;
         }
 
-        public bool IsLastRequiredTask()
+        /// <summary>
+        /// Whether the current task is skippable.
+        /// </summary>
+        /// <returns>Whether the current task is skippable</returns>
+        public bool IsSkippable()
         {
-            return index == optionalTasksStart- 1;
+            if (index < completedIndex) return true;
+            if (index >= tasks.Count - 1) return false;
+            if (GlobalManager.Get().CheatMode) return true;
+            return tasks[index].Skippable;
         }
 
+        /// <summary>
+        /// Get the current tasks' name.
+        /// </summary>
+        /// <returns>The current tasks' name</returns>
         public string GetName()
         {
             if (index >= tasks.Count) return "";
             return tasks[index].Name;
         }
 
+        /// <summary>
+        /// Get the current tasks' description.
+        /// </summary>
+        /// <returns>The current tasks' description</returns>
         public string GetDescription()
         {
             if (index >= tasks.Count) return "";
             return tasks[index].Description;
         }
 
+        /// <summary>
+        /// Get the current tasks' identifier.
+        /// </summary>
+        /// <returns>The current tasks' identifier</returns>
         public string GetIdentifier()
         {
             if (index >= tasks.Count) return "";
             return tasks[index].Identifier;
         }
 
-        public float GetPercentage()
+        /// <summary>
+        /// Get the percentage of completed tasks.
+        /// </summary>
+        /// <returns>The percentage of completed tasks</returns>
+        public float GetCompletedPercentage()
         {
-            int completed = IsRequired() ? index : index - optionalTasksStart;
-            int total = IsRequired() ? optionalTasksStart - 1 : tasks.Count - optionalTasksStart - 1;
-            if (total == 0) return 1f;
-            return completed / (float)total;
+            if (tasks.Count == 0) return 0f;
+            return completedIndex / ((float)tasks.Count - 1);
         }
 
         /// <summary>
-        /// Complete a tutorial task
+        /// Get the current task index.
+        /// </summary>
+        /// <returns>The current task index</returns>
+        public int GetCurrentTaskindex()
+        {
+            return index;
+        }
+
+        /// <summary>
+        /// Get the completed task index.
+        /// </summary>
+        /// <returns>The completed task index</returns>
+        public int GetCompletedTaskIndex()
+        {
+            return completedIndex;
+        }
+
+        /// <summary>
+        /// Get the total number of tasks.
+        /// </summary>
+        /// <returns>The total number of tasks</returns>
+        public int GetTotalTaskCount()
+        {
+            return tasks.Count;
+        }
+
+        /// <summary>
+        /// Complete a tutorial task.
         /// </summary>
         /// <param name="identifier"></param>
         /// <returns> Whether identifier was found </returns>
         public bool CompleteTask(string identifier)
         {
             if (index >= tasks.Count - 1) return false;
-            if (tasks[index].Identifier != identifier) return false;
-            tasks[index++].Completed = true;
+            if (GetIdentifier() != identifier) return false;
+
+            if (index == completedIndex)
+            {
+                GlobalManager.TutorialPoints += tasks[index].Points;
+                completedIndex++;
+            }
+            index++;
+
             return true;
         }
 
         /// <summary>
-        /// Skip a tutorial task
+        /// Skip/Go to the next tutorial task.
         /// </summary>
-        /// <returns> Whether a task was skipped </returns>
-        public bool SkipTask()
+        /// <returns> Whether it went to the next task</returns>
+        public bool NextTask()
         {
-            // Find next uncompleted task
-            for (int step = 1; step < tasks.Count; step++)
-            {
-                if (!tasks[(index + step) % tasks.Count].Completed)
-                {
-                    index = (index + step) % tasks.Count;
-                    return true;
-                }
-            }
+            return CompleteTask(GetIdentifier());
+        }
 
-            // In case we are already at the end
-            if (index == tasks.Count - 1) return false;
-
-            // Skip to the end
-            index = Math.Max(tasks.Count - 1, 0);
+        /// <summary>
+        /// Go to the previous tutorial task.
+        /// </summary>
+        /// <returns>Whether it returned to the previous task</returns>
+        public bool PreviousTask()
+        {
+            if (index == 0) return false;
+            index--;
             return true;
+        }
+
+        /// <summary>
+        /// Counts the amount of required tasks points
+        /// </summary>
+        /// <returns>The amount of required tasks points</returns>
+        public int GetRequiredTasksPoints()
+        {
+            int total = 0;
+            for (int i = 0; i < optionalTasksStart && i < tasks.Count; i++)
+                total += tasks[i].Points;
+            return total;
+        }
+
+        /// <summary>
+        /// Counts the amount of optional tasks points
+        /// </summary>
+        /// <returns>The amount of optional tasks points</returns>
+        public int GetOptionalTasksPoints()
+        {
+            int total = 0;
+            for (int i = optionalTasksStart; i < tasks.Count; i++)
+                total += tasks[i].Points;
+            return total;
         }
     }
 }

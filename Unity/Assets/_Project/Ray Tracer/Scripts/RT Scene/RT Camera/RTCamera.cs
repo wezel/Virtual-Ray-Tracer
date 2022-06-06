@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Camera
 {
@@ -14,6 +16,13 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Camera
         /// An event invoked whenever a property of this camera is changed.
         /// </summary>
         public event CameraChanged OnCameraChanged;
+
+        /// <summary>
+        /// An event invoked whenever a mesh is selected.
+        /// </summary>
+        [Serializable]
+        public class CameraSelected : UnityEvent { }
+        public CameraSelected OnCameraSelected;
 
         [SerializeField]
         private Color defaultColor;

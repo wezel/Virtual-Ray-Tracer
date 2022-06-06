@@ -21,7 +21,7 @@ namespace _Project.Scripts
     /// <summary>
     /// Manages the application in general.
     /// </summary>
-    public class GlobalSettings : MonoBehaviour
+    public class GlobalManager : MonoBehaviour
     {
         private Dictionary<CursorType, Texture2D> cursorTextures = new Dictionary<CursorType, Texture2D>();
 
@@ -30,19 +30,22 @@ namespace _Project.Scripts
         /// <summary>
         /// The cursor texture used when dragging certain UI components.
         /// </summary>
-        private static GlobalSettings instance = null;
+        private static GlobalManager instance = null;
 
         public bool FPSEnabled = false;
-        public bool Unlimited = false;
+        public bool CheatMode = false;
 
         public static bool TutorialExpanded = true;
+        public static int TutorialPoints = 0;
+        public static int ObjectsCreated = 0;
         public List<Tasks> TutorialTasks;
+        public List<Badge> Badges;
 
         /// <summary>
-        /// Get the current <see cref="GlobalSettings"/> instance.
+        /// Get the current <see cref="GlobalManager"/> instance.
         /// </summary>
-        /// <returns> The current <see cref="GlobalSettings"/> instance. </returns>
-        public static GlobalSettings Get()
+        /// <returns> The current <see cref="GlobalManager"/> instance. </returns>
+        public static GlobalManager Get()
         {
             return instance;
         }
@@ -83,9 +86,15 @@ namespace _Project.Scripts
             instance = this;
             DontDestroyOnLoad(gameObject);
 
-            //Debug.Log(Time.maximumDeltaTime);
-            //Time.maximumDeltaTime = /*1f /*/ 3f;
-            //Debug.Log(Time.maximumDeltaTime);
+#if true
+            int required = 0, optional = 0;
+            foreach (Tasks tasks in TutorialTasks)
+            {
+                required += tasks.GetRequiredTasksPoints();
+                optional += tasks.GetOptionalTasksPoints();
+            }
+            Debug.Log("Total required points = " + required + ". Total optional points = " + optional + ". Total points = " + (required + optional));
+#endif
         }
     }
 }

@@ -87,7 +87,7 @@ GameObject:
   - component: {fileID: 6127716243765127061}
   - component: {fileID: 816952160630163522}
   m_Layer: 5
-  m_Name: Unlimited Mode
+  m_Name: Cheat Mode
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -641,7 +641,7 @@ MonoBehaviour:
   exitButton: {fileID: 4796505143940216259}
   fullScreenToggle: {fileID: 88549214299525564}
   fpsCounterToggle: {fileID: 643271776770825921}
-  unlimitedToggle: {fileID: 9195390961317873651}
+  cheatModeToggle: {fileID: 9195390961317873651}
   fpsCounter: {fileID: 0}
 --- !u!1 &4213844450000983036
 GameObject:
@@ -1653,7 +1653,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Unlimited Mode
+  m_text: Cheat Mode
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -2276,7 +2276,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 0
+  m_Interactable: 1
   m_TargetGraphic: {fileID: 1630568755397521823}
   toggleTransition: 1
   graphic: {fileID: 6678625926406173553}

@@ -1,5 +1,7 @@
 using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Camera;
+using System;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
 namespace _Project.UI.Scripts.Control_Panel
@@ -27,6 +29,10 @@ namespace _Project.UI.Scripts.Control_Panel
         private FloatEdit screenDistanceEdit;
         [SerializeField]
         private FloatEdit screenOpacityEdit;
+
+        [Serializable]
+        public class ExternalChange : UnityEvent { };
+        public ExternalChange OnExternalTranslationChange;
 
         /// <summary>
         /// Show the camera properties for <paramref name="camera"/>. These properties can be changed via the shown UI.
@@ -58,14 +64,14 @@ namespace _Project.UI.Scripts.Control_Panel
 
         private void Awake()
         {
-            positionEdit.OnValueChanged += (value) => { camera.Position = value; };
-            rotationEdit.OnValueChanged += (value) => { camera.Rotation = value; };
+            positionEdit.OnValueChanged.AddListener((value) => { camera.Position = value; });
+            rotationEdit.OnValueChanged.AddListener((value) => { camera.Rotation = value; });
 
-            fieldOfViewEdit.OnValueChanged += (value) => { camera.FieldOfView = value; };
-            screenWidthEdit.OnValueChanged += (value) => { camera.ScreenWidth = (int)value; };
-            screenHeightEdit.OnValueChanged += (value) => { camera.ScreenHeight = (int)value; };
-            screenDistanceEdit.OnValueChanged += (value) => { camera.ScreenDistance = value; };
-            screenOpacityEdit.OnValueChanged += (value) => { camera.Screen.ImageAlpha = value; };
+            fieldOfViewEdit.OnValueChanged.AddListener((value) => { camera.FieldOfView = value; });
+            screenWidthEdit.OnValueChanged.AddListener((value) => { camera.ScreenWidth = (int)value; });
+            screenHeightEdit.OnValueChanged.AddListener((value) => { camera.ScreenHeight = (int)value; });
+            screenDistanceEdit.OnValueChanged.AddListener((value) => { camera.ScreenDistance = value; });
+            screenOpacityEdit.OnValueChanged.AddListener((value) => { camera.Screen.ImageAlpha = value; });
         }
 
         private void FixedUpdate()
@@ -75,7 +81,11 @@ namespace _Project.UI.Scripts.Control_Panel
             bool draggingEdit = positionEdit.IsDragging() || rotationEdit.IsDragging();
             if (camera != null && camera.transform.hasChanged && !inUI && !draggingEdit)
             {
-                positionEdit.Value = camera.transform.position;
+                if (positionEdit.Value != camera.transform.position)
+                {
+                    positionEdit.Value = camera.transform.position;
+                    OnExternalTranslationChange?.Invoke();
+                }
                 rotationEdit.Value = camera.transform.eulerAngles;
             }
         }

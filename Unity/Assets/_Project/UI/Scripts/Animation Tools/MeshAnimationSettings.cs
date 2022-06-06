@@ -9,25 +9,22 @@ namespace _Project.UI.Scripts.Animation_Tools
     /// access to ray tracer settings <see cref="RayManager"/>. This class contains a couple of variables
     /// describing what ray tracing settings should be used and how the object should rotate. 
     /// </summary>
-    
+
     [RequireComponent(typeof(RTMesh))]
     public class MeshAnimationSettings : MonoBehaviour
     {
-        [SerializeField] 
-        private int maxDepth = 3;
-        
         [SerializeField]
-        private bool hideNoHitRays;
+        private int maxDepth = 3;
 
         [SerializeField]
-        private float rayHideThreshold = 0.02f;
+        private bool hideNoHitRays;
 
         [SerializeField]
         private bool animate;
 
         [SerializeField]
         private bool loop;
-        
+
         [SerializeField]
         private bool sequentialAnimate;
 
@@ -37,13 +34,13 @@ namespace _Project.UI.Scripts.Animation_Tools
         [SerializeField]
         private float rotationSpeed;
 
-        [SerializeField] 
+        [SerializeField]
         private Vector3 axis;
 
         private RTMesh mesh;
 
         private bool update;
-        
+
         /// <summary>
         /// Reset the script to its starting configuration when enabled.
         /// </summary>
@@ -56,7 +53,6 @@ namespace _Project.UI.Scripts.Animation_Tools
             rayManager.Speed = speed;
             rayManager.AnimateSequentially = sequentialAnimate;
             rayManager.HideNoHitRays = hideNoHitRays;
-            rayManager.RayHideThreshold = rayHideThreshold;
             rayManager.Reset = true;
             mesh = gameObject.GetComponent<RTMesh>();
             update = axis.magnitude != 0;

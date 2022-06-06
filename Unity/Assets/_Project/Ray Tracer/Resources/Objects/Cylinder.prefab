@@ -110,6 +110,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a541f90d4ad74514dabd4872900f6878, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnMeshChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnMeshColorChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnAmbientChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDiffuseChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnSpecularChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnShininessChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnRefractiveIndexChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnMaterialTypeChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnMeshSelected:
+    m_PersistentCalls:
+      m_Calls: []
+  Type: 0
+  shadeSmooth: 1
 --- !u!114 &6716819065396824742
 MonoBehaviour:
   m_ObjectHideFlags: 0

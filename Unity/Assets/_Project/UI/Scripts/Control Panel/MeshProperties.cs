@@ -1,6 +1,8 @@
 using _Project.Ray_Tracer.Scripts.RT_Scene;
+using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
 namespace _Project.UI.Scripts.Control_Panel
@@ -34,6 +36,10 @@ namespace _Project.UI.Scripts.Control_Panel
         private TMP_Dropdown typeDropdown; 
         [SerializeField]
         private FloatEdit refractiveIndexEdit;
+
+        [Serializable]
+        public class ExternalChange : UnityEvent { };
+        public ExternalChange OnExternalTranslationChange, OnExternalRotationChange, OnExternalScaleChange;
 
         /// <summary>
         /// Show the mesh properties for <paramref name="mesh"/>. These properties can be changed via the shown UI.
@@ -79,19 +85,19 @@ namespace _Project.UI.Scripts.Control_Panel
         
         private void Awake()
         {
-            positionEdit.OnValueChanged += (value) => { mesh.Position = value; };
-            rotationEdit.OnValueChanged += (value) => { mesh.Rotation = value; };
-            scaleEdit.OnValueChanged += (value) => { mesh.Scale = value; };
+            positionEdit.OnValueChanged.AddListener((value) => { mesh.Position = value; });
+            rotationEdit.OnValueChanged.AddListener((value) => { mesh.Rotation = value; });
+            scaleEdit.OnValueChanged.AddListener((value) => { mesh.Scale = value; });
 
-            colorEdit.OnValueChanged += (value) => { mesh.Color = value; };
-            ambientEdit.OnValueChanged += (value) => { mesh.Ambient = value; };
-            diffuseEdit.OnValueChanged += (value) => { mesh.Diffuse = value; };
-            specularEdit.OnValueChanged += (value) => { mesh.Specular = value; };
-            shininessEdit.OnValueChanged += (value) => { mesh.Shininess = value; };
+            colorEdit.OnValueChanged.AddListener((value) => { mesh.Color = value; });
+            ambientEdit.OnValueChanged.AddListener((value) => { mesh.Ambient = value; });
+            diffuseEdit.OnValueChanged.AddListener((value) => { mesh.Diffuse = value; });
+            specularEdit.OnValueChanged.AddListener((value) => { mesh.Specular = value; });
+            shininessEdit.OnValueChanged.AddListener((value) => { mesh.Shininess = value; });
 
             typeDropdown.onValueChanged.AddListener( type => ChangeObjectType( (RTMesh.ObjectType) type));
 
-            refractiveIndexEdit.OnValueChanged += (value) => { mesh.RefractiveIndex = value; };
+            refractiveIndexEdit.OnValueChanged.AddListener((value) => { mesh.RefractiveIndex = value; });
         }
 
         private void FixedUpdate()
@@ -101,9 +107,22 @@ namespace _Project.UI.Scripts.Control_Panel
             bool draggingEdit = positionEdit.IsDragging() || rotationEdit.IsDragging() || scaleEdit.IsDragging();
             if (gameObject.activeSelf && mesh.transform.hasChanged && !inUI && !draggingEdit)
             {
-                positionEdit.Value = mesh.transform.position;
-                rotationEdit.Value = mesh.transform.eulerAngles;
-                scaleEdit.Value = mesh.transform.localScale;
+                if (positionEdit.Value != mesh.transform.position)
+                {
+                    positionEdit.Value = mesh.transform.position;
+                    OnExternalTranslationChange?.Invoke();
+                }
+                if (rotationEdit.Value != mesh.transform.eulerAngles)
+                {
+                    rotationEdit.Value = mesh.transform.eulerAngles;
+                    OnExternalRotationChange?.Invoke();
+                }
+                if (scaleEdit.Value != mesh.transform.localScale)
+                {
+                    scaleEdit.Value = mesh.transform.localScale;
+                    OnExternalScaleChange?.Invoke();
+                }
+                mesh.transform.hasChanged = false;
             }
         }
 

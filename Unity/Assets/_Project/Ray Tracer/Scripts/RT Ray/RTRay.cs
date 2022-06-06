@@ -76,7 +76,6 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
             Length = 0.0f;
             Color = Color.black;
             Type = RayType.NoHit;
-            Contribution = 0.0f;
         }
 
         /// <summary>

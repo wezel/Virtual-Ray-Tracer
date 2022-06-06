@@ -36,7 +36,7 @@ namespace _Project.Ray_Tracer.Scripts
         public float Epsilon
         {
             get { return epsilon; }
-            set 
+            set
             {
                 if (value == epsilon) return;
                 epsilon = value;
@@ -154,10 +154,10 @@ namespace _Project.Ray_Tracer.Scripts
         /// <summary>
         /// A struct that calculates and stores all relevant information about a ray-object intersection.
         /// </summary>
-        private readonly struct HitInfo 
+        private readonly struct HitInfo
         {
             public readonly Vector3 Point;
-            public readonly Vector3 View ;
+            public readonly Vector3 View;
             public readonly Vector3 Normal;
             public readonly bool InversedNormal;
 
@@ -188,13 +188,13 @@ namespace _Project.Ray_Tracer.Scripts
                 // Interpolate the hit normal to achieve smooth shading.
                 if (mesh.ShadeSmooth)
                     Normal = SmoothedNormal(ref hit);
-                
+
                 // The shading normal always points in the direction of the view, as required by the Phong illumination
                 // model.
                 InversedNormal = Vector3.Dot(Normal, View) < -0.1f;
                 Normal = InversedNormal ? -Normal : Normal;
             }
-            
+
             private static Vector3 SmoothedNormal(ref RaycastHit hit)
             {
                 // See if we have this mesh cached.
@@ -257,7 +257,7 @@ namespace _Project.Ray_Tracer.Scripts
 
             int width = camera.ScreenWidth;
             int height = camera.ScreenHeight;
-            float aspectRatio = (float) width / height;
+            float aspectRatio = (float)width / height;
             float halfScreenHeight = camera.ScreenDistance * Mathf.Tan(Mathf.Deg2Rad * camera.FieldOfView / 2.0f);
             float halfScreenWidth = aspectRatio * halfScreenHeight;
             float pixelWidth = halfScreenWidth * 2.0f / width;
@@ -271,23 +271,23 @@ namespace _Project.Ray_Tracer.Scripts
             {
                 for (int x = 0; x < width; ++x)
                 {
-                    Color color = Color.black;
-                    float step = 1f / ssFactor;
+                    // Convert the pixel coordinates to camera space positions.
+                    float pixelX = -halfScreenWidth + pixelWidth * (x + 0.5f);
+                    float pixelY = -halfScreenHeight + pixelHeight * (y + 0.5f);
 
-                    // Set a base Ray with a zero-distance as the main ray of the pixel
-                    float centerPixelX = -halfScreenWidth + pixelWidth * (x + 0.5f);
-                    float centerPixelY = -halfScreenHeight + pixelHeight * (y + 0.5f);
-                    Vector3 centerPixel = new Vector3(centerPixelX, centerPixelY, camera.ScreenDistance);
-                    TreeNode<RTRay> rayTree = new TreeNode<RTRay>(new RTRay());
-                    rayTree.Data = new RTRay(origin, centerPixel / centerPixel.magnitude, 0f, Color.black, RTRay.RayType.Normal);
+                    // Create and rotate the pixel location. Note that the camera looks along the positive z-axis.
+                    Vector3 pixel = new Vector3(pixelX, pixelY, camera.ScreenDistance);
+                    pixel = camera.transform.rotation * pixel;
 
-                    for (int supY = 0; supY < ssFactor; supY++)
-                    {
-                        float pixelY = centerPixelY + pixelHeight * (step * (0.5f + supY) - 0.5f);
+                    // This is the distance between the pixel on the screen and the origin. We need this to compensate
+                    // for the length of the returned RTRay. Since we have this factor we also use it to normalize this
+                    // vector to make the code more efficient.
+                    float pixelDistance = pixel.magnitude;
 
-                        for (int supX = 0; supX < ssFactor; supX++)
-                        {
-                            float pixelX = centerPixelX + pixelWidth * (step * (0.5f + supX) - 0.5f);
+                    // Compensate for the location of the screen so we don't render objects that are behind the screen.
+                    TreeNode<RTRay> rayTree = Trace(origin + pixel,
+                                                    pixel / pixelDistance, // Division by magnitude == .normalized.
+                                                    MaxDepth, RTRay.RayType.Normal);
 
                             // Create and rotate the pixel location. Note that the camera looks along the positive z-axis.
                             Vector3 pixel = new Vector3(pixelX, pixelY, camera.ScreenDistance);
@@ -323,7 +323,7 @@ namespace _Project.Ray_Tracer.Scripts
                     SetContributions(rayTree);
                     rayTrees.Add(rayTree);
                 }
-            }       
+            }
 
             return rayTrees;
         }
@@ -346,7 +346,7 @@ namespace _Project.Ray_Tracer.Scripts
             TreeNode<RTRay> rayTree = new TreeNode<RTRay>(new RTRay());
             RTMesh mesh = hit.transform.GetComponent<RTMesh>();
             HitInfo hitInfo = new HitInfo(ref hit, ref direction, ref mesh);
-            
+
             // Add the ambient component once, regardless of the number of lights.
             Color color = hitInfo.Ambient * hitInfo.Color;
 
@@ -507,7 +507,7 @@ namespace _Project.Ray_Tracer.Scripts
 
             // The object is not transparent, so we only reflect (provided it has a non zero specular component).
             if (hitInfo.Specular <= 0.0f) return rays;
-            
+
             node = Trace(hitInfo.Point + hitInfo.Normal * Epsilon,
                 Vector3.Reflect(-hitInfo.View, hitInfo.Normal),
                 depth - 1, RTRay.RayType.Reflect);
@@ -526,11 +526,11 @@ namespace _Project.Ray_Tracer.Scripts
             RenderedImageWindow renderedImageWindow = UIManager.Get().RenderedImageWindow;
             scene = rtSceneManager.Scene;
             camera = scene.Camera;
-            
+
             int width = camera.ScreenWidth;
             int height = camera.ScreenHeight;
-            float aspectRatio = (float) width / height;
-            
+            float aspectRatio = (float)width / height;
+
             // Scale width and height in such a way that the image has around a total of 160,000 pixels.
             int scaleFactor = Mathf.RoundToInt(Mathf.Sqrt(160000f / (width * height)));
             width = scaleFactor * width;
@@ -565,7 +565,7 @@ namespace _Project.Ray_Tracer.Scripts
                             float difX = pixelWidth * (x + step * (0.5f + supX));
 
                             // Create and rotate the pixel location. Note that the camera looks along the positive z-axis.
-                            Vector3 pixel = new Vector3(-halfScreenWidth + difX, -halfScreenHeight + difY, camera.ScreenDistance); 
+                            Vector3 pixel = new Vector3(-halfScreenWidth + difX, -halfScreenHeight + difY, camera.ScreenDistance);
                             pixel = camera.transform.rotation * pixel;
 
                             // Compensate for the location of the screen so we don't render objects that are behind the screen.
@@ -601,7 +601,7 @@ namespace _Project.Ray_Tracer.Scripts
 
             RTMesh mesh = hit.transform.GetComponent<RTMesh>();
             HitInfo hitInfo = new HitInfo(ref hit, ref direction, ref mesh);
-            
+
             // Add the ambient component once, regardless of the number of lights.
             Color color = hitInfo.Ambient * hitInfo.Color;
 
@@ -613,7 +613,7 @@ namespace _Project.Ray_Tracer.Scripts
             // Cast reflection and refraction rays.
             if (depth > 0)
                 color += TraceReflectionAndRefractionImage(depth, hitInfo);
-            
+
             return ClampColor(color);
         }
 
@@ -719,7 +719,7 @@ namespace _Project.Ray_Tracer.Scripts
                 return hitInfo.Specular * TraceImage(hitInfo.Point + hitInfo.Normal * Epsilon,
                     Vector3.Reflect(-hitInfo.View, hitInfo.Normal),
                     depth - 1);
-            
+
             return Color.black;
         }
 

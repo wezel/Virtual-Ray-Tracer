@@ -14,7 +14,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
         /// </summary>
         public RTRay Ray
         {
-            get => ray;
+            get { return ray; }
             set { ray = value; Reset(); }
         }
 

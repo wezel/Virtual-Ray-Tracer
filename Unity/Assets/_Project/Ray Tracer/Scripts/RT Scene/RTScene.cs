@@ -157,7 +157,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
 
             Meshes = meshes;
             foreach (var mesh in meshes)
-                mesh.OnMeshChanged += SceneObjectChanged;
+                mesh.OnMeshChanged.AddListener(SceneObjectChanged);
         }
 
         /// <summary>
@@ -206,7 +206,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
         public void AddMesh(RTMesh mesh)
         {
             Meshes.Add(mesh);
-            mesh.OnMeshChanged += SceneObjectChanged;
+            mesh.OnMeshChanged.AddListener(SceneObjectChanged);
             OnSceneChanged?.Invoke();
         }
 
@@ -217,7 +217,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
         public void RemoveMesh(RTMesh mesh)
         {
             Meshes.Remove(mesh);
-            mesh.OnMeshChanged -= SceneObjectChanged;
+            mesh.OnMeshChanged.RemoveListener(SceneObjectChanged);
             OnSceneChanged?.Invoke();
         }
         
@@ -237,7 +237,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             {
                 if (light != null)
                 {
-                    light.OnLightChanged -= SceneObjectChanged;
+                    light.OnLightChanged.RemoveListener(SceneObjectChanged);
                     Object.Destroy(light.gameObject);
                 }
             }
@@ -267,7 +267,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             {
                 if (mesh != null)
                 {
-                    mesh.OnMeshChanged -= SceneObjectChanged;
+                    mesh.OnMeshChanged.RemoveListener(SceneObjectChanged);
                     Object.Destroy(mesh.gameObject);
                 }
             }
