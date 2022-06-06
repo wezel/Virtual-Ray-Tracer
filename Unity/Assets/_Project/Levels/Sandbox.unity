@@ -238,8 +238,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 768.4712, y: -189.83}
-  m_SizeDelta: {x: 1496.9424, y: 0}
+  m_AnchoredPosition: {x: 825.359, y: -189.83}
+  m_SizeDelta: {x: 1610.718, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &404699062
 GameObject:
@@ -273,8 +273,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 768.4712, y: -452.45}
-  m_SizeDelta: {x: 1496.9424, y: 0}
+  m_AnchoredPosition: {x: 825.359, y: -480.05}
+  m_SizeDelta: {x: 1610.718, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &527525842
 GameObject:
@@ -310,8 +310,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 768.4712, y: -482.56}
-  m_SizeDelta: {x: 1496.9424, y: 40.22}
+  m_AnchoredPosition: {x: 825.359, y: -510.15997}
+  m_SizeDelta: {x: 1610.718, y: 40.22}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &527525844
 MonoBehaviour:
@@ -444,8 +444,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 768.4712, y: -567.47504}
-  m_SizeDelta: {x: 1496.9424, y: 109.61}
+  m_AnchoredPosition: {x: 825.359, y: -608.875}
+  m_SizeDelta: {x: 1610.718, y: 137.21}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &728888729
 MonoBehaviour:
@@ -467,16 +467,14 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'The last button in the top right menu bar is now available to you! If
-    you click this button a drop-down menu will appear listing the different types
-    of objects you can add to the scene. When choosing one of these objects the menu
+  m_text: The last button in the top right menu bar is now available to you! If you
+    click this button a drop-down menu will appear listing the different types of
+    objects you can add to the scene. When choosing one of these objects the menu
     will close again and the object will appear at the centre of the scene ready
     for you to manipulate. To get rid of objects you can simply select them and press
     the delete button. This will remove the object from the scene. You are only able
-    to add and remove light sources and objects, there is only ever one camera. This
-    is the way.
-
-'
+    to add and remove light sources and objects, there is only ever one camera. You
+    cannot add lightsources of a type that is disabled in the ray tracer properties.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -587,8 +585,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 768.4712, y: -219.94}
-  m_SizeDelta: {x: 1496.9424, y: 40.22}
+  m_AnchoredPosition: {x: 825.359, y: -219.94}
+  m_SizeDelta: {x: 1610.718, y: 40.22}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &859849906
 MonoBehaviour:
@@ -1018,19 +1016,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3379506522100200911, guid: aa7cec59df0025d4896ac99db41e4250, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.8893677
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3379506522100200911, guid: aa7cec59df0025d4896ac99db41e4250, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.09805542
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 3379506522100200911, guid: aa7cec59df0025d4896ac99db41e4250, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.44386417
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 3379506522100200911, guid: aa7cec59df0025d4896ac99db41e4250, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.048937343
+      value: -0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aa7cec59df0025d4896ac99db41e4250, type: 3}
@@ -1567,7 +1565,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3770574504227641030, guid: 60ed96064c5523b46b7a7bd67e36e6d7, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 1496.9424
+      value: 1610.718
       objectReference: {fileID: 0}
     - target: {fileID: 3770574504227641030, guid: 60ed96064c5523b46b7a7bd67e36e6d7, type: 3}
       propertyPath: m_SizeDelta.y
@@ -1575,7 +1573,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3770574504227641030, guid: 60ed96064c5523b46b7a7bd67e36e6d7, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 768.4712
+      value: 825.359
       objectReference: {fileID: 0}
     - target: {fileID: 3770574504227641030, guid: 60ed96064c5523b46b7a7bd67e36e6d7, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -2761,7 +2759,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8295274377048907396, guid: 60ed96064c5523b46b7a7bd67e36e6d7, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 1496.9424
+      value: 1610.718
       objectReference: {fileID: 0}
     - target: {fileID: 8295274377048907396, guid: 60ed96064c5523b46b7a7bd67e36e6d7, type: 3}
       propertyPath: m_SizeDelta.y
@@ -2769,7 +2767,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8295274377048907396, guid: 60ed96064c5523b46b7a7bd67e36e6d7, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 768.4712
+      value: 825.359
       objectReference: {fileID: 0}
     - target: {fileID: 8295274377048907396, guid: 60ed96064c5523b46b7a7bd67e36e6d7, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -3087,8 +3085,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 768.4712, y: -346.25}
-  m_SizeDelta: {x: 1496.9424, y: 192.4}
+  m_AnchoredPosition: {x: 825.359, y: -360.05}
+  m_SizeDelta: {x: 1610.718, y: 220}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1937440508
 MonoBehaviour:
@@ -3127,7 +3125,11 @@ MonoBehaviour:
 
     <margin-left=1em>-<indent=1em>Having
     a high recursion depth, especially with transparent objects. This will cause
-    a lot of ray bounces which increases complexity.</indent></margin>'
+    a lot of ray bounces which increases complexity.</indent></margin>
+
+    <margin-left=1em>-<indent=1em>Arealights
+    are more computational expensive than point or spotlights. Arealights are sampled.
+    16 samples is equivalent to having 16 spotlights.</indent></margin>'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

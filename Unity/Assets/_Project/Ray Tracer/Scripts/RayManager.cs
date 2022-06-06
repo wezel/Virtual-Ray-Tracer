@@ -397,11 +397,11 @@ namespace _Project.Ray_Tracer.Scripts
         private Material TranspariceMaterial(Material mat, float contribution, bool areaLight)
         {
             float baseFactor = Mathf.Pow(contribution * 0.65f + 0.25f, RayTransExponent);
-            float alphaFactor = baseFactor * (areaLight ? (RayTransparencyEnabled ? 0.25f : 0.75f) : 0.5f);
-            mat.SetFloat("_Ambient", baseFactor * 0.4f + 0.6f);
-            mat.color = new Color(mat.color.r * (0.7f + baseFactor * 0.3f),
-                                  mat.color.g * (0.7f + baseFactor * 0.3f),
-                                  mat.color.b * (0.7f + baseFactor * 0.3f),
+            float alphaFactor = baseFactor * (areaLight ? (RayTransparencyEnabled ? 0.25f : 0.75f) : 0.6f);
+            mat.SetFloat("_Ambient", baseFactor * 0.3f + 0.7f);
+            mat.color = new Color(mat.color.r * (0.75f + baseFactor * 0.25f),
+                                  mat.color.g * (0.75f + baseFactor * 0.25f),
+                                  mat.color.b * (0.75f + baseFactor * 0.25f),
                                   mat.color.a * alphaFactor);
             return mat;
         }

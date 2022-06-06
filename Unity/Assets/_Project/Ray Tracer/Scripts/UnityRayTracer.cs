@@ -443,8 +443,8 @@ namespace _Project.Ray_Tracer.Scripts
             // Use the lightVector to the light's origin for arealights, such that all rays to the area or in or out of range
             float angle = Vector3.Dot(light.transform.forward, (hitInfo.Point - light.Position).normalized);
             if (light.Type != RTLight.RTLightType.Point)
-                if (angle < Mathf.Cos(light.SpotAngle * Mathf.PI / 360f))
-                    return new RTRay(hitInfo.Point, lightVector, lightDistance, Color.black, RTRay.RayType.Shadow);
+                if (angle < Mathf.Cos(light.SpotAngle * Mathf.PI / 360f))       // Subtract 0.01f to not go through the light.
+                    return new RTRay(hitInfo.Point, lightVector, lightDistance - 0.01f, Color.black, RTRay.RayType.Shadow);
 
             // We either don't render shadows or nothing is between the object and the light source.
 
@@ -468,7 +468,8 @@ namespace _Project.Ray_Tracer.Scripts
             // Lastly add ambient so it doesn't get attenuated
             color += light.Ambient * light.Color * hitInfo.Color;
 
-            return new RTRay(hitInfo.Point, lightVector, lightDistance, ClampColor(color), RTRay.RayType.Light);
+            // Subtract 0.01f to not go through the light.
+            return new RTRay(hitInfo.Point, lightVector, lightDistance - 0.01f, ClampColor(color), RTRay.RayType.Light);
         }
 
         private List<TreeNode<RTRay>> TraceReflectionAndRefraction(int depth, in HitInfo hitInfo)
