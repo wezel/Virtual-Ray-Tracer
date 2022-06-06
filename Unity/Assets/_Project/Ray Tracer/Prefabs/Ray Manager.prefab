@@ -43,15 +43,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9cd2915fe113a26f2b04552e68a06761, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hideNegligibleRays: 0
   rayHideThreshold: 0.02
-  rayTransExponent: 1
-  rayTransThreshold: 0.25
+  rayTransparencyEnabled: 0
+  rayDynamicRadiusEnabled: 0
+  rayColorContributionEnabled: 0
   rayRadius: 0.01
+  rayMinRadius: 0.003
+  rayMaxRadius: 0.025
   infiniteRayDrawLength: 10
   rayPrefab: {fileID: 3475852730852656632, guid: c002e298918eb804994048849f871225, type: 3}
-  HideNoHitRays: 0
-  ShowRays: 1
-  HideNegligibleRays: 0
+  areaRayPrefab: {fileID: 3475852730852656632, guid: c41b63091c4709445aa74fe42f3298cc, type: 3}
+  showRays: 1
   noHitMaterial: {fileID: 2100000, guid: a98bb9836e3faab40afd0672bb18dc32, type: 2}
   reflectMaterial: {fileID: 2100000, guid: 3d44750ec9ccdc547af676ae26be4ef1, type: 2}
   reflectMaterialTransparent: {fileID: 2100000, guid: 280810bf45eb4a44096d286eeda64900, type: 2}
@@ -63,6 +66,8 @@ MonoBehaviour:
   shadowMaterialTransparent: {fileID: 2100000, guid: 763eee2706c4a51419a4e12a0a02340f, type: 2}
   lightMaterial: {fileID: 2100000, guid: ca1132ecbe5f8cd429367540678c7bb0, type: 2}
   lightMaterialTransparent: {fileID: 2100000, guid: a128415b4a4413e40943cf5c219ca694, type: 2}
+  colorRayMaterial: {fileID: 2100000, guid: 79cae673e2b06ab4c967933347beb21b, type: 2}
+  colorRayMaterialTransparent: {fileID: 2100000, guid: 69bd0e396dc160edfaaf3b6a2cfde5bb, type: 2}
   errorMaterial: {fileID: 2100000, guid: 2476b30221d1a2f4fb658070ee52c5b5, type: 2}
   animate: 0
   animateSequentially: 0

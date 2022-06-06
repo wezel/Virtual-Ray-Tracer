@@ -18,7 +18,9 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
             Refract,
             Normal,
             Shadow,
-            Light
+            Light,
+            AreaShadow,
+            AreaLight
         }
 
         /// <summary>
@@ -49,10 +51,19 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
         /// </summary>
         public RayType Type { get; set; }
 
+        private float contribution;
         /// <summary>
         /// The contribution of this ray.
         /// </summary>
-        public float Contribution { get; set; }
+        public float Contribution
+        {
+            get { return contribution; }
+            set { contribution = value; }
+        }
+
+        public Vector3[] AreaLightPoints { get; set; }
+
+        public bool AreaRay { get; set; } = false;
 
         /// <summary>
         /// Construct a default ray. The resulting ray is technically valid, but should only be used in the
@@ -83,8 +94,18 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
             Length = length;
             Color = color;
             Type = type;
-            Contribution = type == RayType.NoHit ? 0.0f : 1.0f;
+            Contribution = type == RayType.NoHit || type == RayType.Shadow ? 0.0f : 1.0f;
         }
+
+        public RTRay(Vector3 origin, Vector3 direction, float lengthScale, Color color, RayType type, Vector3[] areaLightPoints)
+        :
+            this(origin, direction, lengthScale, color, type)
+        {
+            AreaRay = true;
+            AreaLightPoints = areaLightPoints;
+        }
+
+        public int ObjectPoolIndex { get; set; }
 
         /// <summary>
         /// Determine the position of a point a certain distance along this ray.
@@ -92,5 +113,17 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
         /// <param name="distance"> The distance to travel along this ray. </param>
         /// <returns> A <see cref="Vector3"/> point <paramref name="distance"/> along this ray. </returns>
         public Vector3 At(float distance) => Origin + distance * Direction;
+
+        /// <summary>
+        /// Divides the <paramref name="ray"/>'s Color by <paramref name="div"/>
+        /// </summary>
+        /// <param name="ray"> The ray of which the color needs to be divided. </param>
+        /// <param name="div"> The divisor for the color. </param>
+        /// <returns> The original <paramref name="ray"/> </returns>
+        public static RTRay operator /(RTRay ray, int div)
+        {
+            ray.Color /= div;
+            return ray;
+        }
     }
 }

@@ -149,13 +149,22 @@ namespace _Project.UI.Scripts.Control_Panel
         }
 
         /// <summary>
+        /// Whether this <see cref="FloatEdit"/>'s UI is not interactable.
+        /// </summary>
+        public bool InverseInteractable
+        {
+            get { return !interactable; }
+            set { Interactable = !value; }
+        }
+
+        /// <summary>
         /// Correct <paramref name="value"/> to fit within the restrictions of this <see cref="FloatEdit"/>. This involves
         /// rounding <paramref name="value"/> to the number of digits specified by <see cref="Digits"/> and clamping it
         /// between <see cref="MinValue"/> and <see cref="MaxValue"/>.
         /// </summary>
         /// <param name="value"> The floating point value to correct. </param>
         /// <returns> <paramref name="value"/> rounded and clamped. </returns>
-        private float CorrectValue(float value)
+        protected virtual float CorrectValue(float value)
         {
             float correctedValue = (float)Math.Round(value, Digits);
             return Mathf.Clamp(correctedValue, MinValue, MaxValue);

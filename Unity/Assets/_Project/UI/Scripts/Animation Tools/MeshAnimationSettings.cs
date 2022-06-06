@@ -23,9 +23,6 @@ namespace _Project.UI.Scripts.Animation_Tools
         private float rayHideThreshold = 0.02f;
 
         [SerializeField]
-        private float rayTransThreshold = 0.25f;
-
-        [SerializeField]
         private bool animate;
 
         [SerializeField]
@@ -60,7 +57,6 @@ namespace _Project.UI.Scripts.Animation_Tools
             rayManager.AnimateSequentially = sequentialAnimate;
             rayManager.HideNoHitRays = hideNoHitRays;
             rayManager.RayHideThreshold = rayHideThreshold;
-            rayManager.RayTransThreshold = rayTransThreshold;
             rayManager.Reset = true;
             mesh = gameObject.GetComponent<RTMesh>();
             update = axis.magnitude != 0;
@@ -72,6 +68,16 @@ namespace _Project.UI.Scripts.Animation_Tools
         private void FixedUpdate()
         {
             if (update) mesh.Rotation += axis * rotationSpeed;
+        }
+
+        /// <summary>
+        /// If the object should be rotated, set the transform.hasChanged to true.
+        /// Because of the OnEnable, this script has to run after default time and RTMesh checks
+        /// transform.hasChanged before the rotation. Set is back to true to let in update the next frame.
+        /// </summary>
+        private void Update()
+        {
+            if (update) mesh.transform.hasChanged = true;
         }
     }
 }

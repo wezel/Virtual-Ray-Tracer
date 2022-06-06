@@ -1,3 +1,4 @@
+using _Project.Ray_Tracer.Scripts;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using System;
@@ -264,13 +265,46 @@ namespace _Project.Scripts
             }
         }
 
+        private bool flytocam = false;
+
+        public void FlyToRTCamera()
+        {
+            flytocam = true;
+        }
+
+        private void FlyToRTCameraStep()
+        {
+            Transform RTCamTransform = RTSceneManager.Get().Scene.Camera.transform;
+
+            transform.position = Vector3.Lerp(transform.position, RTCamTransform.position, 0.1f);
+            transform.rotation = Quaternion.Lerp(transform.rotation, RTCamTransform.rotation, 0.1f);
+        }
+
+        private void FixedUpdate()
+        {
+            if (flytocam)
+            {
+                Transform RTCamTransform = RTSceneManager.Get().Scene.Camera.transform;
+                if (transform.position == RTCamTransform.position && transform.eulerAngles == RTCamTransform.eulerAngles)
+                {
+                    flytocam = false;
+                    distance = Vector3.Distance(Target.position, RTCamTransform.position);
+                    xDegrees = transform.rotation.eulerAngles.y;
+                    yDegrees = transform.rotation.eulerAngles.x;
+                    Target.position = transform.position + (transform.rotation * Vector3.forward * distance);
+                }
+                else
+                    FlyToRTCameraStep();
+            }
+        }
+
         void Update()
         {
+            if (flytocam)
+                return;
         
             // If we are over the ui we don't allow the user to start any of these actions.
-
             OnlyOneInputPicker();
-
 
             // TODO Allow for free zoom movement not clamped and not as a function of distance just a fixed step amount.
             // TODO Add function to focus on objects and have zoom like it is now.
@@ -279,7 +313,7 @@ namespace _Project.Scripts
 
             // Update the position based on our rotation and the distance to the target.
             transform.position = Target.position - (transform.rotation * Vector3.forward * distance);
-        
+
         }
 
         private static float ClampAngle(float angle, float min, float max)

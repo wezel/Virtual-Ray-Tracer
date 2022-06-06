@@ -68,7 +68,7 @@ namespace _Project.UI.Scripts.Control_Panel
             screenOpacityEdit.OnValueChanged += (value) => { camera.Screen.ImageAlpha = value; };
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
             // Update the UI based on external changes to the camera transform (e.g. through the transformation gizmos).
             bool inUI = EventSystem.current.currentSelectedGameObject != null; // Only update if we are not in the UI.
@@ -77,8 +77,12 @@ namespace _Project.UI.Scripts.Control_Panel
             {
                 positionEdit.Value = camera.transform.position;
                 rotationEdit.Value = camera.transform.eulerAngles;
-                camera.transform.hasChanged = false;
             }
+        }
+
+        private void Update()
+        {
+            camera.transform.hasChanged = false;   // Do this in Update to let other scripts also check
         }
     }
 }

@@ -119,6 +119,7 @@ namespace _Project.UI.Scripts
         {
             bool areThereEscapables = escapables.Count > 0;
             // These Keys are are not checked in the openings scene
+
             if (!inOpeningScene)
             {
                 if (Input.GetKeyDown(KeyCode.Escape) && !areThereEscapables)

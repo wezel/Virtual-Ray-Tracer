@@ -82,6 +82,10 @@ namespace _Project.Scripts
         {
             instance = this;
             DontDestroyOnLoad(gameObject);
+
+            //Debug.Log(Time.maximumDeltaTime);
+            //Time.maximumDeltaTime = /*1f /*/ 3f;
+            //Debug.Log(Time.maximumDeltaTime);
         }
     }
 }

@@ -45,10 +45,10 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Camera
         public Vector3 Position
         {
             get { return transform.position; }
-            set
+            set 
             {
-                transform.position = value;
-                OnCameraChanged?.Invoke();
+                if (value == transform.position) return;
+                transform.position = value; 
             }
         }
 
@@ -60,8 +60,8 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Camera
             get { return transform.eulerAngles; }
             set
             {
+                if (value == transform.eulerAngles) return;
                 transform.eulerAngles = value;
-                OnCameraChanged?.Invoke();
             }
         }
 
@@ -76,6 +76,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Camera
             get { return fieldOfView; }
             set
             {
+                if (value == fieldOfView) return;
                 fieldOfView = value;
                 Recalculate();
                 OnCameraChanged?.Invoke();
@@ -93,6 +94,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Camera
             get { return screenWidth; }
             set 
             {
+                if (value == screenWidth) return;
                 screenWidth = value;
                 Recalculate();
                 OnCameraChanged?.Invoke();
@@ -110,6 +112,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Camera
             get { return screenHeight; }
             set
             {
+                if (value == screenHeight) return;
                 screenHeight = value;
                 Recalculate();
                 OnCameraChanged?.Invoke();
@@ -127,6 +130,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Camera
             get { return screenDistance; }
             set 
             {
+                if (value == screenDistance) return;
                 screenDistance = value;
                 Recalculate();
                 OnCameraChanged?.Invoke();
@@ -169,11 +173,17 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Camera
             ResetColor();
         }
 
+        private void FixedUpdate()
+        {
+            if (transform.hasChanged) OnCameraChanged?.Invoke();
+        }
+
         private void Update()
         {
             // In update we only move around existing lines to match the camera's transform.
             RecalculateFrustum();
             Screen.RecalculateLines();
+            transform.hasChanged = false;   // Do this in Update to let other scripts also check
         }
 
         /// <summary>

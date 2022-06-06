@@ -366,7 +366,7 @@ namespace _Project.UI.Scripts.Control_Panel
                 if (DraggingZ)
                     Value = new Vector3(Value.x, Value.y, Value.z + deltaX + deltaY);
             }
-            
+
             previousMousePostion = currentMousePosition;
         }
     }

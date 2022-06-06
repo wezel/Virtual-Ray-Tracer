@@ -45,6 +45,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   epsilon: 0.001
   renderShadows: 1
+  renderPointLights: 1
+  renderAreaLights: 1
   maxDepth: 3
+  areaLightSamples: 2
   superSamplingFactor: 1
+  superSamplingVisual: 0
   backgroundColor: {r: 0.7, g: 0.7, b: 0.7, a: 1}

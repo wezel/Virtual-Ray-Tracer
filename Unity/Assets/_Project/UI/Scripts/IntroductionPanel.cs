@@ -18,7 +18,6 @@ namespace _Project.UI.Scripts
         /// </summary>
         public void Show()
         {
-            return;
             if (uiManager == null)
                 uiManager = UIManager.Get();
 

@@ -40,6 +40,7 @@ namespace _Project.UI.Scripts.Toolbar
         /// </summary>
         public void Open()
         {
+            CheckLights();
             openButton.gameObject.SetActive(false);
             items.gameObject.SetActive(true);
         }
@@ -70,6 +71,21 @@ namespace _Project.UI.Scripts.Toolbar
             Close();
         }
 
+        private void CheckLights()
+        {
+            foreach (var itemButton in items.GetComponentsInChildren<Button>())
+            {
+                string text = itemButton.GetComponentInChildren<TextMeshProUGUI>().text;
+                if (text.Contains("Light"))
+                {
+                    if (text == RTSceneManager.ObjectType.PointLight.ToString()) itemButton.interactable = RTSceneManager.Get().Scene.EnablePointLights;
+                    if (text == RTSceneManager.ObjectType.SpotLight.ToString()) itemButton.interactable = RTSceneManager.Get().Scene.EnableSpotLights;
+                    if (text == RTSceneManager.ObjectType.AreaLight.ToString()) itemButton.interactable = RTSceneManager.Get().Scene.EnableAreaLights;
+                }
+            }
+
+        }
+
         private void Awake()
         {
             openButton.onClick.AddListener(Toggle);
@@ -87,12 +103,14 @@ namespace _Project.UI.Scripts.Toolbar
 
             // Add the buttons that create the objects.
             Array objectTypes = Enum.GetValues(typeof(RTSceneManager.ObjectType));
-            foreach(RTSceneManager.ObjectType objectType in objectTypes)
+            foreach (RTSceneManager.ObjectType objectType in objectTypes)
             {
                 itemButton = Instantiate(itemPrefab, items.transform);
                 itemButton.GetComponentInChildren<TextMeshProUGUI>().text = objectType.ToString();
                 itemButton.onClick.AddListener(() => OnClick(objectType));
             }
+            CheckLights();
+
             items.GetComponent<RectTransform>().sizeDelta = new Vector2(100, 30 * (objectTypes.Length + 1));
         }
 

@@ -100,6 +100,28 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
 
         private MeshRenderer meshRenderer;
 
+        public void SetAreaLightRay(Vector3[] areaLightVerts)
+        {
+            // Get the distance to the light to set the scale correct, such that the length corresponds to the actual length.
+            Vector3 lightCenter = (areaLightVerts[0] + areaLightVerts[1] + areaLightVerts[2] + areaLightVerts[3]) / 4f;
+            float lightDistance = (lightCenter - Origin).magnitude;
+
+            // Move all vertices just a tiny bit to prevent z-fighting
+            Vector3[] correctedVerts = new Vector3[areaLightVerts.Length];
+            for (int i = 0; i < areaLightVerts.Length; ++i)
+                correctedVerts[i] = areaLightVerts[i] + 0.001f * Random.insideUnitSphere;
+
+            transform.localScale = lightDistance * new Vector3(1f, 1.002f, 1f); // Set the scale so the ray stops just before the light.
+            Vector3[] newverts = new Vector3[5];
+            // This order doesn't correspond to the .obj, but somehow this is Unity's order.
+            newverts[0] = transform.InverseTransformPoint(correctedVerts[1]);
+            newverts[1] = transform.InverseTransformPoint(correctedVerts[0]);
+            newverts[2] = GetComponent<MeshFilter>().mesh.vertices[2];
+            newverts[3] = transform.InverseTransformPoint(correctedVerts[2]);
+            newverts[4] = transform.InverseTransformPoint(correctedVerts[3]);
+            GetComponent<MeshFilter>().mesh.vertices = newverts;
+        }
+
         private void Awake()
         {
             meshRenderer = GetComponent<MeshRenderer>();
