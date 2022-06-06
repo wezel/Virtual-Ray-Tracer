@@ -193,6 +193,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9e8b55c6a21edb4ab146a532adce7f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnNotification:
+    m_PersistentCalls:
+      m_Calls: []
   badgePrefab: {fileID: 5988128348047978439}
   animator: {fileID: 981998151248721584}
   showingNotification: 0
@@ -206,7 +209,7 @@ Animator:
   m_GameObject: {fileID: 6459980650014630416}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: dce361e199d13f3468c027cde75dbc65, type: 2}
+  m_Controller: {fileID: 9100000, guid: b440fb601b53cb847a7790ca6ad772c8, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
