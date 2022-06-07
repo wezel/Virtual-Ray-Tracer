@@ -82,17 +82,17 @@ namespace _Project.Ray_Tracer.Scripts
         /// </summary>
         public enum ObjectType
         {
-            Sphere = 0,
-            Cube = 5000,
-            Cylinder = 6000,
-            Barrel = 6500,
-            Capsule = 7000,
-            Prism = 8000,
-            Goat = 9000,
-            Wineglass = 10000,
-            PointLight = 11000,
-            SpotLight = 12000,
-            AreaLight = 13000
+            Sphere = 8000,
+            Cube = 8500,
+            Cylinder = 9000,
+            Barrel = 9500,
+            Capsule = 10000,
+            Prism = 10500,
+            Goat = 11000,
+            Wineglass = 11500,
+            PointLight = 12000,
+            SpotLight = 13000,
+            AreaLight = 14000
         }
 
         /// <summary>
