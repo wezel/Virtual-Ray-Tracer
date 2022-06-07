@@ -217,7 +217,7 @@ namespace _Project.Scripts
                 return;
             }
 
-            if (mode && !(Input.GetKey(KeyCode.LeftControl) || Input.GetKeyDown(KeyCode.LeftCommand)))
+            if (mode && !(Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.LeftCommand)))
             {
                 inputBlocker.gameObject.SetActive(false);
                 GlobalManager.Get().ResetCursor();
@@ -238,7 +238,7 @@ namespace _Project.Scripts
                 OnZoomChanged.Invoke();
 
             // If the left control is pressed and.... 
-            if (Input.GetKey(KeyCode.LeftControl) || Input.GetKeyDown(KeyCode.LeftCommand))
+            if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.LeftCommand))
             {
 
                 // The right mouse button we activate zoom.
