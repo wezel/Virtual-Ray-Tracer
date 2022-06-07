@@ -667,7 +667,7 @@ MonoBehaviour:
   - optionalTasksStart: 6
     tasks:
     - identifier: 
-      name: 'Advanced Lighting '
+      name: Advanced Lighting - Spot Lights
       description: So far, the only type of light source has been the point light
         source. But not all lights can be approximated by point light sources. Therefore
         we will introduce 2 more types of light sources, starting with the Spot Light!
@@ -683,7 +683,7 @@ MonoBehaviour:
     - identifier: spotAngleChange
       name: Spot Light Angle
       description: The spot light's angle can be changed in the light's properties.
-        It works like a flashlight. The angle defines how wide the cone of the light
+        It works like a flash light. The angle defines how wide the cone of the light
         is, and the light's direction specifies where the light points towards. Try
         changing the light's "Spot Angle" and see for yourself!
       skippable: 0
@@ -691,8 +691,8 @@ MonoBehaviour:
     - identifier: 
       name: Light Attenuation
       description: 'To make lighting look even more realistic, lights can be attenuated.
-        There are two types of attenuation in this program: spot light attenuation
-        and light-distance attenuation. As this changed the light''s intensity, lights
+        There are two types of attenuation in this program: angle attenuation and
+        light-distance attenuation. As this changed the light''s intensity, lights
         now also have a "Light intensity" setting.'
       skippable: 1
       points: 0
@@ -704,6 +704,15 @@ MonoBehaviour:
         Attenuation"!
       skippable: 0
       points: 89
+    - identifier: angleAtten
+      name: Angle Attenuation
+      description: Angle attenuation occurs when the light is not directly looking
+        at a point, but at an angle. Just like a flash light, the point it shines
+        at is the brightest. The light needs to have a direction, so it does not
+        apply to point lights. You can change how strong a spot (or area) light is
+        attenuated per light with the "Angle Attenuation" slider. Try it!
+      skippable: 0
+      points: 90
     - identifier: 
       name: 
       description: 
@@ -756,7 +765,7 @@ MonoBehaviour:
         and change the number of "Light Samples".
       skippable: 0
       points: 123
-    - identifier: area lightRender
+    - identifier: arealightRender
       name: Area Light Rendering
       description: The downside of only taking a few samples is that the result looks
         unrealistic, although it renders quite fast. The effect is called 'noise'.
@@ -764,7 +773,7 @@ MonoBehaviour:
         Set the samples very low and press "Render Image".
       skippable: 0
       points: 109
-    - identifier: area lightRender
+    - identifier: arealightRender
       name: Area Light Rendering
       description: The downside of many samples is that it takes very long to render.
         For example, when using 36 samples, the raytracer effectively renders 36

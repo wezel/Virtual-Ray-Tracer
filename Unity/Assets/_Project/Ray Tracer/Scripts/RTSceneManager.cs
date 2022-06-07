@@ -222,7 +222,7 @@ namespace _Project.Ray_Tracer.Scripts
             // Do nothing if what we selected is already the selected object.
             if (selection.Transform == newSelection)
             {
-                selection.Mesh.OnMeshSelected?.Invoke();
+                selection.Mesh?.OnMeshSelected?.Invoke();
                 selection.Camera?.OnCameraSelected?.Invoke();
                 selection.Light?.OnLightSelected?.Invoke();
 
@@ -345,16 +345,19 @@ namespace _Project.Ray_Tracer.Scripts
             {
                 case ObjectType.PointLight:
                     RTPointLight pointLight = Instantiate(pointLightPrefab);
+                    pointLight.UpdateLightData();
                     Scene.AddLight(pointLight);
                     Select(pointLight.transform);
                     return;
                 case ObjectType.SpotLight:
                     RTSpotLight spotLight = Instantiate(spotLightPrefab);
+                    spotLight.UpdateLightData();
                     Scene.AddLight(spotLight);
                     Select(spotLight.transform);
                     return;
                 case ObjectType.AreaLight:
                     RTAreaLight areaLight = Instantiate(areaLightPrefab);
+                    areaLight.UpdateLightData();
                     Scene.AddLight(areaLight);
                     Select(areaLight.transform);
                     return;

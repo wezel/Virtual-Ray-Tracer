@@ -461,7 +461,7 @@ namespace _Project.Ray_Tracer.Scripts
             // Spotlight attenuation
             if (light.Type != RTLight.RTLightType.Point)
                 // Angle is always positive; position has been checked before.
-                color *= Mathf.Pow(angle, 0.01f / (angle - Mathf.Cos(light.SpotAngle * Mathf.PI / 360f)));
+                color *= Mathf.Pow(angle, light.SpotAttenuationPower);
 
             // Lastly add ambient so it doesn't get attenuated
             color += light.Ambient * light.Color * hitInfo.Color;
@@ -676,7 +676,7 @@ namespace _Project.Ray_Tracer.Scripts
             // Spotlight attenuation
             if (light.Type != RTLight.RTLightType.Point)
                 // Angle is always positive; position has been checked before.
-                color *= Mathf.Pow(angle, 0.01f / (angle - Mathf.Cos(light.SpotAngle * Mathf.PI / 360f)));
+                color *= Mathf.Pow(angle, light.SpotAttenuationPower);
 
             // Lastly add ambient so it doesn't get attenuated
             color += light.Ambient * light.Color * hitInfo.Color;

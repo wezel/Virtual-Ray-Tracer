@@ -37,12 +37,29 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Spot_Light
             }
         }
 
+        // Important! The max of this range is also hardcoded in the shader!
+        [SerializeField, Range(0, 64)]
+        private float spotAttenuationPower = 2f;
+        public override float SpotAttenuationPower
+        {
+            get { return spotAttenuationPower; }
+            set
+            {
+                if (value == spotAttenuationPower) return;
+                if (value < 0 || value > 64) return;
+                spotAttenuationPower = value;
+                UpdateLightData();
+                OnLightChangedInvoke();
+                OnAttenuationPowerChanged?.Invoke();
+            }
+        }
+
         public override void UpdateLightData()
         {
             Color lightData;
             lightData.r = Mathf.Floor(color.r * 256)  + color.g / 2;
             lightData.g = Mathf.Floor(color.b * 256)  + (intensity / intensityDivisor);
-            lightData.b = Mathf.Floor(ambient * 256)  + diffuse / 2;
+            lightData.b = Mathf.Floor(ambient * 256)  + diffuse / 2 + Mathf.Floor(Mathf.Floor(spotAttenuationPower / 64f * 256) * 256 * 2);
             lightData.a = Mathf.Floor(specular * 256) + Mathf.Cos(spotAngle * Mathf.PI / 360f) / 2f + (lightDistanceAttenuation ? 512 : 0);
             light.color = lightData;
         }
@@ -53,7 +70,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Spot_Light
         [SerializeField]
         private new Light light;
 
-        public LightChanged OnSpotAngleChanged;
+        public LightChanged OnSpotAngleChanged, OnAttenuationPowerChanged;
 
         public override LightShadows Shadows { get => light.shadows; set => light.shadows = value; }
 

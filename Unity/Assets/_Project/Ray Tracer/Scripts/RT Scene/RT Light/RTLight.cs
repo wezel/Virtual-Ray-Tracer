@@ -136,7 +136,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
 
 
         /// <summary>
-        /// The rotation of the mesh.
+        /// The rotation of the light.
         /// </summary>
         public Vector3 Rotation
         {
@@ -150,7 +150,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
         }
 
         /// <summary>
-        /// The scale of the mesh.
+        /// The scale of the light.
         /// </summary>
         public Vector3 Scale
         {
@@ -196,6 +196,8 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
         public virtual LightShadows Shadows { get; set; }
 
         public virtual int LightSamples { get; set; } = 4;
+
+        public virtual float SpotAttenuationPower { get; set; } = 1f;
 
         protected void FixedUpdate()
         {

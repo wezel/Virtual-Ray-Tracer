@@ -92,7 +92,7 @@ Shader "Custom/LightShader"
                 // For now we do the lighting calculation under the assumption that all unity-lights are point or spot light sources.  
                 // We use the _LightColor0 to transfer the lightColor, intensity, spotAngle, ambient, diffuse and specular components.
                 // lightColor and intensity are encoded in .r and .g
-                // ambDifSpec and spotAngle are encoded in .b and .a
+                // ambDifSpec, power and spotAngle are encoded in .b and .a
                 // See the unpackData4 function for more info.
                 float3 normal = normalize(input.normal);
                 if (facing < 0) normal = -normal;
@@ -108,7 +108,10 @@ Shader "Custom/LightShader"
                 
                 // return black if the point is outside the scope of the spot light.
                 if (angle < spotAngle) return float4(0, 0, 0, 0);
+                float power = floor(ambDifSpecAngle.x / 2) * 64 / 256; // Power is compressed to 0-1 but is actually 0-64.
 #endif
+                // ambient also contains the Spotlight Attenuation Power. This uses the same principle as in the upackData4 function.
+                ambDifSpecAngle.x = fmod(ambDifSpecAngle.x, 2);
 
                 float diffuseStrength = max(0.0, dot(light, normal));
                  // return black if the angle is >= 90 degrees between the normal and the light vector.
@@ -133,7 +136,7 @@ Shader "Custom/LightShader"
                 float3 result = diffuseColor + specularColor; // Add ambient at the end, as it's immune to attenuation
 
 #ifdef SPOT     // Spotlight attenuation
-                result *= pow(angle, 0.01 / (angle - spotAngle));
+                result *= pow(angle, power);
 #endif
 
                 // Light distance attenuation

@@ -33,12 +33,28 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
             set => lights.ForEach(light => light.shadows = value);
         }
 
+        // Important! The max of this range is also hardcoded in the shader!
+        [SerializeField, Range(0, 64)]
+        private float spotAttenuationPower = 1f;
+        public override float SpotAttenuationPower 
+        {
+            get { return spotAttenuationPower; }
+            set
+            {
+                if (value == spotAttenuationPower) return;
+                if (value < 0 || value > 64) return;
+                spotAttenuationPower = value;
+                UpdateLightData();
+            }
+        }
+
         public override void UpdateLightData()
         {
             Color lightData;
             lightData.r = Mathf.Floor(color.r / LightSamples * 256) + color.g / LightSamples / 2;
             lightData.g = Mathf.Floor(color.b / LightSamples * 256) + (intensity / intensityDivisor);
-            lightData.b = Mathf.Floor(ambient / (LightSamples * LightSamples) * 256) + diffuse / LightSamples / 2;
+            lightData.b = Mathf.Floor(ambient / (LightSamples * LightSamples) * 256) + diffuse / LightSamples / 2
+                        + Mathf.Floor(Mathf.Floor(spotAttenuationPower / 100f * 256) * 256 * 2);
             lightData.a = Mathf.Floor(specular / LightSamples * 256) + Mathf.Clamp01(Mathf.Cos(areaSpotAngle * Mathf.PI / 360f)) / 2f + (lightDistanceAttenuation ? 512 : 0);
             lights.ForEach(light => light.color = lightData);
         }
@@ -87,8 +103,8 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
             set
             {
                 if (value == lightSamples) return;
-                if (value >= 2 && value <= 10)
-                    lightSamples = value;
+                if (value < 2 || value > 10) return;
+                lightSamples = value;
                 UpdateLights();
                 onLightSampleChanged?.Invoke();
             }

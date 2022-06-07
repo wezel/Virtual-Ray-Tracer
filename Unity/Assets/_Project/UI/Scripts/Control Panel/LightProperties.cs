@@ -45,6 +45,8 @@ namespace _Project.UI.Scripts.Control_Panel
         [SerializeField]
         private FloatEdit spotAngleEdit;
         [SerializeField]
+        private FloatEdit spotAttenuationEdit;
+        [SerializeField]
         private BoolEdit distanceAttenuationEdit;
 
         [SerializeField]
@@ -69,11 +71,13 @@ namespace _Project.UI.Scripts.Control_Panel
                 rotationEdit.Value = ((RTAreaLight)light).Rotation;
                 scaleEdit.Value = ((RTAreaLight)light).Scale;
                 lightSamplesEdit.Value = Mathf.Pow(((RTAreaLight)light).LightSamples, 2);
+                spotAttenuationEdit.Value = ((RTAreaLight)light).SpotAttenuationPower;
             }
             if (light.Type == RTLight.RTLightType.Spot)
             {
                 rotationEdit.Value = ((RTSpotLight)light).Rotation;
                 spotAngleEdit.Value = ((RTSpotLight)light).SpotAngle;
+                spotAttenuationEdit.Value = ((RTSpotLight)light).SpotAttenuationPower;
             }
 
             rotationEdit.gameObject.SetActive(light.Type == RTLight.RTLightType.Area || light.Type == RTLight.RTLightType.Spot);
@@ -81,6 +85,7 @@ namespace _Project.UI.Scripts.Control_Panel
             scaleEdit.gameObject.SetActive(light.Type == RTLight.RTLightType.Area);
             lightSamplesEdit.gameObject.SetActive(light.Type == RTLight.RTLightType.Area);
             spotAngleEdit.gameObject.SetActive(light.Type == RTLight.RTLightType.Spot);
+            spotAttenuationEdit.gameObject.SetActive(light.Type == RTLight.RTLightType.Area || light.Type == RTLight.RTLightType.Spot);
 
             typeDropdown.gameObject.SetActive(true);
             typeDropdown.interactable = RTSceneManager.Get().DeleteAllowed; // Should only be available if lights may be deleted
@@ -133,6 +138,7 @@ namespace _Project.UI.Scripts.Control_Panel
             float diffuse = light.Diffuse;
             float specular = light.Specular;
             float spotAngle = light.SpotAngle;
+            float spotAttenuationPower = light.SpotAttenuationPower;
             int lightSamples = light.LightSamples;
             bool distanceAttenuation = light.LightDistanceAttenuation;
 
@@ -161,6 +167,7 @@ namespace _Project.UI.Scripts.Control_Panel
             light.Diffuse = diffuse;
             light.Specular = specular;
             light.SpotAngle = spotAngle;
+            light.SpotAttenuationPower = spotAttenuationPower;
             light.LightSamples = lightSamples;
             light.LightDistanceAttenuation = distanceAttenuation;
             light.UpdateLightData(); // Call this explicitly in case all of the above are the same as prefab
@@ -184,6 +191,7 @@ namespace _Project.UI.Scripts.Control_Panel
 
             lightSamplesEdit.OnValueChanged.AddListener(value => light.LightSamples = (int)Mathf.Sqrt(value));
             spotAngleEdit.OnValueChanged.AddListener(value => light.SpotAngle = value);
+            spotAttenuationEdit.OnValueChanged.AddListener(value => light.SpotAttenuationPower = value);
             distanceAttenuationEdit.OnValueChanged.AddListener(value => light.LightDistanceAttenuation = value);
             typeDropdown.onValueChanged.AddListener(type => ChangeObjectType((RTLight.RTLightType)type));
         }
