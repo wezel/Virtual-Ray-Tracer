@@ -1,5 +1,6 @@
 using _Project.Scripts;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace _Project.UI.Scripts.Main_Menu
@@ -60,7 +61,8 @@ namespace _Project.UI.Scripts.Main_Menu
         private void ToggleCheatMode(bool isOn)
         {
             GlobalManager.Get().CheatMode = isOn;
-            Tutorial.TutorialManager.Get().UpdateTutorial();
+            if (SceneManager.GetActiveScene().buildIndex != 0)
+                Tutorial.TutorialManager.Get().UpdateTutorial();
         }
     
         private void Awake()
