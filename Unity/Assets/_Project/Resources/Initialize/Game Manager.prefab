@@ -664,7 +664,7 @@ MonoBehaviour:
       description: 
       skippable: 0
       points: 0
-  - optionalTasksStart: 6
+  - optionalTasksStart: 7
     tasks:
     - identifier: 
       name: Advanced Lighting - Spot Lights
