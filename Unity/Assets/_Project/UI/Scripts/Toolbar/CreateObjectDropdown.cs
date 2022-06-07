@@ -57,7 +57,6 @@ namespace _Project.UI.Scripts.Toolbar
                 if (transforms.Length > 2) transforms[2].gameObject.SetActive(!enabled); // hide or show unlock panel
                 buttons[idx++].interactable = enabled;
             }
-            CheckLights();  // There may be enough points, but if a lighttype is disabled, don't add it!
         }
 
         /// <summary>
@@ -82,24 +81,13 @@ namespace _Project.UI.Scripts.Toolbar
 
         private void OnClick(RTSceneManager.ObjectType type)
         {
-            RTSceneManager.Get().CreateObject(type);
+            RTSceneManager sceneManager = RTSceneManager.Get();
+            if      (type == RTSceneManager.ObjectType.PointLight) sceneManager.Scene.EnablePointLights = true;
+            else if (type == RTSceneManager.ObjectType.SpotLight)  sceneManager.Scene.EnableSpotLights  = true;
+            else if (type == RTSceneManager.ObjectType.AreaLight)  sceneManager.Scene.EnableAreaLights  = true;
+            sceneManager.CreateObject(type);
             GlobalManager.ObjectsCreated++;
             Close();
-        }
-
-        private void CheckLights()
-        {
-            foreach (var itemButton in items.GetComponentsInChildren<Button>())
-            {
-                string text = itemButton.GetComponentInChildren<TextMeshProUGUI>().text;
-                if (text.Contains("Light"))
-                {
-                    if (text == RTSceneManager.ObjectType.PointLight.ToString()) itemButton.interactable = RTSceneManager.Get().Scene.EnablePointLights;
-                    if (text == RTSceneManager.ObjectType.SpotLight.ToString()) itemButton.interactable = RTSceneManager.Get().Scene.EnableSpotLights;
-                    if (text == RTSceneManager.ObjectType.AreaLight.ToString()) itemButton.interactable = RTSceneManager.Get().Scene.EnableAreaLights;
-                }
-            }
-
         }
 
         private void Awake()
@@ -130,7 +118,6 @@ namespace _Project.UI.Scripts.Toolbar
                 itemButton.onClick.AddListener(() => OnClick(objectType));
                 buttons.Add(itemButton);
             }
-            CheckLights();
 
             items.GetComponent<RectTransform>().sizeDelta = new Vector2(120, 30 * (objectTypes.Length + 1));
         }

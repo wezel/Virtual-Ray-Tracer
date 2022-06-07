@@ -78,7 +78,7 @@ MonoBehaviour:
       points: 153
     - identifier: mainMenu
       name: Main Menu
-      description: In the main menu you have options to go back to homescreen, switch
+      description: In the main menu you have options to go back to home screen, switch
         between levels (once they have been unlocked), see your earned badges, change
         settings, and exit the program. Access the main menu by clicking the "Main
         Menu" button in the top left or by pressing [ESC].
@@ -476,7 +476,7 @@ MonoBehaviour:
       points: 50
     - identifier: editSuperSampling
       name: Visualizing Super Sampling
-      description: As explained before, supsersampling is a technique where mulitple
+      description: As explained before, supersampling is a technique where multiple
         rays are casted through a pixel to get a better approximation of the true
         pixel color, not just the center of the pixel. This can also be visualized.
         First, increase the "Super Sampling" factor in the ray tracer properties.
@@ -497,9 +497,9 @@ MonoBehaviour:
       points: 42
     - identifier: hideRays
       name: Hide Rays
-      description: 'There are now two toglles to hide rays: "Hide No Hit Rays" and
-        "Hide Neglibilbe Rays". The latter will hide rays that contribute less than
-        a set threshhold to the final pixel''s color. Enable "Hide Neglibilbe Rays"!'
+      description: 'There are now two toggles to hide rays: "Hide No Hit Rays" and
+        "Hide negligible Rays". The latter will hide rays that contribute less than
+        a set threshold to the final pixel''s color. Enable "Hide Negligible Rays"!'
       skippable: 0
       points: 86
     - identifier: rayTransparency
@@ -513,17 +513,17 @@ MonoBehaviour:
       points: 98
     - identifier: dynamicRadius
       name: Dynamic Ray Radius
-      description: To better distinguish between important and non-important rays,
-        there is "Dyanmic Ray Radius" which will make negligible rays thin and important
+      description: To better distinguish between important and unimportant rays,
+        there is "Dynamic Ray Radius" which will make negligible rays thin and important
         rays thicker. The minimal and maximum radius can be changed by the "Ray Minimal
-        Radius" and "Ray Maximal Radius" sliders. Try it by enabling "Dyanmic Ray
+        Radius" and "Ray Maximal Radius" sliders. Try it by enabling "Dynamic Ray
         Radius".
       skippable: 0
       points: 110
     - identifier: colorContribution
       name: Contribution Based Color
-      description: Lastly, be enabling "Contribution Based Ray Color" the ray's color
-        will not represent it's type, but the color it adds to the pixel color. Check
+      description: Lastly, by enabling "Contribution Based Ray Color" the ray's color
+        will not represent its type, but the color it adds to the pixel color. Check
         it out!
       skippable: 0
       points: 123
@@ -627,9 +627,9 @@ MonoBehaviour:
     tasks:
     - identifier: 
       name: Everything Put Together
-      description: This scene contains all principles combined. It contains a mirror,
-        a transparent object and various shapes. It also contains a sphere that causes
-        some interesting interactions with the rays.
+      description: This scene contains all principles discussed thus-far combined.
+        It contains a mirror, a transparent object and various shapes. It also contains
+        a sphere that causes some interesting interactions with the rays.
       skippable: 1
       points: 88
     - identifier: selectSphere
@@ -675,15 +675,15 @@ MonoBehaviour:
       points: 42
     - identifier: spotLightSelect
       name: Spot Light
-      description: A spotlight is simmiliar to a point light in that light comes
-        from a single point, but this time it also has a direction and a "Spot Angle".
-        Select the spotlight.
+      description: A spot light is similar to a point light in that light comes from
+        a single point, but this time it also has a direction and a "Spot Angle".
+        Select the spot light.
       skippable: 0
       points: 68
     - identifier: spotAngleChange
       name: Spot Light Angle
-      description: The spotlight's angle can be changed in the light's properties.
-        It works like a flash light. The angle defines how wide the cone of the light
+      description: The spot light's angle can be changed in the light's properties.
+        It works like a flashlight. The angle defines how wide the cone of the light
         is, and the light's direction specifies where the light points towards. Try
         changing the light's "Spot Angle" and see for yourself!
       skippable: 0
@@ -691,7 +691,7 @@ MonoBehaviour:
     - identifier: 
       name: Light Attenuation
       description: 'To make lighting look even more realistic, lights can be attenuated.
-        There are two types of attenuation in this program: spotlight attenuation
+        There are two types of attenuation in this program: spot light attenuation
         and light-distance attenuation. As this changed the light''s intensity, lights
         now also have a "Light intensity" setting.'
       skippable: 1
@@ -700,7 +700,7 @@ MonoBehaviour:
       name: Light-Distance Attenuation
       description: Light-distance attenuation can be toggled on/off per light in
         this program. This will also change the intensity as the distance has a big
-        impact. Check it out by disabling and enabling the spotlight's "Distance
+        impact. Check it out by disabling and enabling the spot light's "Distance
         Attenuation"!
       skippable: 0
       points: 89
@@ -714,7 +714,7 @@ MonoBehaviour:
       description: Light's now also have an intensity setting. This determines how
         bright a light is. A bright light can still illuminate object from a for
         distance, a dull light will not. See for yourself by changing the "Intensity"
-        setting of the spotlight.
+        setting of the spot light.
       skippable: 0
       points: 89
     - identifier: 
@@ -726,8 +726,8 @@ MonoBehaviour:
     tasks:
     - identifier: 
       name: Advanced Lighting 2
-      description: As said in the previous level, there are also arealights. This
-        level has an arealight. An arealight is very simmilar to a spotlight, except
+      description: As said in the previous level, there are also area lights. This
+        level has an area light. An area light is very similar to a spot light, except
         that the light does not come from a single point, but from an area. This
         can create soft shadows.
       skippable: 1
@@ -736,49 +736,49 @@ MonoBehaviour:
       name: Soft Shadows
       description: 'So far we''ve only seen hard shadows: First there is no shadow,
         and the next pixel there is a shadow. A soft shadow is a transition from
-        this no-shadow to full-shadow space. Arealights create soft shadows when
-        only a part of the arealight is visible from a point. '
+        this no-shadow to full-shadow space. Area lights create soft shadows when
+        only a part of the area light is visible from a point. '
       skippable: 1
       points: 46
     - identifier: 
-      name: Arealight Sampling
+      name: Area Light Sampling
       description: 'But it''s extremely difficult to determine how much of the area
         is visible from a certain point. To approximate that, we use an approach
-        called ''sampling'': We take some random points on the arealight and use
+        called ''sampling'': We take some random points on the area light and use
         that to approximate how much of the area is visible. '
       skippable: 1
       points: 52
     - identifier: lightSamplesChange
-      name: Arealight Sampling
-      description: To mimic this sampling behaviour, the arealight in this program
-        actually uses multiple spotlights, the same amount as light samples taken.
-        This is a setting that can be changed per arealight. Select the arealight
+      name: Area Light Sampling
+      description: To mimic this sampling behaviour, the area light in this program
+        actually uses multiple spot lights, the same amount as light samples taken.
+        This is a setting that can be changed per area light. Select the area light
         and change the number of "Light Samples".
       skippable: 0
       points: 123
-    - identifier: arealightRender
-      name: Arealight Rendering
+    - identifier: area lightRender
+      name: Area Light Rendering
       description: The downside of only taking a few samples is that the result looks
         unrealistic, although it renders quite fast. The effect is called 'noise'.
         This appears because it takes too few samples to make a good approximation.
         Set the samples very low and press "Render Image".
       skippable: 0
       points: 109
-    - identifier: arealightRender
-      name: Arealight Rendering
+    - identifier: area lightRender
+      name: Area Light Rendering
       description: The downside of many samples is that it takes very long to render.
         For example, when using 36 samples, the raytracer effectively renders 36
-        spotlights. Increase the light samples and press "Render Image" and expierence
+        spot lights. Increase the light samples and press "Render Image" and experience
         the slowness...
       skippable: 0
       points: 134
     - identifier: 
-      name: Arealight Rays
+      name: Area Light Rays
       description: 'As you may have noticed, many lightsamples will also create many
-        rays: too many rays. Therefore, if a light uses 25 or maore samples and all
+        rays: too many rays. Therefore, if a light uses 25 or more samples and all
         the rays are of the same type, it will only show a single a single square
-        cone. This ''area-ray'' is big and there always transparent. It is also unaffected
-        by the radius settings.'
+        cone. This ''area-ray'' is big and therefore always transparent. It is also
+        unaffected by the radius settings.'
       skippable: 1
       points: 42
     - identifier: 
@@ -803,12 +803,12 @@ MonoBehaviour:
       skippable: 0
       points: 78
     - identifier: changeSpotAngle
-      name: Change the spotlight's spot angle
-      description: Now change the spotlight's spot angle.
+      name: Change the spot light's spot angle
+      description: Now change the spot light's spot angle.
       skippable: 0
       points: 98
     - identifier: changeSpecFloor
-      name: Change floor's specular compenent
+      name: Change floor's specular component
       description: Next, change the floor's specular component.
       skippable: 0
       points: 65
@@ -818,9 +818,9 @@ MonoBehaviour:
       skippable: 0
       points: 132
     - identifier: areaSampleChange
-      name: Arealight samples
-      description: Last but not least, change the numer of light samples used by
-        the arealight.
+      name: Area Light samples
+      description: Last but not least, change the number of light samples used by
+        the area light.
       skippable: 0
       points: 106
     - identifier: 
