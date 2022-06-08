@@ -669,8 +669,9 @@ MonoBehaviour:
     - identifier: 
       name: Advanced Lighting - Spot Lights
       description: So far, the only type of light source has been the point light
-        source. But not all lights can be approximated by point light sources. Therefore
-        we will introduce 2 more types of light sources, starting with the Spot Light!
+        source. However, not all lights can be approximated by point light sources.
+        Therefore we will introduce 2 more types of light sources, starting with
+        the Spot Light!
       skippable: 1
       points: 42
     - identifier: spotLightSelect

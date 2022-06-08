@@ -80,26 +80,30 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Spot_Light
             base.Awake();
         }
 
+        private int rotz = 0;
+
         private void LateUpdate()
         {
+            rotz = (rotz + 1) % 360;
 #if UNITY_EDITOR
-                if(!Application.isPlaying) return;
+            if (!Application.isPlaying) return;
 #endif
             // Make the label face the camera. We do this in LateUpdate to make sure the camera has finished its moving.
             // Only rotate the canvas towards the camera in the z rotation.
-            canvas.transform.up = (Camera.main.transform.position - Position).normalized;
-            canvas.transform.localEulerAngles = new Vector3(0, 0, canvas.transform.localEulerAngles.z);
+            canvas.transform.up = Vector3.ProjectOnPlane(Camera.main.transform.position - Position, transform.forward).normalized;
+            canvas.transform.localRotation = Quaternion.Euler(0, 0, (canvas.transform.localEulerAngles.z + 90) % 360);
         }
 
 #if UNITY_EDITOR
         private void OnRenderObject()
         {
             // Fix maximize window errors
-            if (UnityEditor.SceneView.lastActiveSceneView == null) 
+            if (UnityEditor.SceneView.lastActiveSceneView == null)
                 return;
             // Only rotate the canvas towards the camera in the z rotation.
-            canvas.transform.up = (UnityEditor.SceneView.lastActiveSceneView.camera.transform.position - Position).normalized;
-            canvas.transform.localEulerAngles = new Vector3(0, 0, canvas.transform.localEulerAngles.z);
+            canvas.transform.up = Vector3.ProjectOnPlane(
+                UnityEditor.SceneView.lastActiveSceneView.camera.transform.position - Position, transform.forward).normalized;
+            canvas.transform.localRotation = Quaternion.Euler(0, 0, (canvas.transform.localEulerAngles.z + 90) % 360);
         }
 #endif
     }

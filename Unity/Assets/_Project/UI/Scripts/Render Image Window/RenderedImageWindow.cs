@@ -141,7 +141,7 @@ namespace _Project.UI.Scripts.Render_Image_Window
             saveImageButton.gameObject.SetActive(false);
             imageSavedText.text = "This functionality is not (yet) available for the web version.";
             imageSavedText.gameObject.SetActive(true);
-#endif
+#else
             string path = Application.dataPath + "/SavedImages/";
             string fileName = "Render " + System.DateTime.Now.ToString().Replace(":", "-") + ".png";
 
@@ -152,6 +152,7 @@ namespace _Project.UI.Scripts.Render_Image_Window
             saveImageButton.gameObject.SetActive(false);
             imageSavedText.text = "Image has been saved to " + path +  fileName;
             imageSavedText.gameObject.SetActive(true);
+#endif
         }
 
         private void Awake()
