@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using _Project.Ray_Tracer.Scripts;
+using _Project.Ray_Tracer.Scripts.RT_Scene;
 using _Project.Scripts;
 using TMPro;
 using UnityEngine;
@@ -54,9 +55,38 @@ namespace _Project.UI.Scripts.Toolbar
             {
                 bool enabled = GlobalManager.TutorialPoints >= (int)objectType || GlobalManager.Get().CheatMode;
                 var transforms = buttons[idx].GetComponentsInChildren<RectTransform>(true);
+
                 if (transforms.Length > 2) transforms[2].gameObject.SetActive(!enabled); // hide or show unlock panel
-                buttons[idx++].interactable = enabled;
+                buttons[idx].interactable = enabled;
+
+                // Check if the light limit is reached
+                if (enabled && objectType.ToString().Contains("Light"))
+                {
+                    RTSceneManager sceneManager = RTSceneManager.Get();
+                    RTScene scene = sceneManager.Scene;
+                    if ((objectType.ToString().Contains("Point") || objectType.ToString().Contains("Spot")) &&
+                        scene.PointLights.Count + scene.SpotLights.Count >= sceneManager.PointSpotLightLimit)
+                    {
+                        buttons[idx].interactable = false;
+                        buttons[idx].GetComponentInChildren<TextMeshProUGUI>().text = "Point/Spot light limit reached!";
+                        buttons[idx].GetComponentInChildren<TextMeshProUGUI>().fontSize = 14;
+                    }
+                    else if (objectType.ToString().Contains("Area") && scene.AreaLights.Count >= sceneManager.AreaLightLimit)
+                    {
+                        buttons[idx].interactable = false;
+                        buttons[idx].GetComponentInChildren<TextMeshProUGUI>().text = "Area light limit reached!";
+                        buttons[idx].GetComponentInChildren<TextMeshProUGUI>().fontSize = 14;
+                    }
+                    else // Reset the button (text and fontSize) in case the text was changed before.
+                    {
+                        buttons[idx].GetComponentInChildren<TextMeshProUGUI>().text = objectType.ToString();
+                        buttons[idx].GetComponentInChildren<TextMeshProUGUI>().fontSize = itemPrefab.GetComponentInChildren<TextMeshProUGUI>().fontSize;
+                    }
+                }
+
+                ++idx;
             }
+
         }
 
         /// <summary>

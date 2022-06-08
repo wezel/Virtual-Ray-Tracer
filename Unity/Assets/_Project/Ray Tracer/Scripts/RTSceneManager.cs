@@ -64,7 +64,11 @@ namespace _Project.Ray_Tracer.Scripts
 
         [Header("Objects")]
         [SerializeField] private bool deleteAllowed = false;
+        [SerializeField, Range(0, 12)] private int pointSpotLightLimit = 12;
+        [SerializeField, Range(0,  5)] private int areaLightLimit = 5;
         public bool DeleteAllowed { get => deleteAllowed; }
+        public int PointSpotLightLimit { get => pointSpotLightLimit; }
+        public int AreaLightLimit { get => areaLightLimit; }
 
         [Serializable]
         public class Event : UnityEvent { };
@@ -344,18 +348,33 @@ namespace _Project.Ray_Tracer.Scripts
             switch (type)
             {
                 case ObjectType.PointLight:
+                    if (Scene.PointLights.Count + Scene.SpotLights.Count >= pointSpotLightLimit)
+                    {
+                        Debug.LogError("PointSpotLightLimit reached!");
+                        return;
+                    }
                     RTPointLight pointLight = Instantiate(pointLightPrefab);
                     pointLight.UpdateLightData();
                     Scene.AddLight(pointLight);
                     Select(pointLight.transform);
                     return;
                 case ObjectType.SpotLight:
+                    if (Scene.PointLights.Count + Scene.SpotLights.Count >= pointSpotLightLimit)
+                    {
+                        Debug.LogError("PointSpotLightLimit reached!");
+                        return;
+                    }
                     RTSpotLight spotLight = Instantiate(spotLightPrefab);
                     spotLight.UpdateLightData();
                     Scene.AddLight(spotLight);
                     Select(spotLight.transform);
                     return;
                 case ObjectType.AreaLight:
+                    if (Scene.AreaLights.Count >= areaLightLimit + 1)
+                    {
+                        Debug.LogError("AreaLightLimit reached!");
+                        return;
+                    }
                     RTAreaLight areaLight = Instantiate(areaLightPrefab);
                     areaLight.UpdateLightData();
                     Scene.AddLight(areaLight);
