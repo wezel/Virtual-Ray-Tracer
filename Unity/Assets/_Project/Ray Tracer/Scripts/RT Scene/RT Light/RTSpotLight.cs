@@ -80,11 +80,8 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Spot_Light
             base.Awake();
         }
 
-        private int rotz = 0;
-
         private void LateUpdate()
         {
-            rotz = (rotz + 1) % 360;
 #if UNITY_EDITOR
             if (!Application.isPlaying) return;
 #endif
