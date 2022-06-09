@@ -462,6 +462,7 @@ namespace _Project.Ray_Tracer.Scripts
             bool selectedCamera = selection.Type == typeof(RTCamera);
             bool selectedPointLight = selection.Type == typeof(RTPointLight);
             bool selectedSpotLight = selection.Type == typeof(RTSpotLight);
+            bool selectedAreaLight = selection.Type == typeof(RTAreaLight);
             if (type == HandleType.ROTATION && selectedPointLight)
                 type = HandleType.POSITION;
             if (type == HandleType.SCALE && (selectedCamera || selectedPointLight || selectedSpotLight))
@@ -484,6 +485,13 @@ namespace _Project.Ray_Tracer.Scripts
                 OnRotationMode?.Invoke();
             else
                 OnScaleMode?.Invoke();
+
+            // Spotlight may not rotate in z; Arealight may not scale in z
+            if ((selectedSpotLight && type == HandleType.ROTATION) ||
+                (selectedAreaLight && type == HandleType.SCALE))
+                transformHandle.axes = HandleAxes.XY;
+            else
+                transformHandle.axes = HandleAxes.XYZ;   // reset in case it's set to XY
 
             transformHandle.type = type;
         }
