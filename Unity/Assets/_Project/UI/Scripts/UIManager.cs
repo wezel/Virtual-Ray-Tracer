@@ -111,7 +111,7 @@ namespace _Project.UI.Scripts
                 hidable.gameObject.SetActive(false);
                 return;
             }
-            
+            Debug.Log("UI manager start");
             introductionPanel.Show();
         }
 

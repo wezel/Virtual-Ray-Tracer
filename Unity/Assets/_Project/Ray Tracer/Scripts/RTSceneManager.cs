@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using _Project.Ray_Tracer.Scripts.RT_Scene;
 using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Camera;
 using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light;
+using _Project.Ray_Tracer.Scripts.RT_Ray;
 using _Project.Ray_Tracer.Scripts.Utility;
 using _Project.UI.Scripts;
 using _Project.UI.Scripts.Control_Panel;
@@ -156,7 +157,25 @@ namespace _Project.Ray_Tracer.Scripts
                     Empty = false;
                 }
             }
-            
+
+            public RayObject Ray
+            {
+                get
+                {
+                    if (Type == typeof(RayObject)) return (RayObject)selected;
+                    return null;
+                }
+                set
+                {
+                    if (value == null) return;
+                    selected = value;
+
+                    Type = typeof(RayObject);
+                    Transform = value.transform;
+                    Empty = false;
+                }
+            }
+
             /// <summary>
             /// A selection is empty if an object is selected that has no <see cref="RTCamera"/>, <see cref="RTLight"/>
             /// or <see cref="RTMesh"/> component attached. <see cref="Transform"/> does not have to be <c>null</c> for
@@ -223,7 +242,14 @@ namespace _Project.Ray_Tracer.Scripts
                 selection.Mesh.Outline.enabled = true;
                 previousTransform = newSelection;
             }
-            
+            else if (selection.Type == typeof(RayObject))
+            {
+                ControlPanel.ShowAlgorithmProperties(selection.Ray);
+                selection.Ray.Outline.OutlineColor = SelectionColor;
+                selection.Ray.Outline.enabled = true;
+                previousTransform = newSelection;
+            }
+
             transformHandle.target = selection.Transform;
             SetHandleType(transformHandle.type);
             transformHandle.gameObject.SetActive(true);
@@ -252,6 +278,8 @@ namespace _Project.Ray_Tracer.Scripts
                 selection.Light.ResetHighlight();
             else if (selection.Type == typeof(RTMesh))
                 selection.Mesh.Outline.enabled = false;
+            else if (selection.Type == typeof(RayObject))
+                selection.Ray.Outline.enabled = false;
 
             selection = new Selection();
 
@@ -269,6 +297,7 @@ namespace _Project.Ray_Tracer.Scripts
             if (!deleteAllowed) return;
             if (selection.Empty) return;
             if (selection.Type == typeof(RTCamera)) return; // Cameras can't be deleted, there must always be a camera.
+            if (selection.Type == typeof(RayObject)) return;
 
             // delete the object in our database
             if (selection.Type == typeof(RTLight))
@@ -311,7 +340,7 @@ namespace _Project.Ray_Tracer.Scripts
                     mesh = Instantiate(capsulePrefab);
                     break;
                 case ObjectType.Goat:
-                     mesh = Instantiate(goatPrefab);
+                    mesh = Instantiate(goatPrefab);
                     break;
                 case ObjectType.Prism:
                     mesh = Instantiate(prismPrefab);
@@ -358,7 +387,10 @@ namespace _Project.Ray_Tracer.Scripts
             
             result.Mesh = selection.GetComponent<RTMesh>();
             if (!result.Empty) return result;
-            
+
+            result.Ray = selection.GetComponent<RayObject>();
+            if (!result.Empty) return result;
+
             return result;
         }
         
@@ -406,6 +438,16 @@ namespace _Project.Ray_Tracer.Scripts
                     Select(Scene.Camera.transform);
                     break;
                 case ControlPanel.SignalType.Object:
+                    if (previousTransform != null)
+                        Select(previousTransform);
+                    else
+                    {
+                        Deselect();
+                        ControlPanel.ShowEmptyProperties();
+                    }
+                    break;
+                case ControlPanel.SignalType.Algorithm:
+                    Debug.Log("in algo type :)");
                     if (previousTransform != null)
                         Select(previousTransform);
                     else
