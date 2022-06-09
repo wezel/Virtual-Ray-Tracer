@@ -45,12 +45,12 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Point_Light
 
         private void LateUpdate()
         {
-            #if UNITY_EDITOR
+#if UNITY_EDITOR
                 if(!Application.isPlaying) return;
-            #endif
+#endif
             // Make the label face the camera. We do this in LateUpdate to make sure the camera has finished its moving.
             // From: https://answers.unity.com/questions/52656/how-i-can-create-an-sprite-that-always-look-at-the.html
-            canvas.transform.forward = Camera.main.transform.forward;
+            canvas.transform.forward = (Camera.main.transform.position - Position).normalized;
         }
 
 #if UNITY_EDITOR
@@ -60,7 +60,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Point_Light
             // Fix maximize window errors
             if (UnityEditor.SceneView.lastActiveSceneView == null) 
                 return;
-            canvas.transform.forward = UnityEditor.SceneView.lastActiveSceneView.camera.transform.forward;
+            canvas.transform.forward = (UnityEditor.SceneView.lastActiveSceneView.camera.transform.position - Position).normalized; ;
         }
 #endif
         
