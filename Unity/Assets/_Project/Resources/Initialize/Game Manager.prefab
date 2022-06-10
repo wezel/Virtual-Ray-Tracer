@@ -693,7 +693,7 @@ MonoBehaviour:
       name: Light Attenuation
       description: 'To make lighting look even more realistic, lights can be attenuated.
         There are two types of attenuation in this program: angle attenuation and
-        light-distance attenuation. As this changed the light''s intensity, lights
+        light-distance attenuation. As this changes the light''s intensity, lights
         now also have a "Light intensity" setting.'
       skippable: 1
       points: 0
@@ -722,7 +722,7 @@ MonoBehaviour:
     - identifier: lightIntensity
       name: Light Intensity
       description: Light's now also have an intensity setting. This determines how
-        bright a light is. A bright light can still illuminate object from a for
+        bright a light is. A bright light can still illuminate object from a far
         distance, a dull light will not. See for yourself by changing the "Intensity"
         setting of the spot light.
       skippable: 0
@@ -753,9 +753,10 @@ MonoBehaviour:
     - identifier: 
       name: Area Light Sampling
       description: 'But it''s extremely difficult to determine how much of the area
-        is visible from a certain point. To approximate that, we use an approach
-        called ''sampling'': We take some random points on the area light and use
-        that to approximate how much of the area is visible. '
+        is visible from a certain point. To approximate that, we use  ''sampling'':
+        We take random ''sample'' points on the area light and use that to approximate
+        the area light''s contribution. We trace each sample point like we trace
+        a spot light and then average the results.'
       skippable: 1
       points: 52
     - identifier: lightSamplesChange
