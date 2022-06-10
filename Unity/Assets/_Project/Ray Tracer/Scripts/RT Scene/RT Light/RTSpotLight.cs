@@ -80,16 +80,26 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Spot_Light
             base.Awake();
         }
 
+        /// <summary>
+        /// Make the label face the camera / user.
+        /// Only rotate the canvas towards the camera in the z rotation.
+        /// </summary>
+        /// <param name="CameraPos"> Position of the Camera </param>
+        private void RotateCanvas(Vector3 CameraPos)
+        {
+            var dir = Vector3.ProjectOnPlane(CameraPos - Position, transform.forward).normalized;
+            canvas.transform.rotation = Quaternion.LookRotation(transform.forward, dir);
+            canvas.transform.localEulerAngles = new Vector3(0, 0, canvas.transform.localEulerAngles.z + 90);
+        }
+
         private void LateUpdate()
         {
 #if UNITY_EDITOR
-            if (!Application.isPlaying) return;
+            if (!Application.isPlaying)
+                return;
 #endif
-            // Make the label face the camera. We do this in LateUpdate to make sure the camera has finished its moving.
-            // Only rotate the canvas towards the camera in the z rotation.
-            var dir = Vector3.ProjectOnPlane(Camera.main.transform.position - Position, transform.forward).normalized;
-            canvas.transform.rotation = Quaternion.LookRotation(transform.forward, dir);
-            canvas.transform.localEulerAngles = new Vector3(0, 0, canvas.transform.localEulerAngles.z + 90);
+            // We do this in LateUpdate to make sure the camera has finished its moving.
+            RotateCanvas(Camera.main.transform.position);
         }
 
 #if UNITY_EDITOR
@@ -98,10 +108,8 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Spot_Light
             // Fix maximize window errors
             if (UnityEditor.SceneView.lastActiveSceneView == null)
                 return;
-            // Only rotate the canvas towards the camera in the z rotation.
-            canvas.transform.rotation = Quaternion.LookRotation(transform.forward,
-                Vector3.ProjectOnPlane(UnityEditor.SceneView.lastActiveSceneView.camera.transform.position - Position, transform.forward).normalized);
-            canvas.transform.localEulerAngles = new Vector3(0, 0, canvas.transform.localEulerAngles.z + 90);
+            // Rotate the canvas to the user
+            RotateCanvas(UnityEditor.SceneView.lastActiveSceneView.camera.transform.position);
         }
 #endif
     }

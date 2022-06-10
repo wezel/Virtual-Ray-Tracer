@@ -60,7 +60,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Point_Light
             // Fix maximize window errors
             if (UnityEditor.SceneView.lastActiveSceneView == null) 
                 return;
-            canvas.transform.forward = (UnityEditor.SceneView.lastActiveSceneView.camera.transform.position - Position).normalized; ;
+            canvas.transform.forward = (UnityEditor.SceneView.lastActiveSceneView.camera.transform.position - Position).normalized;
         }
 #endif
         
