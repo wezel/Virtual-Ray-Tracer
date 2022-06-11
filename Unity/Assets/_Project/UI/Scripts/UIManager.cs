@@ -124,7 +124,11 @@ namespace _Project.UI.Scripts
             {
                 if (Input.GetKeyDown(KeyCode.Escape) && !areThereEscapables)
                     mainMenu.Show();
+#if UNITY_WEBGL
+                if (Input.GetKeyDown(KeyCode.H))
+#else
                 if (Input.GetKeyDown(KeyCode.F1))
+#endif
                     helpPanel.Toggle();
 
                 if (Input.GetKeyDown(KeyCode.F2))
