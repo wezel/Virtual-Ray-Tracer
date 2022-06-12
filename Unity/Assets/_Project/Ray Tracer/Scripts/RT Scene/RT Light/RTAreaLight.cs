@@ -45,6 +45,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
                 if (value < 0 || value > 64) return;
                 spotAttenuationPower = value;
                 UpdateLightData();
+                OnLightChangedInvoke();
             }
         }
 
