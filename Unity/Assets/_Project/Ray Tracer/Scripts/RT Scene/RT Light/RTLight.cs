@@ -9,7 +9,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
     /// Base class of the RTLights
     /// </summary>
     [ExecuteAlways]
-    public class RTLight : MonoBehaviour
+    public abstract class RTLight : MonoBehaviour
     {
         /// <summary>
         /// This function encodes the color data. By encoding the color data we have extra room to send other data to
