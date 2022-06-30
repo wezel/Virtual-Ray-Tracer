@@ -120,9 +120,17 @@ namespace _Project.UI.Scripts.Render_Image_Window
         /// </summary>
         public void Hide()
         {
+            if (loading.gameObject.activeSelf)
+            {
+                loading.gameObject.SetActive(false);
+                progressBar.gameObject.SetActive(false);
+                empty.gameObject.SetActive(true);
+            }
+
             UIManager.Get().DisableBlocker();
             UIManager.Get().RemoveEscapable(closeButton.onClick.Invoke);
             gameObject.SetActive(false);
+
         }
 
         /// <summary>

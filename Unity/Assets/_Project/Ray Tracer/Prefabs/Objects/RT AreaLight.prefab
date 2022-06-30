@@ -241,17 +241,36 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   color: {r: 1, g: 1, b: 1, a: 1}
-  intensity: 10
+  intensity: 1
   ambient: 0
   diffuse: 1
   specular: 1
   lightDistanceAttenuation: 1
+  OnLightSelected:
+    m_PersistentCalls:
+      m_Calls: []
+  OnLightChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnLightColorChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDistAttenuationChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnIntensityChanged:
+    m_PersistentCalls:
+      m_Calls: []
   Type: 2
   label: {fileID: 9142056303369678339}
   outline: {fileID: 5935705926004890677}
   canvas: {fileID: 551413664047874153}
+  spotAttenuationPower: 1
   lightSamples: 4
   spotLightPrefab: {fileID: 8750512382897571081, guid: 5d98d613692e89440adcaefe45055b31, type: 3}
+  onLightSampleChanged:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!222 &8661944374056115377
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -332,7 +351,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

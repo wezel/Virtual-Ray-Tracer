@@ -699,10 +699,11 @@ MonoBehaviour:
       points: 0
     - identifier: lightDistAtten
       name: Light-Distance Attenuation
-      description: Light-distance attenuation can be toggled on/off per light in
-        this program. This will also change the intensity as the distance has a big
-        impact. Check it out by disabling and enabling the spot light's "Distance
-        Attenuation"!
+      description: Light-distance attenuation can be toggled on/off per light. Light
+        decreases in intensity when it travels further because it covers a bigger
+        area. A light close to an object only illuminates a small section, but if
+        it is furher away is illuminates a bigger section. Check it out by disabling
+        /enabling the spot light's "Distance Attenuation"!
       skippable: 0
       points: 89
     - identifier: angleAtten

@@ -143,7 +143,7 @@ Shader "Custom/LightShader"
                 if (lightDistanceAttenuation)
                 {
                     float distance = length(vertexToLightSource);
-                    result /= 0.4 + 1 * distance + 0.6 * (distance * distance);
+                    result /= 0.04 + 0.1 * distance + 0.06 * (distance * distance);
                 }
 
                 float attenuation = SHADOW_ATTENUATION(input); // Will be 1.0 for no shadow and 0.0 for full shadow.

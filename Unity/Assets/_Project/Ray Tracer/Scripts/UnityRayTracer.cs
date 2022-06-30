@@ -456,7 +456,7 @@ namespace _Project.Ray_Tracer.Scripts
 
             // Light distance attenuation
             if (light.LightDistanceAttenuation)
-                color /= 0.4f + 1f * lightDistance + 0.6f * (lightDistance * lightDistance);
+                color /= 0.04f + 0.1f * lightDistance + 0.06f * (lightDistance * lightDistance);
 
             // Spotlight attenuation
             if (light.Type != RTLight.RTLightType.Point)
@@ -671,7 +671,7 @@ namespace _Project.Ray_Tracer.Scripts
 
             // Light distance attenuation
             if (light.LightDistanceAttenuation)
-                color /= 0.4f + 1f * lightDistance + 0.6f * (lightDistance * lightDistance);
+                color /= 0.04f + 0.1f * lightDistance + 0.06f * (lightDistance * lightDistance);
 
             // Spotlight attenuation
             if (light.Type != RTLight.RTLightType.Point)

@@ -162,6 +162,7 @@ namespace _Project.UI.Scripts.Control_Panel
             light.Rotation = rotation;  
             light.Scale = scale;
             light.Color = color;
+            light.Intensity = intensity;
             light.Ambient = ambient;
             light.Diffuse = diffuse;
             light.Specular = specular;
@@ -169,7 +170,6 @@ namespace _Project.UI.Scripts.Control_Panel
             light.SpotAttenuationPower = spotAttenuationPower;
             light.LightSamples = lightSamples;
             light.LightDistanceAttenuation = distanceAttenuation;
-            light.Intensity = intensity; // Set intensity after setting distanceAttenuation
             light.UpdateLightData(); // Call this explicitly in case all of the above are the same as prefab
 
             manager.Scene.AddLight(light);

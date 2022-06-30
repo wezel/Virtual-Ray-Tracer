@@ -47,11 +47,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   color: {r: 1, g: 1, b: 1, a: 1}
-  intensity: 10
+  intensity: 1
   ambient: 0
   diffuse: 1
   specular: 1
   lightDistanceAttenuation: 1
+  OnLightSelected:
+    m_PersistentCalls:
+      m_Calls: []
+  OnLightChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnLightColorChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDistAttenuationChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnIntensityChanged:
+    m_PersistentCalls:
+      m_Calls: []
   Type: 0
   label: {fileID: 4415559385507083291}
   outline: {fileID: 2936163527658708494}
@@ -159,7 +174,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3904491717560610861}
-  m_LocalRotation: {x: 0.07503924, y: -0.67444396, z: 0.06921138, w: 0.7312347}
+  m_LocalRotation: {x: -0.00011760039, y: 0.99986523, z: 0.014163363, w: 0.008302022}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.001, y: 0.001, z: 0.001}
   m_Children:
