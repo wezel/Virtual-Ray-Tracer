@@ -50,7 +50,7 @@ MonoBehaviour:
     tasks:
     - identifier: 
       name: Introduction
-      description: Welcome to the Virtual Ray Tracer! These tutorial tasks will guide
+      description: Welcome to Virtual Ray Tracer! These tutorial tasks will guide
         you through the program. Below this text, a progress bar is shown, which
         displays your progress in the current level.  There are 11 levels in total.
         Press the button to the right of the progress bar to continue to the next
@@ -863,7 +863,9 @@ MonoBehaviour:
       points: 410
     - identifier: 
       name: 
-      description: You are now able to create your own custom scenes. Go crazy!
+      description: You are now able to create your own custom scenes. Go crazy! If
+        you would like to use Virtual Ray Tracer again but without any restrictions,
+        you can enable "Cheat Mode" in the settings.
       skippable: 0
       points: 0
   Badges:
@@ -872,7 +874,7 @@ MonoBehaviour:
     badgeDescription: Play with the Virtual Ray Tracer for 3 minutes
     actionTotal: 3
   - type: 1
-    badgeName: Addicted
+    badgeName: Expert
     badgeDescription: Play with the Virtual Ray Tracer for 30 minutes
     actionTotal: 30
   - type: 0
