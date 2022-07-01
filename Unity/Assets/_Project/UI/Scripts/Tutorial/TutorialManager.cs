@@ -237,8 +237,6 @@ namespace _Project.UI.Scripts.Tutorial
         /// </summary>
         private void Start()
         {
-            lastScene = SceneManager.sceneCountInBuildSettings - 1;
-            currentScene = SceneManager.GetActiveScene().buildIndex;
             originalSize = contents.GetComponent<RectTransform>().sizeDelta;
             expandCollapseButton.onClick.AddListener(ExpandCollapse);
             
@@ -252,6 +250,8 @@ namespace _Project.UI.Scripts.Tutorial
 
         private void Awake()
         {
+            lastScene = SceneManager.sceneCountInBuildSettings - 1;
+            currentScene = SceneManager.GetActiveScene().buildIndex;
             instance = this;
         }
     }
