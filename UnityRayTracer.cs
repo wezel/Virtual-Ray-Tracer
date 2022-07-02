@@ -26,7 +26,7 @@ namespace _Project.Ray_Tracer.Scripts
         [SerializeField]
         public GameObject acceleratedObject;
         /// <summary>
-        /// The game object that is used in the AABB and Octree levels.
+        /// The game object that is used in the AABB and OctreeRoot levels.
         /// </summary>
         /// 
         [SerializeField]
@@ -37,7 +37,14 @@ namespace _Project.Ray_Tracer.Scripts
         ///
 
         [SerializeField]
-        public TextMeshProUGUI hitTestsSaved;
+        public TextMeshProUGUI raysIgnored;
+        /// <summary>
+        /// Text to display amount of rays ignored
+        /// </summary>
+        ///
+
+        [SerializeField]
+        public TextMeshProUGUI trianglesIgnored;
         /// <summary>
         /// Text to display amount of hit tests saved
         /// </summary>
@@ -48,6 +55,14 @@ namespace _Project.Ray_Tracer.Scripts
         /// <summary>
         /// Number of hit tests saved / rays ignored 
         /// </summary>
+        /// 
+
+        [SerializeField]
+        int totalTriangles = 0;
+        /// <summary>
+        /// Number of total triangles in mesh
+        /// </summary>
+        /// 
 
         [SerializeField]
         private float epsilon = 0.001f;
@@ -245,6 +260,24 @@ namespace _Project.Ray_Tracer.Scripts
         /// <returns> The list of ray trees that were traced to render the image. </returns>
         public List<TreeNode<RTRay>> Render()
         {
+            bool accelerationAABB = false;
+            AABB aabb = null;
+            bool accelerationOctree = false;
+            Octree createOctree = null;
+            if (acceleratedObject)
+            {
+                if (aabb = acceleratedObject.GetComponent<AABB>())
+                {
+                    accelerationAABB = true;
+                }
+
+                if (createOctree = acceleratedObject.GetComponent<Octree>())
+                {
+                    accelerationOctree = true;
+                }
+            }
+            trianglesNotIgnored = 0;
+
             List<TreeNode<RTRay>> rayTrees = new List<TreeNode<RTRay>>();
             scene = rtSceneManager.Scene;
             camera = scene.Camera;
@@ -259,6 +292,7 @@ namespace _Project.Ray_Tracer.Scripts
             Vector3 origin = camera.transform.position;
 
             // Trace a ray for each pixel. 
+            octreeStatusFlag = false;
             for (int y = 0; y < height; ++y)
             {
                 for (int x = 0; x < width; ++x)
@@ -280,12 +314,15 @@ namespace _Project.Ray_Tracer.Scripts
                     TreeNode<RTRay> rayTree;
                     if (acceleratedObject)
                     {
-                        if (acceleratedObject.GetComponent<AABB>())
+                        if (accelerationAABB)
                         {
                             rayTree = TraceAABB(origin + pixel, pixel / pixelDistance, MaxDepth, RTRay.RayType.Normal); // AABB
+                        } else if (accelerationOctree)
+                        {
+                            rayTree = TraceOctree(origin + pixel, pixel / pixelDistance, MaxDepth, RTRay.RayType.Normal); // OctreeRoot
                         } else
                         {
-                            rayTree = Trace(origin + pixel, pixel / pixelDistance, MaxDepth, RTRay.RayType.Normal); // Octree
+                            rayTree = Trace(origin + pixel, pixel / pixelDistance, MaxDepth, RTRay.RayType.Normal); // Default
                         }
 
                     } else rayTree = Trace(origin + pixel,
@@ -298,7 +335,8 @@ namespace _Project.Ray_Tracer.Scripts
                     rayTrees.Add(rayTree);
                 }
             }
-
+            if (accelerationOctree)
+                trianglesIgnored.text = (totalTriangles - trianglesNotIgnored).ToString() + " triangles ignored\n" + trianglesNotIgnored.ToString() + " triangles ray traced";
             return rayTrees;
         }
 
@@ -325,22 +363,142 @@ namespace _Project.Ray_Tracer.Scripts
             
             // Hit AABB, so check for intersection with object itself
             bool intersected = Physics.Raycast(origin, direction, out hit, Mathf.Infinity, rayTracerLayer);
-
+            
             Vector3 point = raycast.origin + raycast.direction * distance;
             // Tell AABB script to draw the hit point.
             aabb.hitpoint = point;
             aabb.drawHitpoint = true;
 
             // If we did not hit the object itself we return a no hit ray whose result color is black.
-            accelerationStatus.color = Color.red;
+            
             if (!intersected)
             {
-                accelerationStatus.text = "Ray hits AABB! No acceleration.";
+                accelerationStatus.color = Color.red;
+                accelerationStatus.text = "Ray hits AABB but misses object! No acceleration.";
                 rayTree.Data = new RTRay(origin, direction, Mathf.Infinity, BackgroundColor, RTRay.RayType.NoHit);
                 return rayTree;
             } else
             {
-                accelerationStatus.text = "Ray hits AABB and the object! No acceleration.";
+                accelerationStatus.color = Color.green;
+                accelerationStatus.text = "Ray hits AABB and the object!";
+            }
+
+            RTMesh mesh = hit.transform.GetComponent<RTMesh>();
+            HitInfo hitInfo = new HitInfo(ref hit, ref direction, ref mesh);
+
+            // Add the ambient component once, regardless of the number of lights.
+            Color color = hitInfo.Ambient * hitInfo.Color;
+
+            // Add diffuse and specular components.
+            foreach (RTLight light in scene.Lights)
+            {
+                Vector3 lightVector = (light.transform.position - hit.point).normalized;
+
+                if (Vector3.Dot(hitInfo.Normal, lightVector) >= 0.0f)
+                    rayTree.AddChild(TraceLight(ref lightVector, light, in hitInfo));
+            }
+
+            // Cast reflection and refraction rays.
+            if (depth > 0)
+            {
+                var newRays = TraceReflectionAndRefraction(depth, hitInfo);
+                foreach (var ray in newRays)
+                    rayTree.AddChild(ray);
+            }
+
+            // Add the child ray colors to the parent ray.
+            foreach (var child in rayTree.Children)
+                color += child.Data.Color;
+
+            rayTree.Data = new RTRay(origin, direction, hit.distance, ClampColor(color), type);
+            return rayTree;
+        }
+
+
+        private bool octreeStatusFlag = false;
+        private int trianglesNotIgnored = 0;
+        private void IntersectOctreeNode(OctreeNode node, Ray ray)
+        {
+            // Assume we never hit a node with triangles
+            
+            if (node.children != null)
+            {
+                for (int i = 0; i < 8; i++)
+                {
+                    if (node.children[i] != null)
+                    {
+                        if (node.children[i].nodeBounds.IntersectRay(ray))
+                        {
+                            if (node.children[i].containedTriangles.Count != 0)
+                            {
+                                octreeStatusFlag = true; // hit a node with triangles, so set flag to true
+                                trianglesNotIgnored += node.children[i].containedTriangles.Count; // Keep track of non-ignored triangles
+
+
+                            }
+                            IntersectOctreeNode(node.children[i], ray);
+                        }
+                    }
+                }
+            }
+            
+            
+        }
+
+        private TreeNode<RTRay> TraceOctree(Vector3 origin, Vector3 direction, int depth, RTRay.RayType type)
+        {
+            RaycastHit hit;
+
+            TreeNode<RTRay> rayTree = new TreeNode<RTRay>(new RTRay());
+            OctreeNode ot = acceleratedObject.GetComponent<Octree>().octreeRoot.rootNode;
+            
+            float distance;
+            Ray raycast = new Ray(origin, direction);
+
+            // Check root node intersection
+            if (!ot.nodeBounds.IntersectRay(raycast, out distance))
+            {
+                accelerationStatus.color = Color.green;
+                accelerationStatus.text = "Ray misses Octree! We can safely ignore this ray to accelerate.";
+                rayTree.Data = new RTRay(origin, direction, Mathf.Infinity, BackgroundColor, RTRay.RayType.NoHit);
+                return rayTree;
+            } else
+            {
+                // Hit octree root, so check childs. If at any point a node that contains triangles is hit, we do not ignore this ray.
+                if (ot.children != null)
+                {
+                    for (int i = 0; i < 8; i++)
+                    {
+                        if (ot.children[i] != null)
+                            IntersectOctreeNode(ot.children[i], raycast);
+                    }
+                }
+            }
+
+            accelerationStatus.color = Color.green;
+            // If flag is false, it means we never hit a node with triangles, so we can ignore ray to accelerate :(
+            if (!octreeStatusFlag)
+            {
+                accelerationStatus.text = "Ray does not hit any node with triangles! We can ignore it.";
+                rayTree.Data = new RTRay(origin, direction, Mathf.Infinity, BackgroundColor, RTRay.RayType.NoHit);
+                return rayTree;
+            } else
+            {
+                accelerationStatus.text = "Ray hits node(s) with triangles in it! We can not ignore it.";
+            }
+            
+            // Hit OctreeRoot, so check for intersection with object itself
+            bool intersected = Physics.Raycast(origin, direction, out hit, Mathf.Infinity, rayTracerLayer);
+
+            if (!intersected)
+            {
+                accelerationStatus.text = "Ray hits node(s) with triangles in it but misses mesh! Still accelerated because we only need to check for the triangles within the node(s).";
+                rayTree.Data = new RTRay(origin, direction, Mathf.Infinity, BackgroundColor, RTRay.RayType.NoHit);
+                return rayTree;
+            }
+            else
+            {
+                accelerationStatus.text = "Ray hits Octree and the triangles in a node! Accelerated!";
             }
 
             RTMesh mesh = hit.transform.GetComponent<RTMesh>();
@@ -508,7 +666,8 @@ namespace _Project.Ray_Tracer.Scripts
             bool accelerationAABB = false;
             AABB aabb = null;
             bool accelerationOctree = false;
-            CreateOctree createOctree = null;
+            Octree createOctree = null;
+            OctreeNode octreeRoot = null;
             if (acceleratedObject)
             {
                 if (aabb = acceleratedObject.GetComponent<AABB>())
@@ -516,12 +675,13 @@ namespace _Project.Ray_Tracer.Scripts
                     accelerationAABB = true;
                 }
 
-                if (createOctree = acceleratedObject.GetComponent<CreateOctree>())
+                if (createOctree = acceleratedObject.GetComponent<Octree>())
                 {
+                    octreeRoot = createOctree.octreeRoot.rootNode;
                     accelerationOctree = true;
                 }
             }
-            
+         
             scene = rtSceneManager.Scene;
             camera = scene.Camera;
             
@@ -546,7 +706,9 @@ namespace _Project.Ray_Tracer.Scripts
 
             float start = Time.realtimeSinceStartup;
 
+            octreeStatusFlag = false;
             savedAmount = 0;
+           
             // Trace a ray for each pixel.
             for (int y = 0; y < height; ++y)
             {
@@ -568,7 +730,8 @@ namespace _Project.Ray_Tracer.Scripts
                             pixel = camera.transform.rotation * pixel;
 
                             // Compensate for the location of the screen so we don't render objects that are behind the screen.
-                            if (accelerationAABB) color += TraceImageAABB(origin + pixel, pixel.normalized, MaxDepth, aabb);    
+                            if (accelerationAABB) color += TraceImageAABB(origin + pixel, pixel.normalized, MaxDepth, aabb);
+                            else if (accelerationOctree) color += TraceImageOctree(origin + pixel, pixel.normalized, MaxDepth, octreeRoot);
                             else color += TraceImage(origin + pixel, pixel.normalized, MaxDepth);
                         }
                     }
@@ -580,8 +743,8 @@ namespace _Project.Ray_Tracer.Scripts
                 }
             }
 
-            //Debug.Log((Time.realtimeSinceStartup - start)); // Time it took to render with ray tracing
-            hitTestsSaved.text = savedAmount.ToString();
+            Debug.Log("Time: " + (Time.realtimeSinceStartup - start)); // Time it took to render with ray tracing
+            if (accelerationAABB) raysIgnored.text = savedAmount.ToString();
             
             image.Apply(); // Very important.
 
@@ -613,6 +776,67 @@ namespace _Project.Ray_Tracer.Scripts
             if (!intersected)
             {
                 
+                return BackgroundColor;
+            }
+
+            RTMesh mesh = hit.transform.GetComponent<RTMesh>();
+            HitInfo hitInfo = new HitInfo(ref hit, ref direction, ref mesh);
+
+            // Add the ambient component once, regardless of the number of lights.
+            Color color = hitInfo.Ambient * hitInfo.Color;
+
+            // Add diffuse and specular components.
+            foreach (RTLight light in scene.Lights)
+            {
+                Vector3 lightVector = (light.transform.position - hit.point).normalized;
+
+                if (Vector3.Dot(hitInfo.Normal, lightVector) >= 0.0f)
+                    color += TraceLightImage(ref lightVector, light, in hitInfo);
+            }
+
+            // Cast reflection and refraction rays.
+            if (depth > 0)
+                color += TraceReflectionAndRefractionImage(depth, hitInfo);
+
+            return ClampColor(color);
+        }
+
+        private Color TraceImageOctree(Vector3 origin, Vector3 direction, int depth, OctreeNode ot)
+        {
+            RaycastHit hit;
+
+            Ray raycast = new Ray(origin, direction);
+
+            // Check root node intersection
+            if (!ot.nodeBounds.IntersectRay(raycast))
+            {
+                savedAmount++;
+                return BackgroundColor;
+            }
+            else
+            {
+                // Hit octree root, so check childs. If at any point a node that contains triangles is hit, we do not ignore this ray.
+                if (ot.children != null)
+                {
+                    for (int i = 0; i < 8; i++)
+                    {
+                        if (ot.children[i] != null)
+                            IntersectOctreeNode(ot.children[i], raycast);
+                    }
+                }
+            }
+
+            if (!octreeStatusFlag)
+            {
+                savedAmount++;
+                return BackgroundColor;
+            }
+       
+            bool intersected = Physics.Raycast(origin, direction, out hit, Mathf.Infinity, rayTracerLayer);
+
+            // If we did not hit anything we return the background color.
+            if (!intersected)
+            {
                 return BackgroundColor;
             }
 
@@ -755,6 +979,8 @@ namespace _Project.Ray_Tracer.Scripts
         {
             instance = this;
             rayTracerLayer = LayerMask.GetMask("Ray Tracer Objects");
+            if (acceleratedObject)
+                totalTriangles = acceleratedObject.GetComponent<MeshFilter>().mesh.triangles.Length/3;
         }
 
         private void Start()
