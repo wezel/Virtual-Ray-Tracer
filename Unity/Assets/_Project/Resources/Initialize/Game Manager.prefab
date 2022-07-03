@@ -521,8 +521,8 @@ MonoBehaviour:
       skippable: 0
       points: 110
     - identifier: colorContribution
-      name: Contribution Based Color
-      description: Lastly, by enabling "Contribution Based Ray Color" the ray's color
+      name: Contribution-Based Color
+      description: Lastly, by enabling "Contribution-Based Ray Color" the ray's color
         will not represent its type, but the color it adds to the pixel color. Check
         it out!
       skippable: 0
