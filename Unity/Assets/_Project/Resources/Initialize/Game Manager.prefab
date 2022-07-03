@@ -669,8 +669,8 @@ MonoBehaviour:
     - identifier: 
       name: Advanced Lighting - Spot Lights
       description: So far, the only type of light source has been the point light
-        source. However, not all lights can be approximated by point light sources.
-        Therefore we will introduce 2 more types of light sources, starting with
+        source. However, not all light sources can be approximated by point light
+        sources. Therefore we introduce 2 more types of light sources, starting with
         the Spot Light!
       skippable: 1
       points: 42
@@ -678,15 +678,15 @@ MonoBehaviour:
       name: Spot Light
       description: A spot light is similar to a point light in that light comes from
         a single point, but this time it also has a direction and a "Spot Angle".
-        Select the spot light.
+        It works very much like a flashlisht. Select the spot light.
       skippable: 0
       points: 68
     - identifier: spotAngleChange
       name: Spot Light Angle
       description: The spot light's angle can be changed in the light's properties.
-        It works like a flash light. The angle defines how wide the cone of the light
-        is, and the light's direction specifies where the light points towards. Try
-        changing the light's "Spot Angle" and see for yourself!
+        The angle defines how wide the cone of the light is, and the light's direction
+        specifies where the light points towards. Try changing the light's "Spot
+        Angle" and see for yourself!
       skippable: 0
       points: 145
     - identifier: 
@@ -709,7 +709,7 @@ MonoBehaviour:
     - identifier: angleAtten
       name: Angle Attenuation
       description: Angle attenuation occurs when the light is not directly looking
-        at a point, but at an angle. Just like a flash light, the point it shines
+        at a point, but at an angle. Just like a flashlight, the point it shines
         at is the brightest. The light needs to have a direction, so it does not
         apply to point lights. You can change how strong a spot (or area) light is
         attenuated per light with the "Angle Attenuation" slider. Try it!
