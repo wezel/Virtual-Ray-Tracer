@@ -22,7 +22,6 @@ public class AABB : MonoBehaviour
         if (transform.hasChanged)
         {
             bounds = meshRenderer.bounds;
-            
         }
         if (!drawAABB)
         {

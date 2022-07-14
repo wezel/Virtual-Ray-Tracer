@@ -69,6 +69,10 @@ namespace _Project.Ray_Tracer.Scripts
         /// <summary>
         /// A small floating point value used to prevent shadow acne.
         /// </summary>
+        /// 
+
+        private int trianglesTests = 0;
+
         public float Epsilon
         {
             get { return epsilon; }
@@ -292,7 +296,7 @@ namespace _Project.Ray_Tracer.Scripts
             Vector3 origin = camera.transform.position;
 
             // Trace a ray for each pixel. 
-            octreeStatusFlag = false;
+            
             for (int y = 0; y < height; ++y)
             {
                 for (int x = 0; x < width; ++x)
@@ -309,7 +313,7 @@ namespace _Project.Ray_Tracer.Scripts
                     // for the length of the returned RTRay. Since we have this factor we also use it to normalize this
                     // vector to make the code more efficient.
                     float pixelDistance = pixel.magnitude;
-
+                    
                     // Compensate for the location of the screen so we don't render objects that are behind the screen.
                     TreeNode<RTRay> rayTree;
                     if (acceleratedObject)
@@ -335,6 +339,7 @@ namespace _Project.Ray_Tracer.Scripts
                     rayTrees.Add(rayTree);
                 }
             }
+            
             if (accelerationOctree)
                 trianglesIgnored.text = (totalTriangles - trianglesNotIgnored).ToString() + " triangles ignored\n" + trianglesNotIgnored.ToString() + " triangles ray traced";
             return rayTrees;
@@ -353,7 +358,7 @@ namespace _Project.Ray_Tracer.Scripts
             if (!bounds.IntersectRay(raycast, out distance))
             {
                 accelerationStatus.color = Color.green;
-                accelerationStatus.text = "Ray misses AABB! We can safely ignore this ray to accelerate.";
+                accelerationStatus.text = "Ray misses AABB! We accelerate by ignoring this ray";
                 aabb.drawHitpoint = false; // Tell AABB script to not draw the hit point
                 rayTree.Data = new RTRay(origin, direction, Mathf.Infinity, BackgroundColor, RTRay.RayType.NoHit);
                 return rayTree;
@@ -374,13 +379,13 @@ namespace _Project.Ray_Tracer.Scripts
             if (!intersected)
             {
                 accelerationStatus.color = Color.red;
-                accelerationStatus.text = "Ray hits AABB but misses object! No acceleration.";
+                accelerationStatus.text = "Ray hits AABB but misses object! Ray is not ignored.";
                 rayTree.Data = new RTRay(origin, direction, Mathf.Infinity, BackgroundColor, RTRay.RayType.NoHit);
                 return rayTree;
             } else
             {
-                accelerationStatus.color = Color.green;
-                accelerationStatus.text = "Ray hits AABB and the object!";
+                accelerationStatus.color = Color.red;
+                accelerationStatus.text = "Ray hits AABB and the object! Ray is not ignored.";
             }
 
             RTMesh mesh = hit.transform.GetComponent<RTMesh>();
@@ -431,20 +436,25 @@ namespace _Project.Ray_Tracer.Scripts
                         {
                             if (node.children[i].containedTriangles.Count != 0)
                             {
+                                trianglesTests += node.children[i].containedTriangles.Count;
                                 octreeStatusFlag = true; // hit a node with triangles, so set flag to true
                                 trianglesNotIgnored += node.children[i].containedTriangles.Count; // Keep track of non-ignored triangles
-
-
+                                // node.children[i].containedTriangles should be ray traced. With Physics.Raycast this is not feasible to filter.
+                                // For further work, this is where the acceleration of focusing only on these triangles in the mesh should occur.
+                                // Workarounds:
+                                // Mesh could be edited to only contain these triangles, then reverted back to original after rendering
+                                // A new RTMesh could be created, and the original RTMesh could be disabled while ray tracing
+                                // Physics.Raycast could be replaced with manual ray cast calculations between ray - triangles
                             }
                             IntersectOctreeNode(node.children[i], ray);
                         }
                     }
                 }
             }
-            
-            
+            return;
         }
 
+      
         private TreeNode<RTRay> TraceOctree(Vector3 origin, Vector3 direction, int depth, RTRay.RayType type)
         {
             RaycastHit hit;
@@ -681,7 +691,7 @@ namespace _Project.Ray_Tracer.Scripts
                     accelerationOctree = true;
                 }
             }
-         
+            trianglesTests = 0;
             scene = rtSceneManager.Scene;
             camera = scene.Camera;
             
@@ -708,7 +718,7 @@ namespace _Project.Ray_Tracer.Scripts
 
             octreeStatusFlag = false;
             savedAmount = 0;
-           
+          
             // Trace a ray for each pixel.
             for (int y = 0; y < height; ++y)
             {
@@ -728,7 +738,7 @@ namespace _Project.Ray_Tracer.Scripts
                             // Create and rotate the pixel location. Note that the camera looks along the positive z-axis.
                             Vector3 pixel = new Vector3(-halfScreenWidth + difX, -halfScreenHeight + difY, camera.ScreenDistance); 
                             pixel = camera.transform.rotation * pixel;
-
+                            
                             // Compensate for the location of the screen so we don't render objects that are behind the screen.
                             if (accelerationAABB) color += TraceImageAABB(origin + pixel, pixel.normalized, MaxDepth, aabb);
                             else if (accelerationOctree) color += TraceImageOctree(origin + pixel, pixel.normalized, MaxDepth, octreeRoot);
@@ -742,7 +752,7 @@ namespace _Project.Ray_Tracer.Scripts
                     image.SetPixel(x, y, ClampColor(color));
                 }
             }
-
+            Debug.Log("Triangle tests: " + trianglesTests);
             Debug.Log("Time: " + (Time.realtimeSinceStartup - start)); // Time it took to render with ray tracing
             if (accelerationAABB) raysIgnored.text = savedAmount.ToString();
             

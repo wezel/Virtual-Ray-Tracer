@@ -2,47 +2,94 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Octree
+/// <summary>
+/// An Octree component for an object who has MeshFilter and MeshRenderer components.
+/// MonoBehaviour enabled in order to draw it in the scene
+/// </summary>
+public class Octree : MonoBehaviour
 {
-    public OctreeNode rootNode;
 
-    public Bounds bounds;
+    public OctreeRoot octreeRoot; 
+    /// <summary>
+    /// Root node of this Octree
+    /// </summary>
 
- 
-    public Octree(GameObject obj, float minNodeSize)
+    public int maxDepth = 3;
+    /// <summary>
+    /// Max subdivision depth of this Octree
+    /// 3-4 works well overall
+    /// </summary>
+
+    private bool drawOctree = true;
+    /// <summary>
+    /// Boolean flag for drawing or hiding the Octree from UI
+    /// </summary>
+    /// 
+
+    void Start()
     {
-        // Get the axis aligned bounding box from mesh renderer component
-        bounds = obj.GetComponent<MeshRenderer>().bounds;
-
-        // Force the bounding box into a cube (equal sides) by getting the longest side
-        float maxSize = Mathf.Max(new float[] { bounds.size.x, bounds.size.y, bounds.size.z });
-        Vector3 sizeVector = new Vector3(maxSize, maxSize, maxSize) * 0.5f;
-        //Debug.Log("Center: " + bounds.center + ", Size: " + bounds.size);
-        bounds.SetMinMax(bounds.center - sizeVector, bounds.center + sizeVector);
-
-
-        rootNode = new OctreeNode(bounds, minNodeSize);
-        AddTriangles(obj);
+        // Initalize the Octree and draw
+        octreeRoot = new OctreeRoot(this.gameObject, maxDepth);
+        Draw(octreeRoot.rootNode);
     }
 
-    public void AddTriangles(GameObject obj)
+    /// <summary>
+    /// MonoBehaviour update function which runs every frame
+    /// We make sure to not recalculate the Octree each frame when not needed
+    /// </summary>
+    void Update()
     {
-        Mesh mesh = obj.GetComponent<MeshFilter>().sharedMesh;
-        int[] triangles = mesh.triangles;
-        Vector3[] vertices = mesh.vertices;
-        for (int i = 0; i < triangles.Length;)
+        // If drawing is not enabled, return
+        if (!drawOctree) return;
+        
+        Draw(octreeRoot.rootNode);
+
+        // Recalculate octree if transformed
+        if (transform.hasChanged)
+            octreeRoot = new OctreeRoot(this.gameObject, maxDepth);
+        
+    }
+
+    /// <summary>
+    /// Recursively draws an Octree given any node (root or any child)
+    /// When the root node is passed, it will draw the whole Octree
+    /// </summary>
+    /// <param name="node"></param>
+    public void Draw(OctreeNode node)
+    {
+        // Draw the current nodes Bounds using Popcron Gizmos package
+        // node: current node
+        // nodeBounds: Bounds of the node being drawn
+        Popcron.Gizmos.Bounds(node.nodeBounds, Color.green);
+        
+        // Recursively call Draw() on children
+        if (node.children != null)
         {
-            // Derive the triangle (in world space) and add it
-
-            // index i, i+1 and i+2 is the triangle vertices
-            Matrix4x4 localToWorld = obj.transform.localToWorldMatrix;
-            Vector3 v1 = localToWorld.MultiplyPoint3x4(vertices[triangles[i]]);
-            Vector3 v2 = localToWorld.MultiplyPoint3x4(vertices[triangles[i + 1]]);
-            Vector3 v3 = localToWorld.MultiplyPoint3x4(vertices[triangles[i + 2]]);
-            Triangle t = new Triangle(v1, v2, v3);
-            rootNode.AddTriangle(t);
-
-            i += 3; // move to next triangle
+            for (int i = 0; i < 8; i++)
+            {
+                if (node.children[i] != null)
+                    Draw(node.children[i]);
+            }
         }
     }
+
+    /// <summary>
+    /// Used to toggle the drawOctree boolean from the UI
+    /// </summary>
+    /// <param name="tog"></param>
+    public void showOctreeToggle(bool tog)
+    {
+        drawOctree = !drawOctree;
+    }
+
+    /// <summary>
+    /// Used to change depth of the Octree
+    /// </summary>
+    /// <param name="tog"></param>
+    public void changeOctreeDepthSlider(float val)
+    {
+        maxDepth = (int) val;
+        octreeRoot = new OctreeRoot(this.gameObject, maxDepth);
+    }
 }
+
