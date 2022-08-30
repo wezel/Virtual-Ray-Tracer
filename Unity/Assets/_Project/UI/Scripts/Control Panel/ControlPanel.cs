@@ -3,7 +3,6 @@ using _Project.Ray_Tracer.Scripts;
 using _Project.Ray_Tracer.Scripts.RT_Scene;
 using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Camera;
 using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light;
-using _Project.Ray_Tracer.Scripts.RT_Ray;
 using TMPro;
 using UnityEngine;
 
@@ -19,8 +18,7 @@ namespace _Project.UI.Scripts.Control_Panel
         {
             RayTracer,
             Camera,
-            Object,
-            Algorithm
+            Object
         }
 
         public void Subscribe(Action<SignalType> function)
@@ -28,7 +26,6 @@ namespace _Project.UI.Scripts.Control_Panel
             rayTracerButton.onClick.AddListener(() => function(SignalType.RayTracer));
             cameraButton.onClick.AddListener(() => function(SignalType.Camera));
             objectButton.onClick.AddListener(() => function(SignalType.Object));
-            algorithmButton.onClick.AddListener(() => function(SignalType.Algorithm));
         }
         
         [SerializeField]
@@ -47,10 +44,6 @@ namespace _Project.UI.Scripts.Control_Panel
         private FolderButton cameraButton;
         [SerializeField]
         private FolderButton objectButton;
-        [SerializeField]
-        private FolderButton algorithmButton;
-        [SerializeField]
-        private AlgorithmVisualization algorithmVisualizer;
 
         /// <summary>
         /// Show the control panel. By default this will not show any properties, just the panel background.
@@ -66,15 +59,12 @@ namespace _Project.UI.Scripts.Control_Panel
         /// </summary>
         public void ShowRayTracerProperties()
         {
-            Debug.Log("Called ShowRayTracerProps");
             cameraProperties.Hide();
             lightProperties.Hide();
             meshProperties.Hide();
-            algorithmVisualizer.Hide();
             emptyProperties.gameObject.SetActive(false);
             cameraButton.Conceal();
             objectButton.Conceal();
-            algorithmButton.Conceal();
 
             Show();
             rayTracerButton.Highlight();
@@ -90,11 +80,9 @@ namespace _Project.UI.Scripts.Control_Panel
             rayTracerProperties.Hide();
             lightProperties.Hide();
             meshProperties.Hide();
-            algorithmVisualizer.Hide();
             emptyProperties.gameObject.SetActive(false);
             objectButton.Conceal();
             rayTracerButton.Conceal();
-            algorithmButton.Conceal();
 
             Show();
             cameraButton.Highlight();
@@ -110,11 +98,9 @@ namespace _Project.UI.Scripts.Control_Panel
             rayTracerProperties.Hide();
             cameraProperties.Hide();
             meshProperties.Hide();
-            algorithmVisualizer.Hide();
             emptyProperties.gameObject.SetActive(false);
             rayTracerButton.Conceal();
             cameraButton.Conceal();
-            algorithmButton.Conceal();
             
             Show();
             objectButton.Highlight();
@@ -130,31 +116,13 @@ namespace _Project.UI.Scripts.Control_Panel
             rayTracerProperties.Hide();
             cameraProperties.Hide();
             lightProperties.Hide();
-            algorithmVisualizer.Hide();
             emptyProperties.gameObject.SetActive(false);
             cameraButton.Conceal();
             rayTracerButton.Conceal();
-            algorithmButton.Conceal();
             
             Show();
             objectButton.Highlight();
             meshProperties.Show(mesh);
-        }
-
-        public void ShowAlgorithmProperties(RayObject ray)
-        {
-            rayTracerProperties.Hide();
-            cameraProperties.Hide();
-            lightProperties.Hide();
-            meshProperties.Hide();
-            emptyProperties.gameObject.SetActive(false);
-            cameraButton.Conceal();
-            rayTracerButton.Conceal();
-            objectButton.Conceal();
-
-            Show();
-            algorithmButton.Highlight();
-            algorithmVisualizer.Show(ray);
         }
 
         public void ShowEmptyProperties()
@@ -162,10 +130,8 @@ namespace _Project.UI.Scripts.Control_Panel
             rayTracerProperties.Hide();
             cameraProperties.Hide();
             lightProperties.Hide();
-            algorithmVisualizer.Hide();
             cameraButton.Conceal();
             rayTracerButton.Conceal();
-            algorithmButton.Conceal();
             
             Show();
             objectButton.Highlight();
@@ -181,7 +147,6 @@ namespace _Project.UI.Scripts.Control_Panel
             cameraProperties.Hide();
             lightProperties.Hide();
             meshProperties.Hide();
-            algorithmVisualizer.Hide();
             emptyProperties.gameObject.SetActive(false);
             gameObject.SetActive(false);
         }

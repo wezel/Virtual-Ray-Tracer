@@ -18,8 +18,6 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
             set { ray = value; Reset(); }
         }
 
-        public Outline Outline { get; private set; }
-
         /// <summary>
         /// The length to which this ray object is drawn. Generally this is the same as the length of <see cref="Ray"/>,
         /// but if the ray is infinitely long the drawn length will be set to
