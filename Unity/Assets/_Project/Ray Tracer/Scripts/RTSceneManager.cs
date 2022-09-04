@@ -399,6 +399,9 @@ namespace _Project.Ray_Tracer.Scripts
         {
             switch (signal)
             {
+                case ControlPanel.SignalType.Visual:
+                    ControlPanel.ShowVisualizationProperties();
+                    break;
                 case ControlPanel.SignalType.RayTracer:
                     Deselect();
                     break;

@@ -18,7 +18,8 @@ namespace _Project.UI.Scripts.Control_Panel
         {
             RayTracer,
             Camera,
-            Object
+            Object,
+            Visual
         }
 
         public void Subscribe(Action<SignalType> function)
@@ -26,6 +27,7 @@ namespace _Project.UI.Scripts.Control_Panel
             rayTracerButton.onClick.AddListener(() => function(SignalType.RayTracer));
             cameraButton.onClick.AddListener(() => function(SignalType.Camera));
             objectButton.onClick.AddListener(() => function(SignalType.Object));
+            visualButton.onClick.AddListener(() => function(SignalType.Visual));
         }
         
         [SerializeField]
