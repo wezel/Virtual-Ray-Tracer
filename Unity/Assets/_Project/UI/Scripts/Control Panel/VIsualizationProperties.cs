@@ -1,25 +1,44 @@
 using System.Collections;
-using _Project.Ray_Tracer.Scripts;
+using System.Linq;
 using UnityEngine;
-using UnityEngine.Serialization;
-using UnityEngine.UI;
 
 namespace _Project.UI.Scripts.Control_Panel
 {
     public class VisualizationProperties : MonoBehaviour
     {
 
-        private UIManager uiManager;
+        [SerializeField]
+        private BoolEdit highlight;
 
         public void Show()
         {
             gameObject.SetActive(true);
-            uiManager = UIManager.Get();
+            highlight.IsOn = false;
         }
 
         public void Hide()
         {
             gameObject.SetActive(false);
+        }
+
+        private void Awake()
+        {
+            highlight.OnValueChanged += (value) =>
+            {
+                var text = highlight.GetComponentsInChildren<TMPro.TextMeshProUGUI>().First(c => c.gameObject.name == "Title");
+                text.color = determineColor(value);
+            };
+        }
+
+        private Color determineColor(bool value)
+        {
+            switch (value)
+            {
+                case true:
+                    return new Color(0.0f, 1.0f, 1.0f, 1.0f);
+                case false:
+                    return new Color(1.0f, 1.0f, 1.0f, 1.0f);
+            }
         }
     }
 }

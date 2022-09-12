@@ -270,6 +270,7 @@ namespace _Project.Ray_Tracer.Scripts
             if (selection.Empty) return;
             if (selection.Type == typeof(RTCamera)) return; // Cameras can't be deleted, there must always be a camera.
 
+            // TODO ?? figure this out
             // delete the object in our database
             if (selection.Type == typeof(RTLight))
                 Scene.RemoveLight(selection.Light);
@@ -311,7 +312,7 @@ namespace _Project.Ray_Tracer.Scripts
                     mesh = Instantiate(capsulePrefab);
                     break;
                 case ObjectType.Goat:
-                     mesh = Instantiate(goatPrefab);
+                    mesh = Instantiate(goatPrefab);
                     break;
                 case ObjectType.Prism:
                     mesh = Instantiate(prismPrefab);
