@@ -25,6 +25,7 @@ namespace _Project.UI.Scripts.Control_Panel
         {
             highlight.OnValueChanged += (value) =>
             {
+                // THIS IS REALLY BAD!!! find another way so that when the name of the object changes i dont have to change it here too
                 var text = highlight.GetComponentsInChildren<TMPro.TextMeshProUGUI>().First(c => c.gameObject.name == "Title");
                 text.color = determineColor(value);
             };
