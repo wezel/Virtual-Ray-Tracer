@@ -2647,6 +2647,10 @@ PrefabInstance:
       propertyPath: HideAllRays
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3364825822907551461, guid: c271906e89fa0f342a70789873c17236, type: 3}
+      propertyPath: previousStep
+      value: 
+      objectReference: {fileID: 8842367933099488670, guid: a054496b427b1ac49b7759f6a5207f2b, type: 3}
     - target: {fileID: 3364825822907551462, guid: c271906e89fa0f342a70789873c17236, type: 3}
       propertyPath: m_RootOrder
       value: 6

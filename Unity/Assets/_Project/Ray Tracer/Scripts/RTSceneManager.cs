@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using _Project.Ray_Tracer.Scripts.RT_Ray;
 using _Project.Ray_Tracer.Scripts.RT_Scene;
 using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Camera;
 using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light;
@@ -270,7 +271,6 @@ namespace _Project.Ray_Tracer.Scripts
             if (selection.Empty) return;
             if (selection.Type == typeof(RTCamera)) return; // Cameras can't be deleted, there must always be a camera.
 
-            // TODO ?? figure this out
             // delete the object in our database
             if (selection.Type == typeof(RTLight))
                 Scene.RemoveLight(selection.Light);

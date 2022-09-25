@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using _Project.Ray_Tracer.Scripts.RT_Ray;
 using _Project.Ray_Tracer.Scripts.Utility;
+using _Project.UI.Scripts.Control_Panel;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -63,6 +65,7 @@ namespace _Project.Ray_Tracer.Scripts
 
         [SerializeField]
         private bool animate = false;
+
         /// <summary>
         /// Whether this ray manager animates the rays it draws.
         /// </summary>
@@ -142,6 +145,10 @@ namespace _Project.Ray_Tracer.Scripts
         private bool animationDone = false;
 
         private bool shouldUpdateRays = true;
+
+        private int prevStep = -1;
+        [SerializeField]
+        private VisualizationProperties visualizationProperties;
 
         /// <summary>
         /// Get the current <see cref="RayManager"/> instance.
@@ -223,6 +230,7 @@ namespace _Project.Ray_Tracer.Scripts
 
             rtSceneManager = RTSceneManager.Get();
             rayTracer = UnityRayTracer.Get();
+            visualizationProperties = VisualizationProperties.Instance;
 
             rtSceneManager.Scene.OnSceneChanged += () => { shouldUpdateRays = true; };
             rayTracer.OnRayTracerChanged += () => { shouldUpdateRays = true; };
@@ -242,6 +250,9 @@ namespace _Project.Ray_Tracer.Scripts
                 int index = selectedRayCoordinates.x + width * selectedRayCoordinates.y;
                 selectedRay = rays[index];
             }
+
+            visualizationProperties.onStepChange(prevStep, 0);
+            prevStep = 0;
 
             if (Animate)
                 DrawRaysAnimated();
@@ -286,7 +297,14 @@ namespace _Project.Ray_Tracer.Scripts
         private void DrawRayTree(TreeNode<RTRay> rayTree)
         {
             if (HideNoHitRays && rayTree.Data.Type == RTRay.RayType.NoHit)
+            {
+                visualizationProperties.onStepChange(prevStep, 2);
+                prevStep = 2;
                 return;
+            }
+
+            visualizationProperties.onStepChange(prevStep, 3);
+            prevStep = 3;
 
             RayObject rayObject = rayObjectPool.GetRayObject();
             rayObject.Ray = rayTree.Data;
@@ -294,6 +312,8 @@ namespace _Project.Ray_Tracer.Scripts
 
             if (!rayTree.IsLeaf())
             {
+                visualizationProperties.onStepChange(prevStep, 4);
+                prevStep = 4;
                 foreach (var child in rayTree.Children)
                     DrawRayTree(child);
             }
@@ -310,6 +330,8 @@ namespace _Project.Ray_Tracer.Scripts
             // Reset the animation if we are looping or if a reset was requested.
             if (animationDone && Loop || Reset)
             {
+                visualizationProperties.onStepChange(prevStep, 0);
+                prevStep = 0;
                 distanceToDraw = 0.0f;
                 rayTreeToDraw = 0;
                 animationDone = false;
@@ -319,6 +341,8 @@ namespace _Project.Ray_Tracer.Scripts
             // Animate all ray trees if we are not done animating already.
             if (!animationDone)
             {
+                visualizationProperties.onStepChange(prevStep, 1);
+                prevStep = 1;
                 distanceToDraw += Speed * Time.deltaTime;
                 animationDone = true; // Will be reset to false if one tree is not finished animating.
 
@@ -354,12 +378,21 @@ namespace _Project.Ray_Tracer.Scripts
             // Otherwise we can just draw all rays in full.
             else
                 DrawRays();
+            visualizationProperties.onStepChange(prevStep, 5);
+            prevStep = 5;
         }
 
         private bool DrawRayTreeAnimated(TreeNode<RTRay> rayTree, float distance)
         {
             if (HideNoHitRays && rayTree.Data.Type == RTRay.RayType.NoHit)
+            {
+                visualizationProperties.onStepChange(prevStep, 2);
+                prevStep = 2;
                 return true;
+            }
+
+            visualizationProperties.onStepChange(prevStep, 3);
+            prevStep = 3;
 
             RayObject rayObject = rayObjectPool.GetRayObject();
             rayObject.Ray = rayTree.Data;
@@ -374,6 +407,8 @@ namespace _Project.Ray_Tracer.Scripts
             if (rayTree.IsLeaf())
                 return true;
 
+            visualizationProperties.onStepChange(prevStep, 4);
+            prevStep = 4;
             // Otherwise we start animating the children.
             bool done = true;
             foreach (var child in rayTree.Children)

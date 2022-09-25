@@ -1,19 +1,30 @@
-using System.Collections;
-using System.Linq;
+using System;
+using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 namespace _Project.UI.Scripts.Control_Panel
 {
-    public class VisualizationProperties : MonoBehaviour
+    public class VisualizationProperties : Singleton<VisualizationProperties>
     {
-
         [SerializeField]
-        private BoolEdit highlight;
+        private TextMeshProUGUI resetText;
+        [SerializeField]
+        private TextMeshProUGUI startLoopText;
+        [SerializeField]
+        private TextMeshProUGUI noCollisionText;
+        [SerializeField]
+        private TextMeshProUGUI computeRayText;
+        [SerializeField]
+        private TextMeshProUGUI castChildrenText;
+        [SerializeField]
+        private TextMeshProUGUI stopLoopText;
+
+        private List<TextMeshProUGUI> steps;
 
         public void Show()
         {
             gameObject.SetActive(true);
-            highlight.IsOn = false;
         }
 
         public void Hide()
@@ -21,25 +32,31 @@ namespace _Project.UI.Scripts.Control_Panel
             gameObject.SetActive(false);
         }
 
+        //JAY try with no named text vars
         private void Awake()
         {
-            highlight.OnValueChanged += (value) =>
+            Debug.Log("calling awake on visprops");
+
+            steps = new List<TextMeshProUGUI>
             {
-                // THIS IS REALLY BAD!!! find another way so that when the name of the object changes i dont have to change it here too
-                var text = highlight.GetComponentsInChildren<TMPro.TextMeshProUGUI>().First(c => c.gameObject.name == "Title");
-                text.color = determineColor(value);
+                resetText,
+                startLoopText,
+                noCollisionText,
+                computeRayText,
+                castChildrenText,
+                stopLoopText
             };
+            //these two return null
+            Debug.Log(steps[0]);
+            Debug.Log(resetText.text);
         }
 
-        private Color determineColor(bool value)
+        public void onStepChange(int newStep, int prevStep)
         {
-            switch (value)
-            {
-                case true:
-                    return new Color(0.0f, 1.0f, 1.0f, 1.0f);
-                case false:
-                    return new Color(1.0f, 1.0f, 1.0f, 1.0f);
-            }
+            Debug.Log(steps.Count);
+            if (prevStep >= 0)
+                steps[prevStep].color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+            steps[newStep].color = new Color(0.0f, 1.0f, 1.0f, 1.0f);
         }
     }
 }

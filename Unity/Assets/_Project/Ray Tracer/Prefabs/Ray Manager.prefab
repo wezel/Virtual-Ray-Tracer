@@ -60,3 +60,4 @@ MonoBehaviour:
   loop: 0
   reset: 0
   speed: 1
+  visualizationProperties: {fileID: -5615939747135981297, guid: da2c9ed74d6f968448e947b4c492a5a9, type: 3}

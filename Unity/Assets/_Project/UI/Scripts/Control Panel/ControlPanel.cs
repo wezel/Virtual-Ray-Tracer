@@ -188,6 +188,7 @@ namespace _Project.UI.Scripts.Control_Panel
         private void Start()
         {
             ShowRayTracerProperties();
+            visualizationProperties = VisualizationProperties.Instance;
         }
     }
 }
