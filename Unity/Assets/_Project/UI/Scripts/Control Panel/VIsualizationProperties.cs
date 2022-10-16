@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace _Project.UI.Scripts.Control_Panel
 {
-    public class VisualizationProperties : Singleton<VisualizationProperties>
+    public class VisualizationProperties : MonoBehaviour
     {
         [SerializeField]
         private TextMeshProUGUI resetText;
@@ -20,6 +20,7 @@ namespace _Project.UI.Scripts.Control_Panel
         [SerializeField]
         private TextMeshProUGUI stopLoopText;
 
+        //[SerializeField]
         private List<TextMeshProUGUI> steps;
 
         public void Show()
@@ -32,11 +33,8 @@ namespace _Project.UI.Scripts.Control_Panel
             gameObject.SetActive(false);
         }
 
-        //JAY try with no named text vars
-        private void Awake()
+        public void Awake()
         {
-            Debug.Log("calling awake on visprops");
-
             steps = new List<TextMeshProUGUI>
             {
                 resetText,
@@ -46,14 +44,10 @@ namespace _Project.UI.Scripts.Control_Panel
                 castChildrenText,
                 stopLoopText
             };
-            //these two return null
-            Debug.Log(steps[0]);
-            Debug.Log(resetText.text);
         }
 
-        public void onStepChange(int newStep, int prevStep)
+        public void onStepChange(int prevStep, int newStep)
         {
-            Debug.Log(steps.Count);
             if (prevStep >= 0)
                 steps[prevStep].color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
             steps[newStep].color = new Color(0.0f, 1.0f, 1.0f, 1.0f);

@@ -180,6 +180,7 @@ MonoBehaviour:
   cameraButton: {fileID: 1275962875368193987}
   objectButton: {fileID: 2311804751056248152}
   visualButton: {fileID: 5213230721981286216}
+  rayManager: {fileID: 3364825822907551461, guid: c271906e89fa0f342a70789873c17236, type: 3}
 --- !u!1 &3353097685823959504
 GameObject:
   m_ObjectHideFlags: 0
@@ -2077,17 +2078,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92620f800cc26c341a3f054646c5d3b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &7154504451863317980 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3341912229893229448, guid: da2c9ed74d6f968448e947b4c492a5a9, type: 3}
-  m_PrefabInstance: {fileID: 5560041817158862420}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7350eb3064614fd386b436bb7f7eef21, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!222 &2212919696889084924
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2108,7 +2098,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92620f800cc26c341a3f054646c5d3b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  highlight: {fileID: 7154504451863317980}
+  resetText: {fileID: 0}
+  startLoopText: {fileID: 0}
+  noCollisionText: {fileID: 0}
+  computeRayText: {fileID: 0}
+  castChildrenText: {fileID: 0}
+  stopLoopText: {fileID: 0}
 --- !u!114 &1964859917225814522
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2904,11 +2899,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 113385e0ba0854642abfadb26691365c, type: 3}
---- !u!224 &5609461798112450298 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 3641045733115134028, guid: 113385e0ba0854642abfadb26691365c, type: 3}
-  m_PrefabInstance: {fileID: 9178151342439028406}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &3209837239092607000 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6040727822185868974, guid: 113385e0ba0854642abfadb26691365c, type: 3}
@@ -2931,6 +2921,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23b2ee5f75347a34d887f1f90192d4ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!224 &5609461798112450298 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 3641045733115134028, guid: 113385e0ba0854642abfadb26691365c, type: 3}
+  m_PrefabInstance: {fileID: 9178151342439028406}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &9183789022724387004
 PrefabInstance:
   m_ObjectHideFlags: 0
