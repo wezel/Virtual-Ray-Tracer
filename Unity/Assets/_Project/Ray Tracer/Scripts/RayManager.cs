@@ -134,8 +134,11 @@ namespace _Project.Ray_Tracer.Scripts
         private RayObjectPool rayObjectPool;
 
         private TreeNode<RTRay> selectedRay;
+        public TreeNode<RTRay> SelectedRay { get { return selectedRay; } }
         private Vector2Int selectedRayCoordinates;
+
         private bool hasSelectedRay = false;
+        public bool HasSelectedRay { get { return hasSelectedRay; } }
 
         private RTSceneManager rtSceneManager;
         private UnityRayTracer rayTracer;

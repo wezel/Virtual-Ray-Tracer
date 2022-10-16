@@ -1,7 +1,11 @@
+using _Project.Ray_Tracer.Scripts;
 using System;
 using System.Collections.Generic;
 using TMPro;
+using TreeEditor;
 using UnityEngine;
+using _Project.Ray_Tracer.Scripts.RT_Ray;
+using _Project.Ray_Tracer.Scripts.Utility;
 
 namespace _Project.UI.Scripts.Control_Panel
 {
@@ -11,7 +15,7 @@ namespace _Project.UI.Scripts.Control_Panel
         private TextMeshProUGUI resetText;
         [SerializeField]
         private TextMeshProUGUI startLoopText;
-        [SerializeField]
+/*        [SerializeField]
         private TextMeshProUGUI noCollisionText;
         [SerializeField]
         private TextMeshProUGUI computeRayText;
@@ -21,7 +25,10 @@ namespace _Project.UI.Scripts.Control_Panel
         private TextMeshProUGUI stopLoopText;
 
         //[SerializeField]
-        private List<TextMeshProUGUI> steps;
+        private List<TextMeshProUGUI> steps;*/
+
+        private RayManager rayManager;
+        private TreeNode<RTRay> ray;
 
         public void Show()
         {
@@ -33,9 +40,10 @@ namespace _Project.UI.Scripts.Control_Panel
             gameObject.SetActive(false);
         }
 
-        public void Awake()
+        private void Awake()
         {
-            steps = new List<TextMeshProUGUI>
+            Debug.Log("visprops awake");
+/*            steps = new List<TextMeshProUGUI>
             {
                 resetText,
                 startLoopText,
@@ -43,14 +51,22 @@ namespace _Project.UI.Scripts.Control_Panel
                 computeRayText,
                 castChildrenText,
                 stopLoopText
-            };
+            };*/
         }
 
-        public void onStepChange(int prevStep, int newStep)
+        private void Start()
         {
-            if (prevStep >= 0)
-                steps[prevStep].color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
-            steps[newStep].color = new Color(0.0f, 1.0f, 1.0f, 1.0f);
+            rayManager = RayManager.Get();
+            if (rayManager.HasSelectedRay)
+                ray = rayManager.SelectedRay;
+
         }
+
+        /*        public void onStepChange(int prevStep, int newStep)
+                {
+                    if (prevStep >= 0)
+                        steps[prevStep].color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+                    steps[newStep].color = new Color(0.0f, 1.0f, 1.0f, 1.0f);
+                }*/
     }
 }
