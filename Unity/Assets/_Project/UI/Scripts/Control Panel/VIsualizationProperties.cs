@@ -57,9 +57,20 @@ namespace _Project.UI.Scripts.Control_Panel
         private void Start()
         {
             rayManager = RayManager.Get();
+            rayManager.changedSelectedRay += RMChangedSelectedRay;
             if (rayManager.HasSelectedRay)
                 ray = rayManager.SelectedRay;
+        }
 
+        public void RMChangedSelectedRay(object sender, bool hasSelectedRayNow)
+        {
+            if (hasSelectedRayNow && ray == null)
+            {
+                ray = rayManager.SelectedRay;
+                Debug.Log("ray selected");
+            }
+            else if (!hasSelectedRayNow)
+                Debug.Log("ray unselected");
         }
 
         /*        public void onStepChange(int prevStep, int newStep)

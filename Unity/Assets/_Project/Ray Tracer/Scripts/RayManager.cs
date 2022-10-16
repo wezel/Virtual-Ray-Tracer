@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using _Project.Ray_Tracer.Scripts.RT_Ray;
 using _Project.Ray_Tracer.Scripts.Utility;
@@ -208,17 +209,25 @@ namespace _Project.Ray_Tracer.Scripts
             selectedRayCoordinates = rayCoordinates;
             hasSelectedRay = true;
             Reset = true;
+            OnChangedSelectedRay(hasSelectedRay);
         }
 
         public void DeselectRay()
         {
             hasSelectedRay = false;
             Reset = true;
+            OnChangedSelectedRay(hasSelectedRay);
         }
 
         private void Awake()
         {
             instance = this;
+        }
+
+        public event EventHandler<bool> changedSelectedRay;
+        protected virtual void OnChangedSelectedRay(bool hasSelectedRayNow)
+        {
+            changedSelectedRay?.Invoke(this, hasSelectedRayNow);
         }
 
         private void Start()
