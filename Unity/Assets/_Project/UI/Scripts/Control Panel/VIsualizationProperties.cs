@@ -43,7 +43,6 @@ namespace _Project.UI.Scripts.Control_Panel
 
         private void Awake()
         {
-            Debug.Log("visprops awake");
 /*            steps = new List<TextMeshProUGUI>
             {
                 resetText,
@@ -58,6 +57,9 @@ namespace _Project.UI.Scripts.Control_Panel
         private void Start()
         {
             rayType.text = ray.Data.Type.ToString();
+            Debug.Log(rayType.text);
+            Debug.Log(ray);
+            //null reference on line 60 on the very first selection
             rayChildren.text = ray.Children.Count.ToString();
         }
 

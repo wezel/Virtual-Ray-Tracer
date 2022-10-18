@@ -462,7 +462,7 @@ namespace _Project.Ray_Tracer.Scripts
 
         public void RMChangedSelectedRay(object sender, bool hasSelectedRayNow)
         {
-            if (hasSelectedRayNow && ray == null)
+            if (hasSelectedRayNow)
             {
                 ray = rayManager.SelectedRay;
                 ControlPanel.ShowVisualizationProperties(ray);
