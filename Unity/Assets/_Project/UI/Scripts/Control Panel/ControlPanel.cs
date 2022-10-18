@@ -5,6 +5,7 @@ using _Project.Ray_Tracer.Scripts.RT_Scene;
 using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Camera;
 using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light;
 using TMPro;
+using _Project.Ray_Tracer.Scripts.Utility;
 using UnityEngine;
 
 namespace _Project.UI.Scripts.Control_Panel
@@ -140,7 +141,7 @@ namespace _Project.UI.Scripts.Control_Panel
             meshProperties.Show(mesh);
         }
 
-        public void ShowVisualizationProperties()
+        public void ShowVisualizationProperties(TreeNode<RTRay> ray)
         {
             rayTracerProperties.Hide();
             cameraProperties.Hide();
@@ -153,7 +154,7 @@ namespace _Project.UI.Scripts.Control_Panel
 
             Show();
             visualButton.Highlight();
-            visualizationProperties.Show();
+            visualizationProperties.Show(ray);
         }
 
         public void ShowEmptyProperties()

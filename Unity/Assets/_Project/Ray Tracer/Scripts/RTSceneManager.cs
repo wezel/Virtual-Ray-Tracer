@@ -25,6 +25,8 @@ namespace _Project.Ray_Tracer.Scripts
         /// The scene this scene manager manages.
         /// </summary>
         public RTScene Scene { get; private set; }
+        private RayManager rayManager;
+        private TreeNode<RTRay> ray;
 
         /// <summary>
         /// The most recent low resolution preview image produced by the ray tracer.
@@ -401,7 +403,10 @@ namespace _Project.Ray_Tracer.Scripts
             switch (signal)
             {
                 case ControlPanel.SignalType.Visual:
-                    ControlPanel.ShowVisualizationProperties();
+                    if (ray == null)
+                        ControlPanel.ShowEmptyProperties();
+                    else
+                        ControlPanel.ShowVisualizationProperties(ray);
                     break;
                 case ControlPanel.SignalType.RayTracer:
                     Deselect();
@@ -451,9 +456,25 @@ namespace _Project.Ray_Tracer.Scripts
             Scene = new RTScene(camera, lights, meshes);
             
             ControlPanel.Subscribe(OnEvent);
+            rayManager = RayManager.Get();
+            rayManager.changedSelectedRay += RMChangedSelectedRay;
         }
 
-        
+        public void RMChangedSelectedRay(object sender, bool hasSelectedRayNow)
+        {
+            if (hasSelectedRayNow && ray == null)
+            {
+                ray = rayManager.SelectedRay;
+                ControlPanel.ShowVisualizationProperties(ray);
+            }
+            else if (!hasSelectedRayNow)
+            {
+                ray = null;
+                ControlPanel.ShowEmptyProperties();
+            }
+        }
+
+
         // Check whether we are clicking on a transformation handle.
         private void OnLeftClick()
         {

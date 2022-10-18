@@ -227,6 +227,9 @@ namespace _Project.Ray_Tracer.Scripts
         public event EventHandler<bool> changedSelectedRay;
         protected virtual void OnChangedSelectedRay(bool hasSelectedRayNow)
         {
+            int width = rtSceneManager.Scene.Camera.ScreenWidth;
+            int index = selectedRayCoordinates.x + width * selectedRayCoordinates.y;
+            selectedRay = rays[index];
             changedSelectedRay?.Invoke(this, hasSelectedRayNow);
         }
 

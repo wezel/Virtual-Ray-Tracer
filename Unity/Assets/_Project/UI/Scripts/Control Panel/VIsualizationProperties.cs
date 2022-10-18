@@ -12,9 +12,9 @@ namespace _Project.UI.Scripts.Control_Panel
     public class VisualizationProperties : MonoBehaviour
     {
         [SerializeField]
-        private TextMeshProUGUI resetText;
+        private TextMeshProUGUI rayType;
         [SerializeField]
-        private TextMeshProUGUI startLoopText;
+        private TextMeshProUGUI rayChildren;
 /*        [SerializeField]
         private TextMeshProUGUI noCollisionText;
         [SerializeField]
@@ -26,13 +26,14 @@ namespace _Project.UI.Scripts.Control_Panel
 
         //[SerializeField]
         private List<TextMeshProUGUI> steps;*/
-
-        private RayManager rayManager;
         private TreeNode<RTRay> ray;
 
-        public void Show()
+        public void Show(TreeNode<RTRay> ray)
         {
             gameObject.SetActive(true);
+            this.ray = ray;
+            rayType.text = ray.Data.Type.ToString();
+            rayChildren.text = ray.Children.Count.ToString();
         }
 
         public void Hide()
@@ -56,21 +57,8 @@ namespace _Project.UI.Scripts.Control_Panel
 
         private void Start()
         {
-            rayManager = RayManager.Get();
-            rayManager.changedSelectedRay += RMChangedSelectedRay;
-            if (rayManager.HasSelectedRay)
-                ray = rayManager.SelectedRay;
-        }
-
-        public void RMChangedSelectedRay(object sender, bool hasSelectedRayNow)
-        {
-            if (hasSelectedRayNow && ray == null)
-            {
-                ray = rayManager.SelectedRay;
-                Debug.Log("ray selected");
-            }
-            else if (!hasSelectedRayNow)
-                Debug.Log("ray unselected");
+            rayType.text = ray.Data.Type.ToString();
+            rayChildren.text = ray.Children.Count.ToString();
         }
 
         /*        public void onStepChange(int prevStep, int newStep)
