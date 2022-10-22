@@ -7,6 +7,7 @@ using UnityEngine;
 using _Project.Ray_Tracer.Scripts.RT_Ray;
 using _Project.Ray_Tracer.Scripts.Utility;
 
+//no start bc no need to change values through the environment
 namespace _Project.UI.Scripts.Control_Panel
 {
     public class VisualizationProperties : MonoBehaviour
@@ -52,15 +53,6 @@ namespace _Project.UI.Scripts.Control_Panel
                 castChildrenText,
                 stopLoopText
             };*/
-        }
-
-        private void Start()
-        {
-            rayType.text = ray.Data.Type.ToString();
-            Debug.Log(rayType.text);
-            Debug.Log(ray);
-            //null reference on line 60 on the very first selection
-            rayChildren.text = ray.Children.Count.ToString();
         }
 
         /*        public void onStepChange(int prevStep, int newStep)

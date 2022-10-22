@@ -6,6 +6,7 @@ using _Project.UI.Scripts.Control_Panel;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
+using static _Project.Ray_Tracer.Scripts.RT_Ray.RTRay;
 
 namespace _Project.Ray_Tracer.Scripts
 {
@@ -345,7 +346,7 @@ namespace _Project.Ray_Tracer.Scripts
                 // If we have selected a ray we only draw its ray tree.
                 if (hasSelectedRay)
                 {
-                    animationDone = DrawRayTreeAnimated(selectedRay, distanceToDraw);
+                    animationDone = DrawSingleRayTreeAnimated(selectedRay, distanceToDraw).isDone;
                 }
                 // If specified we animate the ray trees sequentially (pixel by pixel).
                 else if (animateSequentially)
@@ -403,5 +404,60 @@ namespace _Project.Ray_Tracer.Scripts
                 done &= DrawRayTreeAnimated(child, leftover);
             return done;
         }
+
+        private struct rayReturn
+        {
+            public bool isDone;
+            public float leftover;
+        };
+
+        private rayReturn DrawSingleRayTreeAnimated(TreeNode<RTRay> rayTree, float distance)
+        {
+            rayReturn returnValue = new rayReturn();
+            if (HideNoHitRays && rayTree.Data.Type == RTRay.RayType.NoHit)
+            {
+                returnValue.isDone = true;
+                returnValue.leftover = 0;
+                return returnValue;
+            }
+
+
+            RayObject rayObject = rayObjectPool.GetRayObject();
+            rayObject.Ray = rayTree.Data;
+            rayObject.Draw(RayRadius, distance);
+
+            float leftover = distance - rayObject.DrawLength;
+
+            returnValue.leftover = leftover;
+            // If this ray is not at its full length we are not done animating.
+            if (leftover <= 0.0f)
+            {
+                returnValue.isDone = false;
+                return returnValue;
+            }
+                
+            // If this ray is at its full length and has no children we are done animating.
+            if (rayTree.IsLeaf())
+            {
+                returnValue.isDone = true;
+                return returnValue;
+            }
+                
+
+            // Otherwise we start animating the children.
+            bool done = true;
+            float leftoverFromPrev = returnValue.leftover;
+            foreach (var child in rayTree.Children)
+            {
+                rayReturn fromChild = DrawSingleRayTreeAnimated(child, leftoverFromPrev);
+                done &= fromChild.isDone;
+                leftoverFromPrev = fromChild.leftover;
+            }
+                
+            returnValue.isDone = done;
+            returnValue.leftover = leftoverFromPrev;
+            return returnValue;
+        }
+
     }
 }
