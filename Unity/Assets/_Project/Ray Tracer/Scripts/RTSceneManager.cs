@@ -458,9 +458,14 @@ namespace _Project.Ray_Tracer.Scripts
             ControlPanel.Subscribe(OnEvent);
             rayManager = RayManager.Get();
             rayManager.changedSelectedRay += RMChangedSelectedRay;
+            rayManager.drawingNewChild += RMDrawingNewChild;
         }
 
-        public void RMChangedSelectedRay(object sender, bool hasSelectedRayNow)
+        /// <summary>
+        /// Handles an event that signals that a ray has been selected using the pixel preview. 
+        /// Corresponds to changedSelectedRay in <see cref="RayManager">
+        /// </summary>
+        private void RMChangedSelectedRay(object sender, bool hasSelectedRayNow)
         {
             if (hasSelectedRayNow)
             {
@@ -472,6 +477,11 @@ namespace _Project.Ray_Tracer.Scripts
                 ray = null;
                 ControlPanel.ShowEmptyProperties();
             }
+        }
+
+        private void RMDrawingNewChild(object sender, TreeNode<RTRay> childBeingDrawn)
+        {
+            ControlPanel.ShowVisualizationProperties(childBeingDrawn);
         }
 
 

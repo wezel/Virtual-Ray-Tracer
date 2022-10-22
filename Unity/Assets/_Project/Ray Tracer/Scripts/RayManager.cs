@@ -161,6 +161,27 @@ namespace _Project.Ray_Tracer.Scripts
         }
 
         /// <summary>
+        /// Even handler that signals when a ray has been selected through the pixel preview
+        /// </summary>
+        public event EventHandler<bool> changedSelectedRay;
+        protected virtual void OnChangedSelectedRay(bool hasSelectedRayNow)
+        {
+            int width = rtSceneManager.Scene.Camera.ScreenWidth;
+            int index = selectedRayCoordinates.x + width * selectedRayCoordinates.y;
+            selectedRay = rays[index];
+            changedSelectedRay?.Invoke(this, hasSelectedRayNow);
+        }
+
+        /// <summary>
+        /// Event handler that signals when a new child has started drawing. Used by VisualizationProperties.
+        /// </summary>
+        public event EventHandler<TreeNode<RTRay>> drawingNewChild;
+        protected virtual void OnDrawingNewChild(TreeNode<RTRay> newRay)
+        {
+            drawingNewChild?.Invoke(this, newRay);
+        }
+
+        /// <summary>
         /// Get the colors of the root rays managed by this <see cref="RayManager"/>.
         /// </summary>
         /// <returns> A <see cref="Color"/><c>[]</c> of from rays at the root of their ray tree. </returns>
@@ -223,15 +244,6 @@ namespace _Project.Ray_Tracer.Scripts
         private void Awake()
         {
             instance = this;
-        }
-
-        public event EventHandler<bool> changedSelectedRay;
-        protected virtual void OnChangedSelectedRay(bool hasSelectedRayNow)
-        {
-            int width = rtSceneManager.Scene.Camera.ScreenWidth;
-            int index = selectedRayCoordinates.x + width * selectedRayCoordinates.y;
-            selectedRay = rays[index];
-            changedSelectedRay?.Invoke(this, hasSelectedRayNow);
         }
 
         private void Start()
@@ -346,7 +358,8 @@ namespace _Project.Ray_Tracer.Scripts
                 // If we have selected a ray we only draw its ray tree.
                 if (hasSelectedRay)
                 {
-                    animationDone = DrawSingleRayTreeAnimated(selectedRay, distanceToDraw).isDone;
+                    OnDrawingNewChild(SelectedRay);
+                    animationDone = DrawRayTreeAnimatedSequential(selectedRay, distanceToDraw).isDone;
                 }
                 // If specified we animate the ray trees sequentially (pixel by pixel).
                 else if (animateSequentially)
@@ -411,7 +424,12 @@ namespace _Project.Ray_Tracer.Scripts
             public float leftover;
         };
 
-        private rayReturn DrawSingleRayTreeAnimated(TreeNode<RTRay> rayTree, float distance)
+        /// <summary>
+        /// Animates drawing a ray tree; only when one child finishes drawing in full does the next child start drawing
+        /// </summary>
+        /// <returns>A struct containing whether the animation is done <see cref="rayReturn.isDone", and the 
+        /// distance left to draw for the next child></returns>
+        private rayReturn DrawRayTreeAnimatedSequential(TreeNode<RTRay> rayTree, float distance)
         {
             rayReturn returnValue = new rayReturn();
             if (HideNoHitRays && rayTree.Data.Type == RTRay.RayType.NoHit)
@@ -420,7 +438,6 @@ namespace _Project.Ray_Tracer.Scripts
                 returnValue.leftover = 0;
                 return returnValue;
             }
-
 
             RayObject rayObject = rayObjectPool.GetRayObject();
             rayObject.Ray = rayTree.Data;
@@ -449,7 +466,9 @@ namespace _Project.Ray_Tracer.Scripts
             float leftoverFromPrev = returnValue.leftover;
             foreach (var child in rayTree.Children)
             {
-                rayReturn fromChild = DrawSingleRayTreeAnimated(child, leftoverFromPrev);
+                if (done)
+                    OnDrawingNewChild(child);
+                rayReturn fromChild = DrawRayTreeAnimatedSequential(child, leftoverFromPrev);
                 done &= fromChild.isDone;
                 leftoverFromPrev = fromChild.leftover;
             }
