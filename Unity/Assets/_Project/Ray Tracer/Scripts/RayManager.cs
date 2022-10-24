@@ -137,6 +137,10 @@ namespace _Project.Ray_Tracer.Scripts
 
         private TreeNode<RTRay> selectedRay;
         public TreeNode<RTRay> SelectedRay { get { return selectedRay; } }
+
+        private TreeNode<RTRay> currentlyDrawingRay;
+        public TreeNode<RTRay> CurrentlyDrawingRay { get { return currentlyDrawingRay; } }
+        
         private Vector2Int selectedRayCoordinates;
 
         private bool hasSelectedRay = false;
@@ -173,12 +177,12 @@ namespace _Project.Ray_Tracer.Scripts
         }
 
         /// <summary>
-        /// Event handler that signals when a new child has started drawing. Used by VisualizationProperties.
+        /// Event handler that signals when a new ray has started drawing.
         /// </summary>
-        public event EventHandler<TreeNode<RTRay>> drawingNewChild;
-        protected virtual void OnDrawingNewChild(TreeNode<RTRay> newRay)
+        public event EventHandler<TreeNode<RTRay>> drawingNewRay;
+        protected virtual void OnDrawingNewRay(TreeNode<RTRay> newRay)
         {
-            drawingNewChild?.Invoke(this, newRay);
+            drawingNewRay?.Invoke(this, newRay);
         }
 
         /// <summary>
@@ -244,6 +248,7 @@ namespace _Project.Ray_Tracer.Scripts
         private void Awake()
         {
             instance = this;
+            signaledRays = new HashSet<TreeNode<RTRay>>();
         }
 
         private void Start()
@@ -358,8 +363,9 @@ namespace _Project.Ray_Tracer.Scripts
                 // If we have selected a ray we only draw its ray tree.
                 if (hasSelectedRay)
                 {
-                    OnDrawingNewChild(SelectedRay);
                     animationDone = DrawRayTreeAnimatedSequential(selectedRay, distanceToDraw).isDone;
+                    if (animationDone)
+                        signaledRays.Clear();
                 }
                 // If specified we animate the ray trees sequentially (pixel by pixel).
                 else if (animateSequentially)
@@ -424,6 +430,9 @@ namespace _Project.Ray_Tracer.Scripts
             public float leftover;
         };
 
+        //keep track of which rays have been signaled as drawn to visprops
+        private HashSet<TreeNode<RTRay>> signaledRays;
+
         /// <summary>
         /// Animates drawing a ray tree; only when one child finishes drawing in full does the next child start drawing
         /// </summary>
@@ -431,6 +440,10 @@ namespace _Project.Ray_Tracer.Scripts
         /// distance left to draw for the next child></returns>
         private rayReturn DrawRayTreeAnimatedSequential(TreeNode<RTRay> rayTree, float distance)
         {
+            if (!signaledRays.Contains(rayTree))
+                OnDrawingNewRay(rayTree);   
+            signaledRays.Add(rayTree);
+
             rayReturn returnValue = new rayReturn();
             if (HideNoHitRays && rayTree.Data.Type == RTRay.RayType.NoHit)
             {
@@ -466,9 +479,9 @@ namespace _Project.Ray_Tracer.Scripts
             float leftoverFromPrev = returnValue.leftover;
             foreach (var child in rayTree.Children)
             {
-                if (done)
-                    OnDrawingNewChild(child);
                 rayReturn fromChild = DrawRayTreeAnimatedSequential(child, leftoverFromPrev);
+                if (fromChild.isDone)
+                    signaledRays.Add(child);
                 done &= fromChild.isDone;
                 leftoverFromPrev = fromChild.leftover;
             }
@@ -477,6 +490,5 @@ namespace _Project.Ray_Tracer.Scripts
             returnValue.leftover = leftoverFromPrev;
             return returnValue;
         }
-
     }
 }

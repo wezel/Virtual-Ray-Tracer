@@ -458,7 +458,6 @@ namespace _Project.Ray_Tracer.Scripts
             ControlPanel.Subscribe(OnEvent);
             rayManager = RayManager.Get();
             rayManager.changedSelectedRay += RMChangedSelectedRay;
-            rayManager.drawingNewChild += RMDrawingNewChild;
         }
 
         /// <summary>
@@ -478,12 +477,6 @@ namespace _Project.Ray_Tracer.Scripts
                 ControlPanel.ShowEmptyProperties();
             }
         }
-
-        private void RMDrawingNewChild(object sender, TreeNode<RTRay> childBeingDrawn)
-        {
-            ControlPanel.ShowVisualizationProperties(childBeingDrawn);
-        }
-
 
         // Check whether we are clicking on a transformation handle.
         private void OnLeftClick()

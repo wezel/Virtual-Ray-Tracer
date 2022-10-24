@@ -27,14 +27,21 @@ namespace _Project.UI.Scripts.Control_Panel
 
         //[SerializeField]
         private List<TextMeshProUGUI> steps;*/
+        private RayManager rayManager;
         private TreeNode<RTRay> ray;
 
+        private void Awake()
+        {
+        }
+
+        private void Start()
+        {
+        }
         public void Show(TreeNode<RTRay> ray)
         {
             gameObject.SetActive(true);
-            this.ray = ray;
-            rayType.text = ray.Data.Type.ToString();
-            rayChildren.text = ray.Children.Count.ToString();
+            rayManager = RayManager.Get();
+            rayManager.drawingNewRay += RMDrawingNewRay;
         }
 
         public void Hide()
@@ -42,17 +49,11 @@ namespace _Project.UI.Scripts.Control_Panel
             gameObject.SetActive(false);
         }
 
-        private void Awake()
+        private void RMDrawingNewRay(object sender, TreeNode<RTRay> rayBeingDrawn)
         {
-/*            steps = new List<TextMeshProUGUI>
-            {
-                resetText,
-                startLoopText,
-                noCollisionText,
-                computeRayText,
-                castChildrenText,
-                stopLoopText
-            };*/
+            ray = rayBeingDrawn;
+            rayType.text = ray.Data.Type.ToString();
+            rayChildren.text = ray.Children.Count.ToString();
         }
 
         /*        public void onStepChange(int prevStep, int newStep)
