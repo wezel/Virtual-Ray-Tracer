@@ -6,6 +6,7 @@ using TreeEditor;
 using UnityEngine;
 using _Project.Ray_Tracer.Scripts.RT_Ray;
 using _Project.Ray_Tracer.Scripts.Utility;
+using System.Collections;
 
 //no start bc no need to change values through the environment
 namespace _Project.UI.Scripts.Control_Panel
@@ -13,25 +14,43 @@ namespace _Project.UI.Scripts.Control_Panel
     public class VisualizationProperties : MonoBehaviour
     {
         [SerializeField]
-        private TextMeshProUGUI rayType;
+        private TextMeshProUGUI formRayText;
         [SerializeField]
-        private TextMeshProUGUI rayChildren;
-/*        [SerializeField]
-        private TextMeshProUGUI noCollisionText;
+        private TextMeshProUGUI computeIntersectionInput;
         [SerializeField]
-        private TextMeshProUGUI computeRayText;
+        private TextMeshProUGUI ifIntersectText;
         [SerializeField]
-        private TextMeshProUGUI castChildrenText;
+        private TextMeshProUGUI enterShadeText;
         [SerializeField]
-        private TextMeshProUGUI stopLoopText;
+        private TextMeshProUGUI computeLightRayText;
+        [SerializeField]
+        private TextMeshProUGUI ifReflectiveText;
+        [SerializeField]
+        private TextMeshProUGUI computeReflectiveText;
+        [SerializeField]
+        private TextMeshProUGUI ifTransparentText;
+        [SerializeField]
+        private TextMeshProUGUI computeRefractiveText;
 
         //[SerializeField]
-        private List<TextMeshProUGUI> steps;*/
+        private List<TextMeshProUGUI> steps;
+        private int prevStep;
         private RayManager rayManager;
         private TreeNode<RTRay> ray;
 
         private void Awake()
         {
+            steps = new List<TextMeshProUGUI>() {
+                formRayText,
+                computeIntersectionInput,
+                ifIntersectText,
+                enterShadeText,
+                computeLightRayText,
+                ifReflectiveText,
+                computeReflectiveText,
+                ifTransparentText,
+                computeRefractiveText
+            };
         }
 
         private void Start()
@@ -52,15 +71,54 @@ namespace _Project.UI.Scripts.Control_Panel
         private void RMDrawingNewRay(object sender, TreeNode<RTRay> rayBeingDrawn)
         {
             ray = rayBeingDrawn;
-            rayType.text = ray.Data.Type.ToString();
+            syncToCurrent();
+/*            rayType.text = ray.Data.Type.ToString();
             rayChildren.text = ray.Children.Count.ToString();
+            rayParent.text = (ray.Parent != null ? ray.Parent.ToString() : "no parent");*/
         }
 
-        /*        public void onStepChange(int prevStep, int newStep)
+        private void syncToCurrent()
+        {
+            if (ray.Parent == null)
+            {
+                prevStep = -1;
+                if (ray.Data.Type != RTRay.RayType.NoHit)
+                    highlightStepWait(prevStep, 0, 2);
+            }
+            else
+            {
+                switch (ray.Data.Type)
                 {
-                    if (prevStep >= 0)
-                        steps[prevStep].color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
-                    steps[newStep].color = new Color(0.0f, 1.0f, 1.0f, 1.0f);
-                }*/
+                    case RTRay.RayType.Light:
+                        highlightStepWait(prevStep, 3, 4);
+                        break;
+                    case RTRay.RayType.Reflect:
+                        highlightStepWait(3, 5, 6);
+                        break;
+                    case RTRay.RayType.Refract:
+                        highlightStepWait(3, 7, 8);
+                        break;
+                }
+            }
+        }
+
+        //highlist cnt first, then future
+        private IEnumerator highlightStepWait(int localPrev, int cnt, int future)
+        {
+            highlightStep(localPrev, cnt);
+            prevStep = cnt;
+            Debug.Log(1 / rayManager.Speed);
+            yield return new WaitForSeconds(1 / rayManager.Speed);
+            highlightStep(prevStep, future);
+            prevStep = future;
+        }
+
+        private void highlightStep(int prevStep, int newStep)
+        {
+            Debug.Log("highlighting");
+            if (prevStep >= 0)
+                steps[prevStep].color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+            steps[newStep].color = new Color(0.0f, 1.0f, 1.0f, 1.0f);
+        }
     }
 }

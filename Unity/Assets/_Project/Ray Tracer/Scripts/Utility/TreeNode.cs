@@ -19,6 +19,7 @@ namespace _Project.Ray_Tracer.Scripts.Utility
         public List<TreeNode<T>> Children { get; private set; }
 
         private TreeNode<T> parent;
+        public TreeNode<T> Parent { get { return parent; } }
 
         /// <summary>
         /// Construct a new <see cref="TreeNode{T}"/> from <paramref name="data"/>. It will have no parent and no
