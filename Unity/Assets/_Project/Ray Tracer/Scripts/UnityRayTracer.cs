@@ -245,6 +245,8 @@ namespace _Project.Ray_Tracer.Scripts
         /// <returns> The list of ray trees that were traced to render the image. </returns>
         public List<TreeNode<RTRay>> Render()
         {
+            AccelerationPrep();
+            
             List<TreeNode<RTRay>> rayTrees = new List<TreeNode<RTRay>>();
             scene = rtSceneManager.Scene;
             camera = scene.Camera;
@@ -458,6 +460,8 @@ namespace _Project.Ray_Tracer.Scripts
         /// </summary>
         public IEnumerator RenderImage()
         {
+            AccelerationPrep();
+            
             RenderedImageWindow renderedImageWindow = UIManager.Get().RenderedImageWindow;
             scene = rtSceneManager.Scene;
             camera = scene.Camera;
@@ -522,9 +526,14 @@ namespace _Project.Ray_Tracer.Scripts
                     yield return null; // yield to update UI and give the ability to cancel
                 }
             }
+            
+            Debug.Log("Triangle tests: " + trianglesTests);
             Debug.Log(Time.realtimeSinceStartup - start);
+            
+            AccelerationCleanup();
 
             image.Apply(); // Very important.
+            
             yield return null;
         }
 

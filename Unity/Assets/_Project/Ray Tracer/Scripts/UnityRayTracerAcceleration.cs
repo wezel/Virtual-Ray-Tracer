@@ -84,13 +84,13 @@ namespace _Project.Ray_Tracer.Scripts
                 case TraceMode.AABB:
                 {
                     traceFunc = TraceAABB;
-                    // imageTraceFunc = TraceImageAABB;
+                    imageTraceFunc = TraceImageAABB;
                     break;
                 }
                 case TraceMode.Octree:
                 {
                     traceFunc = TraceOctree;
-                    // imageTraceFunc = TraceImageOctree;
+                    imageTraceFunc = TraceImageOctree;
                     break;
                 }
 
@@ -98,11 +98,21 @@ namespace _Project.Ray_Tracer.Scripts
 
         }
 
+        private void AccelerationPrep()
+        {
+            trianglesNotIgnored = 0;
+            octreeStatusFlag = false;
+            savedAmount = 0;
+        }
+
         private void AccelerationCleanup()
         {
+            // TODO this should be data not strings 
             if (mode == TraceMode.Octree)
                 trianglesIgnored.text = (totalTriangles - trianglesNotIgnored).ToString() + " triangles ignored\n" + trianglesNotIgnored.ToString() + " triangles ray traced";
 
+            if(mode == TraceMode.AABB)
+                raysIgnored.text = savedAmount.ToString();
         }
 
         private TreeNode<RTRay> TraceAABB(Vector3 origin, Vector3 direction, int depth, RTRay.RayType type)
@@ -110,6 +120,8 @@ namespace _Project.Ray_Tracer.Scripts
             RaycastHit hit;
             
             TreeNode<RTRay> rayTree = new TreeNode<RTRay>(new RTRay());
+            
+            // todo make this function for "all" objects
             AABB aabb = acceleratedObject.GetComponent<AABB>();
             aabb.drawHitpoint = true;
             Bounds bounds = aabb.bounds;
@@ -215,6 +227,8 @@ namespace _Project.Ray_Tracer.Scripts
             RaycastHit hit;
 
             TreeNode<RTRay> rayTree = new TreeNode<RTRay>(new RTRay());
+            
+            // todo make this function for "all" objects
             OctreeNode ot = acceleratedObject.GetComponent<Octree>().octreeRoot.rootNode;
             
             float distance;
@@ -297,10 +311,13 @@ namespace _Project.Ray_Tracer.Scripts
             return rayTree;
         }
         
-        private Color TraceImageAABB(Vector3 origin, Vector3 direction, int depth, AABB aabb)
+        private Color TraceImageAABB(Vector3 origin, Vector3 direction, int depth)
         {
             RaycastHit hit;
-           
+            
+            // todo make this function for "all" objects
+            AABB aabb = acceleratedObject.GetComponent<AABB>();
+            aabb.drawHitpoint = true;
             Bounds bounds = aabb.bounds;
             float distance;
             Ray raycast = new Ray(origin, direction);
@@ -345,9 +362,11 @@ namespace _Project.Ray_Tracer.Scripts
             return ClampColor(color);
         }
         
-         private Color TraceImageOctree(Vector3 origin, Vector3 direction, int depth, OctreeNode ot)
+         private Color TraceImageOctree(Vector3 origin, Vector3 direction, int depth)
         {
             RaycastHit hit;
+            // todo make this function for "all" objects
+            OctreeNode ot = acceleratedObject.GetComponent<Octree>().octreeRoot.rootNode;
 
             Ray raycast = new Ray(origin, direction);
 
