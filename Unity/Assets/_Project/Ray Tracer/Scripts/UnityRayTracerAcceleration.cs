@@ -110,12 +110,15 @@ namespace _Project.Ray_Tracer.Scripts
             }
         }
 
-        private void AccelerationCleanup()
+        private void AccelerationCleanupTree()
         {
             // TODO this should be data not strings 
             if (mode == TraceMode.Octree)
                 trianglesIgnored.text = (totalTriangles - trianglesNotIgnored).ToString() + " triangles ignored\n" + trianglesNotIgnored.ToString() + " triangles ray traced";
+        }
 
+        private void AccelerationCleanupImage()
+        {
             if(mode == TraceMode.AABB)
                 raysIgnored.text = savedAmount.ToString();
         }

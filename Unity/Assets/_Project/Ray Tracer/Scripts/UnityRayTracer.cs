@@ -322,7 +322,7 @@ namespace _Project.Ray_Tracer.Scripts
                 }
             }
 
-            AccelerationCleanup();
+            AccelerationCleanupTree();
             return rayTrees;
         }
 
@@ -530,7 +530,7 @@ namespace _Project.Ray_Tracer.Scripts
             Debug.Log("Triangle tests: " + trianglesTests);
             Debug.Log(Time.realtimeSinceStartup - start);
             
-            AccelerationCleanup();
+            AccelerationCleanupImage();
 
             image.Apply(); // Very important.
             
