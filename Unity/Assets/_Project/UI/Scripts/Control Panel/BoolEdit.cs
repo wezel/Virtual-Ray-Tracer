@@ -37,6 +37,8 @@ namespace _Project.UI.Scripts.Control_Panel
             set { title.text = value; }
         }
 
+        // TODO rather have this not like this
+        [SerializeField]
         private bool isOn;
         /// <summary>
         /// The value of this <see cref="BoolEdit"/>. When set, the toggle UI element will be updated.

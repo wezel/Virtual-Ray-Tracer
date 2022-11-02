@@ -51,8 +51,7 @@ namespace _Project.Ray_Tracer.Scripts.Utility
             Draw(octreeRoot.rootNode);
 
             // Recalculate octree if transformed
-            if (transform.hasChanged)
-                octreeRoot = new OctreeRoot(this.gameObject, maxDepth);
+            octreeRoot = new OctreeRoot(gameObject, maxDepth);
 
         }
 
@@ -83,7 +82,7 @@ namespace _Project.Ray_Tracer.Scripts.Utility
         /// Used to toggle the drawOctree boolean from the UI
         /// </summary>
         /// <param name="tog"></param>
-        public void showOctreeToggle(bool tog)
+        public void showOctreeToggle()
         {
             drawOctree = !drawOctree;
         }

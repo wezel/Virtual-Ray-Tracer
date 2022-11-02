@@ -14,52 +14,51 @@ namespace _Project.Ray_Tracer.Scripts.Utility
         public bool drawHitpoint = false;
         private bool drawAABB = false;
         GameObject hitpointSphere = null;
+        
 
         void Start()
         {
-            meshRenderer = this.GetComponent<MeshRenderer>();
+            meshRenderer = GetComponent<MeshRenderer>();
+            
             bounds = meshRenderer.bounds;
         }
 
         void Update()
         {
-            if (transform.hasChanged)
-            {
-                bounds = meshRenderer.bounds;
-            }
+            
+            bounds = meshRenderer.bounds;
+
 
             if (!drawAABB)
             {
-                if (hitpointSphere != null) Object.Destroy(hitpointSphere);
+                if (hitpointSphere != null) Destroy(hitpointSphere);
                 return;
+            }
+
+            Popcron.Gizmos.Bounds(bounds, Color.green);
+            if (drawHitpoint)
+            {
+                if (hitpointSphere == null)
+                {
+                    hitpointSphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                    Renderer renderer = hitpointSphere.GetComponent<Renderer>();
+                    Material material = new Material(Shader.Find("Diffuse"));
+                    material.color = Color.green;
+                    renderer.material = material;
+                    renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                }
+
+                hitpointSphere.transform.position = hitpoint;
+                hitpointSphere.transform.localScale = 0.05f * Vector3.one;
             }
             else
             {
-                Popcron.Gizmos.Bounds(bounds, Color.green);
-                if (drawHitpoint)
-                {
-                    if (hitpointSphere == null)
-                    {
-                        hitpointSphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                        Renderer renderer = hitpointSphere.GetComponent<Renderer>();
-                        Material material = new Material(Shader.Find("Diffuse"));
-                        material.color = Color.green;
-                        renderer.material = material;
-                        renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-                    }
-
-                    hitpointSphere.transform.position = hitpoint;
-                    hitpointSphere.transform.localScale = 0.05f * Vector3.one;
-                }
-                else
-                {
-                    if (hitpointSphere != null) Object.Destroy(hitpointSphere);
-                }
+                if (hitpointSphere != null) Destroy(hitpointSphere);
             }
-
+            
         }
 
-        public void showAABBToggle(bool tog)
+        public void showAABBToggle()
         {
             drawAABB = !drawAABB;
         }

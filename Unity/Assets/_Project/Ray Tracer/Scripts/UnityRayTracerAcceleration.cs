@@ -66,6 +66,8 @@ namespace _Project.Ray_Tracer.Scripts
 
         private Func<Vector3, Vector3, int, RTRay.RayType, TreeNode<RTRay>> traceFunc;
         private Func<Vector3, Vector3, int, Color> imageTraceFunc;
+        
+        [SerializeField]
         private TraceMode mode;
 
 
@@ -100,9 +102,12 @@ namespace _Project.Ray_Tracer.Scripts
 
         private void AccelerationPrep()
         {
-            trianglesNotIgnored = 0;
-            octreeStatusFlag = false;
-            savedAmount = 0;
+            if (mode != TraceMode.Normal)
+            {
+                trianglesNotIgnored = 0;
+                octreeStatusFlag = false;
+                savedAmount = 0;
+            }
         }
 
         private void AccelerationCleanup()
@@ -427,7 +432,9 @@ namespace _Project.Ray_Tracer.Scripts
 
          private void AccelerationAwake()
          {
-             SetTraceMode(TraceMode.Normal);
+             SetTraceMode(mode);
+             if (acceleratedObject)
+                 totalTriangles = acceleratedObject.GetComponent<MeshFilter>().mesh.triangles.Length/3;
          }
     }
 }

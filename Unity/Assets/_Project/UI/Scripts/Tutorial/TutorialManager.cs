@@ -111,6 +111,8 @@ namespace _Project.UI.Scripts.Tutorial
             if (level <= 1)
                 return true;
 
+            if (GlobalManager.Get().CheatMode) return true;
+
             // Check whether the tasks of the previous level exist
             if (GlobalManager.Get().TutorialTasks.Count <= level - 2)
                 return false;
