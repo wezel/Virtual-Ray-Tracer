@@ -25,7 +25,7 @@ namespace _Project.Ray_Tracer.Scripts.Utility
         /// 3-4 works well overall
         /// </summary>
 
-        private bool drawOctree = true;
+        private bool drawOctree = false;
 
         /// <summary>
         /// Boolean flag for drawing or hiding the Octree from UI

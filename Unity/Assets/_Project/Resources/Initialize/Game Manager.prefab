@@ -844,15 +844,15 @@ MonoBehaviour:
   - optionalTasksStart: 4
     tasks:
     - identifier: 
-      name: Axis-Aligned Bounding Box (AABB)
+      name: Axis-Aligned Bounding Box (AABB).
       description: In 3D space, AABBs are a data structure representing a box which
         encapsulate the object within them fully. For any complex or basic object,
         AABB gives us the simpler and broader shape of the object it encapsulates.
       skippable: 1
       points: 93
     - identifier: showAABB
-      name: Show AABB
-      description: On the ray tracer tab at the bottom select the button "Show AABB"
+      name: Show AABB.
+      description: On the ray tracer tab at the bottom select the button "Show AABB".
       skippable: 0
       points: 538
     - identifier: 
@@ -863,31 +863,43 @@ MonoBehaviour:
         AABB.
       skippable: 1
       points: 410
+    - identifier: scaleAABB
+      name: Scale AABB.
+      description: Now try to scale the object.
+      skippable: 0
+      points: 250
+    - identifier: 
+      name: Scaling explained.
+      description: We can see the previous explained properties in action. When we
+        scale the object the AABB scales with it keeping the minimum and maximum
+        points of the object within its bounds.
+      skippable: 1
+      points: 250
     - identifier: translateAABB
-      name: Move AABB
-      description: Now try to move the AABB around.
+      name: Move AABB.
+      description: Now try to move the object around.
       skippable: 0
       points: 250
     - identifier: 
       name: Moving explained.
       description: Notice that when the object is moved the AAB moves with it. Whenever
-        the location of the object is updated the location of the AABB updates with
-        it.
+        the location of the object is updated the location of the AABB updates as
+        well.
       skippable: 1
       points: 250
     - identifier: spinAABB
-      name: Spin AABB
-      description: On the ray tracer tab at the bottom select the button "Spin Object"
+      name: Spin AABB.
+      description: On the ray tracer tab at the bottom select the button "Spin Object".
       skippable: 0
       points: 250
     - identifier: 
-      name: Spin explained
-      description: Notice that when the object is spinning  the AABB is always aligned
-        to the 3 axes.
+      name: Spin explained.
+      description: Notice that when the object is spinning  the AABB changes size
+        but always stays aligned to the 3 axes.
       skippable: 1
       points: 250
     - identifier: 
-      name: 
+      name: Level Complete
       description: You may press "Next Level" now to move onto the next level or
         do some more exploring.
       skippable: 0
@@ -922,28 +934,55 @@ MonoBehaviour:
   - optionalTasksStart: 4
     tasks:
     - identifier: 
-      name: Freedom
-      description: You have reached the final level! This is a sandbox level which
-        means all tools are available to create a customized scene yourself.
+      name: The Octree.
+      description: Octrees are a tree data structure which is the 3D spatial partitioning
+        of an object. In it's most basic form it is practically an AABB. However
+        in this level we will discover how an octree differs from an AABB.
       skippable: 1
       points: 93
-    - identifier: createObject
-      name: Creating Objects
-      description: You can now create objects. Create an object by choosing one of
-        the objects in the "Create" dropdown.
+    - identifier: showOctree
+      name: Show Octree.
+      description: On the ray tracer tab at the bottom select the button "Show Octree".
       skippable: 0
       points: 538
-    - identifier: deleteObject
-      name: Deleting Objects
-      description: You can now also delete any object, except for the camera. Delete
-        a non-camera object from the scene by selecting it and pressing [DEL].
-      skippable: 0
-      points: 410
     - identifier: 
-      name: 
-      description: You are now able to create your own custom scenes. Go crazy! If
-        you would like to use Virtual Ray Tracer again but without any restrictions,
-        you can enable "Cheat Mode" in the settings.
+      name: How is the octree derived?
+      description: Now we see the octree. Currentetly it looks and behaves like an
+        AABB because its depth is set to 0. The currently visible part of the octree
+        is also created in the same way as an AABB is.
+      skippable: 1
+      points: 410
+    - identifier: octreeDepth1
+      name: Change octree Depth.
+      description: Now try to change the depth of the octree. Go to the ray tracer
+        tab and use the "depth slider" at the bottom.
+      skippable: 0
+      points: 250
+    - identifier: 
+      name: Depth explained.
+      description: We can think of an octree as a collection of AABBs structured
+        as a tree.  By increasing the depth with 1 we split each AABB into 8 new
+        ones and add only those to the tree that contain the object. This gives us
+        more information on where the object is which we can then use to accelerate
+        ray tracing.
+      skippable: 1
+      points: 250
+    - identifier: spinOctree
+      name: Spin Octree.
+      description: On the ray tracer tab at the bottom select the button "Spin Object".
+      skippable: 0
+      points: 250
+    - identifier: 
+      name: Spin explained.
+      description: Notice that an octree behaves the same as an AABB when the object
+        is spinning. The same is true for moving and scaling the octree.  the AABB
+        is always aligned to the 3 axes.
+      skippable: 1
+      points: 250
+    - identifier: 
+      name: Level complete.
+      description: You may press "Next Level" now to move onto the next level or
+        do some more exploring.
       skippable: 0
       points: 0
   - optionalTasksStart: 4
