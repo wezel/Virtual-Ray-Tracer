@@ -13,6 +13,7 @@ namespace _Project.UI.Scripts
         private Button closeButton;
         private UIManager uiManager;
 
+        // TODO instead of removing functionality remove the function itself
         /// <summary>
         /// Show the introduction panel.
         /// </summary>

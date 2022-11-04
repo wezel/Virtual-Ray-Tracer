@@ -844,6 +844,138 @@ MonoBehaviour:
   - optionalTasksStart: 4
     tasks:
     - identifier: 
+      name: Axis-Aligned Bounding Box (AABB)
+      description: In 3D space, AABBs are a data structure representing a box which
+        encapsulate the object within them fully. For any complex or basic object,
+        AABB gives us the simpler and broader shape of the object it encapsulates.
+      skippable: 1
+      points: 93
+    - identifier: showAABB
+      name: Show AABB
+      description: On the ray tracer tab at the bottom select the button "Show AABB"
+      skippable: 0
+      points: 538
+    - identifier: 
+      name: How is AABB derived?
+      description: Now we see the AABB. The AABB is created by getting the minimum
+        and maximum value of the object on each axes (x,y,z). By combining these
+        6 values in every possible way we arive at the 8 corners that define our
+        AABB.
+      skippable: 1
+      points: 410
+    - identifier: translateAABB
+      name: Move AABB
+      description: Now try to move the AABB around.
+      skippable: 0
+      points: 250
+    - identifier: 
+      name: Moving explained.
+      description: Notice that when the object is moved the AAB moves with it. Whenever
+        the location of the object is updated the location of the AABB updates with
+        it.
+      skippable: 1
+      points: 250
+    - identifier: spinAABB
+      name: Spin AABB
+      description: On the ray tracer tab at the bottom select the button "Spin Object"
+      skippable: 0
+      points: 250
+    - identifier: 
+      name: Spin explained
+      description: Notice that when the object is spinning  the AABB is always aligned
+        to the 3 axes.
+      skippable: 1
+      points: 250
+    - identifier: 
+      name: 
+      description: You may press "Next Level" now to move onto the next level or
+        do some more exploring.
+      skippable: 0
+      points: 0
+  - optionalTasksStart: 4
+    tasks:
+    - identifier: 
+      name: Freedom
+      description: You have reached the final level! This is a sandbox level which
+        means all tools are available to create a customized scene yourself.
+      skippable: 1
+      points: 93
+    - identifier: createObject
+      name: Creating Objects
+      description: You can now create objects. Create an object by choosing one of
+        the objects in the "Create" dropdown.
+      skippable: 0
+      points: 538
+    - identifier: deleteObject
+      name: Deleting Objects
+      description: You can now also delete any object, except for the camera. Delete
+        a non-camera object from the scene by selecting it and pressing [DEL].
+      skippable: 0
+      points: 410
+    - identifier: 
+      name: 
+      description: You are now able to create your own custom scenes. Go crazy! If
+        you would like to use Virtual Ray Tracer again but without any restrictions,
+        you can enable "Cheat Mode" in the settings.
+      skippable: 0
+      points: 0
+  - optionalTasksStart: 4
+    tasks:
+    - identifier: 
+      name: Freedom
+      description: You have reached the final level! This is a sandbox level which
+        means all tools are available to create a customized scene yourself.
+      skippable: 1
+      points: 93
+    - identifier: createObject
+      name: Creating Objects
+      description: You can now create objects. Create an object by choosing one of
+        the objects in the "Create" dropdown.
+      skippable: 0
+      points: 538
+    - identifier: deleteObject
+      name: Deleting Objects
+      description: You can now also delete any object, except for the camera. Delete
+        a non-camera object from the scene by selecting it and pressing [DEL].
+      skippable: 0
+      points: 410
+    - identifier: 
+      name: 
+      description: You are now able to create your own custom scenes. Go crazy! If
+        you would like to use Virtual Ray Tracer again but without any restrictions,
+        you can enable "Cheat Mode" in the settings.
+      skippable: 0
+      points: 0
+  - optionalTasksStart: 4
+    tasks:
+    - identifier: 
+      name: Freedom
+      description: You have reached the final level! This is a sandbox level which
+        means all tools are available to create a customized scene yourself.
+      skippable: 1
+      points: 93
+    - identifier: createObject
+      name: Creating Objects
+      description: You can now create objects. Create an object by choosing one of
+        the objects in the "Create" dropdown.
+      skippable: 0
+      points: 538
+    - identifier: deleteObject
+      name: Deleting Objects
+      description: You can now also delete any object, except for the camera. Delete
+        a non-camera object from the scene by selecting it and pressing [DEL].
+      skippable: 0
+      points: 410
+    - identifier: 
+      name: 
+      description: You are now able to create your own custom scenes. Go crazy! If
+        you would like to use Virtual Ray Tracer again but without any restrictions,
+        you can enable "Cheat Mode" in the settings.
+      skippable: 0
+      points: 0
+  - optionalTasksStart: 4
+    tasks:
+    - identifier: 
       name: Freedom
       description: You have reached the final level! This is a sandbox level which
         means all tools are available to create a customized scene yourself.

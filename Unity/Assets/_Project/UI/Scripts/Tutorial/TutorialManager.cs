@@ -110,15 +110,19 @@ namespace _Project.UI.Scripts.Tutorial
             // The first level can always be loaded
             if (level <= 1)
                 return true;
+            
+            GlobalManager globalManager = GlobalManager.Get();
 
-            if (GlobalManager.Get().CheatMode) return true;
+            if (globalManager.CheatMode) return true;
+
+            if (level == SceneManager.sceneCountInBuildSettings - 1) return true;
 
             // Check whether the tasks of the previous level exist
-            if (GlobalManager.Get().TutorialTasks.Count <= level - 2)
+            if (globalManager.TutorialTasks.Count <= level - 2)
                 return false;
 
             // Check whether the tasks of the previous level are finished
-            return GlobalManager.Get().TutorialTasks[level - 2].AreRequiredTasksFinished();
+            return globalManager.TutorialTasks[level - 2].AreRequiredTasksFinished();
         }
 
         /// <summary>

@@ -74,7 +74,6 @@ namespace _Project.Ray_Tracer.Scripts
         private void SetTraceMode(TraceMode mode)
         {
             this.mode = mode;
-            // TODO we ignore the image tracer for now because it is not that important and takes more work to integrate (like this)
             switch (mode)
             {
                 case TraceMode.Normal:
