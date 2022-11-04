@@ -9,7 +9,8 @@ public class Badge
     {
         Points,
         Playtime,
-        Objects
+        Objects,
+        EasterEgg
     }
 
     /// <summary>
@@ -57,6 +58,8 @@ public class Badge
                     return (int)Time.realtimeSinceStartup / 60;
                 case BadgeType.Objects:
                     return GlobalManager.ObjectsCreated;
+                case BadgeType.EasterEgg:
+                    return GlobalManager.EasterEggFound;
             }
             return 0;
         }

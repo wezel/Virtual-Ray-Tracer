@@ -1064,3 +1064,7 @@ MonoBehaviour:
     badgeName: Creator
     badgeDescription: Create 50 objects
     actionTotal: 50
+  - type: 3
+    badgeName: You found the easter egg
+    badgeDescription: The force is strong in this one
+    actionTotal: 1

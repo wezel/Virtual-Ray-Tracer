@@ -14,6 +14,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Spot_Light;
+using _Project.Scripts;
 
 namespace _Project.Ray_Tracer.Scripts
 {
@@ -528,6 +529,7 @@ namespace _Project.Ray_Tracer.Scripts
                     {
                         Deselect();
                         ControlPanel.ShowEmptyProperties();
+                        GlobalManager.EasterEggFound = 1;
                     }
                     break;
             }

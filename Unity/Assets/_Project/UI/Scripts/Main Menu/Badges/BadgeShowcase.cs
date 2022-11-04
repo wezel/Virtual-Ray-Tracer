@@ -29,11 +29,13 @@ public class BadgeShowcase : MonoBehaviour
                 badgeIcon.sprite = playTimeSprite;
                 break;
             case Badge.BadgeType.Points:
+            case Badge.BadgeType.EasterEgg:
                 badgeIcon.sprite = pointsSprite;
                 break;
             case Badge.BadgeType.Objects:
                 badgeIcon.sprite = objectsSprite;
                 break;
+            
         }
 
         // Update badge text

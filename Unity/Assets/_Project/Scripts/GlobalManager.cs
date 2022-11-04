@@ -36,6 +36,7 @@ namespace _Project.Scripts
         public static bool TutorialExpanded = true;
         public static int TutorialPoints = 0;
         public static int ObjectsCreated = 0;
+        public static int EasterEggFound = 0;
         
         // TODO not the optimal way to do this including the way that task completion is registered.
         public List<Tasks> TutorialTasks;

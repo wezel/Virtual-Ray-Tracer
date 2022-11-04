@@ -27,6 +27,8 @@ public class BadgesPanel : MonoBehaviour
         for (int i = 0; i < badgePrefabs.Count; i++)
             badgePrefabs[i].UpdateUI(badges[i]);
 
+        if (GlobalManager.EasterEggFound != 0) badgePrefabs[badgePrefabs.Count - 1].gameObject.SetActive(true);
+        
         gameObject.SetActive(true);
         UIManager.Get().AddEscapable(Hide);
     }
@@ -61,5 +63,8 @@ public class BadgesPanel : MonoBehaviour
             prefab.UpdateUI(badge);
             badgePrefabs.Add(prefab);
         }
+
+        // hide easter egg TODO implement this nicer
+        badgePrefabs[badgePrefabs.Count - 1].gameObject.SetActive(false);
     }
 }
