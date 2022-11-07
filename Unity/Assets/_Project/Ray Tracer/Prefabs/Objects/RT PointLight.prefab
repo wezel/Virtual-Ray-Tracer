@@ -83,7 +83,7 @@ Light:
   serializedVersion: 10
   m_Type: 2
   m_Shape: 0
-  m_Color: {r: 256.5, g: 1, b: 0.5, a: 1}
+  m_Color: {r: 256.5, g: 256.01666, b: 0.5, a: 768}
   m_Intensity: 1
   m_Range: 100
   m_SpotAngle: 30
@@ -121,7 +121,7 @@ Light:
   m_RenderMode: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 1011
   m_RenderingLayerMask: 1
   m_Lightmapping: 4
   m_LightShadowCasterMode: 0
@@ -174,7 +174,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3904491717560610861}
-  m_LocalRotation: {x: -0.00011760039, y: 0.99986523, z: 0.014163363, w: 0.008302022}
+  m_LocalRotation: {x: -0.07253435, y: 0.88704574, z: 0.14935593, w: 0.43079165}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.001, y: 0.001, z: 0.001}
   m_Children:
