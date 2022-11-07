@@ -907,28 +907,48 @@ MonoBehaviour:
   - optionalTasksStart: 4
     tasks:
     - identifier: 
-      name: Freedom
-      description: You have reached the final level! This is a sandbox level which
-        means all tools are available to create a customized scene yourself.
+      name: Speed Up
+      description: The AABB is used to speed up the ray tracing process. Instead
+        of checking a ray against every single triangle of a 3D mesh we check against
+        the simple AABB first. If the ray misses the AABB we ignore the object and
+        don't check the triangles which speeds up the ray tracing process.
       skippable: 1
       points: 93
-    - identifier: createObject
-      name: Creating Objects
-      description: You can now create objects. Create an object by choosing one of
-        the objects in the "Create" dropdown.
+    - identifier: enableRayTracerAABB
+      name: Show Rays
+      description: To see how this works go to the ray tracer tab and click the "show
+        rays" button.
       skippable: 0
       points: 538
-    - identifier: deleteObject
-      name: Deleting Objects
-      description: You can now also delete any object, except for the camera. Delete
-        a non-camera object from the scene by selecting it and pressing [DEL].
-      skippable: 0
-      points: 410
     - identifier: 
-      name: 
-      description: You are now able to create your own custom scenes. Go crazy! If
-        you would like to use Virtual Ray Tracer again but without any restrictions,
-        you can enable "Cheat Mode" in the settings.
+      name: Ray AABB interaction
+      description: 'We can now see the ray interacting with the AABB. The location
+        where the ray hits the AABB is marked with a dot and in the top left we are
+        informed on the ray status.  '
+      skippable: 1
+      points: 410
+    - identifier: translateAABB2
+      name: Move AABB
+      description: 'Move the object and its AABB around to see. What the effect is
+        on the ray interaction.
+
+        - Hit the AABB and not the object.
+
+        -
+        Mis the AABB completely.'
+      skippable: 0
+      points: 538
+    - identifier: 
+      name: Moveing explained
+      description: We see that by moving the object and the AABB outside of the trajectory
+        of the ray we can ignore the ray object interaction and thus speed up the
+        ray tracing process as we set out to achieve.
+      skippable: 1
+      points: 50
+    - identifier: 
+      name: Level Complete
+      description: You may press "Next Level" now to move onto the next level or
+        do some more exploring.
       skippable: 0
       points: 0
   - optionalTasksStart: 4
@@ -988,28 +1008,52 @@ MonoBehaviour:
   - optionalTasksStart: 4
     tasks:
     - identifier: 
-      name: Freedom
-      description: You have reached the final level! This is a sandbox level which
-        means all tools are available to create a customized scene yourself.
+      name: Speed Up
+      description: Like the AABB the octree is used to speed up the ray tracing process.
+        The difference here is that when we hit the octree we check if the ray intersects
+        with an octant of the octree in which the object exists. We repeat this cycle
+        up to a depth and only then check against the triangles of the 3D mesh that
+        fall into that section.
       skippable: 1
       points: 93
-    - identifier: createObject
-      name: Creating Objects
-      description: You can now create objects. Create an object by choosing one of
-        the objects in the "Create" dropdown.
+    - identifier: enableRayTracerOctree
+      name: Show Rays
+      description: To see how this works go to the ray tracer tab and click the "show
+        rays" button.
       skippable: 0
       points: 538
-    - identifier: deleteObject
-      name: Deleting Objects
-      description: You can now also delete any object, except for the camera. Delete
-        a non-camera object from the scene by selecting it and pressing [DEL].
-      skippable: 0
-      points: 410
     - identifier: 
-      name: 
-      description: You are now able to create your own custom scenes. Go crazy! If
-        you would like to use Virtual Ray Tracer again but without any restrictions,
-        you can enable "Cheat Mode" in the settings.
+      name: Ray AABB interaction
+      description: 'We can now see the ray interacting with the octree. In the top
+        left corner we are informed of how we hit the octree and the object and how
+        many triangle calculations we could skip.  '
+      skippable: 1
+      points: 410
+    - identifier: translateOctree2
+      name: Move octree
+      description: 'Move the object and its octree around to see. What the effect
+        is on the ray interaction.
+
+        - Graze the object.
+
+        - Hit the
+        octree but not the object.
+
+        - Mis the octree completely.'
+      skippable: 0
+      points: 538
+    - identifier: 
+      name: Moveing explained
+      description: We see that for any type of interaction we reduced the needed
+        calculations significantly. Where first we needed to check against all the
+        triangles we no,w at the cost of a couple of box interaction, can ignore
+        most of them. Again speeding up the ray tracing process.
+      skippable: 1
+      points: 0
+    - identifier: 
+      name: Level Complete
+      description: You may press "Next Level" now to move onto the next level or
+        do some more exploring.
       skippable: 0
       points: 0
   - optionalTasksStart: 4
