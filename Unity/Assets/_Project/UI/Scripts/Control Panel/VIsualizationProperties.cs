@@ -34,7 +34,7 @@ namespace _Project.UI.Scripts.Control_Panel
 
         //[SerializeField]
         private List<TextMeshProUGUI> steps;
-        private int prevStep;
+        private int globalPrev;
         private RayManager rayManager;
         private TreeNode<RTRay> ray;
 
@@ -51,10 +51,12 @@ namespace _Project.UI.Scripts.Control_Panel
                 ifTransparentText,
                 computeRefractiveText
             };
-        }
 
-        private void Start()
-        {
+            //reset color - needed when we exit visprops and then start it again.
+            foreach (TextMeshProUGUI step in steps)
+            {
+                step.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+            }
         }
         public void Show(TreeNode<RTRay> ray)
         {
@@ -81,36 +83,32 @@ namespace _Project.UI.Scripts.Control_Panel
         {
             if (ray.Parent == null)
             {
-                prevStep = -1;
                 if (ray.Data.Type != RTRay.RayType.NoHit)
-                    highlightStepWait(prevStep, 0, 2);
+                    StartCoroutine(highlightStepWait(globalPrev, 0, 2));
             }
             else
             {
                 switch (ray.Data.Type)
                 {
                     case RTRay.RayType.Light:
-                        highlightStepWait(prevStep, 3, 4);
+                        StartCoroutine(highlightStepWait(globalPrev, 3, 4));
                         break;
                     case RTRay.RayType.Reflect:
-                        highlightStepWait(3, 5, 6);
+                        StartCoroutine(highlightStepWait(3, 5, 6));
                         break;
                     case RTRay.RayType.Refract:
-                        highlightStepWait(3, 7, 8);
+                        StartCoroutine(highlightStepWait(3, 7, 8));
                         break;
                 }
             }
         }
 
-        //highlist cnt first, then future
-        private IEnumerator highlightStepWait(int localPrev, int cnt, int future)
+        //highlist cnt first, wait, then future
+        IEnumerator highlightStepWait(int localPrev, int cnt, int future)
         {
             highlightStep(localPrev, cnt);
-            prevStep = cnt;
-            Debug.Log(1 / rayManager.Speed);
-            yield return new WaitForSeconds(1 / rayManager.Speed);
-            highlightStep(prevStep, future);
-            prevStep = future;
+            yield return new WaitForSeconds(1/rayManager.Speed);
+            highlightStep(globalPrev, future);
         }
 
         private void highlightStep(int prevStep, int newStep)
@@ -119,6 +117,7 @@ namespace _Project.UI.Scripts.Control_Panel
             if (prevStep >= 0)
                 steps[prevStep].color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
             steps[newStep].color = new Color(0.0f, 1.0f, 1.0f, 1.0f);
+            globalPrev = newStep;
         }
     }
 }
