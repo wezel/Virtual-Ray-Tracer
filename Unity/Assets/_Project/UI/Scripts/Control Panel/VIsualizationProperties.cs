@@ -53,10 +53,7 @@ namespace _Project.UI.Scripts.Control_Panel
             };
 
             //reset color - needed when we exit visprops and then start it again.
-            foreach (TextMeshProUGUI step in steps)
-            {
-                step.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
-            }
+            resetColor();
         }
         public void Show(TreeNode<RTRay> ray)
         {
@@ -74,15 +71,16 @@ namespace _Project.UI.Scripts.Control_Panel
         {
             ray = rayBeingDrawn;
             syncToCurrent();
-/*            rayType.text = ray.Data.Type.ToString();
-            rayChildren.text = ray.Children.Count.ToString();
-            rayParent.text = (ray.Parent != null ? ray.Parent.ToString() : "no parent");*/
         }
 
         private void syncToCurrent()
         {
+            Debug.Log(ray.Data.Type);
+            //root of tree
             if (ray.Parent == null)
             {
+                //reset all colors - for when we change to a different ray while on a ray
+                resetColor();
                 if (ray.Data.Type != RTRay.RayType.NoHit)
                     StartCoroutine(highlightStepWait(globalPrev, 0, 2));
             }
@@ -103,21 +101,28 @@ namespace _Project.UI.Scripts.Control_Panel
             }
         }
 
+        // draws light ray first but receives signals from light & reflective at same time???
+        // time using the length of ray? 
         //highlist cnt first, wait, then future
         IEnumerator highlightStepWait(int localPrev, int cnt, int future)
         {
             highlightStep(localPrev, cnt);
-            yield return new WaitForSeconds(1/rayManager.Speed);
+            yield return new WaitForSeconds(1 / rayManager.Speed);
             highlightStep(globalPrev, future);
         }
 
         private void highlightStep(int prevStep, int newStep)
         {
-            Debug.Log("highlighting");
             if (prevStep >= 0)
                 steps[prevStep].color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
             steps[newStep].color = new Color(0.0f, 1.0f, 1.0f, 1.0f);
             globalPrev = newStep;
+        }
+
+        private void resetColor()
+        {
+            foreach(TextMeshProUGUI step in steps) 
+                step.color = Color.white;   
         }
     }
 }
