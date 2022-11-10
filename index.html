@@ -21,7 +21,7 @@
         <div id="unity-webgl-logo"></div>
         <div id="unity-fullscreen-button"></div>
         <div id="unity-build-title">Virtual Ray Tracer</div>
-      </div> -->
+      </div> remove unity things --> 
     </div>
     <script>
       var container = document.querySelector("#unity-container");
@@ -106,9 +106,9 @@
           progressBarFull.style.width = 100 * progress + "%";
         }).then((unityInstance) => {
           loadingBar.style.display = "none";
-          fullscreenButton.onclick = () => {
+/*          fullscreenButton.onclick = () => {
             unityInstance.SetFullscreen(1);
-          };
+          };*/ // prevent fullscreen button error
         }).catch((message) => {
           alert(message);
         });
