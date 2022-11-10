@@ -227,6 +227,7 @@ namespace _Project.Ray_Tracer.Scripts
         /// </summary>            
         private void ReloadMaterials() => rayObjectPool.ReloadMaterials();
 
+        // TODO this can be changed to a resource as well removing the need to assign them all here
         [SerializeField] private Material noHitMaterial;
         [SerializeField] private Material reflectMaterial;
         [SerializeField] private Material reflectMaterialTransparent;
