@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -25,17 +26,15 @@ namespace _Project.Ray_Tracer.Scripts.Utility
 
         void Update()
         {
-            
             bounds = meshRenderer.bounds;
-
 
             if (!drawAABB)
             {
                 if (hitpointSphere != null) Destroy(hitpointSphere);
                 return;
             }
-
             Popcron.Gizmos.Bounds(bounds, Color.green);
+
             if (drawHitpoint)
             {
                 if (hitpointSphere == null)

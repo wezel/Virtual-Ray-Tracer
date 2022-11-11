@@ -1,5 +1,5 @@
 #if UNITY_EDITOR
-using UnityEditor.Experimental.SceneManagement;
+
 #endif
 using UnityEngine;
 using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light;
@@ -202,7 +202,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
 #if UNITY_EDITOR // Update the (amount of) lights in the editor
             if (lights != null && lights.Count == LightSamples * LightSamples)
                 return;
-            else if (PrefabStageUtility.GetCurrentPrefabStage() != null) // In Prefab Mode
+            else if (UnityEditor.SceneManagement.PrefabStageUtility.GetCurrentPrefabStage() != null) // In Prefab Mode
                 return;                                                  // Don't add lights to the prefab
             else
                 UpdateLights(); // Update lights as well in the editor

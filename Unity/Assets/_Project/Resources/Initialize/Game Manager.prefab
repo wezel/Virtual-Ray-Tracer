@@ -27,6 +27,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -736,7 +737,7 @@ MonoBehaviour:
   - optionalTasksStart: 8
     tasks:
     - identifier: 
-      name: Advanced Lighting 2
+      name: Advanced Lighting - Area Lights
       description: As said in the previous level, there are also area lights. This
         level has an area light. An area light is very similar to a spot light, except
         that the light does not come from a single point, but from an area. This
@@ -841,12 +842,12 @@ MonoBehaviour:
         do some more exploring.
       skippable: 0
       points: 0
-  - optionalTasksStart: 4
+  - optionalTasksStart: 10
     tasks:
     - identifier: 
       name: Axis-Aligned Bounding Box (AABB).
       description: In 3D space, AABBs are a data structure representing a box which
-        encapsulate the object within them fully. For any complex or basic object,
+        encapsulates the object within them fully. For any complex or basic object,
         AABB gives us the simpler and broader shape of the object it encapsulates.
       skippable: 1
       points: 93
@@ -858,7 +859,7 @@ MonoBehaviour:
     - identifier: 
       name: How is AABB derived?
       description: Now we see the AABB. The AABB is created by getting the minimum
-        and maximum value of the object on each axes (x,y,z). By combining these
+        and maximum value of the object on each axis (x,y,z). By combining these
         6 values in every possible way we arive at the 8 corners that define our
         AABB.
       skippable: 1
@@ -904,7 +905,7 @@ MonoBehaviour:
         do some more exploring.
       skippable: 0
       points: 0
-  - optionalTasksStart: 4
+  - optionalTasksStart: 6
     tasks:
     - identifier: 
       name: Speed Up
@@ -929,7 +930,7 @@ MonoBehaviour:
       points: 410
     - identifier: translateAABB2
       name: Move AABB
-      description: 'Move the object and its AABB around to see. What the effect is
+      description: 'Move the object and its AABB around to see what the effect is
         on the ray interaction.
 
         - Hit the AABB and not the object.
@@ -951,7 +952,7 @@ MonoBehaviour:
         do some more exploring.
       skippable: 0
       points: 0
-  - optionalTasksStart: 4
+  - optionalTasksStart: 8
     tasks:
     - identifier: 
       name: The Octree.
@@ -1005,7 +1006,7 @@ MonoBehaviour:
         do some more exploring.
       skippable: 0
       points: 0
-  - optionalTasksStart: 4
+  - optionalTasksStart: 6
     tasks:
     - identifier: 
       name: Speed Up
@@ -1052,8 +1053,8 @@ MonoBehaviour:
       points: 0
     - identifier: 
       name: Level Complete
-      description: You may press "Next Level" now to move onto the next level or
-        do some more exploring.
+      description: This is the last tutorial level. You may press "Next Level" now
+        to move onto the sandbox level or do some more exploring.
       skippable: 0
       points: 0
   - optionalTasksStart: 4
