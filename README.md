@@ -7,7 +7,7 @@ Virtual Ray Tracer is a Unity application that visualizes ray tracing. The appli
 
 ## New in 2.0
 
-Virtual Ray Tracer 2.0 comes with several new features. The info panel at the start of each level has been replaced by a task and achievement system. The tasks allow us to devide the information in smaller pieces and encouraged the user to interact more with the levels. The achievements reward the user encouraging them even more. Lighting has been expanded. The application now supports area lights, soft shadows, spot lights and distance attenuation. Visualization of axis-aligned bounding boxes and octrees has been added. Besides the new features the application also has a couple of new settings you can find in the settings panel in each level.
+Virtual Ray Tracer 2.0 comes with several new features. The info panel at the start of each level has been replaced by a task and achievement system. The tasks allow to present the information in smaller chunks and motivate users to explore the levels. The achievements further reward users. Lighting has been expanded: the application now supports area lights, soft shadows, spot lights and distance attenuation. Visualization of axis-aligned bounding boxes and octrees has been added. Besides the new features the application also introduce several settings you can find in the settings panel in each level.
 
 Also new in Virtual ray tracer 2.0 is the possibility to run the application in your [browser](https://wezel.github.io/Virtual-Ray-Tracer) or even on [android devices](https://play.google.com/store/apps/details?id=com.RUG.VirtualRayTracer&hl=en&gl=US&pli=1)(older version). 
 
