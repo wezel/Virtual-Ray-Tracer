@@ -1,4 +1,5 @@
-<https://user-images.githubusercontent.com/5408480/158495833-fd7c4836-3924-4127-ac56-f29c75273958.mp4>
+<https://user-images.githubusercontent.com/5408480/201260880-cbe8eb57-4fe2-46d6-b2e6-765760412808.mp4>
+
 
 # Virtual Ray Tracer 2.0
 
@@ -50,7 +51,7 @@ Virtual Ray Tracer was created by Chris van Wezel and Willard Verschoore as a gr
 
 ## Future
 
-The application is still in active development. A new user study has been conducted and, under the guidance of the same supervisors, a new group of students started their Bachelor's projects focused on improving and extending the application. And we hope that you will contribute to Virtual Ray Tracer, too; read on.
+Although currently there are no mentionable worthy new projects the application is still in active development and we hope that you will contribute to Virtual Ray Tracer, too; read on.
 
 ## License
 
