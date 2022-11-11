@@ -5,7 +5,7 @@
 
 Virtual Ray Tracer is a Unity application that visualizes ray tracing. The application shows a scene with a camera, lights and objects. Rays slowly shoot from the camera and interact with the lights and objects in the scene. Users can change the settings of the ray tracer and material properties of the objects and see how this affects the rays traced in real-time. The application comes with a number of scenes that walk the user through the settings and controls of the application as well as several ray tracing concepts.
 
-# New in 2.0
+## New in 2.0
 
 Thanks to a new group of students Virtual Ray Tracer 2.0 comes with even more features. The info panel at the start of each level has been replaced by a task and achievement system. The tasks allow us to devide the information in smaller pieces and encouraged the user to interact more with the levels. The achievements reward the user encouraging them even more. Lighting has been expanded. The application now supports area lights, soft shadows, spot lights and distance attenuation. Vissualization of Axis Aligned Bounding Boxes and octrees has been added. Besides the new features the application also has a couple of new settings you can find in the settings panel in each level.
 
