@@ -63,18 +63,18 @@ Any questions, bug reports or suggestions can be created as an issue on this rep
 
 ## Paper and theses
 
-W.A. Verschoore de la Houssaije, C.S. van Wezel, S. Frey, and J. Kosinka: Virtual Ray Tracer, Eurographics 2022 Education Papers; <https://diglib.eg.org/handle/10.2312/eged20221045>.
+[W.A. Verschoore de la Houssaije, C.S. van Wezel, S. Frey, and J. Kosinka: Virtual Ray Tracer, Eurographics 2022 Education Papers.](https://diglib.eg.org/handle/10.2312/eged20221045)
 
-W.A. Verschoore de la Houssaije: A Virtual Ray Tracer, BSc thesis, University of Groningen, 2021; <http://fse.studenttheses.ub.rug.nl/24859>.
+[W.A. Verschoore de la Houssaije: A Virtual Ray Tracer, BSc thesis, University of Groningen, 2021.](http://fse.studenttheses.ub.rug.nl/24859)
 
-C.S. van Wezel: A Virtual Ray Tracer, BSc thesis, University of Groningen, 2022; <http://fse.studenttheses.ub.rug.nl/26455>.
+[C.S. van Wezel: A Virtual Ray Tracer, BSc thesis, University of Groningen, 2022.](http://fse.studenttheses.ub.rug.nl/26455)
 
-J. van der Zwaag: Virtual Ray Tracer: Distribution Ray Tracing, BSc Thesis, University of Groningen, 2022; <https://fse.studenttheses.ub.rug.nl/27881>.
+[J. van der Zwaag: Virtual Ray Tracer: Distribution Ray Tracing, BSc Thesis, University of Groningen, 2022.](https://fse.studenttheses.ub.rug.nl/27881)
 
-B. Yilmaz: Acceleration data structures for Virtual Ray Tracer, BSc Thesis, University of Groningen, 2022; <https://fse.studenttheses.ub.rug.nl/27838>.
+[B. Yilmaz: Acceleration data structures for Virtual Ray Tracer, BSc Thesis, University of Groningen, 2022.](https://fse.studenttheses.ub.rug.nl/27838)
 
-PJ. Blok: Gamification of Virtual Ray Tracer, BSc Thesis, University of Groningen, 2022; <https://fse.studenttheses.ub.rug.nl/27596>.
+[PJ. Blok: Gamification of Virtual Ray Tracer, BSc Thesis, University of Groningen, 2022.](https://fse.studenttheses.ub.rug.nl/27596)
 
-R. Rosema: Adapting Virtual Ray Tracer to a Web and Mobile Application, BSc Thesis, University of Groningen, 2022; <https://fse.studenttheses.ub.rug.nl/27894>.
+[R. Rosema: Adapting Virtual Ray Tracer to a Web and Mobile Application, BSc Thesis, University of Groningen, 2022.](https://fse.studenttheses.ub.rug.nl/27894)
 
 Further documents will appear here in due course.
