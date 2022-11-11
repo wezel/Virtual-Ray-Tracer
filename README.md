@@ -1,12 +1,20 @@
 <https://user-images.githubusercontent.com/5408480/158495833-fd7c4836-3924-4127-ac56-f29c75273958.mp4>
 
-# Virtual Ray Tracer
+# Virtual Ray Tracer 2.0
 
 Virtual Ray Tracer is a Unity application that visualizes ray tracing. The application shows a scene with a camera, lights and objects. Rays slowly shoot from the camera and interact with the lights and objects in the scene. Users can change the settings of the ray tracer and material properties of the objects and see how this affects the rays traced in real-time. The application comes with a number of scenes that walk the user through the settings and controls of the application as well as several ray tracing concepts.
 
+# New in 2.0
+
+Thanks to a new group of students Virtual Ray Tracer 2.0 comes with even more features. The info panel at the start of each level has been replaced by a task and achievement system. The tasks allow us to devide the information in smaller pieces and encouraged the user to interact more with the levels. The achievements reward the user encouraging them even more. Lighting has been expanded. The application now supports area lights, soft shadows, spot lights and distance attenuation. Vissualization of Axis Aligned Bounding Boxes and octrees has been added. Besides the new features the application also has a couple of new settings you can find in the settings panel in each level.
+
+Also new in Virtual ray tracer 2.0 is the posibility to run the application in your [browser]<https://wezel.github.io/Virtual-Ray-Tracer> or even on [android devices]<https://play.google.com/store/apps/details?id=com.RUG.VirtualRayTracer&hl=en&gl=US&pli=1>(update to 2.0 comes soon). 
+
+The corresponding thesis that let to these features can be found below in the thesis and paper section.
+
 ## Building the Application
 
-To build the application you need a [Unity 2020.3 LTS](https://unity3d.com/unity/qa/lts-releases) release. To build the application, open the `Unity` folder with Unity, navigate to `File > Build Settings`, select your desired platform and press 'build'. The application has been tested on Windows, Linux and MacOS. For more information on building Unity applications see the [Unity Manual page](https://docs.unity3d.com/Manual/BuildSettings.html).
+To build the application you need a [Unity 2021.3.12f1 LTS](https://unity3d.com/unity/qa/lts-releases) release. To build the application, open the `Unity` folder with Unity, navigate to `File > Build Settings`, select your desired platform and press 'build'. The application has been tested on Windows, Linux, Android and WebGL. For more information on building Unity applications see the [Unity Manual page](https://docs.unity3d.com/Manual/BuildSettings.html).
 
 ## Implementation
 
@@ -38,7 +46,7 @@ This covers all the most important components of the application, but there are 
 
 ## About us
 
-Virtual Ray Tracer was created by Chris van Wezel and Willard Verschoore as a graduation project for their Computing Science Bachelor's degree programme at the University of Groningen. The project was proposed and supervised by Jiri Kosinka and Steffen Frey in the [SVCG research group](https://www.cs.rug.nl/svcg/Main/HomePage). The application was built to aid students of the Computer Graphics course at the University of Groningen by providing them with an interactive introduction to the principles of ray tracing. A user study conducted at the end of the project found positive results. This success inspired the supervisors of the project to write a paper in collaboration with Chris and Willard. The paper is about to appear as an educational paper at the Eurographics 2022 conference and the EG Digital Library (DOI to follow soon).
+Virtual Ray Tracer was created by Chris van Wezel and Willard Verschoore as a graduation project for their Computing Science Bachelor's degree programme at the University of Groningen. The project was proposed and supervised by Jiri Kosinka and Steffen Frey in the [SVCG research group](https://www.cs.rug.nl/svcg/Main/HomePage). The application was built to aid students of the Computer Graphics course at the University of Groningen by providing them with an interactive introduction to the principles of ray tracing. A user study conducted at the end of the project found positive results. This success inspired the supervisors of the project to write a paper in collaboration with Chris and Willard. The paper is published as an educational paper at the Eurographics 2022 conference and the EG Digital Library: [Virtual Ray Tracer]<https://diglib.eg.org/handle/10.2312/eged20221045>. This paper was then selected as one of the best educational papers and a slot was granted for an expanded follow up in a virtual special edition from Graphics and Visual Computing journal (DOI to follow soon).
 
 ## Future
 
@@ -59,5 +67,13 @@ W.A. Verschoore de la Houssaije, C.S. van Wezel, S. Frey, and J. Kosinka: Virtua
 W.A. Verschoore de la Houssaije: A Virtual Ray Tracer, BSc thesis, University of Groningen, 2021; <http://fse.studenttheses.ub.rug.nl/24859>.
 
 C.S. van Wezel: A Virtual Ray Tracer, BSc thesis, University of Groningen, 2022; <http://fse.studenttheses.ub.rug.nl/26455>.
+
+J. van der Zwaag: Virtual Ray Tracer: Distribution Ray Tracing, BSc Thesis, University of Groningen, 2022; <https://fse.studenttheses.ub.rug.nl/27881>.
+
+B. Yilmaz: Acceleration data structures for Virtual Ray Tracer, BSc Thesis, University of Groningen, 2022; <https://fse.studenttheses.ub.rug.nl/27838>.
+
+PJ. Blok: Gamification of Virtual Ray Tracer, BSc Thesis, University of Groningen, 2022; <https://fse.studenttheses.ub.rug.nl/27596>.
+
+R. Rosema: Adapting Virtual Ray Tracer to a Web and Mobile Application, BSc Thesis, University of Groningen, 2022; <https://fse.studenttheses.ub.rug.nl/27894>.
 
 Further documents will appear here in due course.
