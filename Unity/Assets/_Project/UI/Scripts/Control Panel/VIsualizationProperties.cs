@@ -2,13 +2,12 @@ using _Project.Ray_Tracer.Scripts;
 using System;
 using System.Collections.Generic;
 using TMPro;
-using TreeEditor;
+//using TreeEditor;
 using UnityEngine;
 using _Project.Ray_Tracer.Scripts.RT_Ray;
 using _Project.Ray_Tracer.Scripts.Utility;
 using System.Collections;
 
-//no start bc no need to change values through the environment
 namespace _Project.UI.Scripts.Control_Panel
 {
     public class VisualizationProperties : MonoBehaviour
@@ -32,11 +31,18 @@ namespace _Project.UI.Scripts.Control_Panel
         [SerializeField]
         private TextMeshProUGUI computeRefractiveText;
 
+/*        private struct FlaggedRay
+        {
+            public TreeNode<RTRay> rayData;
+            public bool flag;
+        }*/
+
         //[SerializeField]
         private List<TextMeshProUGUI> steps;
         private int globalPrev;
         private RayManager rayManager;
         private TreeNode<RTRay> ray;
+
 
         private void Awake()
         {
@@ -51,7 +57,7 @@ namespace _Project.UI.Scripts.Control_Panel
                 ifTransparentText,
                 computeRefractiveText
             };
-
+            ray = null;
             //reset color - needed when we exit visprops and then start it again.
             resetColor();
         }
@@ -69,18 +75,18 @@ namespace _Project.UI.Scripts.Control_Panel
 
         private void RMDrawingNewRay(object sender, TreeNode<RTRay> rayBeingDrawn)
         {
+            Debug.Log($"received {rayBeingDrawn.Data.Type}");
+            //sometimes the last text box remains highlighted, so just get rid of that
+            resetColor();
             ray = rayBeingDrawn;
             syncToCurrent();
         }
 
         private void syncToCurrent()
         {
-            Debug.Log(ray.Data.Type);
             //root of tree
             if (ray.Parent == null)
             {
-                //reset all colors - for when we change to a different ray while on a ray
-                resetColor();
                 if (ray.Data.Type != RTRay.RayType.NoHit)
                     StartCoroutine(highlightStepWait(globalPrev, 0, 2));
             }
@@ -102,7 +108,6 @@ namespace _Project.UI.Scripts.Control_Panel
         }
 
         // draws light ray first but receives signals from light & reflective at same time???
-        // time using the length of ray? 
         //highlist cnt first, wait, then future
         IEnumerator highlightStepWait(int localPrev, int cnt, int future)
         {

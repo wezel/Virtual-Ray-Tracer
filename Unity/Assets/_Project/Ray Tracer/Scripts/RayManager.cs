@@ -150,6 +150,7 @@ namespace _Project.Ray_Tracer.Scripts
         private UnityRayTracer rayTracer;
         
         private float distanceToDraw = 0.0f;
+        public float DistanceToDraw { get { return distanceToDraw; } }
         private int rayTreeToDraw = 0; // Used when animating sequentially.
         private bool animationDone = false;
 
@@ -431,6 +432,7 @@ namespace _Project.Ray_Tracer.Scripts
         };
 
         //keep track of which rays have been signaled as drawn to visprops
+        //TODO no need for hashset here
         private HashSet<TreeNode<RTRay>> signaledRays;
 
         /// <summary>
@@ -440,9 +442,12 @@ namespace _Project.Ray_Tracer.Scripts
         /// distance left to draw for the next child></returns>
         private rayReturn DrawRayTreeAnimatedSequential(TreeNode<RTRay> rayTree, float distance)
         {
-            if (!signaledRays.Contains(rayTree))
-                OnDrawingNewRay(rayTree);   
-            signaledRays.Add(rayTree);
+            //we dont add children here bc they would get added too quickly (i.e. light & reflect rays)
+            if (!signaledRays.Contains(rayTree) && rayTree.Parent == null)
+            {
+                OnDrawingNewRay(rayTree);
+                signaledRays.Add(rayTree);
+            }
 
             rayReturn returnValue = new rayReturn();
             if (HideNoHitRays && rayTree.Data.Type == RTRay.RayType.NoHit)
@@ -477,9 +482,19 @@ namespace _Project.Ray_Tracer.Scripts
             // Otherwise we start animating the children.
             bool done = true;
             float leftoverFromPrev = returnValue.leftover;
+            rayReturn fromChild = new rayReturn() { isDone = true, leftover = 0 };
+
             foreach (var child in rayTree.Children)
             {
-                rayReturn fromChild = DrawRayTreeAnimatedSequential(child, leftoverFromPrev);
+                //previous child is done, then signal & mark new child as signled
+                //also check if current child wasnt already signaled
+                if (fromChild.isDone && !signaledRays.Contains(child))
+                {
+                    OnDrawingNewRay(child);
+                    signaledRays.Add(child);
+                }
+                fromChild = DrawRayTreeAnimatedSequential(child, leftoverFromPrev);
+                //when current child is done, mark it as signaled
                 if (fromChild.isDone)
                     signaledRays.Add(child);
                 done &= fromChild.isDone;
