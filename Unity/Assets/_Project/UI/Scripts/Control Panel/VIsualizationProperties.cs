@@ -2,12 +2,13 @@ using _Project.Ray_Tracer.Scripts;
 using System;
 using System.Collections.Generic;
 using TMPro;
-//using TreeEditor;
 using UnityEngine;
 using _Project.Ray_Tracer.Scripts.RT_Ray;
 using _Project.Ray_Tracer.Scripts.Utility;
 using System.Collections;
+using UnityEngine.UI;
 
+//TODO: fix error when tabbing out => make it so gameobj doesnt always get turned off 
 namespace _Project.UI.Scripts.Control_Panel
 {
     public class VisualizationProperties : MonoBehaviour
@@ -31,13 +32,11 @@ namespace _Project.UI.Scripts.Control_Panel
         [SerializeField]
         private TextMeshProUGUI computeRefractiveText;
 
-/*        private struct FlaggedRay
-        {
-            public TreeNode<RTRay> rayData;
-            public bool flag;
-        }*/
+        [SerializeField]
+        private Button pauseButton;
+        [SerializeField]
+        private bool paused = false;
 
-        //[SerializeField]
         private List<TextMeshProUGUI> steps;
         private int globalPrev;
         private RayManager rayManager;
@@ -61,9 +60,23 @@ namespace _Project.UI.Scripts.Control_Panel
             //reset color - needed when we exit visprops and then start it again.
             resetColor();
         }
+
+        private void Start()
+        {
+            paused = rayManager.Paused;
+            //pauseButton.OnValueChanged += (value) => { RayManager.Get().Paused = value; };
+        }
+
+        public void Pause()
+        {
+            paused = !paused;
+            rayManager.Paused = paused;
+        }
+
         public void Show(TreeNode<RTRay> ray)
         {
             gameObject.SetActive(true);
+            paused = false;
             rayManager = RayManager.Get();
             rayManager.drawingNewRay += RMDrawingNewRay;
         }
@@ -75,7 +88,6 @@ namespace _Project.UI.Scripts.Control_Panel
 
         private void RMDrawingNewRay(object sender, TreeNode<RTRay> rayBeingDrawn)
         {
-            Debug.Log($"received {rayBeingDrawn.Data.Type}");
             //sometimes the last text box remains highlighted, so just get rid of that
             resetColor();
             ray = rayBeingDrawn;
@@ -107,12 +119,14 @@ namespace _Project.UI.Scripts.Control_Panel
             }
         }
 
-        // draws light ray first but receives signals from light & reflective at same time???
         //highlist cnt first, wait, then future
         IEnumerator highlightStepWait(int localPrev, int cnt, int future)
         {
+            float waitTime = ray.Data.Length / rayManager.Speed;
+/*            Debug.Log(waitTime*Time.deltaTime);
+            Debug.Log($"current: {1 / rayManager.Speed}");*/
             highlightStep(localPrev, cnt);
-            yield return new WaitForSeconds(1 / rayManager.Speed);
+            yield return new WaitForSeconds(1/rayManager.Speed);
             highlightStep(globalPrev, future);
         }
 

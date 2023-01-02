@@ -260,7 +260,7 @@ namespace _Project.Ray_Tracer.Scripts
 
             rtSceneManager = RTSceneManager.Get();
             rayTracer = UnityRayTracer.Get();
-
+         
             rtSceneManager.Scene.OnSceneChanged += () => { shouldUpdateRays = true; };
             rayTracer.OnRayTracerChanged += () => { shouldUpdateRays = true; };
         }
@@ -425,7 +425,7 @@ namespace _Project.Ray_Tracer.Scripts
             return done;
         }
 
-        private struct rayReturn
+        private struct RayReturn
         {
             public bool isDone;
             public float leftover;
@@ -434,14 +434,32 @@ namespace _Project.Ray_Tracer.Scripts
         //keep track of which rays have been signaled as drawn to visprops
         //TODO no need for hashset here
         private HashSet<TreeNode<RTRay>> signaledRays;
+        private bool paused = false;
+        //at the beginning game has never been resumed
+        private bool resumed = false;
+        private RayReturn beforePause;
+        public bool Paused 
+        { 
+            get { return paused; } 
+            set 
+            { 
+                paused = value;
+                resumed = !paused;
+                //unpaused
+                if (!paused)
+                    Time.timeScale = 1.0f;
+            } 
+        }
 
         /// <summary>
         /// Animates drawing a ray tree; only when one child finishes drawing in full does the next child start drawing
         /// </summary>
         /// <returns>A struct containing whether the animation is done <see cref="rayReturn.isDone", and the 
         /// distance left to draw for the next child></returns>
-        private rayReturn DrawRayTreeAnimatedSequential(TreeNode<RTRay> rayTree, float distance)
+        private RayReturn DrawRayTreeAnimatedSequential(TreeNode<RTRay> rayTree, float distance)
         {
+            RayReturn returnValue = new RayReturn();
+            currentlyDrawingRay = rayTree;
             //we dont add children here bc they would get added too quickly (i.e. light & reflect rays)
             if (!signaledRays.Contains(rayTree) && rayTree.Parent == null)
             {
@@ -449,7 +467,7 @@ namespace _Project.Ray_Tracer.Scripts
                 signaledRays.Add(rayTree);
             }
 
-            rayReturn returnValue = new rayReturn();
+                
             if (HideNoHitRays && rayTree.Data.Type == RTRay.RayType.NoHit)
             {
                 returnValue.isDone = true;
@@ -470,23 +488,25 @@ namespace _Project.Ray_Tracer.Scripts
                 returnValue.isDone = false;
                 return returnValue;
             }
-                
+
             // If this ray is at its full length and has no children we are done animating.
             if (rayTree.IsLeaf())
             {
                 returnValue.isDone = true;
                 return returnValue;
             }
-                
-
+             
             // Otherwise we start animating the children.
+            RayReturn fromChild = new RayReturn() { isDone = true, leftover = 0 };
+            if (paused)
+                Time.timeScale = 0.0f;
+            
             bool done = true;
             float leftoverFromPrev = returnValue.leftover;
-            rayReturn fromChild = new rayReturn() { isDone = true, leftover = 0 };
 
             foreach (var child in rayTree.Children)
             {
-                //previous child is done, then signal & mark new child as signled
+                //previous child is done, so signal & mark new child as signaled
                 //also check if current child wasnt already signaled
                 if (fromChild.isDone && !signaledRays.Contains(child))
                 {
@@ -500,7 +520,6 @@ namespace _Project.Ray_Tracer.Scripts
                 done &= fromChild.isDone;
                 leftoverFromPrev = fromChild.leftover;
             }
-                
             returnValue.isDone = done;
             returnValue.leftover = leftoverFromPrev;
             return returnValue;
