@@ -39,6 +39,7 @@ namespace _Project.UI.Scripts.Control_Panel
 
         private List<TextMeshProUGUI> steps;
         private int globalPrev;
+        private bool hasBeenShown = false;
         private RayManager rayManager;
         private TreeNode<RTRay> ray;
 
@@ -57,8 +58,6 @@ namespace _Project.UI.Scripts.Control_Panel
                 computeRefractiveText
             };
             ray = null;
-            //reset color - needed when we exit visprops and then start it again.
-            resetColor();
         }
 
         private void Start()
@@ -67,25 +66,30 @@ namespace _Project.UI.Scripts.Control_Panel
             paused = rayManager.Paused;
         }
 
+        public void Show(TreeNode<RTRay> ray)
+        {
+            gameObject.SetActive(true);
+            //reset color - needed when we exit visprops and then start it again.
+            resetColor();
+            rayManager = RayManager.Get();
+            rayManager.drawingNewRay += RMDrawingNewRay;
+            hasBeenShown = true;
+        }
+
+        public void Hide()
+        {
+            gameObject.SetActive(false);
+            if (hasBeenShown)
+                rayManager.drawingNewRay -= RMDrawingNewRay;
+        }
+
         public void Pause()
         {
             paused = !paused;
             rayManager.Paused = paused;
         }
 
-        public void Show(TreeNode<RTRay> ray)
-        {
-            gameObject.SetActive(true);
-            //paused = false;
-            rayManager = RayManager.Get();
-            rayManager.drawingNewRay += RMDrawingNewRay;
-        }
-
-        public void Hide()
-        {
-            gameObject.SetActive(false);
-        }
-
+        //gets notification from ray manager that a new ray is being drawn
         private void RMDrawingNewRay(object sender, TreeNode<RTRay> rayBeingDrawn)
         {
             //sometimes the last text box remains highlighted, so just get rid of that
@@ -139,8 +143,7 @@ namespace _Project.UI.Scripts.Control_Panel
         private void resetColor()
         {
             foreach(TextMeshProUGUI step in steps) 
-                if (step != null)
-                    step.color = Color.white;   
+                step.color = Color.white;   
         }
     }
 }
