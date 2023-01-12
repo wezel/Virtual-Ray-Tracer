@@ -63,8 +63,8 @@ namespace _Project.UI.Scripts.Control_Panel
 
         private void Start()
         {
+            rayManager = RayManager.Get();
             paused = rayManager.Paused;
-            //pauseButton.OnValueChanged += (value) => { RayManager.Get().Paused = value; };
         }
 
         public void Pause()
@@ -76,7 +76,7 @@ namespace _Project.UI.Scripts.Control_Panel
         public void Show(TreeNode<RTRay> ray)
         {
             gameObject.SetActive(true);
-            paused = false;
+            //paused = false;
             rayManager = RayManager.Get();
             rayManager.drawingNewRay += RMDrawingNewRay;
         }
@@ -123,8 +123,6 @@ namespace _Project.UI.Scripts.Control_Panel
         IEnumerator highlightStepWait(int localPrev, int cnt, int future)
         {
             float waitTime = ray.Data.Length / rayManager.Speed;
-/*            Debug.Log(waitTime*Time.deltaTime);
-            Debug.Log($"current: {1 / rayManager.Speed}");*/
             highlightStep(localPrev, cnt);
             yield return new WaitForSeconds(1/rayManager.Speed);
             highlightStep(globalPrev, future);
@@ -141,7 +139,8 @@ namespace _Project.UI.Scripts.Control_Panel
         private void resetColor()
         {
             foreach(TextMeshProUGUI step in steps) 
-                step.color = Color.white;   
+                if (step != null)
+                    step.color = Color.white;   
         }
     }
 }

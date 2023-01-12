@@ -353,6 +353,7 @@ namespace _Project.Ray_Tracer.Scripts
                 rayTreeToDraw = 0;
                 animationDone = false;
                 Reset = false;
+                //drawingRoot = true;
             }
 
             // Animate all ray trees if we are not done animating already.
@@ -364,6 +365,7 @@ namespace _Project.Ray_Tracer.Scripts
                 // If we have selected a ray we only draw its ray tree.
                 if (hasSelectedRay)
                 {
+                    currentlyDrawingRay = selectedRay;
                     animationDone = DrawRayTreeAnimatedSequential(selectedRay, distanceToDraw).isDone;
                     if (animationDone)
                         signaledRays.Clear();
@@ -435,19 +437,21 @@ namespace _Project.Ray_Tracer.Scripts
         //TODO no need for hashset here
         private HashSet<TreeNode<RTRay>> signaledRays;
         private bool paused = false;
-        //at the beginning game has never been resumed
-        private bool resumed = false;
-        private RayReturn beforePause;
+        //bool drawingRoot = true;
+        
+        //works perfectly for parent ray (i.e. waits until ray is finished) but for child ray
+        //works like normal pause (i.e. stops in the middle)
         public bool Paused 
         { 
             get { return paused; } 
             set 
             { 
                 paused = value;
-                resumed = !paused;
                 //unpaused
                 if (!paused)
                     Time.timeScale = 1.0f;
+                else
+                    Time.timeScale = 0.0f;
             } 
         }
 
@@ -459,7 +463,6 @@ namespace _Project.Ray_Tracer.Scripts
         private RayReturn DrawRayTreeAnimatedSequential(TreeNode<RTRay> rayTree, float distance)
         {
             RayReturn returnValue = new RayReturn();
-            currentlyDrawingRay = rayTree;
             //we dont add children here bc they would get added too quickly (i.e. light & reflect rays)
             if (!signaledRays.Contains(rayTree) && rayTree.Parent == null)
             {
@@ -498,14 +501,16 @@ namespace _Project.Ray_Tracer.Scripts
              
             // Otherwise we start animating the children.
             RayReturn fromChild = new RayReturn() { isDone = true, leftover = 0 };
-            if (paused)
-                Time.timeScale = 0.0f;
+
+/*            if (paused && drawingRoot)
+                Time.timeScale = 0.0f;*/
             
             bool done = true;
             float leftoverFromPrev = returnValue.leftover;
 
             foreach (var child in rayTree.Children)
             {
+                //drawingRoot = false;
                 //previous child is done, so signal & mark new child as signaled
                 //also check if current child wasnt already signaled
                 if (fromChild.isDone && !signaledRays.Contains(child))
@@ -516,7 +521,11 @@ namespace _Project.Ray_Tracer.Scripts
                 fromChild = DrawRayTreeAnimatedSequential(child, leftoverFromPrev);
                 //when current child is done, mark it as signaled
                 if (fromChild.isDone)
+                {
                     signaledRays.Add(child);
+/*                    if (paused)
+                        Time.timeScale = 0.0f;*/
+                }
                 done &= fromChild.isDone;
                 leftoverFromPrev = fromChild.leftover;
             }
