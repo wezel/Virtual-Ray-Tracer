@@ -47,8 +47,7 @@ This covers all the most important components of the application, but there are 
 
 ## About us
 
-Virtual Ray Tracer was created by Chris van Wezel and Willard Verschoore as a graduation project for their Computing Science Bachelor's degree programme at the University of Groningen. The project was proposed and supervised by Jiri Kosinka and Steffen Frey in the [SVCG research group](https://www.cs.rug.nl/svcg/Main/HomePage). The application was built to aid students of the Computer Graphics course at the University of Groningen by providing them with an interactive introduction to the principles of ray tracing. The corresponding paper is published as an educational paper at the Eurographics 2022 conference and the EG Digital Library: [Virtual Ray Tracer](https://diglib.eg.org/handle/10.2312/eged20221045). It was selected as one of the best educational papers at the conference.
-<!--and a slot was granted for an expanded follow up in a virtual special edition from Graphics and Visual Computing journal (DOI to follow soon).-->
+Virtual Ray Tracer was created by Chris van Wezel and Willard Verschoore as a graduation project for their Computing Science Bachelor's degree programme at the University of Groningen. The project was proposed and supervised by Jiri Kosinka and Steffen Frey in the [SVCG research group](https://www.cs.rug.nl/svcg/Main/HomePage). The application was built to aid students of the Computer Graphics course at the University of Groningen by providing them with an interactive introduction to the principles of ray tracing. The corresponding paper is published as an educational paper at the Eurographics 2022 conference and the EG Digital Library: [Virtual Ray Tracer](https://diglib.eg.org/handle/10.2312/eged20221045). It was selected as one of the best educational papers at the conference, which lead to an extended paper which can be found at: [Virtual Ray Tracer V2](https://doi.org/10.1016/j.cag.2023.01.005).
 
 ## Future
 
@@ -63,6 +62,8 @@ The application is released under the MIT license. Therefore, you may use and mo
 Any questions, bug reports or suggestions can be created as an issue on this repository. Alternatively, please contact [Jiri Kosinka](http://www.cs.rug.nl/svcg/People/JiriKosinka).
 
 ## Paper and theses
+
+[C.S. van Wezel, W.A. Verschoore de la Houssaije, S. Frey, and J. Kosinka: Virtual Ray Tracer V2, Special Section on EG2022 Edu Best Papers.](https://doi.org/10.1016/j.cag.2023.01.005)
 
 [W.A. Verschoore de la Houssaije, C.S. van Wezel, S. Frey, and J. Kosinka: Virtual Ray Tracer, Eurographics 2022 Education Papers.](https://diglib.eg.org/handle/10.2312/eged20221045)
 
