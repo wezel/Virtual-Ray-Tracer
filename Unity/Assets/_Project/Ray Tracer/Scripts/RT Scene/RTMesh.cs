@@ -1,8 +1,12 @@
+using System;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Rendering;
 
 namespace _Project.Ray_Tracer.Scripts.RT_Scene
 {
+
+
     /// <summary>
     /// Represents a mesh in the ray tracer scene. Requires that the attached game object has a mesh and a material
     /// based on the RayTracerShader. Should be considered something like a tag to indicate to the scene manager that
@@ -12,6 +16,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
     [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer), typeof(MeshCollider)), RequireComponent(typeof(Outline))]
     public class RTMesh : MonoBehaviour
     {
+
         private static Shader StandardShader = null;
         private static Shader TransparentShader = null;
 
@@ -21,11 +26,19 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
         private static readonly int shininess = Shader.PropertyToID("_Shininess");
         private static readonly int refractiveIndex = Shader.PropertyToID("_RefractiveIndex");
 
-        public delegate void MeshChanged();
+
+        [Serializable]
+        public class MeshChanged : UnityEvent { }
         /// <summary>
         /// An event invoked whenever a property of this mesh is changed.
         /// </summary>
-        public event MeshChanged OnMeshChanged;
+        public MeshChanged OnMeshChanged, OnMeshColorChanged, OnAmbientChanged, OnDiffuseChanged, 
+            OnSpecularChanged, OnShininessChanged, OnRefractiveIndexChanged, OnMaterialTypeChanged;
+
+        /// <summary>
+        /// An event invoked whenever a mesh is selected.
+        /// </summary>
+        public MeshChanged OnMeshSelected;
 
         /// <summary>
         /// The underlying <see cref="UnityEngine.Material"/> used by the mesh. Its shader should be either
@@ -46,8 +59,8 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             get => transform.position;
             set
             {
+                if (value == transform.position) return;
                 transform.position = value;
-                OnMeshChanged?.Invoke();
             }
         }
 
@@ -59,8 +72,8 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             get => transform.eulerAngles;
             set
             {
+                if (value == transform.eulerAngles) return;
                 transform.eulerAngles = value;
-                OnMeshChanged?.Invoke();
             }
         }
 
@@ -72,8 +85,8 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             get => transform.localScale;
             set
             {
+                if (value == transform.localScale) return;
                 transform.localScale = value;
-                OnMeshChanged?.Invoke();
             }
         }
 
@@ -85,8 +98,10 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             get => Material.color;
             set
             {
+                if (value == Material.color) return;
                 Material.color = value;
                 OnMeshChanged?.Invoke();
+                OnMeshColorChanged?.Invoke();
             }
         }
 
@@ -98,8 +113,10 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             get => Material.GetFloat(ambient);
             set
             {
+                if (value == Material.GetFloat(ambient)) return;
                 Material.SetFloat(ambient, value);
                 OnMeshChanged?.Invoke();
+                OnAmbientChanged?.Invoke();
             }
         }
 
@@ -111,8 +128,10 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             get => Material.GetFloat(diffuse);
             set
             {
+                if (value == Material.GetFloat(diffuse)) return;
                 Material.SetFloat(diffuse, value);
                 OnMeshChanged?.Invoke();
+                OnDiffuseChanged?.Invoke();
             }
         }
 
@@ -124,8 +143,10 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             get => Material.GetFloat(specular);
             set
             {
+                if (value == Material.GetFloat(specular)) return;
                 Material.SetFloat(specular, value);
                 OnMeshChanged?.Invoke();
+                OnSpecularChanged?.Invoke();
             }
         }
 
@@ -137,8 +158,10 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             get => Material.GetFloat(shininess);
             set
             {
+                if (value == Material.GetFloat(shininess)) return;
                 Material.SetFloat(shininess, value);
                 OnMeshChanged?.Invoke();
+                OnShininessChanged?.Invoke();
             }
         }
 
@@ -150,8 +173,10 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             get => Material.GetFloat(refractiveIndex);
             set
             {
+                if (value == Material.GetFloat(refractiveIndex)) return;
                 Material.SetFloat(refractiveIndex, value);
                 OnMeshChanged?.Invoke();
+                OnRefractiveIndexChanged?.Invoke();
             }
         }
 
@@ -179,6 +204,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             get => shadeSmooth;
             private set 
             { 
+                if (value == shadeSmooth) return;
                 shadeSmooth = value;
                 OnMeshChanged?.Invoke();
             }
@@ -219,6 +245,17 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
 
             Type = type;
             OnMeshChanged?.Invoke();
+            OnMaterialTypeChanged?.Invoke();
+        }
+
+        private void FixedUpdate()
+        {
+            if (transform.hasChanged) OnMeshChanged?.Invoke();
+        }
+
+        private void Update()
+        {
+            transform.hasChanged = false;   // Do this in Update to let other scripts also check
         }
 
         private void Awake()

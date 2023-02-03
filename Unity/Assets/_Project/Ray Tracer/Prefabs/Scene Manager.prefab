@@ -100,13 +100,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraPrefab: {fileID: 7449909581131666508, guid: 5fc8c8504cfcb20419ce26b1a6a38fe5, type: 3}
-  lightPrefab: {fileID: 2869057598925096032, guid: aa7cec59df0025d4896ac99db41e4250, type: 3}
+  pointLightPrefab: {fileID: 2869057598925096032, guid: aa7cec59df0025d4896ac99db41e4250, type: 3}
+  spotLightPrefab: {fileID: 2869057598925096032, guid: bcec7498edbc0334b80decfdf1557457, type: 3}
+  areaLightPrefab: {fileID: 8100249073368088931, guid: e9cde42be2a35d446aacd69fa4de0cb0, type: 3}
   goatPrefab: {fileID: 1943894928092703155, guid: 80e99c08fe12d92e4b1a55ff14806efe, type: 3}
   spherePrefab: {fileID: 1943894928092703155, guid: 474f7c9163559d06f8868291a3a58f26, type: 3}
   cubePrefab: {fileID: 1943894928092703155, guid: 46ac4ca1f3ae1fa0abba7d5d15963b63, type: 3}
   capsulePrefab: {fileID: 1943894928092703155, guid: 8ed94d4a50e2559b2a9a2ba4e0f2ffa1, type: 3}
   cylinderPrefab: {fileID: 1943894928092703155, guid: 902181a0761ad3f81814fd7ea054b8a4, type: 3}
   prismPrefab: {fileID: 1943894928092703155, guid: b62f3132fbd3a882b91608a7a0acbf5a, type: 3}
+  barrelPrefab: {fileID: 1943894928092703155, guid: d5b27bc15e5d1c444b2dfb8385966c1a, type: 3}
+  wineglassPrefab: {fileID: 1943894928092703155, guid: d5f4366881026df47a7a4f8c2059c1e8, type: 3}
   meshPrefab: {fileID: 1943894928092703155, guid: bdace46ddc7698749b2ecb5e38179122, type: 3}
   SelectionColor: {r: 1, g: 0.35, b: 0, a: 1}
   ControlPanel: {fileID: 0}
@@ -116,3 +120,25 @@ MonoBehaviour:
   translationSnap: 0.25
   rotationSnap: 15
   scaleSnap: 0.25
+  deleteAllowed: 0
+  OnTranslationMode:
+    m_PersistentCalls:
+      m_Calls: []
+  OnRotationMode:
+    m_PersistentCalls:
+      m_Calls: []
+  OnScaleMode:
+    m_PersistentCalls:
+      m_Calls: []
+  OnLocalSpace:
+    m_PersistentCalls:
+      m_Calls: []
+  OnGlobalSpace:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDeselect:
+    m_PersistentCalls:
+      m_Calls: []
+  OnObjectDeleted:
+    m_PersistentCalls:
+      m_Calls: []

@@ -18,7 +18,11 @@ namespace _Project.Scripts
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         static void OnAfterSceneLoadRuntimeMethod()
         {
+#if UNITY_WEBGL
+            Object gameObject = Object.Instantiate(Resources.Load("Initialize/Game Manager WEB_GL"));
+#else
             Object gameObject = Object.Instantiate(Resources.Load("Initialize/Game Manager"));
+#endif
             gameObject.name = "Game Manager";
         }
     

@@ -1,10 +1,14 @@
+using System;
 using System.Collections.Generic;
 using _Project.Ray_Tracer.Scripts.RT_Ray;
 using _Project.Ray_Tracer.Scripts.RT_Scene;
 using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Camera;
-using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light;
 using _Project.Ray_Tracer.Scripts.Utility;
 using UnityEngine;
+using _Project.UI.Scripts;
+using _Project.UI.Scripts.Render_Image_Window;
+using System.Collections;
+using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light;
 
 namespace _Project.Ray_Tracer.Scripts
 {
@@ -14,7 +18,7 @@ namespace _Project.Ray_Tracer.Scripts
     /// to produce a relatively small number of rays for the <see cref="RayManager"/> to visualize. For larger images
     /// (and no ray trees) the <see cref="RenderImage"/> function should be used.
     /// </summary>
-    public class UnityRayTracer : MonoBehaviour
+    public partial class UnityRayTracer : MonoBehaviour
     {
         public delegate void RayTracerChanged();
         /// <summary>
@@ -30,8 +34,9 @@ namespace _Project.Ray_Tracer.Scripts
         public float Epsilon
         {
             get { return epsilon; }
-            set 
+            set
             {
+                if (value == epsilon) return;
                 epsilon = value;
                 OnRayTracerChanged?.Invoke();
             }
@@ -47,6 +52,7 @@ namespace _Project.Ray_Tracer.Scripts
             get { return renderShadows; }
             set
             {
+                if (value == renderShadows) return;
                 renderShadows = value;
                 OnRayTracerChanged?.Invoke();
             }
@@ -62,6 +68,7 @@ namespace _Project.Ray_Tracer.Scripts
             get { return maxDepth; }
             set
             {
+                if (value == maxDepth) return;
                 maxDepth = value;
                 OnRayTracerChanged?.Invoke();
             }
@@ -77,13 +84,30 @@ namespace _Project.Ray_Tracer.Scripts
             get { return superSamplingFactor; }
             set
             {
+                if (value == superSamplingFactor) return;
                 superSamplingFactor = value;
                 OnRayTracerChanged?.Invoke();
             }
         }
 
         [SerializeField]
-        private Color backgroundColor = Color.black;
+        private bool superSamplingVisual = false;
+        /// <summary>
+        /// Whether SS is visualized.
+        /// </summary>
+        public bool SuperSamplingVisual
+        {
+            get { return superSamplingVisual; }
+            set
+            {
+                if (value == superSamplingVisual) return;
+                superSamplingVisual = value;
+                OnRayTracerChanged?.Invoke();
+            }
+        }
+
+        [SerializeField]
+        private Color backgroundColor;
         /// <summary>
         /// The color produced by rays that don't intersect an object.
         /// </summary>
@@ -92,6 +116,7 @@ namespace _Project.Ray_Tracer.Scripts
             get { return backgroundColor; }
             set
             {
+                if (value == backgroundColor) return;
                 backgroundColor = value;
                 Camera.main.backgroundColor = backgroundColor;
                 OnRayTracerChanged?.Invoke();
@@ -100,6 +125,8 @@ namespace _Project.Ray_Tracer.Scripts
 
         static private UnityRayTracer instance = null;
         private RTSceneManager rtSceneManager;
+        private Texture2D image;
+        public Texture2D Image { get => image; }
 
         private RTScene scene;
         private new RTCamera camera;
@@ -123,10 +150,10 @@ namespace _Project.Ray_Tracer.Scripts
         /// <summary>
         /// A struct that calculates and stores all relevant information about a ray-object intersection.
         /// </summary>
-        private readonly struct HitInfo 
+        private readonly struct HitInfo
         {
             public readonly Vector3 Point;
-            public readonly Vector3 View ;
+            public readonly Vector3 View;
             public readonly Vector3 Normal;
             public readonly bool InversedNormal;
 
@@ -157,13 +184,13 @@ namespace _Project.Ray_Tracer.Scripts
                 // Interpolate the hit normal to achieve smooth shading.
                 if (mesh.ShadeSmooth)
                     Normal = SmoothedNormal(ref hit);
-                
+
                 // The shading normal always points in the direction of the view, as required by the Phong illumination
                 // model.
                 InversedNormal = Vector3.Dot(Normal, View) < -0.1f;
                 Normal = InversedNormal ? -Normal : Normal;
             }
-            
+
             private static Vector3 SmoothedNormal(ref RaycastHit hit)
             {
                 // See if we have this mesh cached.
@@ -218,124 +245,168 @@ namespace _Project.Ray_Tracer.Scripts
         /// <returns> The list of ray trees that were traced to render the image. </returns>
         public List<TreeNode<RTRay>> Render()
         {
+            AccelerationPrep();
+            
             List<TreeNode<RTRay>> rayTrees = new List<TreeNode<RTRay>>();
             scene = rtSceneManager.Scene;
             camera = scene.Camera;
 
             int width = camera.ScreenWidth;
             int height = camera.ScreenHeight;
-            float aspectRatio = (float) width / height;
+            float aspectRatio = (float)width / height;
             float halfScreenHeight = camera.ScreenDistance * Mathf.Tan(Mathf.Deg2Rad * camera.FieldOfView / 2.0f);
             float halfScreenWidth = aspectRatio * halfScreenHeight;
             float pixelWidth = halfScreenWidth * 2.0f / width;
             float pixelHeight = halfScreenHeight * 2.0f / height;
+            int ssFactor = superSamplingVisual ? SuperSamplingFactor : 1;
+            int ssSquared = ssFactor * ssFactor;
             Vector3 origin = camera.transform.position;
+            float step = 1f / ssFactor;
 
             // Trace a ray for each pixel. 
             for (int y = 0; y < height; ++y)
             {
                 for (int x = 0; x < width; ++x)
                 {
-                    // Convert the pixel coordinates to camera space positions.
-                    float pixelX = -halfScreenWidth + pixelWidth * (x + 0.5f);
-                    float pixelY = -halfScreenHeight + pixelHeight * (y + 0.5f);
-
-                    // Create and rotate the pixel location. Note that the camera looks along the positive z-axis.
-                    Vector3 pixel = new Vector3(pixelX, pixelY, camera.ScreenDistance);
-                    pixel = camera.transform.rotation * pixel;
-
-                    // This is the distance between the pixel on the screen and the origin. We need this to compensate
-                    // for the length of the returned RTRay. Since we have this factor we also use it to normalize this
-                    // vector to make the code more efficient.
-                    float pixelDistance = pixel.magnitude;
-
-                    // Compensate for the location of the screen so we don't render objects that are behind the screen.
-                    TreeNode<RTRay> rayTree = Trace(origin + pixel,
-                                                    pixel / pixelDistance, // Division by magnitude == .normalized.
-                                                    MaxDepth, RTRay.RayType.Normal);
+                    Color color = Color.black;
                     
-                    // Fix the origin and the length so we visualize the right ray.
-                    rayTree.Data.Origin = origin;
-                    rayTree.Data.Length += pixelDistance; 
+                    // Set a base Ray with a zero-distance as the main ray of the pixel
+                    float centerPixelX = -halfScreenWidth + pixelWidth * (x + 0.5f);
+                    float centerPixelY = -halfScreenHeight + pixelHeight * (y + 0.5f);
+                    Vector3 centerPixel = new Vector3(centerPixelX, centerPixelY, camera.ScreenDistance);
+                    TreeNode<RTRay> rayTree = new TreeNode<RTRay>(new RTRay());
+                    rayTree.Data = new RTRay(origin, centerPixel / centerPixel.magnitude, 0f, Color.black, RTRay.RayType.Normal);
+
+                    for (int supY = 0; supY < ssFactor; supY++)
+                    {
+                        float pixelY = centerPixelY + pixelHeight * (step * (0.5f + supY) - 0.5f);
+
+                        for (int supX = 0; supX < ssFactor; supX++)
+                        {
+                            float pixelX = centerPixelX + pixelWidth * (step * (0.5f + supX) - 0.5f);
+
+                            // Create and rotate the pixel location. Note that the camera looks along the positive z-axis.
+                            Vector3 pixel = new Vector3(pixelX, pixelY, camera.ScreenDistance);
+                            pixel = camera.transform.rotation * pixel;
+
+                            // This is the distance between the pixel on the screen and the origin. We need this to compensate
+                            // for the length of the returned RTRay. Since we have this factor we also use it to normalize this
+                            // vector to make the code more efficient.
+                            float pixelDistance = pixel.magnitude;
+
+                            // Compensate for the location of the screen so we don't render objects that are behind the screen.
+                            TreeNode<RTRay> subRayTree = traceFunc(origin + pixel,
+                                pixel / pixelDistance, // Division by magnitude == .normalized.
+                                MaxDepth, RTRay.RayType.Normal);
+
+
+                            // Fix the origin and the length so we visualize the right ray.
+                            subRayTree.Data.Origin = origin;
+                            subRayTree.Data.Length += pixelDistance;
+
+                            // Add the ray as a child of the main ray of the pixel.
+                            subRayTree.Data.Contribution = 1.0f / ssSquared;
+                            rayTree.AddChild(subRayTree);
+
+                            color += subRayTree.Data.Color;
+                        }
+                    }
+
+                    // Divide by superSamplingFactorSquared and set alpha levels back to 1. It should always be 1!
+                    color /= ssSquared;
+                    color.a = 1.0f;
+
+                    rayTree.Data.Color = color;
+                    SetContributions(rayTree);
                     rayTrees.Add(rayTree);
                 }
             }
 
+            AccelerationCleanupTree();
             return rayTrees;
+        }
+
+        private void SetContributions(TreeNode<RTRay> parent)
+        {
+            parent.Children.ForEach(child =>
+            {
+                child.Data.Contribution *= parent.Data.Contribution;
+                SetContributions(child);
+            });
         }
 
         private TreeNode<RTRay> Trace(Vector3 origin, Vector3 direction, int depth, RTRay.RayType type)
         {
-            RaycastHit hit;
-            bool intersected = Physics.Raycast(origin, direction, out hit, Mathf.Infinity, rayTracerLayer);
+            // If we did not hit anything we return a no hit ray whose result color is the backgroundcolor.
+            if (!Physics.Raycast(origin, direction, out RaycastHit hit, Mathf.Infinity, rayTracerLayer))
+                return new TreeNode<RTRay>(new RTRay(origin, direction, Mathf.Infinity, BackgroundColor, RTRay.RayType.NoHit));
+
             TreeNode<RTRay> rayTree = new TreeNode<RTRay>(new RTRay());
-
-            // If we did not hit anything we return a no hit ray whose result color is black.
-            if (!intersected)
-            {
-                rayTree.Data = new RTRay(origin, direction, Mathf.Infinity, BackgroundColor, RTRay.RayType.NoHit);
-                return rayTree;
-            }
-
             RTMesh mesh = hit.transform.GetComponent<RTMesh>();
             HitInfo hitInfo = new HitInfo(ref hit, ref direction, ref mesh);
-            
+
             // Add the ambient component once, regardless of the number of lights.
             Color color = hitInfo.Ambient * hitInfo.Color;
 
-            // Add diffuse and specular components.
-            foreach (RTLight light in scene.Lights)
-            {
-                Vector3 lightVector = (light.transform.position - hit.point).normalized;
-
-                if (Vector3.Dot(hitInfo.Normal,lightVector) >= 0.0f) 
-                    rayTree.AddChild(TraceLight(ref lightVector, light, in hitInfo));
-            }
+            //TODO move this to it's own partial class
+            // Add diffuse and specular components for area, spot and pointlights.
+            scene.PointLights.ForEach(pointLight => TracePointSpotLight(ref rayTree, pointLight, hitInfo));
+            scene.SpotLights.ForEach(spotLight => TracePointSpotLight(ref rayTree, spotLight, hitInfo));
+            scene.AreaLights.ForEach(areaLight => TraceAreaLight(ref rayTree, areaLight, in hitInfo));
 
             // Cast reflection and refraction rays.
             if (depth > 0)
-            {
-                var newRays = TraceReflectionAndRefraction(depth, hitInfo);
-                foreach (var ray in newRays)
-                    rayTree.AddChild(ray);
-            }
+                TraceReflectionAndRefraction(depth, hitInfo).ForEach(newRay => rayTree.AddChild(newRay));
 
             // Add the child ray colors to the parent ray.
-            foreach (var child in rayTree.Children)
-                color += child.Data.Color;
+            rayTree.Children.ForEach(child => color += child.Data.Color);
+
+            // Calculate contribution to the parent.
+            float rgb = ColorSumRGB(color);
+            rayTree.Children.ForEach(ray => ray.Data.Contribution = rgb > 0f ? ColorSumRGB(ray.Data.Color) / rgb : 0f);
 
             rayTree.Data = new RTRay(origin, direction, hit.distance, ClampColor(color), type);
             return rayTree;
         }
 
-        private RTRay TraceLight(ref Vector3 lightVector, RTLight light, in HitInfo hitInfo)
+        private RTRay TraceLight(ref Vector3 lightVector, Vector3 point, RTLight light, in HitInfo hitInfo)
         {
             // Determine the distance to the light source. Note the clever use of the dot product.
-            float lightDistance = Vector3.Dot(lightVector, light.transform.position - hitInfo.Point); 
+            float lightDistance = Vector3.Dot(lightVector, point - hitInfo.Point);
 
             // If we render shadows, check whether a shadow ray first meets the light or an object.
             if (RenderShadows)
             {
-                RaycastHit shadowHit;
                 Vector3 shadowOrigin = hitInfo.Point + Epsilon * hitInfo.Normal;
-                
+
                 // Trace a ray until we reach the light source. If we hit something return a shadow ray.
-                if (Physics.Raycast(shadowOrigin, lightVector, out shadowHit, lightDistance, rayTracerLayer))
-                    return new RTRay(hitInfo.Point, lightVector, shadowHit.distance, Color.black,
-                        RTRay.RayType.Shadow);
+                if (Physics.Raycast(shadowOrigin, lightVector, out RaycastHit shadowHit, lightDistance, rayTracerLayer))
+                    return new RTRay(hitInfo.Point, lightVector, shadowHit.distance, Color.black, RTRay.RayType.Shadow);
             }
 
+            // calculate attenuation influence
+            float attenuation;
+            if (0 == (attenuation = CalculateAttenuation(lightDistance, light, hitInfo)))
+                return new RTRay(hitInfo.Point, lightVector, lightDistance - 0.01f, Color.black, RTRay.RayType.Shadow);
+
             // We either don't render shadows or nothing is between the object and the light source.
-            
+
             // Calculate the color influence of this light.
             Vector3 reflectionVector = Vector3.Reflect(-lightVector, hitInfo.Normal);
-            Color color = light.Ambient * light.Color * hitInfo.Color;
+            Color color = Color.black;
             color += Vector3.Dot(hitInfo.Normal, lightVector) * hitInfo.Diffuse * light.Diffuse *
-                     light.Color * hitInfo.Color; // Id
-            color += Mathf.Pow(Mathf.Max(Vector3.Dot(reflectionVector, hitInfo.View), 0.0f), hitInfo.Shininess) * 
-                     hitInfo.Specular * light.Specular * light.Color; // Is
+                          light.Color * hitInfo.Color * light.Intensity; // Id
+            color += Mathf.Pow(Mathf.Max(Vector3.Dot(reflectionVector, hitInfo.View), 0.0f), hitInfo.Shininess) *
+                          hitInfo.Specular * light.Specular * light.Color * light.Intensity; // Is
 
-            return new RTRay(hitInfo.Point, lightVector, lightDistance, ClampColor(color), RTRay.RayType.Light);
+            // Add attenuation
+            color *= attenuation;
+
+            // Lastly add ambient so it doesn't get attenuated
+            color += light.Ambient * light.Color * hitInfo.Color;
+
+            // Subtract 0.01f to not go through the light.
+            return new RTRay(hitInfo.Point, lightVector, lightDistance - 0.01f, ClampColor(color), RTRay.RayType.Light);
         }
 
         private List<TreeNode<RTRay>> TraceReflectionAndRefraction(int depth, in HitInfo hitInfo)
@@ -373,7 +444,7 @@ namespace _Project.Ray_Tracer.Scripts
 
             // The object is not transparent, so we only reflect (provided it has a non zero specular component).
             if (hitInfo.Specular <= 0.0f) return rays;
-            
+
             node = Trace(hitInfo.Point + hitInfo.Normal * Epsilon,
                 Vector3.Reflect(-hitInfo.View, hitInfo.Normal),
                 depth - 1, RTRay.RayType.Reflect);
@@ -385,24 +456,26 @@ namespace _Project.Ray_Tracer.Scripts
 
         /// <summary>
         /// Render the current <see cref="RTSceneManager"/>'s <see cref="RTScene"/> while building up a "high resolution"
-        /// image.
+        /// image. Saved in <see cref="UnityRayTracer.Image"/>.
         /// </summary>
-        /// <returns> A high resolution render in the form of a <see cref="Texture2D"/>. </returns>
-        public Texture2D RenderImage()
+        public IEnumerator RenderImage()
         {
+            AccelerationPrep();
+            
+            RenderedImageWindow renderedImageWindow = UIManager.Get().RenderedImageWindow;
             scene = rtSceneManager.Scene;
             camera = scene.Camera;
-            
+
             int width = camera.ScreenWidth;
             int height = camera.ScreenHeight;
-            float aspectRatio = (float) width / height;
-            
+            float aspectRatio = (float)width / height;
+
             // Scale width and height in such a way that the image has around a total of 160,000 pixels.
             int scaleFactor = Mathf.RoundToInt(Mathf.Sqrt(160000f / (width * height)));
             width = scaleFactor * width;
             height = scaleFactor * height;
             
-            Texture2D image = new Texture2D(width, height, TextureFormat.RGBA32, false);
+            image = new Texture2D(width, height, TextureFormat.RGBA32, false);
             
             // Calculate the other variables.
             float halfScreenHeight = camera.ScreenDistance * Mathf.Tan(Mathf.Deg2Rad * camera.FieldOfView / 2.0f);
@@ -411,15 +484,17 @@ namespace _Project.Ray_Tracer.Scripts
             float pixelHeight = halfScreenHeight * 2.0f / height;
             int superSamplingSquared = SuperSamplingFactor * SuperSamplingFactor;
             Vector3 origin = camera.transform.position;
+            float step = 1f / SuperSamplingFactor;
 
             // Trace a ray for each pixel.
+            int percentage = 0;
+            float start = Time.realtimeSinceStartup;
             for (int y = 0; y < height; ++y)
             {
                 for (int x = 0; x < width; ++x)
                 {
                     Color color = Color.black;
-                    float step = 1f / SuperSamplingFactor;
-
+                    
                     for (int supY = 0; supY < SuperSamplingFactor; supY++)
                     {
                         float difY = pixelHeight * (y + step * (0.5f + supY));
@@ -429,11 +504,11 @@ namespace _Project.Ray_Tracer.Scripts
                             float difX = pixelWidth * (x + step * (0.5f + supX));
 
                             // Create and rotate the pixel location. Note that the camera looks along the positive z-axis.
-                            Vector3 pixel = new Vector3(-halfScreenWidth + difX, -halfScreenHeight + difY, camera.ScreenDistance); 
+                            Vector3 pixel = new Vector3(-halfScreenWidth + difX, -halfScreenHeight + difY, camera.ScreenDistance);
                             pixel = camera.transform.rotation * pixel;
 
                             // Compensate for the location of the screen so we don't render objects that are behind the screen.
-                            color += TraceImage(origin + pixel, pixel.normalized, MaxDepth);
+                            color += imageTraceFunc(origin + pixel, pixel.normalized, MaxDepth);
                         }
                     }
 
@@ -442,67 +517,86 @@ namespace _Project.Ray_Tracer.Scripts
                     color.a = 1.0f;
                     image.SetPixel(x, y, ClampColor(color));
                 }
+
+                // Update progress bar
+                if (100 * y / height > percentage) // Update only when the percentage changes to limit yields.
+                {
+                    percentage = 100 * y / height;
+                    renderedImageWindow.UpdateProgressBar(percentage);
+                    yield return null; // yield to update UI and give the ability to cancel
+                }
             }
+            
+            Debug.Log("Triangle tests: " + trianglesTests);
+            Debug.Log(Time.realtimeSinceStartup - start);
+            
+            AccelerationCleanupImage();
 
             image.Apply(); // Very important.
-            return image;
+            
+            yield return null;
         }
 
         private Color TraceImage(Vector3 origin, Vector3 direction, int depth)
         {
-            RaycastHit hit;
-            bool intersected = Physics.Raycast(origin, direction, out hit, Mathf.Infinity, rayTracerLayer);
-
             // If we did not hit anything we return the background color.
-            if (!intersected) return BackgroundColor;
+            if (!Physics.Raycast(origin, direction, out RaycastHit hit, Mathf.Infinity, rayTracerLayer))
+                return BackgroundColor;
 
             RTMesh mesh = hit.transform.GetComponent<RTMesh>();
             HitInfo hitInfo = new HitInfo(ref hit, ref direction, ref mesh);
-            
+
             // Add the ambient component once, regardless of the number of lights.
             Color color = hitInfo.Ambient * hitInfo.Color;
 
             // Add diffuse and specular components.
-            foreach (RTLight light in scene.Lights)
-            {
-                Vector3 lightVector = (light.transform.position - hit.point).normalized;
-
-                if (Vector3.Dot(hitInfo.Normal,lightVector) >= 0.0f) 
-                    color += TraceLightImage(ref lightVector, light, in hitInfo);
-            }
+            scene.PointLights.ForEach(pointLight => color += TracePointSpotLightImage(pointLight, in hitInfo));
+            scene.SpotLights.ForEach(spotLight => color += TracePointSpotLightImage(spotLight, in hitInfo));
+            scene.AreaLights.ForEach(areaLight => color += TraceAreaLightImage(areaLight, in hitInfo));
 
             // Cast reflection and refraction rays.
             if (depth > 0)
                 color += TraceReflectionAndRefractionImage(depth, hitInfo);
-            
+
             return ClampColor(color);
         }
 
-        private Color TraceLightImage(ref Vector3 lightVector, RTLight light, in HitInfo hitInfo)
+        private Color TraceLightImage(ref Vector3 lightVector, Vector3 point, RTLight light, in HitInfo hitInfo)
         {
             // Determine the distance to the light source. Note the clever use of the dot product.
-            float lightDistance = Vector3.Dot(lightVector, light.transform.position - hitInfo.Point);
+            float lightDistance = Vector3.Dot(lightVector, point - hitInfo.Point);
 
             // If we render shadows, check whether a shadow ray first meets the light or an object.
             if (RenderShadows)
             {
                 Vector3 shadowOrigin = hitInfo.Point + Epsilon * hitInfo.Normal;
-                
+
                 // Trace a ray until we reach the light source. If we hit something return a shadow ray.
                 if (Physics.Raycast(shadowOrigin, lightVector, out _, lightDistance, rayTracerLayer))
                     return Color.black;
             }
 
+            // calculate attenuation influence
+            float attenuation;
+            if (0 == (attenuation = CalculateAttenuation(lightDistance, light, hitInfo)))
+                return Color.black;
+
             // We either don't render shadows or nothing is between the object and the light source.
-            
+
             // Calculate the color influence of this light.
             Vector3 reflectionVector = Vector3.Reflect(-lightVector, hitInfo.Normal);
-            Color color = light.Ambient * light.Color * hitInfo.Color;
+            Color color = Color.black;
             color += Vector3.Dot(hitInfo.Normal, lightVector) * hitInfo.Diffuse * light.Diffuse *
-                          light.Color * hitInfo.Color; // Id
+                          light.Color * hitInfo.Color * light.Intensity; // Id
             color += Mathf.Pow(Mathf.Max(Vector3.Dot(reflectionVector, hitInfo.View), 0.0f), hitInfo.Shininess) *
-                     hitInfo.Specular * light.Specular * light.Color; // Is
+                     hitInfo.Specular * light.Specular * light.Color * light.Intensity; // Is
 
+            // Add attenuation
+            color *= attenuation;
+
+            // Lastly add ambient so it doesn't get attenuated
+            color += light.Ambient * light.Color * hitInfo.Color;
+        
             return ClampColor(color);
         }
 
@@ -539,7 +633,7 @@ namespace _Project.Ray_Tracer.Scripts
                 return hitInfo.Specular * TraceImage(hitInfo.Point + hitInfo.Normal * Epsilon,
                     Vector3.Reflect(-hitInfo.View, hitInfo.Normal),
                     depth - 1);
-            
+
             return Color.black;
         }
 
@@ -560,15 +654,22 @@ namespace _Project.Ray_Tracer.Scripts
             return new Color(r, g, b);
         }
 
+        private float ColorSumRGB(Color color)
+        {
+            return color.r + color.g + color.b;
+        }
+
         private void Awake()
         {
             instance = this;
             rayTracerLayer = LayerMask.GetMask("Ray Tracer Objects");
+            AccelerationAwake();
         }
 
         private void Start()
         {
             rtSceneManager = RTSceneManager.Get();
+            Camera.main.backgroundColor = backgroundColor;
         }
     }
 }

@@ -1,5 +1,8 @@
+using _Project.Ray_Tracer.Scripts;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using System;
+using UnityEngine.Events;
 
 namespace _Project.Scripts
 {
@@ -22,6 +25,10 @@ namespace _Project.Scripts
         public float OrbitSpeed = 4.0f;
         public float PanSpeed = 2.0f;
         public float ZoomSpeed = 1.0f;
+
+        [Serializable]
+        public class Event : UnityEvent { }
+        public Event onPanChanged, OnOrbitChanged, OnZoomChanged;
 
         private float xDegrees = 0.0f;
         private float yDegrees = 0.0f;
@@ -63,7 +70,7 @@ namespace _Project.Scripts
         {
             if(zoom || panning || orbiting)
                 return;
-            GlobalSettings.Get().SetCursor(CursorType.ModeCursor);
+            GlobalManager.Get().SetCursor(CursorType.ModeCursor);
         }
 
         public void ResetCursor()
@@ -71,12 +78,12 @@ namespace _Project.Scripts
             if(zoom || panning || orbiting)
                 return;
         
-            GlobalSettings.Get().ResetCursor();
+            GlobalManager.Get().ResetCursor();
         }
 
         private void DisableBlocker()
         {
-            GlobalSettings globalSettings = GlobalSettings.Get();
+            GlobalManager globalSettings = GlobalManager.Get();
             if(mode) {
                 globalSettings.SetCursor(CursorType.ModeCursor);
                 return;
@@ -98,6 +105,7 @@ namespace _Project.Scripts
                 yDistance = -Input.GetAxis("Mouse Y") * 0.01f;
             }
 
+
             // And we pan with the arrow keys
             if (Input.GetKey(KeyCode.LeftArrow))
                 xDistance -= Time.deltaTime * 0.5f;
@@ -107,6 +115,9 @@ namespace _Project.Scripts
                 yDistance += Time.deltaTime * 0.5f;
             if (Input.GetKey(KeyCode.DownArrow))
                 yDistance -= Time.deltaTime * 0.5f;
+
+            if (yDistance != 0f || xDistance != 0f)
+                onPanChanged?.Invoke();
 
             // we pan by way of transforming the target in screen space.
             // Grab the rotation of the camera so we can move in a pseudo local XY space.
@@ -125,20 +136,29 @@ namespace _Project.Scripts
 
         private void OrbitingUpdate()
         {
+            float xDistance = 0.0f;
+            float yDistance = 0.0f;
+
             if (Input.GetMouseButton(0))
             {
-                xDegrees += Input.GetAxis("Mouse X") * OrbitSpeed;
-                yDegrees -= Input.GetAxis("Mouse Y") * OrbitSpeed;
+                xDistance += Input.GetAxis("Mouse X") * OrbitSpeed;
+                yDistance -= Input.GetAxis("Mouse Y") * OrbitSpeed;
             }
-            
+
             if (Input.GetKey(KeyCode.LeftArrow))
-                xDegrees += Time.deltaTime * 20.0f * OrbitSpeed;
+                xDistance += Time.deltaTime * 20.0f * OrbitSpeed;
             if (Input.GetKey(KeyCode.RightArrow))
-                xDegrees -= Time.deltaTime * 20.0f * OrbitSpeed;
+                xDistance -= Time.deltaTime * 20.0f * OrbitSpeed;
             if (Input.GetKey(KeyCode.UpArrow))
-                yDegrees += Time.deltaTime * 20.0f * OrbitSpeed;
+                yDistance += Time.deltaTime * 20.0f * OrbitSpeed;
             if (Input.GetKey(KeyCode.DownArrow))
-                yDegrees -= Time.deltaTime * 20.0f * OrbitSpeed;
+                yDistance -= Time.deltaTime * 20.0f * OrbitSpeed;
+
+            if (yDistance != 0f || xDistance != 0f)
+                OnOrbitChanged?.Invoke();
+
+            xDegrees += xDistance;
+            yDegrees += yDistance;
 
             // Clamp the vertical axis for the orbit.
             yDegrees = ClampAngle(yDegrees, YMinLimit, YMaxLimit);
@@ -164,7 +184,7 @@ namespace _Project.Scripts
         private void OnlyOneInputPicker()
         {
 
-            if (Input.GetKeyDown(KeyCode.LeftControl))
+            if (Input.GetKeyDown(KeyCode.LeftControl) || Input.GetKeyDown(KeyCode.LeftCommand))
             {
                 inputBlocker.gameObject.SetActive(true);
                 mode = true;
@@ -197,10 +217,10 @@ namespace _Project.Scripts
                 return;
             }
 
-            if (mode && !Input.GetKey(KeyCode.LeftControl))
+            if (mode && !(Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.LeftCommand)))
             {
                 inputBlocker.gameObject.SetActive(false);
-                GlobalSettings.Get().ResetCursor();
+                GlobalManager.Get().ResetCursor();
                 InputBlockerHovered = false;
                 mode = false;
             }
@@ -213,15 +233,19 @@ namespace _Project.Scripts
             // If scrollWheel is used change zoom. This one is not exclusive.
             distance -= Input.GetAxis("Mouse ScrollWheel") * ZoomSpeed * Mathf.Abs(distance);
 
+            // Invoke zoom changed
+            if (Input.GetAxis("Mouse ScrollWheel") != 0f)
+                OnZoomChanged.Invoke();
+
             // If the left control is pressed and.... 
-            if (Input.GetKey(KeyCode.LeftControl))
+            if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.LeftCommand))
             {
 
                 // The right mouse button we activate zoom.
                 if (Input.GetMouseButtonDown(1))
                 {
                     zoom = true;
-                    GlobalSettings.Get().SetCursor(CursorType.ZoomCursor);
+                    GlobalManager.Get().SetCursor(CursorType.ZoomCursor);
                     return;
                 }
 
@@ -231,7 +255,7 @@ namespace _Project.Scripts
                     Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow))
                 {
                     orbiting = true;
-                    GlobalSettings.Get().SetCursor(CursorType.RotateCursor);
+                    GlobalManager.Get().SetCursor(CursorType.RotateCursor);
                     return;
                 }
             }
@@ -243,18 +267,51 @@ namespace _Project.Scripts
             {
                 inputBlocker.gameObject.SetActive(true);
                 panning = true;
-                GlobalSettings.Get().SetCursor(CursorType.GrabCursor);
+                GlobalManager.Get().SetCursor(CursorType.GrabCursor);
                 return;
+            }
+        }
+
+        private bool flytocam = false;
+
+        public void FlyToRTCamera()
+        {
+            flytocam = true;
+        }
+
+        private void FlyToRTCameraStep()
+        {
+            Transform RTCamTransform = RTSceneManager.Get().Scene.Camera.transform;
+
+            transform.position = Vector3.Lerp(transform.position, RTCamTransform.position, 0.1f);
+            transform.rotation = Quaternion.Lerp(transform.rotation, RTCamTransform.rotation, 0.1f);
+        }
+
+        private void FixedUpdate()
+        {
+            if (flytocam)
+            {
+                Transform RTCamTransform = RTSceneManager.Get().Scene.Camera.transform;
+                if (transform.position == RTCamTransform.position && transform.eulerAngles == RTCamTransform.eulerAngles)
+                {
+                    flytocam = false;
+                    distance = Vector3.Distance(Target.position, RTCamTransform.position);
+                    xDegrees = transform.rotation.eulerAngles.y;
+                    yDegrees = transform.rotation.eulerAngles.x;
+                    Target.position = transform.position + (transform.rotation * Vector3.forward * distance);
+                }
+                else
+                    FlyToRTCameraStep();
             }
         }
 
         void Update()
         {
+            if (flytocam)
+                return;
         
             // If we are over the ui we don't allow the user to start any of these actions.
-
             OnlyOneInputPicker();
-
 
             // TODO Allow for free zoom movement not clamped and not as a function of distance just a fixed step amount.
             // TODO Add function to focus on objects and have zoom like it is now.
@@ -263,7 +320,7 @@ namespace _Project.Scripts
 
             // Update the position based on our rotation and the distance to the target.
             transform.position = Target.position - (transform.rotation * Vector3.forward * distance);
-        
+
         }
 
         private static float ClampAngle(float angle, float min, float max)

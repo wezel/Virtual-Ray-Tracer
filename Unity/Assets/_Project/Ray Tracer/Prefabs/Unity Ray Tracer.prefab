@@ -27,6 +27,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -47,4 +48,12 @@ MonoBehaviour:
   renderShadows: 1
   maxDepth: 3
   superSamplingFactor: 1
+  superSamplingVisual: 0
   backgroundColor: {r: 0.7, g: 0.7, b: 0.7, a: 1}
+  acceleratedObject: {fileID: 0}
+  accelerationStatus: {fileID: 0}
+  raysIgnored: {fileID: 0}
+  trianglesIgnored: {fileID: 0}
+  savedAmount: 0
+  totalTriangles: 0
+  mode: 0

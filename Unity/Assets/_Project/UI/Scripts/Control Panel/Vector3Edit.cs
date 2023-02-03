@@ -3,6 +3,7 @@ using _Project.Scripts;
 using _Project.UI.Scripts.Tooltips;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace _Project.UI.Scripts.Control_Panel
@@ -22,8 +23,9 @@ namespace _Project.UI.Scripts.Control_Panel
             X, Y, Z
         }
 
-        public delegate void ValueChanged(Vector3 value);
-        public event ValueChanged OnValueChanged;
+        [Serializable]
+        public class ValueChanged : UnityEvent<Vector3> { };
+        public ValueChanged OnValueChanged;
 
         /// <summary>
         /// Whether the mouse is dragging the x component of this <see cref="Vector3Edit"/>. It is set through event
@@ -65,6 +67,8 @@ namespace _Project.UI.Scripts.Control_Panel
             get { return value; }
             set
             {
+                if (this.value == value) return;
+
                 // Set the value.
                 this.value = value;
 
@@ -174,7 +178,7 @@ namespace _Project.UI.Scripts.Control_Panel
         public void EnterDragArea()
         {
             if (Interactable)
-                GlobalSettings.Get().SetCursor(CursorType.DragCursor);
+                GlobalManager.Get().SetCursor(CursorType.DragCursor);
         }
 
         /// <summary>
@@ -182,7 +186,7 @@ namespace _Project.UI.Scripts.Control_Panel
         /// </summary>
         public void ExitDragArea()
         {
-            GlobalSettings.Get().ResetCursor();
+            GlobalManager.Get().ResetCursor();
         }
 
         /// <summary>
@@ -366,7 +370,7 @@ namespace _Project.UI.Scripts.Control_Panel
                 if (DraggingZ)
                     Value = new Vector3(Value.x, Value.y, Value.z + deltaX + deltaY);
             }
-            
+
             previousMousePostion = currentMousePosition;
         }
     }

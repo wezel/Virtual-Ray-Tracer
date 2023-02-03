@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
 namespace _Project.UI.Scripts.Tooltips
@@ -9,6 +11,9 @@ namespace _Project.UI.Scripts.Tooltips
     /// </summary>
     public class TooltipTrigger : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
+        [Serializable]
+        public class TooltipShown : UnityEvent { }
+        public TooltipShown onTooltipShown;
         /// <summary>
         /// The content of the tooltip.
         /// </summary>
@@ -38,6 +43,7 @@ namespace _Project.UI.Scripts.Tooltips
         {
             yield return new WaitForSeconds(delay);
             tooltipManager.Show(Content);
+            onTooltipShown?.Invoke();
         }
     }
 }

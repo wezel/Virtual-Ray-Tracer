@@ -1,4 +1,6 @@
+using System.IO;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,6 +21,18 @@ namespace _Project.UI.Scripts.Render_Image_Window
         private TextMeshProUGUI empty;
         [SerializeField]
         private UIZoomImage zoomImage;
+        [SerializeField]
+        private Button closeButton;
+        [SerializeField]
+        private Button saveImageButton;
+        [SerializeField]
+        private TextMeshProUGUI imageSavedText;
+        [SerializeField]
+        private GameObject progressBar;
+        [SerializeField]
+        private GameObject progressFill;
+        [SerializeField]
+        private TextMeshProUGUI taskProgress;
 
         private Texture2D texture;
         private Sprite sprite;
@@ -39,6 +53,8 @@ namespace _Project.UI.Scripts.Render_Image_Window
             
             // hide loading message, show image and reset zoom. This order is important the other way around it breaks
             loading.gameObject.SetActive(false);
+            progressBar.gameObject.SetActive(false);
+            saveImageButton.gameObject.SetActive(true);
             renderedImage.gameObject.SetActive(true);
             zoomImage.ResetZoom();
             
@@ -75,6 +91,18 @@ namespace _Project.UI.Scripts.Render_Image_Window
             empty.gameObject.SetActive(false);
             renderedImage.gameObject.SetActive(false);
             loading.gameObject.SetActive(true);
+            progressFill.GetComponent<RectTransform>().sizeDelta = new Vector2(0, 0);
+            taskProgress.text = "0%";
+            progressBar.SetActive(true);
+            saveImageButton.gameObject.SetActive(false);
+            imageSavedText.gameObject.SetActive(false);
+        }
+
+        public void UpdateProgressBar(int percentage)
+        {
+            progressFill.GetComponent<RectTransform>().sizeDelta = 
+                new Vector2(progressBar.GetComponent<RectTransform>().rect.width / 100 * percentage, 0);
+            taskProgress.text = percentage.ToString() + "%";
         }
 
         /// <summary>
@@ -84,7 +112,7 @@ namespace _Project.UI.Scripts.Render_Image_Window
         {
             gameObject.SetActive(true);
             UIManager.Get().EnableBlocker();
-            UIManager.Get().AddEscapable(Hide);
+            UIManager.Get().AddEscapable(closeButton.onClick.Invoke);
         }
 
         /// <summary>
@@ -92,9 +120,17 @@ namespace _Project.UI.Scripts.Render_Image_Window
         /// </summary>
         public void Hide()
         {
+            if (loading.gameObject.activeSelf)
+            {
+                loading.gameObject.SetActive(false);
+                progressBar.gameObject.SetActive(false);
+                empty.gameObject.SetActive(true);
+            }
+
             UIManager.Get().DisableBlocker();
-            UIManager.Get().RemoveEscapable(Hide);
+            UIManager.Get().RemoveEscapable(closeButton.onClick.Invoke);
             gameObject.SetActive(false);
+
         }
 
         /// <summary>
@@ -107,10 +143,33 @@ namespace _Project.UI.Scripts.Render_Image_Window
             else Show();
         }
 
+        public void SaveImage()
+        {
+#if UNITY_WEBGL
+            saveImageButton.gameObject.SetActive(false);
+            imageSavedText.text = "This functionality is not (yet) available for the web version.";
+            imageSavedText.gameObject.SetActive(true);
+#else
+            string path = Application.dataPath + "/SavedImages/";
+            string fileName = "Render " + System.DateTime.Now.ToString().Replace(":", "-") + ".png";
+
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+            File.WriteAllBytes(path + fileName, renderedImage.sprite.texture.EncodeToPNG());
+
+            saveImageButton.gameObject.SetActive(false);
+            imageSavedText.text = "Image has been saved to " + path +  fileName;
+            imageSavedText.gameObject.SetActive(true);
+#endif
+        }
+
         private void Awake()
         {
             loading.gameObject.SetActive(false);
             renderedImage.gameObject.SetActive(false);
+            progressBar.gameObject.SetActive(false);
+            saveImageButton.gameObject.SetActive(false);
+            imageSavedText.gameObject.SetActive(false);
         }
     }
 }

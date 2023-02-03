@@ -13,11 +13,13 @@ namespace _Project.UI.Scripts
         private Button closeButton;
         private UIManager uiManager;
 
+        // TODO instead of removing functionality remove the function itself
         /// <summary>
         /// Show the introduction panel.
         /// </summary>
         public void Show()
         {
+            /*
             if (uiManager == null)
                 uiManager = UIManager.Get();
 
@@ -27,6 +29,7 @@ namespace _Project.UI.Scripts
 
             gameObject.SetActive(true);
             UIManager.Get().AddEscapable(Hide);
+            */
         }
 
         /// <summary>

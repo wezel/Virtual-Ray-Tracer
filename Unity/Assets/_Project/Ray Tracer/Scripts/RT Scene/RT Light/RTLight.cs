@@ -1,115 +1,123 @@
 using System;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
 {
     /// <summary>
-    /// Represents a light in the ray tracer scene. Requires that the attached game object has a 
-    /// <see cref="UnityEngine.Light"/> component. Should be considered something like a tag to indicate to the scene
-    /// manager that this light should be sent to the ray tracer. All actual information for the ray tracer is stored
-    /// in the transform and light components.
-    ///
-    /// Because of changes made to the render engine the light color "does not" represent the actual color in the scene.
-    /// The color of the light symbol in the editor can be ignored and for accurate light changes the light should
-    /// be changed with the color settings in the RT Light tab instead.
+    /// Base class of the RTLights
     /// </summary>
     [ExecuteAlways]
-    [RequireComponent(typeof(Light))]
-    public class RTLight : MonoBehaviour
+    public abstract class RTLight : MonoBehaviour
     {
-
         /// <summary>
         /// This function encodes the color data. By encoding the color data we have extra room to send other data to
         /// the graphic renderer.
         /// </summary>
         [SerializeField]
-        private Color color;
-        public Color Color
+        protected Color color;
+        public virtual Color Color
         {
             get => color;
             set
             {
                 value.a = 1;
+                if (value == color) return;
                 color = value;
                 label.color = value;
-                
-                Color lightData = light.color;
-                lightData.r = Mathf.Floor(value.r * 256) + value.g / 2;
-                lightData.g = value.b;
-                light.color = lightData;
-                
+                UpdateLightData();
                 OnLightChanged?.Invoke();
+                OnLightColorChanged?.Invoke();
+            }
+        }
+
+        // Important! The range is also hardcoded in the LightShader!
+        protected const int intensityDivisor = 60;  // 2 * max intensity
+        [SerializeField, Range(0.0f, 30.0f)]
+        protected float intensity;
+        public float Intensity
+        {
+            get => intensity;
+            set
+            {
+                if (value == intensity) return;
+                intensity = value;
+                UpdateLightData();
+                OnLightChanged?.Invoke();
+                OnIntensityChanged?.Invoke();
             }
         }
 
         [SerializeField, Range(0,1)]
-        private float ambient;
+        protected float ambient;
         public float Ambient
         {
             get => ambient;
             set
             {
+                if (value == ambient) return;
                 ambient = value;
-                
-                Color lightData = light.color;
-                lightData.b = lightData.b % 1 + Mathf.Floor(value * 256);
-                light.color = lightData;
-                
+                UpdateLightData();
                 OnLightChanged?.Invoke();
             }
         }
 
         [SerializeField, Range(0,1)]
-        private float diffuse;
+        protected float diffuse;
 
         public float Diffuse
         {
             get => diffuse;
             set
             {
+                if (value == diffuse) return;
                 diffuse = value;
-
-                Color lightData = light.color;
-                lightData.b = Mathf.Floor(lightData.b) + value / 2;
-                light.color = lightData;
-
+                UpdateLightData();
                 OnLightChanged?.Invoke();
             }
         }
 
         [SerializeField, Range(0,1)]
-        private float specular;
+        protected float specular;
 
         public float Specular
         {
             get => specular;
             set
             {
+                if (value == specular) return;
                 specular = value;
-
-                Color lightData = light.color;
-                lightData.a = specular;
-                light.color = lightData;
-
+                UpdateLightData();
                 OnLightChanged?.Invoke();
             }
         }
-        
-        public delegate void LightChanged();
-        /// <summary>
-        /// An event invoked whenever a property of this light is changed.
-        /// </summary>
-        public event LightChanged OnLightChanged;
 
-        /// <summary>
-        /// The underlying <see cref="UnityEngine.Light"/> used by the light.
-        /// </summary>
+        public virtual float SpotAngle { get; set; } = 90;
+
         [SerializeField]
-        private new Light light;
-        
-        public LightShadows Shadows { get => light.shadows; set => light.shadows = value; }
-        
+        protected bool lightDistanceAttenuation = true;
+        public bool LightDistanceAttenuation
+        {
+            get => lightDistanceAttenuation;
+            set
+            {
+                if (value == lightDistanceAttenuation) return;
+                lightDistanceAttenuation = value;
+                UpdateLightData();
+                OnLightChanged?.Invoke();
+                OnDistAttenuationChanged?.Invoke();
+            }
+        }
+
+        [Serializable]
+        public class LightChanged : UnityEvent { };
+        /// <summary>
+        /// An event invoked whenever a this light is changed.
+        /// </summary>
+        public LightChanged OnLightSelected, OnLightChanged, OnLightColorChanged, OnDistAttenuationChanged, OnIntensityChanged;
+
+        protected void OnLightChangedInvoke() => OnLightChanged?.Invoke();
 
         /// <summary>
         /// The position of the light.
@@ -119,54 +127,96 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
             get { return transform.position; }
             set
             {
+                if (value == transform.position) return;
                 transform.position = value;
                 OnLightChanged?.Invoke();
             }
         }
-        
-        [SerializeField]
-        private Image label;
-        
-        [SerializeField]
-        private Image outline;
+
+
+        /// <summary>
+        /// The rotation of the light.
+        /// </summary>
+        public Vector3 Rotation
+        {
+            get => transform.eulerAngles;
+            set
+            {
+                if (value == transform.eulerAngles) return;
+                transform.eulerAngles = value;
+                OnLightChanged?.Invoke();
+            }
+        }
+
+        /// <summary>
+        /// The scale of the light.
+        /// </summary>
+        public Vector3 Scale
+        {
+            get => transform.localScale;
+            set
+            {
+                if (value == transform.localScale) return;
+                transform.localScale = value;
+                OnLightChanged?.Invoke();
+            }
+        }
+
+        public enum RTLightType
+        {
+            Point,
+            Spot,
+            Area
+        }
+
+        /// <summary>
+        /// Whether the light is a point or an area.
+        /// </summary>
+        [HideInInspector]
+        public RTLightType Type;
 
         [SerializeField]
-        private Canvas canvas;
+        protected Image label;
+        
+        [SerializeField]
+        protected Image outline;
 
-        private Color defaultOutline;
+        [SerializeField]
+        protected Canvas canvas;
+
+        protected Color defaultOutline;
+
+        public virtual void UpdateLightData() { }
 
         public void Higlight(Color value) => outline.color = value;
 
         public void ResetHighlight() => outline.color = defaultOutline;
-        
-        private void Awake()
+
+        public virtual LightShadows Shadows { get; set; }
+
+        public virtual int LightSamples { get; set; } = 4;
+
+        public virtual float SpotAttenuationPower { get; set; } = 1f;
+
+        protected void FixedUpdate()
+        {
+            if (transform.hasChanged) OnLightChanged?.Invoke();
+        }
+
+        protected void Update()
+        {
+            transform.hasChanged = false;   // Do this in Update to let other scripts also check
+        }
+
+        protected virtual void Awake()
         {
             defaultOutline = outline.color;
         }
-        
-        private void LateUpdate()
-        {
-            #if UNITY_EDITOR
-                if(!Application.isPlaying) return;
-            #endif
-            // Make the label face the camera. We do this in LateUpdate to make sure the camera has finished its moving.
-            // From: https://answers.unity.com/questions/52656/how-i-can-create-an-sprite-that-always-look-at-the.html
-            canvas.transform.forward = Camera.main.transform.forward;
-        }
-
 #if UNITY_EDITOR
-
         private void OnEnable()
         {
             label.color = color;
         }
-
-        private void OnRenderObject()
-        {
-            if (UnityEditor.SceneView.lastActiveSceneView != null)
-                canvas.transform.forward = UnityEditor.SceneView.lastActiveSceneView.camera.transform.forward;
-        }
 #endif
-        
     }
 }

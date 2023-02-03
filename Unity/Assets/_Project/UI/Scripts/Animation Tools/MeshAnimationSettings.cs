@@ -9,13 +9,13 @@ namespace _Project.UI.Scripts.Animation_Tools
     /// access to ray tracer settings <see cref="RayManager"/>. This class contains a couple of variables
     /// describing what ray tracing settings should be used and how the object should rotate. 
     /// </summary>
-    
+
     [RequireComponent(typeof(RTMesh))]
     public class MeshAnimationSettings : MonoBehaviour
     {
-        [SerializeField] 
-        private int maxDepth =3 ;
-        
+        [SerializeField]
+        private int maxDepth = 3;
+
         [SerializeField]
         private bool hideNoHitRays;
 
@@ -24,7 +24,7 @@ namespace _Project.UI.Scripts.Animation_Tools
 
         [SerializeField]
         private bool loop;
-        
+
         [SerializeField]
         private bool sequentialAnimate;
 
@@ -34,13 +34,13 @@ namespace _Project.UI.Scripts.Animation_Tools
         [SerializeField]
         private float rotationSpeed;
 
-        [SerializeField] 
+        [SerializeField]
         private Vector3 axis;
 
         private RTMesh mesh;
 
         private bool update;
-        
+
         /// <summary>
         /// Reset the script to its starting configuration when enabled.
         /// </summary>
@@ -64,6 +64,16 @@ namespace _Project.UI.Scripts.Animation_Tools
         private void FixedUpdate()
         {
             if (update) mesh.Rotation += axis * rotationSpeed;
+        }
+
+        /// <summary>
+        /// If the object should be rotated, set the transform.hasChanged to true.
+        /// Because of the OnEnable, this script has to run after default time and RTMesh checks
+        /// transform.hasChanged before the rotation. Set is back to true to let in update the next frame.
+        /// </summary>
+        private void Update()
+        {
+            if (update) mesh.transform.hasChanged = true;
         }
     }
 }

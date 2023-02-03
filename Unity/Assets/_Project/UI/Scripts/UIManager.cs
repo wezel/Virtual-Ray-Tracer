@@ -100,7 +100,7 @@ namespace _Project.UI.Scripts
 
         private void Start()
         {
-            fpsCounter.gameObject.SetActive(GlobalSettings.Get().FPSEnabled);
+            fpsCounter.gameObject.SetActive(GlobalManager.Get().FPSEnabled);
           
             inOpeningScene = SceneManager.GetActiveScene().buildIndex == 0;
             
@@ -119,11 +119,16 @@ namespace _Project.UI.Scripts
         {
             bool areThereEscapables = escapables.Count > 0;
             // These Keys are are not checked in the openings scene
+
             if (!inOpeningScene)
             {
                 if (Input.GetKeyDown(KeyCode.Escape) && !areThereEscapables)
                     mainMenu.Show();
+#if UNITY_WEBGL
+                if (Input.GetKeyDown(KeyCode.H))
+#else
                 if (Input.GetKeyDown(KeyCode.F1))
+#endif
                     helpPanel.Toggle();
 
                 if (Input.GetKeyDown(KeyCode.F2))

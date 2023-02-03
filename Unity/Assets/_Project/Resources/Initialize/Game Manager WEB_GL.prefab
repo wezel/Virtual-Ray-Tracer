@@ -1,0 +1,66 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &829844179398391297
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2981704608641618389, guid: 5f54f6fe698098a47bffaceb215d99a3, type: 3}
+      propertyPath: TutorialTasks.Array.data[0].tasks.Array.data[2].description
+      value: We'll first start by going over the controls and the various interface
+        elements. If you get lost somewhere, you can always go back to previous task(s)
+        or find all the necessary information in the help menu. Access this menu
+        any time by clicking the "Help" button in the top left or by pressing [H].
+      objectReference: {fileID: 0}
+    - target: {fileID: 2981704608641618394, guid: 5f54f6fe698098a47bffaceb215d99a3, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2981704608641618394, guid: 5f54f6fe698098a47bffaceb215d99a3, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2981704608641618394, guid: 5f54f6fe698098a47bffaceb215d99a3, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2981704608641618394, guid: 5f54f6fe698098a47bffaceb215d99a3, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2981704608641618394, guid: 5f54f6fe698098a47bffaceb215d99a3, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2981704608641618394, guid: 5f54f6fe698098a47bffaceb215d99a3, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2981704608641618394, guid: 5f54f6fe698098a47bffaceb215d99a3, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2981704608641618394, guid: 5f54f6fe698098a47bffaceb215d99a3, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2981704608641618394, guid: 5f54f6fe698098a47bffaceb215d99a3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2981704608641618394, guid: 5f54f6fe698098a47bffaceb215d99a3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2981704608641618394, guid: 5f54f6fe698098a47bffaceb215d99a3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2981704608641618395, guid: 5f54f6fe698098a47bffaceb215d99a3, type: 3}
+      propertyPath: m_Name
+      value: Game Manager WEB_GL
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 5f54f6fe698098a47bffaceb215d99a3, type: 3}

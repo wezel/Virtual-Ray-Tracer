@@ -1,5 +1,6 @@
 using _Project.Scripts;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace _Project.UI.Scripts.Main_Menu
@@ -14,7 +15,7 @@ namespace _Project.UI.Scripts.Main_Menu
         [SerializeField] 
         private Toggle fpsCounterToggle;
         [SerializeField] 
-        private Toggle unlimitedToggle;
+        private Toggle cheatModeToggle;
     
         [SerializeField] 
         private FPSCounter fpsCounter;
@@ -49,33 +50,34 @@ namespace _Project.UI.Scripts.Main_Menu
         private void ToggleFpsCounter(bool isOn)
         {
             fpsCounter.gameObject.SetActive(isOn);
-            GlobalSettings.Get().FPSEnabled = isOn;
-        }
-
-        private void ToggleUnlimited(bool isOn)
-        {
-
-            GlobalSettings.Get().Unlimited = isOn;
+            GlobalManager.Get().FPSEnabled = isOn;
         }
 
         private void ToggleFullScreen(bool isOn)
         {
             Screen.fullScreen = isOn;
         }
+
+        private void ToggleCheatMode(bool isOn)
+        {
+            GlobalManager.Get().CheatMode = isOn;
+            if (SceneManager.GetActiveScene().buildIndex != 0)
+                Tutorial.TutorialManager.Get().UpdateTutorial();
+        }
     
         private void Awake()
         {
             exitButton.onClick.AddListener(Hide);
             fpsCounterToggle.onValueChanged.AddListener(ToggleFpsCounter);
-            unlimitedToggle.onValueChanged.AddListener(ToggleUnlimited);
             fullScreenToggle.onValueChanged.AddListener(ToggleFullScreen);
+            cheatModeToggle.onValueChanged.AddListener(ToggleCheatMode);
         }
 
         private void OnEnable()
         {
-            fpsCounterToggle.isOn = GlobalSettings.Get().FPSEnabled;
+            fpsCounterToggle.isOn = GlobalManager.Get().FPSEnabled;
             fullScreenToggle.isOn = Screen.fullScreen;
-            unlimitedToggle.isOn = GlobalSettings.Get().Unlimited;
+            cheatModeToggle.isOn = GlobalManager.Get().CheatMode;
         }
     }
 }

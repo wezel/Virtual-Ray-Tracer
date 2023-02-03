@@ -12,8 +12,8 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
         /// <summary>
         /// The <see cref="RTRay"/> produced by the ray tracer that this ray object represents.
         /// </summary>
-        public RTRay Ray 
-        { 
+        public RTRay Ray
+        {
             get { return ray; }
             set { ray = value; Reset(); }
         }
@@ -28,7 +28,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
         private RayRenderer rayRenderer;
         private RayManager rayManager;
 
-        /// <summary>
+        /// <summary>   
         /// Draw the ray as a cylinder where <paramref name="radius"/> determines the drawn radius of the cylinder. The
         /// length of the cylinder is the same as the ray's true length unless that length is infinity, then the length is
         /// clamped to <see cref="RayManager.InfiniteRayDrawLength"/>.
@@ -36,7 +36,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
         /// <param name="radius"> The drawn radius of the cylinder. </param>
         public void Draw(float radius)
         {
-            rayRenderer.Radius = radius;
+            rayRenderer.Radius = Ray.AreaRay ? DrawLength : radius; // The arearay's radius is based on its length
             rayRenderer.Length = DrawLength;
         }
 
@@ -49,8 +49,9 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
         /// <param name="length"> The drawn length of the cylinder. Clamped between 0 and <see cref="DrawLength"/> </param>
         public void Draw(float radius, float length)
         {
-            rayRenderer.Radius = radius;
-            rayRenderer.Length = Mathf.Clamp(length, 0.0f, DrawLength);
+            length = Mathf.Clamp(length, 0.0f, DrawLength);
+            rayRenderer.Radius = Ray.AreaRay ? length : radius; // The arearay's radius is based on its length
+            rayRenderer.Length = length;
         }
 
         private void Reset()
@@ -60,7 +61,15 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
             rayRenderer.Origin = Ray.Origin;
             rayRenderer.Direction = Ray.Direction;
             rayRenderer.Length = 0.0f;
-            rayRenderer.Material = rayManager.GetRayTypeMaterial(Ray.Type);
+
+            if (Ray.AreaRay) rayRenderer.SetAreaLightRay(Ray.AreaLightPoints);
+
+            ReloadMaterial();
+        }
+
+        public void ReloadMaterial()
+        {
+            rayRenderer.Material = rayManager.GetRayMaterial(Ray.Contribution, Ray.Type, Ray.Color, Ray.AreaRay);
         }
 
         private void DetermineDrawLength()
