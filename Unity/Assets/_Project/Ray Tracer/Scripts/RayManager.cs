@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using _Project.Ray_Tracer.Scripts.RT_Ray;
 using _Project.Ray_Tracer.Scripts.Utility;
-using Assets._Project.UI.Scripts.Control_Panel;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;

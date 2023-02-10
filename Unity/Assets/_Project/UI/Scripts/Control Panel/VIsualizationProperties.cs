@@ -134,9 +134,12 @@ namespace _Project.UI.Scripts.Control_Panel
 
         private void highlightStep(int prevStep, int newStep)
         {
+            //first get ray color
+            Color rayColor = rayManager.GetRayTypeMaterial(ray.Data.Type).color;
+
             if (prevStep >= 0)
                 steps[prevStep].color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
-            steps[newStep].color = new Color(0.0f, 1.0f, 1.0f, 1.0f);
+            steps[newStep].color = rayColor;
             globalPrev = newStep;
         }
 
