@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using _Project.Ray_Tracer.Scripts.RT_Ray;
 using _Project.Ray_Tracer.Scripts.Utility;
 using _Project.UI.Scripts.Control_Panel;
+using Assets._Project.Ray_Tracer.Scripts.Utility;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -13,7 +14,7 @@ namespace _Project.Ray_Tracer.Scripts
     /// <summary>
     /// Manages the visible rays in the Unity scene. Gets new rays from the ray tracer each frame and draws them.
     /// </summary>
-    public class RayManager : MonoBehaviour
+    public class RayManager : MonoPause
     {
         [Header("Render Settings")]
 
@@ -265,7 +266,7 @@ namespace _Project.Ray_Tracer.Scripts
             rayTracer.OnRayTracerChanged += () => { shouldUpdateRays = true; };
         }
 
-        private void FixedUpdate()
+        protected override void DoUpdate()
         {
             rayObjectPool.SetAllUnused();
             
@@ -436,11 +437,7 @@ namespace _Project.Ray_Tracer.Scripts
         //keep track of which rays have been signaled as drawn to visprops
         //TODO no need for hashset here
         private HashSet<TreeNode<RTRay>> signaledRays;
-        private bool paused = false;
-        //bool drawingRoot = true;
-        
-        //works perfectly for parent ray (i.e. waits until ray is finished) but for child ray
-        //works like normal pause (i.e. stops in the middle)
+/*        private bool paused = false;
         public bool Paused 
         { 
             get { return paused; } 
@@ -453,7 +450,7 @@ namespace _Project.Ray_Tracer.Scripts
                 else
                     Time.timeScale = 0.0f;
             } 
-        }
+        }*/
 
         /// <summary>
         /// Animates drawing a ray tree; only when one child finishes drawing in full does the next child start drawing
@@ -500,17 +497,12 @@ namespace _Project.Ray_Tracer.Scripts
             }
              
             // Otherwise we start animating the children.
-            RayReturn fromChild = new RayReturn() { isDone = true, leftover = 0 };
-
-/*            if (paused && drawingRoot)
-                Time.timeScale = 0.0f;*/
-            
+            RayReturn fromChild = new RayReturn() { isDone = true, leftover = 0 };            
             bool done = true;
             float leftoverFromPrev = returnValue.leftover;
 
             foreach (var child in rayTree.Children)
             {
-                //drawingRoot = false;
                 //previous child is done, so signal & mark new child as signaled
                 //also check if current child wasnt already signaled
                 if (fromChild.isDone && !signaledRays.Contains(child))
@@ -523,8 +515,6 @@ namespace _Project.Ray_Tracer.Scripts
                 if (fromChild.isDone)
                 {
                     signaledRays.Add(child);
-/*                    if (paused)
-                        Time.timeScale = 0.0f;*/
                 }
                 done &= fromChild.isDone;
                 leftoverFromPrev = fromChild.leftover;
