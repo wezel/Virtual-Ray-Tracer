@@ -2,8 +2,7 @@ using System;
 using System.Collections.Generic;
 using _Project.Ray_Tracer.Scripts.RT_Ray;
 using _Project.Ray_Tracer.Scripts.Utility;
-using _Project.UI.Scripts.Control_Panel;
-using Assets._Project.Ray_Tracer.Scripts.Utility;
+using Assets._Project.UI.Scripts.Control_Panel;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -14,7 +13,7 @@ namespace _Project.Ray_Tracer.Scripts
     /// <summary>
     /// Manages the visible rays in the Unity scene. Gets new rays from the ray tracer each frame and draws them.
     /// </summary>
-    public class RayManager : MonoPause
+    public class RayManager : MonoBehaviour
     {
         [Header("Render Settings")]
 
@@ -266,8 +265,11 @@ namespace _Project.Ray_Tracer.Scripts
             rayTracer.OnRayTracerChanged += () => { shouldUpdateRays = true; };
         }
 
-        protected override void DoUpdate()
+        private void FixedUpdate()
         {
+            if (paused)
+                return;
+
             rayObjectPool.SetAllUnused();
             
             if(shouldUpdateRays)
@@ -437,20 +439,18 @@ namespace _Project.Ray_Tracer.Scripts
         //keep track of which rays have been signaled as drawn to visprops
         //TODO no need for hashset here
         private HashSet<TreeNode<RTRay>> signaledRays;
-/*        private bool paused = false;
-        public bool Paused 
-        { 
-            get { return paused; } 
-            set 
-            { 
+        private bool paused = false;
+        public bool Paused
+        {
+            get { return paused; }
+            set
+            {
                 paused = value;
                 //unpaused
                 if (!paused)
-                    Time.timeScale = 1.0f;
-                else
-                    Time.timeScale = 0.0f;
-            } 
-        }*/
+                    FixedUpdate();
+            }
+        }
 
         /// <summary>
         /// Animates drawing a ray tree; only when one child finishes drawing in full does the next child start drawing

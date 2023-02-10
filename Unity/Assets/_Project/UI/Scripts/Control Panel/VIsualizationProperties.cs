@@ -63,7 +63,7 @@ namespace _Project.UI.Scripts.Control_Panel
         private void Start()
         {
             rayManager = RayManager.Get();
-            paused = rayManager.pause;
+            paused = rayManager.Paused;
         }
 
         public void Show(TreeNode<RTRay> ray)
@@ -86,7 +86,7 @@ namespace _Project.UI.Scripts.Control_Panel
         public void Pause()
         {
             paused = !paused;
-            rayManager.pause = paused;
+            rayManager.Paused = paused;
         }
 
         //gets notification from ray manager that a new ray is being drawn
