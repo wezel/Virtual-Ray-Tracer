@@ -180,7 +180,6 @@ MonoBehaviour:
   cameraButton: {fileID: 1275962875368193987}
   objectButton: {fileID: 2311804751056248152}
   visualButton: {fileID: 5213230721981286216}
-  rayManager: {fileID: 3364825822907551461, guid: c271906e89fa0f342a70789873c17236, type: 3}
 --- !u!1 &3353097685823959504
 GameObject:
   m_ObjectHideFlags: 0
@@ -951,7 +950,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6288208813101995266, guid: 6e42c726c7542bc9e9fff79e3c2b0be8, type: 3}
       propertyPath: m_text
-      value: Visualization
+      value: 'Algorithm
+
+'
       objectReference: {fileID: 0}
     - target: {fileID: 6288208813101995266, guid: 6e42c726c7542bc9e9fff79e3c2b0be8, type: 3}
       propertyPath: m_fontSize
@@ -2098,12 +2099,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92620f800cc26c341a3f054646c5d3b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resetText: {fileID: 0}
-  startLoopText: {fileID: 0}
-  noCollisionText: {fileID: 0}
-  computeRayText: {fileID: 0}
-  castChildrenText: {fileID: 0}
-  stopLoopText: {fileID: 0}
+  formRayText: {fileID: 0}
+  computeIntersectionInput: {fileID: 0}
+  ifIntersectText: {fileID: 0}
+  enterShadeText: {fileID: 0}
+  computeLightRayText: {fileID: 0}
+  ifReflectiveText: {fileID: 0}
+  computeReflectiveText: {fileID: 0}
+  ifTransparentText: {fileID: 0}
+  computeRefractiveText: {fileID: 0}
+  pauseButton: {fileID: 0}
+  paused: 0
 --- !u!114 &1964859917225814522
 MonoBehaviour:
   m_ObjectHideFlags: 0
