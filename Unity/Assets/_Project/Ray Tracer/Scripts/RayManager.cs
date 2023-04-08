@@ -154,6 +154,7 @@ namespace _Project.Ray_Tracer.Scripts
         private bool animationDone = false;
 
         private bool shouldUpdateRays = true;
+        private bool changedRayOnPause = false;
 
         /// <summary>
         /// Get the current <see cref="RayManager"/> instance.
@@ -172,6 +173,8 @@ namespace _Project.Ray_Tracer.Scripts
         {
             int width = rtSceneManager.Scene.Camera.ScreenWidth;
             int index = selectedRayCoordinates.x + width * selectedRayCoordinates.y;
+            if (paused)
+                changedRayOnPause = true;
             selectedRay = rays[index];
             changedSelectedRay?.Invoke(this, hasSelectedRayNow);
         }
@@ -266,7 +269,9 @@ namespace _Project.Ray_Tracer.Scripts
 
         private void FixedUpdate()
         {
-            if (paused)
+            if (paused && changedRayOnPause)
+                changedRayOnPause = false;
+            else if (paused)
                 return;
 
             rayObjectPool.SetAllUnused();
@@ -355,7 +360,6 @@ namespace _Project.Ray_Tracer.Scripts
                 rayTreeToDraw = 0;
                 animationDone = false;
                 Reset = false;
-                //drawingRoot = true;
             }
 
             // Animate all ray trees if we are not done animating already.
