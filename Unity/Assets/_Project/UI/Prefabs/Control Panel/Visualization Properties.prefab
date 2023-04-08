@@ -168,7 +168,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 2
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -179,7 +179,7 @@ MonoBehaviour:
     m_FadeDuration: 0.1
   m_SpriteState:
     m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 21300000, guid: 0a9ddc7bbbe8f8e43a88ff882a336eae, type: 3}
     m_SelectedSprite: {fileID: 0}
     m_DisabledSprite: {fileID: 0}
   m_AnimationTriggers:
@@ -649,6 +649,8 @@ MonoBehaviour:
   computeReflectiveText: {fileID: 2138251980704246879}
   ifTransparentText: {fileID: 6587212487101530629}
   computeRefractiveText: {fileID: 6670506628301041469}
+  pauseSprite: {fileID: 21300000, guid: e1f56601df3f9fc4db98dbe66f8c28db, type: 3}
+  playSprite: {fileID: 21300000, guid: 0a9ddc7bbbe8f8e43a88ff882a336eae, type: 3}
   pauseButton: {fileID: 3248980965226474171}
   paused: 0
 --- !u!114 &2203514527426804605

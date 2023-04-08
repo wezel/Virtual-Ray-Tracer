@@ -13,6 +13,7 @@ namespace _Project.UI.Scripts.Control_Panel
 {
     public class VisualizationProperties : MonoBehaviour
     {
+        //text fields
         [SerializeField]
         private TextMeshProUGUI formRayText;
         [SerializeField]
@@ -32,6 +33,11 @@ namespace _Project.UI.Scripts.Control_Panel
         [SerializeField]
         private TextMeshProUGUI computeRefractiveText;
 
+        //pause/play button fileds
+        [SerializeField]
+        private Sprite pauseSprite;
+        [SerializeField]
+        private Sprite playSprite;
         [SerializeField]
         private Button pauseButton;
         [SerializeField]
@@ -87,6 +93,15 @@ namespace _Project.UI.Scripts.Control_Panel
         {
             paused = !paused;
             rayManager.Paused = paused;
+            setButtonSprite(paused);
+        }
+
+        private void setButtonSprite(bool paused)
+        {
+            if (paused)
+                pauseButton.image.sprite = playSprite;
+            else
+                pauseButton.image.sprite = pauseSprite;
         }
 
         //gets notification from ray manager that a new ray is being drawn
