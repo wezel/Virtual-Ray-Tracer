@@ -404,7 +404,7 @@ namespace _Project.Ray_Tracer.Scripts
             {
                 case ControlPanel.SignalType.Visual:
                     if (ray == null)
-                        ControlPanel.ShowEmptyProperties();
+                        ControlPanel.ShowNoSelectedRayProperties();
                     else
                         ControlPanel.ShowVisualizationProperties(ray);
                     break;

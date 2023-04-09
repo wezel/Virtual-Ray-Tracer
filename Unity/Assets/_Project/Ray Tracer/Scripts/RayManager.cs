@@ -173,6 +173,7 @@ namespace _Project.Ray_Tracer.Scripts
         {
             int width = rtSceneManager.Scene.Camera.ScreenWidth;
             int index = selectedRayCoordinates.x + width * selectedRayCoordinates.y;
+            //remember we changed a ray while paused
             if (paused)
                 changedRayOnPause = true;
             selectedRay = rays[index];
@@ -269,6 +270,7 @@ namespace _Project.Ray_Tracer.Scripts
 
         private void FixedUpdate()
         {
+            //if we are paused, do one update to clear the screen
             if (paused && changedRayOnPause)
                 changedRayOnPause = false;
             else if (paused)

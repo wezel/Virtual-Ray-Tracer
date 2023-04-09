@@ -45,6 +45,8 @@ namespace _Project.UI.Scripts.Control_Panel
         [SerializeField]
         private TextMeshProUGUI emptyProperties;
         [SerializeField]
+        private TextMeshProUGUI noSelectedRayProperties;
+        [SerializeField]
         private FolderButton rayTracerButton;
         [SerializeField]
         private FolderButton cameraButton;
@@ -71,6 +73,7 @@ namespace _Project.UI.Scripts.Control_Panel
             lightProperties.Hide();
             meshProperties.Hide();
             visualizationProperties.Hide();
+            noSelectedRayProperties.gameObject.SetActive(false);
             emptyProperties.gameObject.SetActive(false);
             cameraButton.Conceal();
             objectButton.Conceal();
@@ -91,6 +94,7 @@ namespace _Project.UI.Scripts.Control_Panel
             lightProperties.Hide();
             meshProperties.Hide();
             visualizationProperties.Hide();
+            noSelectedRayProperties.gameObject.SetActive(false);
             emptyProperties.gameObject.SetActive(false);
             objectButton.Conceal();
             rayTracerButton.Conceal();
@@ -111,6 +115,7 @@ namespace _Project.UI.Scripts.Control_Panel
             cameraProperties.Hide();
             meshProperties.Hide();
             visualizationProperties.Hide();
+            noSelectedRayProperties.gameObject.SetActive(false);
             emptyProperties.gameObject.SetActive(false);
             rayTracerButton.Conceal();
             cameraButton.Conceal();
@@ -131,6 +136,7 @@ namespace _Project.UI.Scripts.Control_Panel
             cameraProperties.Hide();
             lightProperties.Hide();
             visualizationProperties.Hide();
+            noSelectedRayProperties.gameObject.SetActive(false);
             emptyProperties.gameObject.SetActive(false);
             cameraButton.Conceal();
             rayTracerButton.Conceal();
@@ -147,6 +153,7 @@ namespace _Project.UI.Scripts.Control_Panel
             cameraProperties.Hide();
             lightProperties.Hide();
             meshProperties.Hide();
+            noSelectedRayProperties.gameObject.SetActive(false);
             emptyProperties.gameObject.SetActive(false);
             cameraButton.Conceal();
             rayTracerButton.Conceal();
@@ -163,6 +170,7 @@ namespace _Project.UI.Scripts.Control_Panel
             cameraProperties.Hide();
             lightProperties.Hide();
             visualizationProperties.Hide();
+            noSelectedRayProperties.gameObject.SetActive(false);
             cameraButton.Conceal();
             rayTracerButton.Conceal();
             visualButton.Conceal();
@@ -170,6 +178,22 @@ namespace _Project.UI.Scripts.Control_Panel
             Show();
             objectButton.Highlight();
             emptyProperties.gameObject.SetActive(true);
+        }
+
+        public void ShowNoSelectedRayProperties()
+        {
+            rayTracerProperties.Hide();
+            cameraProperties.Hide();
+            lightProperties.Hide();
+            visualizationProperties.Hide();
+            emptyProperties.gameObject.SetActive(false);
+            cameraButton.Conceal();
+            rayTracerButton.Conceal();
+            visualButton.Conceal();
+
+            Show();
+            visualButton.Highlight();
+            noSelectedRayProperties.gameObject.SetActive(true);
         }
 
         /// <summary>
@@ -182,6 +206,7 @@ namespace _Project.UI.Scripts.Control_Panel
             lightProperties.Hide();
             meshProperties.Hide();
             visualizationProperties.Hide();
+            noSelectedRayProperties.gameObject.SetActive(false);
             emptyProperties.gameObject.SetActive(false);
             gameObject.SetActive(false);
         }
