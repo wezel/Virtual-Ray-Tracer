@@ -420,6 +420,7 @@ namespace _Project.Ray_Tracer.Scripts
                     else
                     {
                         Deselect();
+                        Debug.Log("object deselect");
                         ControlPanel.ShowEmptyProperties();
                     }
                     break;

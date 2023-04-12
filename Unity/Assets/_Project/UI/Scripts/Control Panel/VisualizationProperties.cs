@@ -110,6 +110,7 @@ namespace _Project.UI.Scripts.Control_Panel
             //sometimes the last text box remains highlighted, so just get rid of that
             resetColor();
             ray = rayBeingDrawn;
+            Debug.Log("drawing new ray");
             syncToCurrent();
         }
 

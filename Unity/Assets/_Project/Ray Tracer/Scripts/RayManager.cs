@@ -178,6 +178,7 @@ namespace _Project.Ray_Tracer.Scripts
                 changedRayOnPause = true;
             selectedRay = rays[index];
             changedSelectedRay?.Invoke(this, hasSelectedRayNow);
+            OnDrawingNewRay(selectedRay);
         }
 
         /// <summary>
