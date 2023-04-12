@@ -458,6 +458,11 @@ namespace _Project.Ray_Tracer.Scripts
             }
         }
 
+        private TreeNode<RTRay> drawingRay = null;
+        public TreeNode<RTRay> DrawingRay
+        {
+            get { return drawingRay; }
+        }
         /// <summary>
         /// Animates drawing a ray tree; only when one child finishes drawing in full does the next child start drawing
         /// </summary>
@@ -465,6 +470,7 @@ namespace _Project.Ray_Tracer.Scripts
         /// distance left to draw for the next child></returns>
         private RayReturn DrawRayTreeAnimatedSequential(TreeNode<RTRay> rayTree, float distance)
         {
+            drawingRay = rayTree;
             RayReturn returnValue = new RayReturn();
             //we dont add children here bc they would get added too quickly (i.e. light & reflect rays)
             if (!signaledRays.Contains(rayTree) && rayTree.Parent == null)

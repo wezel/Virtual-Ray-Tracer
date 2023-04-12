@@ -72,19 +72,24 @@ namespace _Project.UI.Scripts.Control_Panel
             paused = rayManager.Paused;
         }
 
-        public void Show(TreeNode<RTRay> ray)
+        public void Show()
         {
             gameObject.SetActive(true);
             //reset color - needed when we exit visprops and then start it again.
             resetColor();
-            rayManager = RayManager.Get();
-            rayManager.drawingNewRay += RMDrawingNewRay;
             hasBeenShown = true;
+            rayManager.drawingNewRay += RMDrawingNewRay;
+            if (rayManager.DrawingRay != null)
+            {
+                this.ray = rayManager.DrawingRay;
+                syncToCurrent();
+            }
         }
 
         public void Hide()
         {
             gameObject.SetActive(false);
+            //add and remove listeners to not get corountine error 
             if (hasBeenShown)
                 rayManager.drawingNewRay -= RMDrawingNewRay;
         }
@@ -110,7 +115,6 @@ namespace _Project.UI.Scripts.Control_Panel
             //sometimes the last text box remains highlighted, so just get rid of that
             resetColor();
             ray = rayBeingDrawn;
-            Debug.Log("drawing new ray");
             syncToCurrent();
         }
 

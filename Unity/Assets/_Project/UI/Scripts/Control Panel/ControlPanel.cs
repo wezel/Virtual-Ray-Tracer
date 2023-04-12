@@ -147,7 +147,7 @@ namespace _Project.UI.Scripts.Control_Panel
             meshProperties.Show(mesh);
         }
 
-        public void ShowVisualizationProperties(TreeNode<RTRay> ray)
+        public void ShowVisualizationProperties()
         {
             rayTracerProperties.Hide();
             cameraProperties.Hide();
@@ -161,7 +161,7 @@ namespace _Project.UI.Scripts.Control_Panel
 
             Show();
             visualButton.Highlight();
-            visualizationProperties.Show(ray);
+            visualizationProperties.Show();
         }
 
         public void ShowEmptyProperties()

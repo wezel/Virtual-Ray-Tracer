@@ -406,7 +406,7 @@ namespace _Project.Ray_Tracer.Scripts
                     if (ray == null)
                         ControlPanel.ShowNoSelectedRayProperties();
                     else
-                        ControlPanel.ShowVisualizationProperties(ray);
+                        ControlPanel.ShowVisualizationProperties();
                     break;
                 case ControlPanel.SignalType.RayTracer:
                     Deselect();
@@ -470,7 +470,7 @@ namespace _Project.Ray_Tracer.Scripts
             if (hasSelectedRayNow)
             {
                 ray = rayManager.SelectedRay;
-                ControlPanel.ShowVisualizationProperties(ray);
+                ControlPanel.ShowVisualizationProperties();
             }
             else if (!hasSelectedRayNow)
             {
