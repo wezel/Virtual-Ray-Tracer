@@ -29,7 +29,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
 
         /// <summary>
         /// The underlying <see cref="UnityEngine.Material"/> used by the mesh. Its shader should be either
-        /// RayTracerShader or RayTracerShaderTransparent.
+        /// LitSS or RayTracerShaderTransparent.
         /// </summary>
         public Material Material { get; private set; }
 
@@ -85,7 +85,15 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             get => Material.color;
             set
             {
+                // Change Base Map color
                 Material.color = value;
+
+                // Get the Renderer component from the new cube
+                var meshRenderer = this.GetComponent<Renderer>();
+
+                // Call SetColor using the shader property name "_Color" and setting the color to red
+                //meshRenderer.material.SetColor("_EmissiveColor", value);
+
                 OnMeshChanged?.Invoke();
             }
         }
@@ -98,8 +106,8 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             get => Material.GetFloat(ambient);
             set
             {
-                Material.SetFloat(ambient, value);
-                OnMeshChanged?.Invoke();
+                // Material.SetFloat(ambient, value);
+                // OnMeshChanged?.Invoke();
             }
         }
 
@@ -111,8 +119,8 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             get => Material.GetFloat(diffuse);
             set
             {
-                Material.SetFloat(diffuse, value);
-                OnMeshChanged?.Invoke();
+                // Material.SetFloat(diffuse, value);
+                // OnMeshChanged?.Invoke();
             }
         }
 
@@ -124,8 +132,8 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             get => Material.GetFloat(specular);
             set
             {
-                Material.SetFloat(specular, value);
-                OnMeshChanged?.Invoke();
+                // Material.SetFloat(specular, value);
+                // OnMeshChanged?.Invoke();
             }
         }
 
@@ -224,7 +232,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
         private void Awake()
         {
             if (StandardShader == null)
-                StandardShader = Shader.Find("Custom/RayTracerShader");
+                StandardShader = Shader.Find("Custom/LitSS");
             if (TransparentShader == null)
                 TransparentShader = Shader.Find("Custom/RayTracerShaderTransparent");
 

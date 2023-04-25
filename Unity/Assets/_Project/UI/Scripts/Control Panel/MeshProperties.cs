@@ -50,10 +50,10 @@ namespace _Project.UI.Scripts.Control_Panel
             scaleEdit.Value = mesh.Scale;
 
             colorEdit.Color = mesh.Color;
-            ambientEdit.Value = mesh.Ambient;
-            diffuseEdit.Value = mesh.Diffuse;
-            specularEdit.Value = mesh.Specular;
-            shininessEdit.Value = mesh.Shininess;
+            // ambientEdit.Value = mesh.Ambient;
+            // diffuseEdit.Value = mesh.Diffuse;
+            // specularEdit.Value = mesh.Specular;
+            // shininessEdit.Value = mesh.Shininess;
             
             typeDropdown.value = typeDropdown.options.FindIndex(option => option.text == mesh.Type.ToString());
             refractiveIndexEdit.gameObject.SetActive(mesh.Type == RTMesh.ObjectType.Transparent);
@@ -83,10 +83,10 @@ namespace _Project.UI.Scripts.Control_Panel
             scaleEdit.OnValueChanged += (value) => { mesh.Scale = value; };
 
             colorEdit.OnValueChanged += (value) => { mesh.Color = value; };
-            ambientEdit.OnValueChanged += (value) => { mesh.Ambient = value; };
-            diffuseEdit.OnValueChanged += (value) => { mesh.Diffuse = value; };
-            specularEdit.OnValueChanged += (value) => { mesh.Specular = value; };
-            shininessEdit.OnValueChanged += (value) => { mesh.Shininess = value; };
+            // ambientEdit.OnValueChanged += (value) => { mesh.Ambient = value; };
+            // diffuseEdit.OnValueChanged += (value) => { mesh.Diffuse = value; };
+            // specularEdit.OnValueChanged += (value) => { mesh.Specular = value; };
+            // shininessEdit.OnValueChanged += (value) => { mesh.Shininess = value; };
 
             typeDropdown.onValueChanged.AddListener( type => ChangeObjectType( (RTMesh.ObjectType) type));
 

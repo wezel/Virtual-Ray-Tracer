@@ -16,12 +16,12 @@ namespace _Project.UI.Scripts.Control_Panel
         private Vector3Edit positionEdit;
         [SerializeField]
         private ColorEdit colorEdit;
-        [SerializeField]
-        private FloatEdit ambientEdit;
-        [SerializeField]
-        private FloatEdit diffuseEdit;
-        [SerializeField]
-        private FloatEdit specularEdit;
+        // [SerializeField]
+        // private FloatEdit ambientEdit;
+        // [SerializeField]
+        // private FloatEdit diffuseEdit;
+        // [SerializeField]
+        // private FloatEdit specularEdit;
 
         /// <summary>
         /// Show the light properties for <paramref name="light"/>. These properties can be changed via the shown UI.
@@ -34,9 +34,9 @@ namespace _Project.UI.Scripts.Control_Panel
 
             positionEdit.Value = light.Position;
             colorEdit.Color = light.Color;
-            ambientEdit.Value = light.Ambient;
-            diffuseEdit.Value = light.Diffuse;
-            specularEdit.Value = light.Specular;
+            // ambientEdit.Value = light.Ambient;
+            // diffuseEdit.Value = light.Diffuse;
+            // specularEdit.Value = light.Specular;
         }
 
         /// <summary>
@@ -53,9 +53,9 @@ namespace _Project.UI.Scripts.Control_Panel
         {
             positionEdit.OnValueChanged += value => light.Position = value;
             colorEdit.OnValueChanged += value => light.Color = value;
-            ambientEdit.OnValueChanged += (value) => { light.Ambient = value; };
-            diffuseEdit.OnValueChanged += (value) => { light.Diffuse = value; };
-            specularEdit.OnValueChanged += (value) => { light.Specular = value; };
+            // ambientEdit.OnValueChanged += (value) => { light.Ambient = value; };
+            // diffuseEdit.OnValueChanged += (value) => { light.Diffuse = value; };
+            // specularEdit.OnValueChanged += (value) => { light.Specular = value; };
         }
 
         private void Update()

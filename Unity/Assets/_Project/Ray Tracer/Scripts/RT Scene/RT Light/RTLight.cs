@@ -18,7 +18,6 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
     [RequireComponent(typeof(Light))]
     public class RTLight : MonoBehaviour
     {
-
         /// <summary>
         /// This function encodes the color data. By encoding the color data we have extra room to send other data to
         /// the graphic renderer.
@@ -35,8 +34,9 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
                 label.color = value;
                 
                 Color lightData = light.color;
-                lightData.r = Mathf.Floor(value.r * 256) + value.g / 2;
-                lightData.g = value.b;
+                lightData.r = value.r;
+                lightData.g = value.g;
+                lightData.b = value.b;
                 light.color = lightData;
                 
                 OnLightChanged?.Invoke();
@@ -52,11 +52,11 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
             {
                 ambient = value;
                 
-                Color lightData = light.color;
-                lightData.b = lightData.b % 1 + Mathf.Floor(value * 256);
-                light.color = lightData;
+                // Color lightData = light.color;
+                // lightData.b = lightData.b % 1 + Mathf.Floor(value * 256);
+                // light.color = lightData;
                 
-                OnLightChanged?.Invoke();
+                // OnLightChanged?.Invoke();
             }
         }
 
@@ -70,11 +70,11 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
             {
                 diffuse = value;
 
-                Color lightData = light.color;
-                lightData.b = Mathf.Floor(lightData.b) + value / 2;
-                light.color = lightData;
+                // Color lightData = light.color;
+                // lightData.b = Mathf.Floor(lightData.b) + value / 2;
+                // light.color = lightData;
 
-                OnLightChanged?.Invoke();
+                // OnLightChanged?.Invoke();
             }
         }
 
@@ -88,11 +88,11 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
             {
                 specular = value;
 
-                Color lightData = light.color;
-                lightData.a = specular;
-                light.color = lightData;
+                // Color lightData = light.color;
+                // lightData.a = specular;
+                // light.color = lightData;
 
-                OnLightChanged?.Invoke();
+                // OnLightChanged?.Invoke();
             }
         }
         
