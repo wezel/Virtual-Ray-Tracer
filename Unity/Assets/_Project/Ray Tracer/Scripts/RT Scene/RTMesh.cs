@@ -20,6 +20,11 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
         private static readonly int specular = Shader.PropertyToID("_Specular");
         private static readonly int shininess = Shader.PropertyToID("_Shininess");
         private static readonly int refractiveIndex = Shader.PropertyToID("_RefractiveIndex");
+        private static readonly int metallic = Shader.PropertyToID("_Metallic");
+        private static readonly int smoothness = Shader.PropertyToID("_Smoothness");
+        private static readonly int backupAmbient = Shader.PropertyToID("_BackupAmbient");
+
+
 
         public delegate void MeshChanged();
         /// <summary>
@@ -85,14 +90,33 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             get => Material.color;
             set
             {
-                // Change Base Map color
-                Material.color = value;
+                // Calculate ambient color
+                if(this.Type == ObjectType.Transparent || this.Type == ObjectType.Mirror) {
+                    return;
+                }
+                var ambientValue = Material.GetFloat(ambient);
+                var oldAmbientValue = Material.GetFloat(backupAmbient);
+                var ambientColor = value;
+                ambientColor.r = ambientValue*value.r - oldAmbientValue*value.r;
+                ambientColor.g = ambientValue*value.g - oldAmbientValue*value.g;
+                ambientColor.b = ambientValue*value.b - oldAmbientValue*value.b;
 
-                // Get the Renderer component from the new cube
+                Material.SetFloat(backupAmbient, ambientValue);
+
+                // Change Base Map color
+                Material.color = value + ambientColor;
+                
+                // Create darker variant of base map for emissive color
+                var emission = value;
+                emission.r = value.r * (ambientValue * (float) 1 + (float) 0.01);
+                emission.g = value.g * (ambientValue * (float) 1 + (float) 0.01);
+                emission.b = value.b * (ambientValue * (float) 1 + (float) 0.01);
+
+                // Get the Renderer component
                 var meshRenderer = this.GetComponent<Renderer>();
 
-                // Call SetColor using the shader property name "_Color" and setting the color to red
-                //meshRenderer.material.SetColor("_EmissiveColor", value);
+                // Call SetColor with color name and set color to corresponding value
+                meshRenderer.material.SetColor("_EmissiveColor", emission);
 
                 OnMeshChanged?.Invoke();
             }
@@ -106,8 +130,16 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             get => Material.GetFloat(ambient);
             set
             {
-                // Material.SetFloat(ambient, value);
-                // OnMeshChanged?.Invoke();
+                Material.SetFloat(ambient, value);
+
+                // Get the Renderer component
+                var meshRenderer = this.GetComponent<Renderer>();
+
+                // Call SetColor using the shader property name "_BaseEmissiveColor" and adjust color with ambient
+                // meshRenderer.material.SetColor("_BaseColor", emission);
+                this.Color = this.Color;
+                
+                OnMeshChanged?.Invoke();
             }
         }
 
@@ -119,8 +151,9 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             get => Material.GetFloat(diffuse);
             set
             {
-                // Material.SetFloat(diffuse, value);
-                // OnMeshChanged?.Invoke();
+                Material.SetFloat(diffuse, value);
+                Material.SetFloat(metallic, 1-value);
+                OnMeshChanged?.Invoke();
             }
         }
 
@@ -132,8 +165,9 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             get => Material.GetFloat(specular);
             set
             {
-                // Material.SetFloat(specular, value);
-                // OnMeshChanged?.Invoke();
+                Material.SetFloat(specular, value);
+                Material.SetFloat(smoothness, value);
+                OnMeshChanged?.Invoke();
             }
         }
 
@@ -237,6 +271,8 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
                 TransparentShader = Shader.Find("Custom/RayTracerShaderTransparent");
 
             Initialize();
+            this.Ambient = this.Ambient;
+            this.Color = this.Color;
         }
 
         /// <summary>

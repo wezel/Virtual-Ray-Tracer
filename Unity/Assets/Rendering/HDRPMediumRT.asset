@@ -156,8 +156,8 @@ MonoBehaviour:
   m_DefaultLookDevProfile: {fileID: 11400000, guid: 5b626cd262f9f20429c1feb622ead9c8, type: 2}
   m_RenderingPathDefaultCameraFrameSettings:
     bitDatas:
-      data1: 140254304403293
-      data2: 4539628425463136280
+      data1: 135924977368925
+      data2: 4539628427610619928
     lodBias: 1
     lodBiasMode: 0
     lodBiasQualityLevel: 0
@@ -260,7 +260,7 @@ MonoBehaviour:
       reflectionProbeCacheSize: 32
       reflectionCubemapSize: 256
       reflectionCacheCompressed: 1
-      reflectionProbeFormat: 74
+      reflectionProbeFormat: 48
       skyReflectionSize: 512
       skyLightingOverrideLayerMask:
         serializedVersion: 2
