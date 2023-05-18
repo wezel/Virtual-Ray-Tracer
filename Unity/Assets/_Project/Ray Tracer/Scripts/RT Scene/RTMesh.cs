@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.Rendering;
+using System;
+using System.Linq;
 
 namespace _Project.Ray_Tracer.Scripts.RT_Scene
 {
@@ -15,14 +17,19 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
         private static Shader StandardShader = null;
         private static Shader TransparentShader = null;
 
+        // Properties used for the ray traced image
         private static readonly int ambient = Shader.PropertyToID("_Ambient");
         private static readonly int diffuse = Shader.PropertyToID("_Diffuse");
         private static readonly int specular = Shader.PropertyToID("_Specular");
         private static readonly int shininess = Shader.PropertyToID("_Shininess");
         private static readonly int refractiveIndex = Shader.PropertyToID("_RefractiveIndex");
+        
+        // Properties used in the scene
         private static readonly int metallic = Shader.PropertyToID("_Metallic");
         private static readonly int smoothness = Shader.PropertyToID("_Smoothness");
         private static readonly int backupAmbient = Shader.PropertyToID("_BackupAmbient");
+        private static readonly int unalteredColor = Shader.PropertyToID("_UnalteredColor");
+        private static readonly int indexOfRefraction = Shader.PropertyToID("_Ior");
 
 
 
@@ -87,37 +94,17 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
         /// </summary>
         public Color Color
         {
-            get => Material.color;
+            get => Material.GetColor(unalteredColor);
             set
             {
-                // Calculate ambient color
-                if(this.Type == ObjectType.Transparent || this.Type == ObjectType.Mirror) {
-                    return;
-                }
-                var ambientValue = Material.GetFloat(ambient);
-                var oldAmbientValue = Material.GetFloat(backupAmbient);
-                var ambientColor = value;
-                ambientColor.r = ambientValue*value.r - oldAmbientValue*value.r;
-                ambientColor.g = ambientValue*value.g - oldAmbientValue*value.g;
-                ambientColor.b = ambientValue*value.b - oldAmbientValue*value.b;
-
-                Material.SetFloat(backupAmbient, ambientValue);
-
-                // Change Base Map color
-                Material.color = value + ambientColor;
-                
-                // Create darker variant of base map for emissive color
-                var emission = value;
-                emission.r = value.r * (ambientValue * (float) 1 + (float) 0.01);
-                emission.g = value.g * (ambientValue * (float) 1 + (float) 0.01);
-                emission.b = value.b * (ambientValue * (float) 1 + (float) 0.01);
-
                 // Get the Renderer component
                 var meshRenderer = this.GetComponent<Renderer>();
 
-                // Call SetColor with color name and set color to corresponding value
-                meshRenderer.material.SetColor("_EmissiveColor", emission);
+                // Call SetColor using the shader property name "_BaseEmissiveColor" and adjust color with ambient
+                meshRenderer.material.SetColor("_UnalteredColor", value);
 
+                // Update final color with new color
+                this.FinalColor = this.FinalColor;
                 OnMeshChanged?.Invoke();
             }
         }
@@ -131,14 +118,9 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             set
             {
                 Material.SetFloat(ambient, value);
-
-                // Get the Renderer component
-                var meshRenderer = this.GetComponent<Renderer>();
-
-                // Call SetColor using the shader property name "_BaseEmissiveColor" and adjust color with ambient
-                // meshRenderer.material.SetColor("_BaseColor", emission);
-                this.Color = this.Color;
                 
+                // Update final color with new ambient
+                this.FinalColor = this.FinalColor;
                 OnMeshChanged?.Invoke();
             }
         }
@@ -185,6 +167,50 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
         }
 
         /// <summary>
+        /// Calculating the final color
+        /// </summary>
+        private Color FinalColor 
+        {
+            get => Material.color;
+            set {
+                // Calculate ambient color
+                var ambientValue = Material.GetFloat(ambient);
+                var basicColor = Material.GetColor(unalteredColor);
+                var ambientColor = value;
+                ambientColor.r = Math.Min(ambientValue*basicColor.r, 1);
+                ambientColor.g = Math.Min(ambientValue*basicColor.g, 1);
+                ambientColor.b = Math.Min(ambientValue*basicColor.b, 1);
+
+                // Color values can't be bigger than 1, so we will divide everything by the maximum color or 1 if everything is smaller than 1
+                var maxColorRatio = new [] {basicColor.r + ambientColor.r, basicColor.g + ambientColor.g, basicColor.b + ambientColor.b, 1}.Max();
+
+                // Calculate final color, component can't be bigger than 1
+                var finalColor = basicColor;
+                finalColor.r = (basicColor.r + ambientColor.r)/maxColorRatio;
+                finalColor.g = (basicColor.g + ambientColor.g)/maxColorRatio;
+                finalColor.b = (basicColor.b + ambientColor.b)/maxColorRatio;
+
+                // Change Base Map color
+                Material.color = finalColor;
+                
+                // Create darker variant of base map for emissive color
+                // Emission color should be closer to base color when ambientValue is higher
+                var emission = basicColor;
+                emission.r = Material.color.r * ambientValue;
+                emission.g = Material.color.g * ambientValue;
+                emission.b = Material.color.b * ambientValue;
+
+                // Get the Renderer component
+                var meshRenderer = this.GetComponent<Renderer>();
+
+                // Call SetColor with color name and set color to corresponding value
+                meshRenderer.material.SetColor("_EmissiveColor", emission);
+
+                OnMeshChanged?.Invoke();
+            }
+        }
+
+        /// <summary>
         /// The refractive index of the mesh's material.
         /// </summary>
         public float RefractiveIndex
@@ -193,6 +219,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             set
             {
                 Material.SetFloat(refractiveIndex, value);
+                Material.SetFloat(indexOfRefraction, value);
                 OnMeshChanged?.Invoke();
             }
         }
@@ -271,8 +298,10 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
                 TransparentShader = Shader.Find("Custom/RayTracerShaderTransparent");
 
             Initialize();
+            this.Color = Material.color;
             this.Ambient = this.Ambient;
-            this.Color = this.Color;
+            this.Diffuse = this.Diffuse;
+            this.FinalColor = this.FinalColor;
         }
 
         /// <summary>

@@ -200,7 +200,7 @@ MonoBehaviour:
     supportShadowMask: 1
     supportSSR: 0
     supportSSRTransparent: 1
-    supportSSAO: 1
+    supportSSAO: 0
     supportSSGI: 1
     supportSubsurfaceScattering: 1
     sssSampleBudget:
@@ -223,7 +223,7 @@ MonoBehaviour:
     supportTransparentDepthPostpass: 1
     colorBufferFormat: 74
     supportCustomPass: 1
-    customBufferFormat: 12
+    customBufferFormat: 74
     supportedLitShaderMode: 2
     planarReflectionResolution:
       m_Values: 000100000004000000040000
@@ -241,7 +241,7 @@ MonoBehaviour:
     decalLayerName7: Decal Layer 7
     msaaSampleCount: 1
     supportMotionVectors: 1
-    supportRuntimeDebugDisplay: 0
+    supportRuntimeDebugDisplay: 1
     supportRuntimeAOVAPI: 0
     supportDitheringCrossFade: 1
     supportTerrainHole: 0
@@ -260,7 +260,7 @@ MonoBehaviour:
       reflectionProbeCacheSize: 32
       reflectionCubemapSize: 256
       reflectionCacheCompressed: 1
-      reflectionProbeFormat: 48
+      reflectionProbeFormat: 74
       skyReflectionSize: 512
       skyLightingOverrideLayerMask:
         serializedVersion: 2
@@ -304,7 +304,7 @@ MonoBehaviour:
       maxAreaShadowMapResolution: 2048
       supportScreenSpaceShadows: 1
       maxScreenSpaceShadowSlots: 4
-      screenSpaceShadowBufferFormat: 48
+      screenSpaceShadowBufferFormat: 8
     decalSettings:
       drawDistance: 1000
       atlasWidth: 2048
@@ -323,7 +323,7 @@ MonoBehaviour:
       forceResolution: 0
       forcedPercentage: 100
     lowresTransparentSettings:
-      enabled: 1
+      enabled: 0
       checkerboardDepthBuffer: 1
       upsampleType: 1
     xrSettings:

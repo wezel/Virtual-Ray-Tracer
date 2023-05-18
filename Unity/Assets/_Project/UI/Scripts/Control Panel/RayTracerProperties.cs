@@ -1,8 +1,11 @@
 using System.Collections;
 using _Project.Ray_Tracer.Scripts;
+using _Project.Scripts;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.HighDefinition;
 
 namespace _Project.UI.Scripts.Control_Panel
 {
@@ -16,6 +19,7 @@ namespace _Project.UI.Scripts.Control_Panel
         private UnityRayTracer rayTracer;
         private RayManager rayManager;
         private UIManager uiManager;
+        private Volume globalVolume;
 
         [SerializeField]
         private BoolEdit renderShadowsEdit;
@@ -46,6 +50,8 @@ namespace _Project.UI.Scripts.Control_Panel
         private Button renderImageButton;
         [SerializeField]
         private Button openImageButton;
+        [SerializeField]
+        private Button FlyToRTCameraButton;
 
         /// <summary>
         /// Show the ray tracer properties for the current <see cref="UnityRayTracer"/> and <see cref="RayManager"/>.
@@ -57,6 +63,8 @@ namespace _Project.UI.Scripts.Control_Panel
             rayTracer = UnityRayTracer.Get();
             rayManager = RayManager.Get();
             uiManager = UIManager.Get();
+
+            globalVolume = rayManager.recursiveRenderingSettings;
 
             renderShadowsEdit.IsOn = rayTracer.RenderShadows;
             recursionDepthEdit.Value = rayTracer.MaxDepth;
@@ -112,7 +120,14 @@ namespace _Project.UI.Scripts.Control_Panel
         private void Awake()
         {
             renderShadowsEdit.OnValueChanged += (value) => { rayTracer.RenderShadows = value; };
-            recursionDepthEdit.OnValueChanged += (value) => { rayTracer.MaxDepth = (int)value; };
+            recursionDepthEdit.OnValueChanged += (value) => {   
+                                                                VolumeProfile profile = globalVolume.sharedProfile;
+                                                                if (profile.TryGet<RecursiveRendering>(out var RecursiveRendering)) 
+                                                                {
+                                                                    RecursiveRendering.maxDepth.value = (int)value+1; 
+                                                                }
+                                                                rayTracer.MaxDepth = (int)value; 
+                                                            };
             backgroundColorEdit.OnValueChanged += (value) => { rayTracer.BackgroundColor = value; };
 
             hideNoHitRaysEdit.OnValueChanged += (value) => { rayManager.HideNoHitRays = value; };
@@ -127,6 +142,11 @@ namespace _Project.UI.Scripts.Control_Panel
             superSamplingFactorEdit.OnValueChanged += (value) => { rayTracer.SuperSamplingFactor = (int)value; };
             renderImageButton.onClick.AddListener(RenderImage);
             openImageButton.onClick.AddListener(ToggleImage);
+            FlyToRTCameraButton.onClick.AddListener(() =>
+            { 
+                showRaysEdit.IsOn = false; // This invokes the OnValueChanged event as well.
+                FindObjectOfType<CameraController>().FlyToRTCamera(); // There should only be 1 CamerController.
+            });
         }
     }
 }

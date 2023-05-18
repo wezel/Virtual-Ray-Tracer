@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.HighDefinition;
 
 namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Camera
 {

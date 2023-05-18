@@ -1,4 +1,4 @@
-Shader "Custom/LitSS"
+Shader "Custom/LitTS"
 {
     Properties
     {
@@ -6,9 +6,7 @@ Shader "Custom/LitSS"
         // They are use to fill a SurfaceData. With a MaterialGraph this should not exist.
 
         // Reminder. Color here are in linear but the UI (color picker) do the conversion sRGB to linear
-        [MainColor] _BaseColor("BaseColor", Color) = (1, 1, 1, 1)
-        [MainTexture] _BaseColorMap("BaseColorMap", 2D) = "white" {}
-        [HideInInspector] _BaseColorMap_MipInfo("_BaseColorMap_MipInfo", Vector) = (0, 0, 0, 0)
+        _Color("Color", Color) = (1,1,1,1)
 
         _Metallic("_Metallic", Range(0.0, 1.0)) = 0
         _Smoothness("Smoothness", Range(0.0, 1.0)) = 0.5
@@ -75,21 +73,11 @@ Shader "Custom/LitSS"
         _SpecularColor("SpecularColor", Color) = (1, 1, 1, 1)
         _SpecularColorMap("SpecularColorMap", 2D) = "white" {}
 
-        // These values are used by the renderer
-        _Ambient("Ambient", Range(0, 1)) = 0.2
-        _Diffuse("Diffuse", Range(0,1)) = 1.0
-        _Specular("Specular", Range(0, 1)) = 0.5
-        _RefractiveIndex("RefractiveIndex", Range(1,1)) = 1
-        _Shininess("Shininess", Float) = 32
-
-        // For the implementation the old ambient value needs to be stored
-        _BackupAmbient("BackupAmbient", Float) = 0
-
         // Following options are for the GUI inspector and different from the input parameters above
         // These option below will cause different compilation flag.
         [Enum(Off, 0, From Ambient Occlusion, 1, From Bent Normals, 2)]  _SpecularOcclusionMode("Specular Occlusion Mode", Int) = 1
 
-        _EmissiveColor("EmissiveColor", Color) = (0, 0, 0)
+        [HDR] _EmissiveColor("EmissiveColor", Color) = (0, 0, 0)
         // Used only to serialize the LDR and HDR emissive color in the material UI,
         // in the shader only the _EmissiveColor should be used
         [HideInInspector] _EmissiveColorLDR("EmissiveColor LDR", Color) = (0, 0, 0)

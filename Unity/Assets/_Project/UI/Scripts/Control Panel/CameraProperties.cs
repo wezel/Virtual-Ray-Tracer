@@ -1,6 +1,8 @@
 using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Camera;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.HighDefinition;
 
 namespace _Project.UI.Scripts.Control_Panel
 {
@@ -27,6 +29,7 @@ namespace _Project.UI.Scripts.Control_Panel
         private FloatEdit screenDistanceEdit;
         [SerializeField]
         private FloatEdit screenOpacityEdit;
+        
 
         /// <summary>
         /// Show the camera properties for <paramref name="camera"/>. These properties can be changed via the shown UI.

@@ -190,6 +190,7 @@ Material:
     - _AlphaToMaskInspectorValue: 0
     - _Ambient: 0.2
     - _Anisotropy: 0
+    - _BackupAmbient: 0
     - _BlendMode: 0
     - _BreakingsIndex: 1.5
     - _CoatMask: 0
@@ -225,6 +226,7 @@ Material:
     - _DoubleSidedEnable: 0
     - _DoubleSidedNormalMode: 0
     - _DstBlend: 0
+    - _EdgeLength: 5
     - _EmissiveColorMode: 1
     - _EmissiveExposureWeight: 1
     - _EmissiveIntensity: 1
@@ -270,6 +272,7 @@ Material:
     - _PPDMinSamples: 5
     - _PPDPrimitiveLength: 1
     - _PPDPrimitiveWidth: 1
+    - _Phong: 0.5
     - _RayTracing: 0
     - _ReceivesSSR: 1
     - _ReceivesSSRTransparent: 0
@@ -339,7 +342,7 @@ Material:
     - _DiffusionProfileAsset: {r: 0, g: 0, b: 0, a: 0}
     - _DoubleSidedConstants: {r: -1, g: -1, b: -1, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
-    - _EmissiveColor: {r: 0.084905684, g: 0.084905684, b: 0.084905684, a: 1}
+    - _EmissiveColor: {r: 0, g: 0, b: 0, a: 1}
     - _EmissiveColorLDR: {r: 0, g: 0, b: 0, a: 1}
     - _HueVariation: {r: 1, g: 0.5, b: 0, a: 0.1}
     - _HueVariationColor: {r: 1, g: 0.5, b: 0, a: 0.2}
@@ -352,6 +355,7 @@ Material:
     - _UVDetailsMappingMask: {r: 1, g: 0, b: 0, a: 0}
     - _UVMappingMask: {r: 1, g: 0, b: 0, a: 0}
     - _UVMappingMaskEmissive: {r: 1, g: 0, b: 0, a: 0}
+    - _UnalteredColor: {r: 1, g: 1, b: 1, a: 1}
     - _UnlitColor: {r: 1, g: 1, b: 1, a: 1}
     - _UnlitColorMap_MipInfo: {r: 0, g: 0, b: 0, a: 0}
     - _uvBaseMask: {r: 1, g: 0, b: 0, a: 0}

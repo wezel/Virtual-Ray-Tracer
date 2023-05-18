@@ -3,6 +3,8 @@ using _Project.Ray_Tracer.Scripts.RT_Ray;
 using _Project.Ray_Tracer.Scripts.Utility;
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.HighDefinition;
 
 namespace _Project.Ray_Tracer.Scripts
 {
@@ -142,6 +144,10 @@ namespace _Project.Ray_Tracer.Scripts
         private bool animationDone = false;
 
         private bool shouldUpdateRays = true;
+
+        [SerializeField]
+        public Volume recursiveRenderingSettings;
+        
 
         /// <summary>
         /// Get the current <see cref="RayManager"/> instance.

@@ -10,6 +10,9 @@ Shader "Custom/LitSS"
         [MainTexture] _BaseColorMap("BaseColorMap", 2D) = "white" {}
         [HideInInspector] _BaseColorMap_MipInfo("_BaseColorMap_MipInfo", Vector) = (0, 0, 0, 0)
 
+        // Color which isn't affected by any illumination model
+        [HideInInspector] _UnalteredColor("UnalteredColor", Color) = (1, 1, 1, 1)
+
         _Metallic("_Metallic", Range(0.0, 1.0)) = 0
         _Smoothness("Smoothness", Range(0.0, 1.0)) = 0.5
         _MaskMap("MaskMap", 2D) = "white" {}
@@ -79,7 +82,7 @@ Shader "Custom/LitSS"
         _Ambient("Ambient", Range(0, 1)) = 0.2
         _Diffuse("Diffuse", Range(0,1)) = 1.0
         _Specular("Specular", Range(0, 1)) = 0.5
-        _RefractiveIndex("RefractiveIndex", Range(1,1)) = 1
+        _RefractiveIndex("RefractiveIndex", Range(0,3)) = 1
         _Shininess("Shininess", Float) = 32
 
         // For the implementation the old ambient value needs to be stored
@@ -479,7 +482,7 @@ Shader "Custom/LitSS"
         }
 
         // Extracts information for lightmapping, GI (emission, albedo, ...)
-        // This pass it not used during regular rendering.
+        // This pass is not used during regular rendering.
         Pass
         {
             Name "META"

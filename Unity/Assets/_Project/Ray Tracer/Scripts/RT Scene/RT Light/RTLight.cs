@@ -56,7 +56,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
                 // lightData.b = lightData.b % 1 + Mathf.Floor(value * 256);
                 // light.color = lightData;
                 
-                // OnLightChanged?.Invoke();
+                OnLightChanged?.Invoke();
             }
         }
 
@@ -74,7 +74,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
                 // lightData.b = Mathf.Floor(lightData.b) + value / 2;
                 // light.color = lightData;
 
-                // OnLightChanged?.Invoke();
+                OnLightChanged?.Invoke();
             }
         }
 
@@ -92,7 +92,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
                 // lightData.a = specular;
                 // light.color = lightData;
 
-                // OnLightChanged?.Invoke();
+                OnLightChanged?.Invoke();
             }
         }
         
