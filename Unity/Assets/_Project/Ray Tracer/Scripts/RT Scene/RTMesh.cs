@@ -148,7 +148,6 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             set
             {
                 Material.SetFloat(specular, value);
-                Material.SetFloat(smoothness, value);
                 OnMeshChanged?.Invoke();
             }
         }
@@ -162,6 +161,10 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             set
             {
                 Material.SetFloat(shininess, value);
+                // Shininess to smoothness conversion function based on 6 points
+                // 77.9756*Math.Pow(value, 0.00150846) - 77.5856;
+                double smoothnessValue = 77.9956*Math.Pow(value, 0.00140846) - 77.5856;
+                Material.SetFloat(smoothness, (float) smoothnessValue); 
                 OnMeshChanged?.Invoke();
             }
         }
@@ -302,6 +305,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             this.Ambient = this.Ambient;
             this.Diffuse = this.Diffuse;
             this.FinalColor = this.FinalColor;
+            this.Shininess = this.Shininess;
         }
 
         /// <summary>

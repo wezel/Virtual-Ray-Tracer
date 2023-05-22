@@ -247,7 +247,7 @@ Material:
     - _RenderQueueType: 1
     - _RequireSplitLighting: 1
     - _Shininess: 16
-    - _Smoothness: 1
+    - _Smoothness: 0.525
     - _SmoothnessMax: 1
     - _SmoothnessMin: 0
     - _SmoothnessRemapMax: 1
@@ -309,7 +309,7 @@ Material:
     - _EmissiveColorLDR: {r: 1, g: 0, b: 0, a: 1}
     - _InvPrimScale: {r: 1, g: 1, b: 0, a: 0}
     - _IridescenceThicknessRemap: {r: 0, g: 1, b: 0, a: 0}
-    - _SpecularColor: {r: 1, g: 0, b: 0, a: 0.39215687}
+    - _SpecularColor: {r: 1, g: 0.5707547, b: 0.5707547, a: 0.39215687}
     - _ThicknessRemap: {r: 0, g: 1, b: 0, a: 0}
     - _TransmittanceColor: {r: 1, g: 1, b: 1, a: 1}
     - _UVDetailsMappingMask: {r: 1, g: 0, b: 0, a: 0}

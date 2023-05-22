@@ -156,7 +156,7 @@ MonoBehaviour:
   m_DefaultLookDevProfile: {fileID: 11400000, guid: 5b626cd262f9f20429c1feb622ead9c8, type: 2}
   m_RenderingPathDefaultCameraFrameSettings:
     bitDatas:
-      data1: 135924977368925
+      data1: 136199855275869
       data2: 4539628427610619928
     lodBias: 1
     lodBiasMode: 0
