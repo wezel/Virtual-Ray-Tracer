@@ -13,6 +13,17 @@ Shader "Custom/LitSS"
         // Color which isn't affected by any illumination model
         [HideInInspector] _UnalteredColor("UnalteredColor", Color) = (1, 1, 1, 1)
 
+        // These values are used by the renderer
+        _Ambient("Ambient", Range(0, 1)) = 0.2
+        [HDRP.Range(0, 1)] _Diffuse("Diffuse", Range(0.0, 1.0)) = 1.0
+        _DiffuseRemapMin("DiffuseRemapMin", Float) = 0.0
+        _DiffuseRemapMax("DiffuseRemapMax", Float) = 0.0
+        _Specular("Specular", Range(0, 1)) = 0.5
+        _RefractiveIndex("RefractiveIndex", Range(0,3)) = 1
+        _Shininess("Shininess", Float) = 32
+
+        _Testing("_Testing", Range(0.0, 1.0)) = 0
+
         _Metallic("_Metallic", Range(0.0, 1.0)) = 0
         _Smoothness("Smoothness", Range(0.0, 1.0)) = 0.5
         _MaskMap("MaskMap", 2D) = "white" {}
@@ -23,7 +34,7 @@ Shader "Custom/LitSS"
         _AORemapMin("AORemapMin", Float) = 0.0
         _AORemapMax("AORemapMax", Float) = 1.0
 
-        _NormalMap("NormalMap", 2D) = "bump" {}     // Tangent space normal map
+        _NormalMap("NormalMap", 2D) = "bump" {}      // Tangent space normal map
         _NormalMapOS("NormalMapOS", 2D) = "white" {} // Object space normal map - no good default value
         _NormalScale("_NormalScale", Range(0.0, 8.0)) = 1
 
@@ -78,12 +89,7 @@ Shader "Custom/LitSS"
         _SpecularColor("SpecularColor", Color) = (1, 1, 1, 1)
         _SpecularColorMap("SpecularColorMap", 2D) = "white" {}
 
-        // These values are used by the renderer
-        _Ambient("Ambient", Range(0, 1)) = 0.2
-        _Diffuse("Diffuse", Range(0,1)) = 1.0
-        _Specular("Specular", Range(0, 1)) = 0.5
-        _RefractiveIndex("RefractiveIndex", Range(0,3)) = 1
-        _Shininess("Shininess", Float) = 32
+        
 
         // For the implementation the old ambient value needs to be stored
         _BackupAmbient("BackupAmbient", Float) = 0

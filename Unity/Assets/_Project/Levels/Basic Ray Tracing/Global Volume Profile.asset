@@ -28,8 +28,8 @@ MonoBehaviour:
     min: 1
     max: 10
   rayLength:
-    m_OverrideState: 0
-    m_Value: 10
+    m_OverrideState: 1
+    m_Value: 250
     min: 0
     max: 500
   minSmoothness:
@@ -37,6 +37,25 @@ MonoBehaviour:
     m_Value: 0.5
     min: 0
     max: 1
+--- !u!114 &-4392143414461006549
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f1984a7ac01bf84b86559f7595cdc68, type: 3}
+  m_Name: LightCluster
+  m_EditorClassIdentifier: 
+  active: 1
+  m_AdvancedMode: 0
+  cameraClusterRange:
+    m_OverrideState: 1
+    m_Value: 151
+    min: 0.001
+    max: 500
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -51,3 +70,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   components:
   - {fileID: -6702576367555563099}
+  - {fileID: -4392143414461006549}

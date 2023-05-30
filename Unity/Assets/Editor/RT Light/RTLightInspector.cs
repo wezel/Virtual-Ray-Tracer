@@ -10,21 +10,21 @@ namespace Editor.RT_Light
     public class RTLightInspector : UnityEditor.Editor
     {
         
-        private RTLight rtLight;
-        private Light light;
+        // private RTLight rtLight;
+        // private Light light;
         
-        void OnEnable(){
-            rtLight = (RTLight) target;
-            light = rtLight.gameObject.GetComponent<Light>();
-            light.hideFlags = HideFlags.None;
-        }
+        // void OnEnable(){
+        //     rtLight = (RTLight) target;
+        //     light = rtLight.gameObject.GetComponent<Light>();
+        //     light.hideFlags = HideFlags.None;
+        // }
 
-        private void OnPreSceneGUI()
-        {
-            rtLight.Color = light.color;
-            rtLight.Ambient = rtLight.Ambient;
-            rtLight.Diffuse = rtLight.Diffuse;
-            rtLight.Specular = rtLight.Specular;
-        }
+        // private void OnPreSceneGUI()
+        // {
+        //     rtLight.Color = light.color;
+        //     rtLight.Ambient = rtLight.Ambient;
+        //     rtLight.Diffuse = rtLight.Diffuse;
+        //     rtLight.Specular = rtLight.Specular;
+        // }
     }
 }

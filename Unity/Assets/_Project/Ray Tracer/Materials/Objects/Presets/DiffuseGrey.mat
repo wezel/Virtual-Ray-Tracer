@@ -22,7 +22,8 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: DiffuseGrey
   m_Shader: {fileID: 4800000, guid: 6b13649cdc0876c4987dc8313f9755f4, type: 3}
-  m_ShaderKeywords: _DISABLE_SSR_TRANSPARENT _NORMALMAP_TANGENT_SPACE _WINDQUALITY_BEST
+  m_ShaderKeywords: _DISABLE_SSR _DISABLE_SSR_TRANSPARENT _MATERIAL_FEATURE_CLEAR_COAT
+    _NORMALMAP_TANGENT_SPACE _WINDQUALITY_BEST
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -34,7 +35,6 @@ Material:
   - TransparentDepthPrepass
   - TransparentDepthPostpass
   - TransparentBackface
-  - RayTracingPrepass
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -193,7 +193,7 @@ Material:
     - _BackupAmbient: 0
     - _BlendMode: 0
     - _BreakingsIndex: 1.5
-    - _CoatMask: 0
+    - _CoatMask: 0.1
     - _Cull: 2
     - _CullMode: 2
     - _CullModeForward: 2
@@ -203,6 +203,8 @@ Material:
     - _DetailNormalScale: 1
     - _DetailSmoothnessScale: 1
     - _Diffuse: 1
+    - _DiffuseRemapMax: 0
+    - _DiffuseRemapMin: 0
     - _DiffusionProfile: 0
     - _DiffusionProfileHash: 0
     - _DisplacementLockObjectScale: 1
@@ -258,7 +260,7 @@ Material:
     - _IridescenceThickness: 1
     - _LinkDetailsWithBase: 1
     - _MaterialID: 1
-    - _Metallic: 0
+    - _Metallic: 0.3
     - _MetallicRemapMax: 1
     - _MetallicRemapMin: 0
     - _NormalMapKwToggle: 1
@@ -273,8 +275,8 @@ Material:
     - _PPDPrimitiveLength: 1
     - _PPDPrimitiveWidth: 1
     - _Phong: 0.5
-    - _RayTracing: 0
-    - _ReceivesSSR: 1
+    - _RayTracing: 1
+    - _ReceivesSSR: 0
     - _ReceivesSSRTransparent: 0
     - _RefractionModel: 0
     - _RefractiveIndex: 0
@@ -292,10 +294,10 @@ Material:
     - _SpecularOcclusionMode: 1
     - _SrcBlend: 1
     - _StencilRef: 0
-    - _StencilRefDepth: 8
+    - _StencilRefDepth: 0
     - _StencilRefDistortionVec: 4
-    - _StencilRefGBuffer: 10
-    - _StencilRefMV: 40
+    - _StencilRefGBuffer: 2
+    - _StencilRefMV: 32
     - _StencilWriteMask: 6
     - _StencilWriteMaskDepth: 8
     - _StencilWriteMaskDistortionVec: 4
@@ -305,6 +307,7 @@ Material:
     - _SubsurfaceScale: 1
     - _SupportDecals: 1
     - _SurfaceType: 0
+    - _Testing: 0
     - _TexWorldScale: 1
     - _TexWorldScaleEmissive: 1
     - _Thickness: 1

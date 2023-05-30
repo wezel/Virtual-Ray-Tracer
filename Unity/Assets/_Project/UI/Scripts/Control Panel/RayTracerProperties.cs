@@ -145,7 +145,7 @@ namespace _Project.UI.Scripts.Control_Panel
             FlyToRTCameraButton.onClick.AddListener(() =>
             { 
                 showRaysEdit.IsOn = false; // This invokes the OnValueChanged event as well.
-                FindObjectOfType<CameraController>().FlyToRTCamera(); // There should only be 1 CamerController.
+                FindObjectOfType<CameraController>().FlyToRTCamera(); // There should only be 1 CameraController.
             });
         }
     }

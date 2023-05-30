@@ -30,6 +30,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
         private static readonly int backupAmbient = Shader.PropertyToID("_BackupAmbient");
         private static readonly int unalteredColor = Shader.PropertyToID("_UnalteredColor");
         private static readonly int indexOfRefraction = Shader.PropertyToID("_Ior");
+        private static readonly int coatMask = Shader.PropertyToID("_CoatMask");
 
 
 
@@ -163,7 +164,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
                 Material.SetFloat(shininess, value);
                 // Shininess to smoothness conversion function based on 6 points
                 // 77.9756*Math.Pow(value, 0.00150846) - 77.5856;
-                double smoothnessValue = 77.9956*Math.Pow(value, 0.00140846) - 77.5856;
+                double smoothnessValue = 77.9856*Math.Pow(value, 0.00135846) - 77.5856;
                 Material.SetFloat(smoothness, (float) smoothnessValue); 
                 OnMeshChanged?.Invoke();
             }
@@ -293,6 +294,16 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             OnMeshChanged?.Invoke();
         }
 
+        private void UpdateValues() {
+            this.Color = Material.color;
+            this.Ambient = this.Ambient;
+            this.Diffuse = 1-Material.GetFloat(metallic);
+            this.FinalColor = this.FinalColor;
+            this.Shininess = this.Shininess;
+            this.RefractiveIndex = this.RefractiveIndex;
+            this.Specular = Material.GetFloat(coatMask);
+        }
+
         private void Awake()
         {
             if (StandardShader == null)
@@ -301,11 +312,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
                 TransparentShader = Shader.Find("Custom/RayTracerShaderTransparent");
 
             Initialize();
-            this.Color = Material.color;
-            this.Ambient = this.Ambient;
-            this.Diffuse = this.Diffuse;
-            this.FinalColor = this.FinalColor;
-            this.Shininess = this.Shininess;
+            UpdateValues();
         }
 
         /// <summary>
