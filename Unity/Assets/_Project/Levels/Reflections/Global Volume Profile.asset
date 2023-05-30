@@ -68,6 +68,6 @@ MonoBehaviour:
   m_AdvancedMode: 0
   cameraClusterRange:
     m_OverrideState: 1
-    m_Value: 50
+    m_Value: 251
     min: 0.001
     max: 500
