@@ -40,6 +40,10 @@ namespace _Project.UI.Scripts
 
         [SerializeField]
         private RenderedImageWindow renderedImageWindow;
+
+        
+
+
         /// <summary>
         /// The window in which the full resolution rendered image will be shown.
         /// </summary>

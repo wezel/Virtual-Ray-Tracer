@@ -35,7 +35,7 @@ namespace _Project.Scripts
         private bool orbiting = false;
         private bool panning = false;
         private bool mode = false;
-
+        
         void Start() { Initialize(); }
 
         void OnEnable() { Initialize(); }
@@ -129,7 +129,7 @@ namespace _Project.Scripts
 
         private void OrbitingUpdate()
         {
-            if (Input.GetMouseButton(0))
+            if (Input.GetMouseButton(1))
             {
                 xDegrees += Input.GetAxis("Mouse X") * OrbitSpeed;
                 yDegrees -= Input.GetAxis("Mouse Y") * OrbitSpeed;
@@ -155,7 +155,7 @@ namespace _Project.Scripts
             // signs of the coordinates flipped.
             transform.rotation = Quaternion.Lerp(transform.rotation, desiredRotation, 1.0f);
 
-            if (!(Input.GetMouseButton(0) ||
+            if (!(Input.GetMouseButton(1) ||
                   Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow) ||
                   Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.DownArrow)))
             {
@@ -168,11 +168,11 @@ namespace _Project.Scripts
         private void OnlyOneInputPicker()
         {
 
-            if (Input.GetKeyDown(KeyCode.LeftControl))
-            {
-                inputBlocker.gameObject.SetActive(true);
-                mode = true;
-            }
+            // if (Input.GetKeyDown(KeyCode.LeftControl))
+            // {
+            //     inputBlocker.gameObject.SetActive(true);
+            //     mode = true;
+            // }
         
             // If the user is zooming, orbiting or panning we calculate their position
 
@@ -201,13 +201,13 @@ namespace _Project.Scripts
                 return;
             }
 
-            if (mode && !Input.GetKey(KeyCode.LeftControl))
-            {
-                inputBlocker.gameObject.SetActive(false);
-                GlobalSettings.Get().ResetCursor();
-                InputBlockerHovered = false;
-                mode = false;
-            }
+            // if (mode && !Input.GetKey(KeyCode.LeftControl))
+            // {
+            //     inputBlocker.gameObject.SetActive(false);
+            //     GlobalSettings.Get().ResetCursor();
+            //     InputBlockerHovered = false;
+            //     mode = false;
+            // }
 
             if (EventSystem.current.IsPointerOverGameObject() && !InputBlockerHovered)
                 return;
@@ -217,27 +217,12 @@ namespace _Project.Scripts
             // If scrollWheel is used change zoom. This one is not exclusive.
             distance -= Input.GetAxis("Mouse ScrollWheel") * ZoomSpeed * Mathf.Abs(distance);
 
-            // If the left control is pressed and.... 
-            if (Input.GetKey(KeyCode.LeftControl))
+            // If the right mouse button is pressed we activate orbiting
+            if (Input.GetMouseButtonDown(1))
             {
-
-                // The right mouse button we activate zoom.
-                if (Input.GetMouseButtonDown(1))
-                {
-                    zoom = true;
-                    GlobalSettings.Get().SetCursor(CursorType.ZoomCursor);
-                    return;
-                }
-
-                // The left mouse button or Arrow keys we activate orbiting.
-                if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.LeftArrow) ||
-                    Input.GetKeyDown(KeyCode.RightArrow) ||
-                    Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow))
-                {
-                    orbiting = true;
-                    GlobalSettings.Get().SetCursor(CursorType.RotateCursor);
-                    return;
-                }
+                orbiting = true;
+                GlobalSettings.Get().SetCursor(CursorType.RotateCursor);
+                return;
             }
         
             // If the middle mouse is pressed, or the arrow keys we activate panning.

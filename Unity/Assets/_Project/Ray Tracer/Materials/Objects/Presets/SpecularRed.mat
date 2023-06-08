@@ -10,8 +10,7 @@ Material:
   m_Name: SpecularRed
   m_Shader: {fileID: 4800000, guid: 6b13649cdc0876c4987dc8313f9755f4, type: 3}
   m_ShaderKeywords: _DISABLE_SSR _DISABLE_SSR_TRANSPARENT _DISPLACEMENT_LOCK_TILING_SCALE
-    _DOUBLESIDED_ON _MATERIAL_FEATURE_CLEAR_COAT _PIXEL_DISPLACEMENT _PIXEL_DISPLACEMENT_LOCK_OBJECT_SCALE
-    _SPECULAR_OCCLUSION_NONE
+    _DOUBLESIDED_ON _PIXEL_DISPLACEMENT _PIXEL_DISPLACEMENT_LOCK_OBJECT_SCALE _SPECULAR_OCCLUSION_NONE
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 1
@@ -181,7 +180,7 @@ Material:
     - _BackupAmbient: 0
     - _BlendMode: 0
     - _BreakingsIndex: 1.5
-    - _CoatMask: 0.3
+    - _CoatMask: 0
     - _CullMode: 0
     - _CullModeForward: 0
     - _Cutoff: 0.5
@@ -249,7 +248,7 @@ Material:
     - _RenderQueueType: 1
     - _RequireSplitLighting: 1
     - _Shininess: 16
-    - _Smoothness: 0.525
+    - _Smoothness: 0.4
     - _SmoothnessMax: 1
     - _SmoothnessMin: 0
     - _SmoothnessRemapMax: 1

@@ -18,11 +18,9 @@ Shader "Custom/LitSS"
         [HDRP.Range(0, 1)] _Diffuse("Diffuse", Range(0.0, 1.0)) = 1.0
         _DiffuseRemapMin("DiffuseRemapMin", Float) = 0.0
         _DiffuseRemapMax("DiffuseRemapMax", Float) = 0.0
-        _Specular("Specular", Range(0, 1)) = 0.5
+        _Specular("Specular", Range(0, 1)) = 0.0
         _RefractiveIndex("RefractiveIndex", Range(0,3)) = 1
         _Shininess("Shininess", Float) = 32
-
-        _Testing("_Testing", Range(0.0, 1.0)) = 0
 
         _Metallic("_Metallic", Range(0.0, 1.0)) = 0
         _Smoothness("Smoothness", Range(0.0, 1.0)) = 0.5

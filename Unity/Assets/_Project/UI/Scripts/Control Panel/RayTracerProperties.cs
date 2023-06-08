@@ -53,6 +53,31 @@ namespace _Project.UI.Scripts.Control_Panel
         [SerializeField]
         private Button FlyToRTCameraButton;
 
+        [SerializeField]
+        private RenderTexture renderedImageUnityRT;
+
+        public Texture2D toTexture2D(RenderTexture rTex)
+        {
+            RenderTexture.active = rTex;
+
+            Texture2D dest = new Texture2D(rTex.width, rTex.height, TextureFormat.RGBA32, false);
+            dest.ReadPixels(new Rect(0, 0, rTex.width, rTex.height), 0, 0);
+            dest.Apply();
+
+            RenderTexture.active = null;
+
+            // Apply gamma correction to the texture
+            Color[] pixels = dest.GetPixels();
+            for (int i = 0; i < pixels.Length; i++)
+            {
+                pixels[i] = pixels[i].gamma;
+            }
+            dest.SetPixels(pixels);
+            dest.Apply();
+
+            return dest;
+        }
+
         /// <summary>
         /// Show the ray tracer properties for the current <see cref="UnityRayTracer"/> and <see cref="RayManager"/>.
         /// These properties can be changed via the shown UI.
@@ -94,7 +119,7 @@ namespace _Project.UI.Scripts.Control_Panel
         {
             yield return new WaitForFixedUpdate();
             Texture2D render = rayTracer.RenderImage();
-            uiManager.RenderedImageWindow.SetImageTexture(render);
+            uiManager.RenderedImageWindow.SetImageTexture(toTexture2D(renderedImageUnityRT));
             yield return null;
         }
 

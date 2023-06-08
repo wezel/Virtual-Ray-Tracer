@@ -288,7 +288,7 @@ Material:
     - _SmoothnessMin: 0
     - _SmoothnessRemapMax: 1
     - _SmoothnessRemapMin: 0
-    - _Specular: 0
+    - _Specular: 0.1
     - _SpecularAAScreenSpaceVariance: 0.1
     - _SpecularAAThreshold: 0.2
     - _SpecularOcclusionMode: 1

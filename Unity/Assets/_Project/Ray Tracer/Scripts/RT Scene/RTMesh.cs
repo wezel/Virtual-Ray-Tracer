@@ -30,7 +30,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
         private static readonly int backupAmbient = Shader.PropertyToID("_BackupAmbient");
         private static readonly int unalteredColor = Shader.PropertyToID("_UnalteredColor");
         private static readonly int indexOfRefraction = Shader.PropertyToID("_Ior");
-        private static readonly int coatMask = Shader.PropertyToID("_CoatMask");
+        private static readonly int normalScale = Shader.PropertyToID("_NormalScale");
 
 
 
@@ -56,7 +56,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
         /// </summary>
         public Vector3 Position
         {
-            get => transform.position;
+            get { return transform.position; }
             set
             {
                 transform.position = value;
@@ -222,8 +222,23 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             get => Material.GetFloat(refractiveIndex);
             set
             {
+                
                 Material.SetFloat(refractiveIndex, value);
-                Material.SetFloat(indexOfRefraction, value);
+
+                if (value <= 1.0) 
+                {
+                    Material.SetFloat(indexOfRefraction, value);
+                }
+                else if (value <= 1.20)
+                {
+                    double UnityRefractiveIndex = 56.1237*Math.Pow(value, 0.0370227) - 55.1144;
+                    Material.SetFloat(indexOfRefraction, (float) UnityRefractiveIndex);
+                }
+                else 
+                {
+                    Material.SetFloat(indexOfRefraction, (float) Math.Min(value + 0.19, 1.5));
+                }
+
                 OnMeshChanged?.Invoke();
             }
         }
@@ -294,6 +309,11 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             OnMeshChanged?.Invoke();
         }
 
+        private void Update() {
+            this.Position = this.Position;
+            OnMeshChanged?.Invoke();
+        }
+
         private void UpdateValues() {
             this.Color = Material.color;
             this.Ambient = this.Ambient;
@@ -301,7 +321,8 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             this.FinalColor = this.FinalColor;
             this.Shininess = this.Shininess;
             this.RefractiveIndex = this.RefractiveIndex;
-            this.Specular = Material.GetFloat(coatMask);
+            //this.Specular = 0;
+            //this.Specular = Math.Min(Material.GetFloat(normalScale), 1); // Specular is temporarily stored in normalScale due to inconveniences
         }
 
         private void Awake()

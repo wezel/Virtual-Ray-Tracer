@@ -175,7 +175,7 @@ MonoBehaviour:
     m_OverrideState: 1
     m_Value: 3
   enable:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 1
   depthBufferThickness:
     m_OverrideState: 1
@@ -202,7 +202,7 @@ MonoBehaviour:
     m_OverrideState: 1
     m_Value:
       serializedVersion: 2
-      m_Bits: 1015
+      m_Bits: 1011
   mode:
     m_OverrideState: 1
     m_Value: 2
@@ -213,7 +213,7 @@ MonoBehaviour:
     max: 32
   bounceCount:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 2
     min: 1
     max: 8
   m_RayLength:

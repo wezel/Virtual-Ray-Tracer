@@ -147,6 +147,8 @@ namespace _Project.Ray_Tracer.Scripts
 
         [SerializeField]
         public Volume recursiveRenderingSettings;
+
+        
         
 
         /// <summary>
