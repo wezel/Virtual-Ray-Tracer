@@ -796,6 +796,7 @@ GameObject:
   m_Component:
   - component: {fileID: 251962334}
   - component: {fileID: 251962337}
+  - component: {fileID: 251962336}
   - component: {fileID: 251962335}
   - component: {fileID: 251962338}
   m_Layer: 0
@@ -933,6 +934,14 @@ MonoBehaviour:
       data1: 0
       data2: 0
   defaultFrameSettings: 0
+--- !u!81 &251962336
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 251962333}
+  m_Enabled: 1
 --- !u!20 &251962337
 Camera:
   m_ObjectHideFlags: 0
@@ -1460,7 +1469,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2680403823875736736, guid: 60ed96064c5523b46b7a7bd67e36e6d7, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -7.9999695
+      value: -7.999939
       objectReference: {fileID: 0}
     - target: {fileID: 2699348666738490957, guid: 60ed96064c5523b46b7a7bd67e36e6d7, type: 3}
       propertyPath: m_AnchorMax.x
@@ -1580,9 +1589,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3242734692340945943, guid: 60ed96064c5523b46b7a7bd67e36e6d7, type: 3}
       propertyPath: m_text
-      value: 'Metallic
-
-'
+      value: Metallic
       objectReference: {fileID: 0}
     - target: {fileID: 3242734692689102887, guid: 60ed96064c5523b46b7a7bd67e36e6d7, type: 3}
       propertyPath: interactable
@@ -1618,7 +1625,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3268545913546083501, guid: 60ed96064c5523b46b7a7bd67e36e6d7, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -18.999725
+      value: -18.999695
       objectReference: {fileID: 0}
     - target: {fileID: 3356202431588279222, guid: 60ed96064c5523b46b7a7bd67e36e6d7, type: 3}
       propertyPath: interactable
@@ -4700,19 +4707,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3379506522100200911, guid: aa7cec59df0025d4896ac99db41e4250, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.81274515
+      value: 0.9153975
       objectReference: {fileID: 0}
     - target: {fileID: 3379506522100200911, guid: aa7cec59df0025d4896ac99db41e4250, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.16102353
+      value: 0.09840661
       objectReference: {fileID: 0}
     - target: {fileID: 3379506522100200911, guid: aa7cec59df0025d4896ac99db41e4250, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.54924965
+      value: -0.3881016
       objectReference: {fileID: 0}
     - target: {fileID: 3379506522100200911, guid: aa7cec59df0025d4896ac99db41e4250, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.10881901
+      value: 0.04172151
       objectReference: {fileID: 0}
     - target: {fileID: 3904491717560610861, guid: aa7cec59df0025d4896ac99db41e4250, type: 3}
       propertyPath: m_Layer

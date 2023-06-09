@@ -140,16 +140,13 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             }
         }
 
-        /// <summary>
-        /// The metallic component of the mesh's material.
-        /// </summary>
         public float Metallic 
         {
             get => Material.GetFloat(metallic);
-            set 
+            set
             {
-                Material.SetFloat(diffuse, 1-value);
                 Material.SetFloat(metallic, value);
+                Material.SetFloat(diffuse, 1-value);
                 OnMeshChanged?.Invoke();
             }
         }
@@ -177,6 +174,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             {
                 Material.SetFloat(shininess, value);
                 // Shininess to smoothness conversion function based on 6 points
+                // 77.9756*Math.Pow(value, 0.00150846) - 77.5856;
                 double smoothnessValue = 77.9856*Math.Pow(value, 0.00135846) - 77.5856;
                 Material.SetFloat(smoothness, (float) smoothnessValue); 
                 OnMeshChanged?.Invoke();
@@ -186,11 +184,12 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
         public float Smoothness 
         {
             get => Material.GetFloat(smoothness);
-            set 
+            set
             {
                 Material.SetFloat(smoothness, value);
-                double shininessValue = Math.Pow((value + 77.5856)/77.9856, 5889/8);
-                Material.SetFloat(shininess, (float) shininessValue);
+                // Smoothness to shininess conversion function based on 6 points
+                double smoothnessValue = Math.Pow((value + 77.5856)/77.9856, 5889/8);
+                Material.SetFloat(shininess, (float) smoothnessValue); 
                 OnMeshChanged?.Invoke();
             }
         }
@@ -346,6 +345,8 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             this.FinalColor = this.FinalColor;
             this.Smoothness = Material.GetFloat(smoothness);
             this.RefractiveIndex = this.RefractiveIndex;
+            //this.Specular = 0;
+            //this.Specular = Math.Min(Material.GetFloat(normalScale), 1); // Specular is temporarily stored in normalScale due to inconveniences
         }
 
         private void Awake()

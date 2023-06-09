@@ -25,11 +25,11 @@ namespace _Project.UI.Scripts.Control_Panel
         [SerializeField]
         private FloatEdit ambientEdit;
         [SerializeField]
-        private FloatEdit diffuseEdit; // diffuseEdit is used to simultaneously change diffuse for the old ray tracing and metallic for Unity's ray tracing
+        private FloatEdit diffuseEdit;
         [SerializeField]
         private FloatEdit specularEdit;
         [SerializeField]
-        private FloatEdit shininessEdit; // shininessEdit is used to simultaneously change shininess for the old ray tracing and smoothness for Unity's ray tracing
+        private FloatEdit shininessEdit;
         [SerializeField]
         private TMP_Dropdown typeDropdown; 
         [SerializeField]

@@ -143,7 +143,7 @@ Material:
     - _DetailAlbedoScale: 1
     - _DetailNormalScale: 1
     - _DetailSmoothnessScale: 1
-    - _Diffuse: 0
+    - _Diffuse: 1
     - _DiffuseRemapMax: 0
     - _DiffuseRemapMin: 0
     - _DiffusionProfile: 0
