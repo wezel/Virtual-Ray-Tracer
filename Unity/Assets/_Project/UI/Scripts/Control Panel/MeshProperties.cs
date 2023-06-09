@@ -25,11 +25,11 @@ namespace _Project.UI.Scripts.Control_Panel
         [SerializeField]
         private FloatEdit ambientEdit;
         [SerializeField]
-        private FloatEdit diffuseEdit;
+        private FloatEdit diffuseEdit; // diffuseEdit is used to simultaneously change diffuse for the old ray tracing and metallic for Unity's ray tracing
         [SerializeField]
         private FloatEdit specularEdit;
         [SerializeField]
-        private FloatEdit shininessEdit;
+        private FloatEdit shininessEdit; // shininessEdit is used to simultaneously change shininess for the old ray tracing and smoothness for Unity's ray tracing
         [SerializeField]
         private TMP_Dropdown typeDropdown; 
         [SerializeField]
@@ -51,9 +51,9 @@ namespace _Project.UI.Scripts.Control_Panel
 
             colorEdit.Color = mesh.Color;
             ambientEdit.Value = mesh.Ambient;
-            diffuseEdit.Value = mesh.Diffuse;
+            diffuseEdit.Value = mesh.Metallic;
             specularEdit.Value = mesh.Specular;
-            shininessEdit.Value = mesh.Shininess;
+            shininessEdit.Value = mesh.Smoothness;
             
             typeDropdown.value = typeDropdown.options.FindIndex(option => option.text == mesh.Type.ToString());
             refractiveIndexEdit.gameObject.SetActive(mesh.Type == RTMesh.ObjectType.Transparent);
@@ -84,9 +84,9 @@ namespace _Project.UI.Scripts.Control_Panel
 
             colorEdit.OnValueChanged += (value) => { mesh.Color = value; };
             ambientEdit.OnValueChanged += (value) => { mesh.Ambient = value; };
-            diffuseEdit.OnValueChanged += (value) => { mesh.Diffuse = value; };
+            diffuseEdit.OnValueChanged += (value) => { mesh.Metallic = value; };
             specularEdit.OnValueChanged += (value) => { mesh.Specular = value; };
-            shininessEdit.OnValueChanged += (value) => { mesh.Shininess = value; };
+            shininessEdit.OnValueChanged += (value) => { mesh.Smoothness = value; };
 
             typeDropdown.onValueChanged.AddListener( type => ChangeObjectType( (RTMesh.ObjectType) type));
 

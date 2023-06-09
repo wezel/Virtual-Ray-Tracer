@@ -6,6 +6,7 @@ using UnityEngine.Serialization;
 using UnityEngine.UI;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.HighDefinition;
+using System;
 
 namespace _Project.UI.Scripts.Control_Panel
 {
@@ -67,10 +68,17 @@ namespace _Project.UI.Scripts.Control_Panel
             RenderTexture.active = null;
 
             // Apply gamma correction to the texture
+            // When color is too dark, don't
             Color[] pixels = dest.GetPixels();
             for (int i = 0; i < pixels.Length; i++)
             {
-                pixels[i] = pixels[i].gamma;
+                pixels[i] = pixels[i] * 2.0f; 
+                // Gets the maximum of all color values or 1 if all values are below 1
+                var maxColorRatio = Math.Max(Math.Max(pixels[i].r, Math.Max(pixels[i].g, pixels[i].b)), 1);
+                // maximum color value should be 1, the rest should also be divided to keep the same ratio
+                pixels[i].r = pixels[i].r / maxColorRatio;
+                pixels[i].g = pixels[i].g / maxColorRatio;
+                pixels[i].b = pixels[i].b / maxColorRatio;
             }
             dest.SetPixels(pixels);
             dest.Apply();

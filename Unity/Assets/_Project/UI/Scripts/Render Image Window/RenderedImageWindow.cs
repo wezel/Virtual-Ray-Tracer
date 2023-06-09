@@ -10,7 +10,7 @@ namespace _Project.UI.Scripts.Render_Image_Window
     public class RenderedImageWindow : MonoBehaviour
     {
         [SerializeField]
-        private Image renderedImage;
+        private RawImage renderedImage;
         [SerializeField]
         private RectTransform imageBounds; // The rendered image is constrained to these bounds.
         [SerializeField]
@@ -52,9 +52,11 @@ namespace _Project.UI.Scripts.Render_Image_Window
             float pixelsPerUnitInHeight = imageBounds.rect.height / texture.height;
             float pixelsPerUnit = Mathf.Min(pixelsPerUnitInWidth, pixelsPerUnitInHeight);
 
-            sprite = Sprite.Create(texture, rect, pivot, pixelsPerUnit);
-            renderedImage.sprite = sprite;
+            // sprite = Sprite.Create(texture, rect, pivot, pixelsPerUnit);
+            // renderedImage.sprite = sprite;
             
+            renderedImage.texture = texture;
+
             // Make sure the image UI element is scaled correctly.
             renderedImage.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal,
                 texture.width * pixelsPerUnit);
