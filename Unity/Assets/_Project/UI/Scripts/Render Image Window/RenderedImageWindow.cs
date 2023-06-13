@@ -10,7 +10,7 @@ namespace _Project.UI.Scripts.Render_Image_Window
     public class RenderedImageWindow : MonoBehaviour
     {
         [SerializeField]
-        private Image renderedImage;
+        private RawImage renderedImage;
         [SerializeField]
         private RectTransform imageBounds; // The rendered image is constrained to these bounds.
         [SerializeField]
@@ -20,7 +20,7 @@ namespace _Project.UI.Scripts.Render_Image_Window
         [SerializeField]
         private UIZoomImage zoomImage;
 
-        private Texture2D texture;
+        private RenderTexture texture;
         private Sprite sprite;
 
         /// <summary>
@@ -28,12 +28,10 @@ namespace _Project.UI.Scripts.Render_Image_Window
         /// <see cref="Show"/> should be called afterwards.
         /// </summary>
         /// <param name="texture"> The new texture for the displayed image. </param>
-        public void SetImageTexture(Texture2D texture)
+        public void SetImageTexture(RenderTexture texture)
         {
             // Textures and sprites are not garbage collected. Provided we are the only users of these textures and
             // sprites destroying them here is fine.
-            if (this.texture != null)
-                Destroy(this.texture);
             if (sprite != null)
                 Destroy(sprite);
             
@@ -52,8 +50,10 @@ namespace _Project.UI.Scripts.Render_Image_Window
             float pixelsPerUnitInHeight = imageBounds.rect.height / texture.height;
             float pixelsPerUnit = Mathf.Min(pixelsPerUnitInWidth, pixelsPerUnitInHeight);
 
-            sprite = Sprite.Create(texture, rect, pivot, pixelsPerUnit);
-            renderedImage.sprite = sprite;
+            // sprite = Sprite.Create(texture, rect, pivot, pixelsPerUnit);
+            // renderedImage.sprite = sprite;
+
+            renderedImage.texture = texture;
             
             // Make sure the image UI element is scaled correctly.
             renderedImage.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal,
@@ -66,8 +66,6 @@ namespace _Project.UI.Scripts.Render_Image_Window
         {
             // Textures and sprites are not garbage collected. Provided we are the only users of these textures and
             // sprites destroying them here is fine.
-            if (texture != null)
-                Destroy(texture);
             if (sprite != null)
                 Destroy(sprite);
             

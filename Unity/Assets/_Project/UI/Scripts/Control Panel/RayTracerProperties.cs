@@ -127,7 +127,7 @@ namespace _Project.UI.Scripts.Control_Panel
         {
             yield return new WaitForFixedUpdate();
             Texture2D render = rayTracer.RenderImage();
-            uiManager.RenderedImageWindow.SetImageTexture(toTexture2D(renderedImageUnityRT));
+            uiManager.RenderedImageWindow.SetImageTexture(renderedImageUnityRT);
             yield return null;
         }
 
