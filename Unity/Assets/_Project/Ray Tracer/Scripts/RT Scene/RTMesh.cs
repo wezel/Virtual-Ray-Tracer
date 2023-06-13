@@ -17,6 +17,10 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
         private static Shader StandardShader = null;
         private static Shader TransparentShader = null;
 
+        public Material TransparentMaterial;
+        public Material OpaqueMaterial;
+        public Material MirrorMaterial;
+
         // Properties used for the ray traced image
         private static readonly int ambient = Shader.PropertyToID("_Ambient");
         private static readonly int diffuse = Shader.PropertyToID("_Diffuse");
@@ -300,10 +304,13 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
         {
             if (Type == type) return;
 
+            MaterialPropertyBlock materialPropertyBlock = new MaterialPropertyBlock();
+            Renderer MeshRenderer = GetComponent<Renderer>();
+
             switch (type)
             {
                 case ObjectType.Transparent:
-                    Material.shader = TransparentShader;
+                    MeshRenderer.sharedMaterial = TransparentMaterial;
                     Material.SetFloat(ambient, 0);
                     Material.SetFloat(diffuse, 0);
                     Material.SetFloat(specular, 0);
@@ -314,13 +321,14 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
                     Material.color = color;
                     break;
                 case ObjectType.Opaque:
-                    Material.shader = StandardShader;
+                    MeshRenderer.sharedMaterial = OpaqueMaterial;
                     Material.SetFloat(ambient, 0.2f);
                     Material.SetFloat(diffuse, 1f);
                     Material.SetFloat(specular, 0);
                     Material.SetFloat(shininess, 1);
                     break;
                 case ObjectType.Mirror:
+                    MeshRenderer.sharedMaterial = MirrorMaterial;
                     Material.shader = StandardShader;
                     Material.SetFloat(ambient, 0);
                     Material.SetFloat(diffuse, 0);
