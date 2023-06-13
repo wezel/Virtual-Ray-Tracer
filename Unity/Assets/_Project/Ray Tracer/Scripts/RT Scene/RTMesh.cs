@@ -306,34 +306,38 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
 
             MaterialPropertyBlock materialPropertyBlock = new MaterialPropertyBlock();
             Renderer MeshRenderer = GetComponent<Renderer>();
+            Color color = Material.color;
 
             switch (type)
             {
                 case ObjectType.Transparent:
                     MeshRenderer.sharedMaterial = TransparentMaterial;
+                    Material = MeshRenderer.sharedMaterial;
                     Material.SetFloat(ambient, 0);
                     Material.SetFloat(diffuse, 0);
                     Material.SetFloat(specular, 0);
                     Material.SetFloat(shininess, 128);
                     Material.SetFloat(refractiveIndex, 1.5f);
-                    Color color = Material.color;
                     color.a = 120 / 256f;
-                    Material.color = color;
+                    Material.SetColor("_UnalteredColor", color);
                     break;
                 case ObjectType.Opaque:
-                    MeshRenderer.sharedMaterial = OpaqueMaterial;
+                    MeshRenderer.material = OpaqueMaterial;
+                    Material = MeshRenderer.material;
                     Material.SetFloat(ambient, 0.2f);
                     Material.SetFloat(diffuse, 1f);
                     Material.SetFloat(specular, 0);
                     Material.SetFloat(shininess, 1);
+                    Material.SetColor("_UnalteredColor", color);
                     break;
                 case ObjectType.Mirror:
                     MeshRenderer.sharedMaterial = MirrorMaterial;
-                    Material.shader = StandardShader;
+                    Material = MeshRenderer.sharedMaterial;
                     Material.SetFloat(ambient, 0);
                     Material.SetFloat(diffuse, 0);
                     Material.SetFloat(specular, 1);
                     Material.SetFloat(shininess, 128);
+                    Material.SetColor("_UnalteredColor", color);
                     break;
             }
 
