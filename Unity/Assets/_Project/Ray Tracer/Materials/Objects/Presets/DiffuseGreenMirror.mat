@@ -144,7 +144,7 @@ Material:
     - _AlphaSrcBlend: 1
     - _AlphaToMask: 0
     - _AlphaToMaskInspectorValue: 0
-    - _Ambient: 0.2
+    - _Ambient: 1
     - _Anisotropy: 0
     - _BackupAmbient: 0
     - _BlendMode: 0
@@ -156,7 +156,7 @@ Material:
     - _DetailAlbedoScale: 1
     - _DetailNormalScale: 1
     - _DetailSmoothnessScale: 1
-    - _Diffuse: 1
+    - _Diffuse: 0
     - _DiffuseRemapMax: 0
     - _DiffuseRemapMin: 0
     - _DiffusionProfile: 0
@@ -185,7 +185,7 @@ Material:
     - _HeightTessAmplitude: 2
     - _HeightTessCenter: 0.5
     - _InvTilingScale: 1
-    - _Ior: 0.3
+    - _Ior: 1
     - _IridescenceMask: 1
     - _IridescenceThickness: 1
     - _LinkDetailsWithBase: 1
@@ -206,11 +206,11 @@ Material:
     - _ReceivesSSRTransparent: 0
     - _RefractionModel: 0
     - _RefractiveIndex: 1
-    - _Shininess: 32
+    - _Shininess: 281.71945
     - _Smoothness: 1
     - _SmoothnessRemapMax: 1
     - _SmoothnessRemapMin: 0
-    - _Specular: 0
+    - _Specular: 1
     - _SpecularAAScreenSpaceVariance: 0.1
     - _SpecularAAThreshold: 0.2
     - _SpecularOcclusionMode: 0
@@ -247,7 +247,7 @@ Material:
     - _ZTestTransparent: 4
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 0, g: 0, b: 0, a: 0}
+    - _BaseColor: {r: 0.30156568, g: 1, b: 0, a: 0.46875}
     - _BaseColorMap_MipInfo: {r: 0, g: 0, b: 0, a: 0}
     - _Color: {r: 0, g: 0, b: 0, a: 0}
     - _DiffusionProfileAsset: {r: 0, g: 0, b: 0, a: 0}
@@ -263,5 +263,5 @@ Material:
     - _UVDetailsMappingMask: {r: 1, g: 0, b: 0, a: 0}
     - _UVMappingMask: {r: 1, g: 0, b: 0, a: 0}
     - _UVMappingMaskEmissive: {r: 1, g: 0, b: 0, a: 0}
-    - _UnalteredColor: {r: 1, g: 1, b: 1, a: 1}
+    - _UnalteredColor: {r: 0.3015657, g: 1, b: 0, a: 0.46875}
   m_BuildTextureStacks: []
