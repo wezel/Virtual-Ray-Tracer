@@ -144,7 +144,7 @@ Material:
     - _AlphaSrcBlend: 1
     - _AlphaToMask: 0
     - _AlphaToMaskInspectorValue: 0
-    - _Ambient: 1
+    - _Ambient: 0
     - _Anisotropy: 0
     - _BackupAmbient: 0
     - _BlendMode: 0

@@ -62,7 +62,12 @@ namespace _Project.Ray_Tracer.Scripts
         private Transform previousTransform;
 
         private HandleSpace handleSpace = HandleSpace.WORLD;
-        
+
+        [Header("Materials")]
+        [SerializeField] public Material DefaultTransparentMaterial;
+        [SerializeField] public Material DefaultOpaqueMaterial;
+        [SerializeField] public Material DefaultMirrorMaterial;
+
         public enum ObjectType
         {
             Light,
@@ -319,6 +324,11 @@ namespace _Project.Ray_Tracer.Scripts
                 default:
                     return;
             }
+
+            mesh.TransparentMaterial = DefaultTransparentMaterial;
+            mesh.OpaqueMaterial = DefaultOpaqueMaterial;
+            mesh.MirrorMaterial = DefaultMirrorMaterial;
+
             Scene.AddMesh(mesh);
             Select(mesh.transform);
         }

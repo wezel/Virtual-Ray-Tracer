@@ -126,7 +126,7 @@ namespace _Project.UI.Scripts.Control_Panel
         private IEnumerator RunRenderImage()
         {
             yield return new WaitForFixedUpdate();
-            Texture2D render = rayTracer.RenderImage();
+            //Texture2D render = rayTracer.RenderImage(); // VRT calculation
             uiManager.RenderedImageWindow.SetImageTexture(renderedImageUnityRT);
             yield return null;
         }

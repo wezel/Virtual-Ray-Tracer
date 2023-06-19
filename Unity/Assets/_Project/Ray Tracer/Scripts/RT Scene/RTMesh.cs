@@ -312,12 +312,13 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             {
                 case ObjectType.Transparent:
                     MeshRenderer.sharedMaterial = TransparentMaterial;
-                    Material = MeshRenderer.sharedMaterial;
+                    MeshRenderer.material = TransparentMaterial;
+                    Material = MeshRenderer.material;
                     Material.SetFloat(ambient, 0);
                     Material.SetFloat(diffuse, 0);
                     Material.SetFloat(specular, 0);
                     Material.SetFloat(shininess, 128);
-                    Material.SetFloat(refractiveIndex, 1.5f);
+                    Material.SetFloat(refractiveIndex, 1.0f);
                     color.a = 120 / 256f;
                     Material.SetColor("_UnalteredColor", color);
                     break;
@@ -332,7 +333,8 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
                     break;
                 case ObjectType.Mirror:
                     MeshRenderer.sharedMaterial = MirrorMaterial;
-                    Material = MeshRenderer.sharedMaterial;
+                    MeshRenderer.material = MirrorMaterial;
+                    Material = MeshRenderer.material;
                     Material.SetFloat(ambient, 0);
                     Material.SetFloat(diffuse, 0);
                     Material.SetFloat(specular, 1);

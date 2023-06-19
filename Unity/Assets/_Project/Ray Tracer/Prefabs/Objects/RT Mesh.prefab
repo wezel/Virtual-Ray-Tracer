@@ -110,6 +110,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a541f90d4ad74514dabd4872900f6878, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  TransparentMaterial: {fileID: 2100000, guid: 69bd0e396dc160edfaaf3b6a2cfde5bb, type: 2}
+  OpaqueMaterial: {fileID: 2100000, guid: 79cae673e2b06ab4c967933347beb21b, type: 2}
+  MirrorMaterial: {fileID: 2100000, guid: 98d08f055604dfc4ab0ed0ae8561e66f, type: 2}
+  Type: 0
+  shadeSmooth: 1
 --- !u!114 &6716819065396824742
 MonoBehaviour:
   m_ObjectHideFlags: 0

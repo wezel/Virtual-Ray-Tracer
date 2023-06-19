@@ -204,7 +204,7 @@ Material:
     - _DetailAlbedoScale: 1
     - _DetailNormalScale: 1
     - _DetailSmoothnessScale: 1
-    - _Diffuse: 0
+    - _Diffuse: 1
     - _DiffuseRemapMax: 0
     - _DiffuseRemapMin: 0
     - _DiffusionProfile: 0
@@ -235,7 +235,7 @@ Material:
     - _HeightTessAmplitude: 2
     - _HeightTessCenter: 0.5
     - _InvTilingScale: 1
-    - _Ior: 2.5
+    - _Ior: 1.5
     - _IridescenceMask: 1
     - _IridescenceThickness: 1
     - _LinkDetailsWithBase: 1
@@ -262,11 +262,11 @@ Material:
     - _RefractiveIndex: 1.5
     - _RenderQueueType: 1
     - _RequireSplitLighting: 0
-    - _Shininess: 128
-    - _Smoothness: 0.831
+    - _Shininess: 57.227688
+    - _Smoothness: 0.83
     - _SmoothnessRemapMax: 1
     - _SmoothnessRemapMin: 0
-    - _Specular: 1
+    - _Specular: 0
     - _SpecularAAScreenSpaceVariance: 0.1
     - _SpecularAAThreshold: 0.2
     - _SpecularOcclusionMode: 1
@@ -309,10 +309,10 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - _BASE_COLOR: {r: 1, g: 1, b: 1, a: 1}
-    - _BaseColor: {r: 0, g: 0, b: 0, a: 0.29411766}
+    - _BaseColor: {r: 0, g: 0, b: 0, a: 0.46875}
     - _BaseColorMap_MipInfo: {r: 0, g: 0, b: 0, a: 0}
     - _COAT_COLOR: {r: 0, g: 0, b: 0, a: 0}
-    - _Color: {r: 0, g: 0, b: 0, a: 0.29411766}
+    - _Color: {r: 0, g: 0, b: 0, a: 0.46875}
     - _DiffusionProfileAsset: {r: 0, g: 0, b: 0, a: 0}
     - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
     - _EMISSION_COLOR: {r: 0, g: 0, b: 0, a: 0}
@@ -329,5 +329,5 @@ Material:
     - _UVDetailsMappingMask: {r: 1, g: 0, b: 0, a: 0}
     - _UVMappingMask: {r: 1, g: 0, b: 0, a: 0}
     - _UVMappingMaskEmissive: {r: 1, g: 0, b: 0, a: 0}
-    - _UnalteredColor: {r: 1, g: 1, b: 1, a: 1}
+    - _UnalteredColor: {r: 1, g: 0, b: 0, a: 0.46875}
   m_BuildTextureStacks: []
