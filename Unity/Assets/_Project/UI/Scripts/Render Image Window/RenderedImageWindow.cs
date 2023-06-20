@@ -50,9 +50,6 @@ namespace _Project.UI.Scripts.Render_Image_Window
             float pixelsPerUnitInHeight = imageBounds.rect.height / texture.height;
             float pixelsPerUnit = Mathf.Min(pixelsPerUnitInWidth, pixelsPerUnitInHeight);
 
-            // sprite = Sprite.Create(texture, rect, pivot, pixelsPerUnit);
-            // renderedImage.sprite = sprite;
-
             renderedImage.texture = texture;
             
             // Make sure the image UI element is scaled correctly.

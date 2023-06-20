@@ -336,9 +336,9 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
                     MeshRenderer.material = MirrorMaterial;
                     Material = MeshRenderer.material;
                     Material.SetFloat(ambient, 0);
-                    Material.SetFloat(diffuse, 0);
+                    Material.SetFloat(metallic, 1);
                     Material.SetFloat(specular, 1);
-                    Material.SetFloat(shininess, 128);
+                    Material.SetFloat(smoothness, 1);
                     Material.SetColor("_UnalteredColor", color);
                     break;
             }

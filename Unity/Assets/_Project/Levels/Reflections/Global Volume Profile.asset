@@ -39,7 +39,7 @@ MonoBehaviour:
       m_Bits: 1011
   maxDepth:
     m_OverrideState: 1
-    m_Value: 3
+    m_Value: 4
     min: 1
     max: 10
   rayLength:
