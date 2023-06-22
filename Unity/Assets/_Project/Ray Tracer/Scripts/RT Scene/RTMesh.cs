@@ -370,6 +370,8 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             if (TransparentShader == null)
                 TransparentShader = Shader.Find("Custom/RayTracerShaderTransparent");
 
+            ChangeObjectType(this.Type);
+
             Initialize();
             UpdateValues();
         }
@@ -384,13 +386,6 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             GetComponent<Renderer>().shadowCastingMode = ShadowCastingMode.TwoSided;
             // Find the material used by this object and verify that it uses the correct shader.
             Material = GetComponent<MeshRenderer>().material;
-            
-            Type = Material.name.Replace("(Instance)","").Trim()  switch
-            {
-                "Glass" => ObjectType.Transparent,
-                "Mirror" => ObjectType.Mirror,
-                _ => ObjectType.Opaque
-            };
             
             if (Material == null)
                 Debug.LogError("Could not find material of " + gameObject.name + "!");
