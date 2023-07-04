@@ -2768,6 +2768,54 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 4635878769233038563, guid: 60ed96064c5523b46b7a7bd67e36e6d7, type: 3}
   m_PrefabInstance: {fileID: 956554176}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1090311307
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1090311309}
+  - component: {fileID: 1090311308}
+  m_Layer: 0
+  m_Name: Recursive rendering settings
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1090311308
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1090311307}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isGlobal: 1
+  priority: 0
+  blendDistance: 0
+  weight: 1
+  sharedProfile: {fileID: 11400000, guid: 04016fcd4f51ebd41b84660ddc4d197f, type: 2}
+--- !u!4 &1090311309
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1090311307}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.20342928, y: 3.1481717, z: 10.097154}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 14
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1100355107
 GameObject:
   m_ObjectHideFlags: 0
@@ -2902,6 +2950,54 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1100355107}
   m_CullTransparentMesh: 1
+--- !u!1 &1156546594
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1156546596}
+  - component: {fileID: 1156546595}
+  m_Layer: 0
+  m_Name: Post Process
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1156546595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1156546594}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isGlobal: 1
+  priority: 0
+  blendDistance: 0
+  weight: 1
+  sharedProfile: {fileID: 11400000, guid: 673785fb86cbf8c4683e264bb740a848, type: 2}
+--- !u!4 &1156546596
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1156546594}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.50659513, y: 0.4036045, z: 6.381673}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 15
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1192047418
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3320,6 +3416,10 @@ PrefabInstance:
       propertyPath: hideAllRays
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3364825822907551461, guid: c271906e89fa0f342a70789873c17236, type: 3}
+      propertyPath: recursiveRenderingSettings
+      value: 
+      objectReference: {fileID: 1090311308}
     - target: {fileID: 3364825822907551462, guid: c271906e89fa0f342a70789873c17236, type: 3}
       propertyPath: m_RootOrder
       value: 5
@@ -3836,10 +3936,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_text: You can pan the camera by holding the middle mouse button and then dragging
-    or by pressing the arrow keys. You can orbit the camera by holding the left mouse
-    button and left control and then dragging or by holding left control and pressing
-    the arrow keys. You can zoom the camera in and out by scrolling or by holding
-    the right mouse button and left control and then dragging.
+    or by pressing the arrow keys. You can orbit the camera by holding the right
+    mouse button and moving the mouse or pressing the arrow keys. You can zoom the
+    camera in and out by scrolling.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -4077,19 +4176,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3379506522100200911, guid: aa7cec59df0025d4896ac99db41e4250, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.969439
+      value: 0.9225136
       objectReference: {fileID: 0}
     - target: {fileID: 3379506522100200911, guid: aa7cec59df0025d4896ac99db41e4250, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.10394043
+      value: 0.3156901
       objectReference: {fileID: 0}
     - target: {fileID: 3379506522100200911, guid: aa7cec59df0025d4896ac99db41e4250, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.22095953
+      value: -0.21009395
       objectReference: {fileID: 0}
     - target: {fileID: 3379506522100200911, guid: aa7cec59df0025d4896ac99db41e4250, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.023690637
+      value: 0.0718955
       objectReference: {fileID: 0}
     - target: {fileID: 3904491717560610861, guid: aa7cec59df0025d4896ac99db41e4250, type: 3}
       propertyPath: m_Layer

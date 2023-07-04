@@ -47,6 +47,10 @@ namespace _Project.UI.Scripts.Control_Panel
 
         [SerializeField]
         private FloatEdit superSamplingFactorEdit;
+
+        [SerializeField]
+        private BoolEdit GIEdit;
+
         [SerializeField]
         private Button renderImageButton;
         [SerializeField]
@@ -173,6 +177,7 @@ namespace _Project.UI.Scripts.Control_Panel
             speedEdit.OnValueChanged += (value) => { rayManager.Speed = value; };
 
             superSamplingFactorEdit.OnValueChanged += (value) => { rayTracer.SuperSamplingFactor = (int)value; };
+            GIEdit.OnValueChanged += (value) => { rayManager.postProcess.screenSpaceGlobalIllumination.value.enabled.value = value; };
             renderImageButton.onClick.AddListener(RenderImage);
             openImageButton.onClick.AddListener(ToggleImage);
             FlyToRTCameraButton.onClick.AddListener(() =>

@@ -139,7 +139,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             set
             {
                 Material.SetFloat(diffuse, value);
-                Material.SetFloat(metallic, 1-value);
+                Material.SetFloat(metallic, 1-value); // Metallic is similar to inverse of diffuse
                 OnMeshChanged?.Invoke();
             }
         }
@@ -150,7 +150,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             set
             {
                 Material.SetFloat(metallic, value);
-                Material.SetFloat(diffuse, 1-value);
+                Material.SetFloat(diffuse, 1-value); // Diffuse is similar to inverse of metallic
                 OnMeshChanged?.Invoke();
             }
         }
@@ -178,7 +178,6 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             {
                 Material.SetFloat(shininess, value);
                 // Shininess to smoothness conversion function based on 6 points
-                // 77.9756*Math.Pow(value, 0.00150846) - 77.5856;
                 double smoothnessValue = 77.9856*Math.Pow(value, 0.00135846) - 77.5856;
                 Material.SetFloat(smoothness, (float) smoothnessValue); 
                 OnMeshChanged?.Invoke();
@@ -253,6 +252,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
                 
                 Material.SetFloat(refractiveIndex, value);
 
+                // Refractive index needs to be altered in several ways to be the same as with VRT method
                 if (value <= 1.0) 
                 {
                     Material.SetFloat(indexOfRefraction, value);
@@ -359,8 +359,6 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             this.FinalColor = this.FinalColor;
             this.Smoothness = Material.GetFloat(smoothness);
             this.RefractiveIndex = this.RefractiveIndex;
-            //this.Specular = 0;
-            //this.Specular = Math.Min(Material.GetFloat(normalScale), 1); // Specular is temporarily stored in normalScale due to inconveniences
         }
 
         private void Awake()
@@ -387,14 +385,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             // Find the material used by this object and verify that it uses the correct shader.
             Material = GetComponent<MeshRenderer>().material;
             
-            if (Material == null)
-                Debug.LogError("Could not find material of " + gameObject.name + "!");
-            if (Type == ObjectType.Transparent && Material.shader != TransparentShader)
-                Debug.LogError("Material of " + gameObject.name + " uses a non transparent shader or a shader not" +
-                    " supported by the ray tracer!");
-            if (Type != ObjectType.Transparent && Material.shader != StandardShader)
-                Debug.LogError("Material of " + gameObject.name + " uses a transparent shader or a shader not" +
-                    " supported by the ray tracer!");
+            
 
             // Find the outline component attached to this object.
             Outline = GetComponent<Outline>();

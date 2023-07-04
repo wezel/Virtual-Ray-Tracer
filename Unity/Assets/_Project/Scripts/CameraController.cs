@@ -244,14 +244,18 @@ namespace _Project.Scripts
             flytocam = true;
         }
 
+        // Move towards camera one step
         private void FlyToRTCameraStep()
         {
             Transform RTCamTransform = RTSceneManager.Get().Scene.Camera.transform;
 
             transform.position = Vector3.Lerp(transform.position, RTCamTransform.position, 0.1f);
             transform.rotation = Quaternion.Lerp(transform.rotation, RTCamTransform.rotation, 0.1f);
+
         }
 
+        // If we want to go the camera we check if we are at that position
+        // if not, we use FlyToRTCameraStep()
         private void FixedUpdate()
         {
             if (flytocam)

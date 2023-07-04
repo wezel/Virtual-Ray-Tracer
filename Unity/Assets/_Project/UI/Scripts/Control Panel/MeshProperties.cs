@@ -25,11 +25,11 @@ namespace _Project.UI.Scripts.Control_Panel
         [SerializeField]
         private FloatEdit ambientEdit;
         [SerializeField]
-        private FloatEdit diffuseEdit;
+        private FloatEdit diffuseEdit; // This is used for diffuse and metallic
         [SerializeField]
         private FloatEdit specularEdit;
         [SerializeField]
-        private FloatEdit shininessEdit;
+        private FloatEdit shininessEdit; // This is used for shininess and smoothness
         [SerializeField]
         private TMP_Dropdown typeDropdown; 
         [SerializeField]

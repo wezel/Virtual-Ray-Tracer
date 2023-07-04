@@ -145,8 +145,11 @@ namespace _Project.Ray_Tracer.Scripts
 
         private bool shouldUpdateRays = true;
 
+        // Volumes that are stored here can be accessed easily elsewhere 
         [SerializeField]
         public Volume recursiveRenderingSettings;
+        [SerializeField]
+        public Volume postProcess;
 
         
         
