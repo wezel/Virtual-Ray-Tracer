@@ -30,6 +30,9 @@ namespace _Project.UI.Scripts.Control_Panel
         private ColorEdit backgroundColorEdit;
 
         [SerializeField]
+        private BoolEdit GIEdit;
+
+        [SerializeField]
         private BoolEdit hideNoHitRaysEdit;
         [SerializeField]
         private BoolEdit showRaysEdit;
@@ -48,8 +51,7 @@ namespace _Project.UI.Scripts.Control_Panel
         [SerializeField]
         private FloatEdit superSamplingFactorEdit;
 
-        [SerializeField]
-        private BoolEdit GIEdit;
+        
 
         [SerializeField]
         private Button renderImageButton;
@@ -57,6 +59,8 @@ namespace _Project.UI.Scripts.Control_Panel
         private Button openImageButton;
         [SerializeField]
         private Button FlyToRTCameraButton;
+
+        
 
         [SerializeField]
         private RenderTexture renderedImageUnityRT;
@@ -116,7 +120,7 @@ namespace _Project.UI.Scripts.Control_Panel
             loopEdit.IsOn = rayManager.Loop;
             speedEdit.Value = rayManager.Speed;
 
-            superSamplingFactorEdit.Value = rayTracer.SuperSamplingFactor;
+            
         }
 
         /// <summary>
@@ -177,7 +181,11 @@ namespace _Project.UI.Scripts.Control_Panel
             speedEdit.OnValueChanged += (value) => { rayManager.Speed = value; };
 
             superSamplingFactorEdit.OnValueChanged += (value) => { rayTracer.SuperSamplingFactor = (int)value; };
-            GIEdit.OnValueChanged += (value) => { rayManager.postProcess.screenSpaceGlobalIllumination.value.enabled.value = value; };
+            GIEdit.OnValueChanged += (value) => { if (rayManager.postProcess.profile.TryGet(out GlobalIllumination ssgi))
+                                                    {
+                                                        ssgi.active = value;
+                                                    } 
+                                                };
             renderImageButton.onClick.AddListener(RenderImage);
             openImageButton.onClick.AddListener(ToggleImage);
             FlyToRTCameraButton.onClick.AddListener(() =>
@@ -185,6 +193,8 @@ namespace _Project.UI.Scripts.Control_Panel
                 showRaysEdit.IsOn = false; // This invokes the OnValueChanged event as well.
                 FindObjectOfType<CameraController>().FlyToRTCamera(); // There should only be 1 CameraController.
             });
+
+            GIEdit.IsOn = true;
         }
     }
 }
