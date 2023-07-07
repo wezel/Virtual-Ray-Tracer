@@ -150,6 +150,8 @@ namespace _Project.Ray_Tracer.Scripts
         public Volume recursiveRenderingSettings;
         [SerializeField]
         public Volume postProcess;
+        [SerializeField]
+        public bool globalIllumination = true;
 
         
         

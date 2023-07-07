@@ -156,6 +156,7 @@ namespace _Project.UI.Scripts.Control_Panel
         private void Start()
         {
             renderShadowsEdit.OnValueChanged += (value) => { RTSceneManager.Get().SetShadows(value); };
+            GIEdit.IsOn = rayManager.globalIllumination;
         }
         
         private void Awake()
@@ -169,7 +170,13 @@ namespace _Project.UI.Scripts.Control_Panel
                                                                 }
                                                                 rayTracer.MaxDepth = (int)value; 
                                                             };
-            backgroundColorEdit.OnValueChanged += (value) => { rayTracer.BackgroundColor = value; };
+            backgroundColorEdit.OnValueChanged += (value) => {  
+                                                                // This code is capable of changing the background color when assigning the Main Camera to
+                                                                // the ray manager, but this does not change the background color of reflections/refractions
+                                                                // so we don't use it now
+                                                                // HDAdditionalCameraData cameraData = rayManager.mainCamera.GetComponent<HDAdditionalCameraData>();
+                                                                // cameraData.backgroundColorHDR = value; 
+                                                             };
 
             hideNoHitRaysEdit.OnValueChanged += (value) => { rayManager.HideNoHitRays = value; };
             showRaysEdit.OnValueChanged += (value) => { rayManager.ShowRays = value; };
@@ -194,7 +201,7 @@ namespace _Project.UI.Scripts.Control_Panel
                 FindObjectOfType<CameraController>().FlyToRTCamera(); // There should only be 1 CameraController.
             });
 
-            GIEdit.IsOn = true;
+            
         }
     }
 }

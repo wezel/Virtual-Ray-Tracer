@@ -213,12 +213,12 @@ MonoBehaviour:
     max: 32
   bounceCount:
     m_OverrideState: 1
-    m_Value: 2
+    m_Value: 1
     min: 1
     max: 8
   m_RayLength:
     m_OverrideState: 1
-    m_Value: 50
+    m_Value: 25
     min: 0.01
   m_ClampValue:
     m_OverrideState: 1
@@ -234,7 +234,7 @@ MonoBehaviour:
     min: 2
     max: 4
   m_Denoise:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: 1
   m_HalfResolutionDenoiser:
     m_OverrideState: 1
