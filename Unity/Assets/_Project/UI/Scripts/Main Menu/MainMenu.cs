@@ -20,16 +20,11 @@ namespace _Project.UI.Scripts.Main_Menu
         private SettingsPanel settingsPanel;
         [SerializeField]
         private BadgesPanel badgesPanel;
-        
-        private int lastScene;
-        private int currentScene;
 
         public void Show()
         {
-            UIManager uiManager = UIManager.Get();
-            uiManager.AddEscapable(Hide);
+            Overlay.Get().ShowBlocker(Hide);
             gameObject.SetActive(true);
-            uiManager.EnableBlocker();
             OnMainMenuShown?.Invoke();
         }
 
@@ -39,9 +34,7 @@ namespace _Project.UI.Scripts.Main_Menu
             settingsPanel.Hide();
             badgesPanel.Hide();
             
-            UIManager uiManager = UIManager.Get();
-            uiManager.RemoveEscapable(Hide);
-            uiManager.DisableBlocker();
+            Overlay.Get().HideBlocker(Hide);
             gameObject.SetActive(false);
         }
         /// <summary>
@@ -73,7 +66,7 @@ namespace _Project.UI.Scripts.Main_Menu
 
         public void GoHome()
         {
-            SceneLoader.Get().LoadScene(0);
+            LevelManager.Get().LoadLevel(2);
         }
 
         public void ToggleSettings()
@@ -92,14 +85,7 @@ namespace _Project.UI.Scripts.Main_Menu
 
         public void LoadNextLevel()
         {
-            if (currentScene < lastScene)
-                SceneLoader.Get().LoadScene(++currentScene);
-        }
-
-        private void Awake()
-        {
-            lastScene = SceneManager.sceneCountInBuildSettings - 1;
-            currentScene = SceneManager.GetActiveScene().buildIndex;
+            LevelManager.Get().LoadNextLevel();
         }
         
     }

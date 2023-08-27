@@ -11,7 +11,6 @@ namespace _Project.UI.Scripts
     {
         [SerializeField]
         private Button closeButton;
-        private UIManager uiManager;
 
         // TODO instead of removing functionality remove the function itself
         /// <summary>
@@ -39,10 +38,9 @@ namespace _Project.UI.Scripts
         {
             // Only disable the blocker if the panel is active now.
             if (gameObject.activeInHierarchy)
-                uiManager.DisableBlocker();
+                Overlay.Get().HideBlocker(Hide);
 
             gameObject.SetActive(false);
-            UIManager.Get().RemoveEscapable(Hide);
         }
         
         public void Toggle()
@@ -54,10 +52,6 @@ namespace _Project.UI.Scripts
         {
             closeButton.onClick.AddListener(Hide);
         }
-
-        private void Start()
-        {
-            uiManager = UIManager.Get();
-        }
+        
     }
 }

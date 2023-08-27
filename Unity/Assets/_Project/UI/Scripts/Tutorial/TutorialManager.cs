@@ -10,9 +10,9 @@ namespace _Project.UI.Scripts.Tutorial
     /// <summary>
     /// Tutorial task UI class
     /// </summary>
-    public class TutorialManager : MonoBehaviour
+    public class TutorialManager : Unique<TutorialManager>
     {
-        private static TutorialManager instance;
+        //TODO move to document
         private const string DEFAULT_REQUIRED_NAME = "You have completed all required tasks for level ";
         private const string DEFAULT_OPTIONAL_NAME = "You have completed all tasks for level ";
         private const string DEFAULT_REQUIRED_DESC = "You may press \"Next Level\" now to move onto the next level or click the button next to the progress bar to continue with additional tasks.";
@@ -74,21 +74,13 @@ namespace _Project.UI.Scripts.Tutorial
         private int currentScene;
 
         /// <summary>
-        /// Get the current <see cref="TutorialManager"/> instance.
-        /// </summary>
-        /// <returns> The current <see cref="TutorialManager"/> instance. </returns>
-        public static TutorialManager Get()
-        {
-            return instance;
-        }
-
-        /// <summary>
         /// Load next level (if possible) and update the buttons.
         /// </summary>
         public void NextLevel()
         {
+            //TODO remove double check button should not create this event if not interactable
             if (nextLevelButton.interactable && currentScene < lastScene)
-                SceneLoader.Get().LoadScene(++currentScene);
+                LevelManager.Get().LoadLevel(++currentScene);
         }
 
         /// <summary>
@@ -96,8 +88,9 @@ namespace _Project.UI.Scripts.Tutorial
         /// </summary>
         public void PreviousLevel()
         {
+            //TODO remove double check button should not create this event if not interactable
             if (previousLevelButton.interactable && currentScene > 1)
-                SceneLoader.Get().LoadScene(--currentScene);
+                LevelManager.Get().LoadLevel(--currentScene);
         }
 
         /// <summary>
@@ -105,7 +98,7 @@ namespace _Project.UI.Scripts.Tutorial
         /// </summary>
         /// <param name="level"></param>
         /// <returns>Whether the level can be loaded></returns>
-        public static bool CanLevelBeLoaded(int level)
+        public bool CanLevelBeLoaded(int level)
         {
             // The first level can always be loaded
             if (level <= 1)
@@ -113,7 +106,7 @@ namespace _Project.UI.Scripts.Tutorial
             
             GlobalManager globalManager = GlobalManager.Get();
 
-            if (globalManager.CheatMode) return true;
+            if (LevelManager.Get().CheatMode) return true;
 
             if (level == SceneManager.sceneCountInBuildSettings - 1) return true;
 
@@ -125,32 +118,48 @@ namespace _Project.UI.Scripts.Tutorial
             return globalManager.TutorialTasks[level - 2].AreRequiredTasksFinished();
         }
 
+        // /// <summary>
+        // /// Skip a tutorial task.
+        // /// </summary>
+        // public static void NextTask()
+        // {
+        //     TutorialManager manager = Get();
+        //     manager.NextTaskinternal();
+        // }
+        //
+        // /// <summary>
+        // /// Go to the previous task.
+        // /// </summary>
+        // public static void PreviousTask()
+        // {
+        //     TutorialManager manager = Get();
+        //     manager.PreviousTaskInternal();
+        // }
+        
         /// <summary>
-        /// Skip a tutorial task.
+        /// Goes to the previous task and updates the UI if necessary.
         /// </summary>
-        public static void NextTask()
+        public void PreviousTask()
         {
-            TutorialManager manager = Get();
-            manager.NextTaskinternal();
+            if (currentTasks.PreviousTask()) UpdateTutorial();
         }
 
         /// <summary>
-        /// Go to the previous task.
+        /// Skip a tutorial task and update the UI if necessary.
         /// </summary>
-        public static void PreviousTask()
+        public void NextTask()
         {
-            TutorialManager manager = Get();
-            manager.PreviousTaskInternal();
+            if (currentTasks.NextTask()) UpdateTutorial();
         }
 
         /// <summary>
         /// Complete a tutorial task.
         /// </summary>
         /// <param name="identifier"></param>
-        public static void CompleteTask(string identifier)
+        public void CompleteTask(string identifier)
         {
-            TutorialManager manager = Get();
-            manager.StartCoroutine(manager.CompleteTaskInternal(identifier));
+            return;
+            StartCoroutine(CompleteTaskInternal(identifier));
         }
 
         /// <summary>
@@ -161,22 +170,6 @@ namespace _Project.UI.Scripts.Tutorial
         {
             yield return new WaitForSeconds(.2f);
             if (currentTasks.CompleteTask(identifier)) UpdateTutorial();
-        }
-
-        /// <summary>
-        /// Goes to the previous task and updates the UI if necessary.
-        /// </summary>
-        private void PreviousTaskInternal()
-        {
-            if (currentTasks.PreviousTask()) UpdateTutorial();
-        }
-
-        /// <summary>
-        /// Skip a tutorial task and update the UI if necessary.
-        /// </summary>
-        private void NextTaskinternal()
-        {
-            if (currentTasks.NextTask()) UpdateTutorial();
         }
 
         /// <summary>
@@ -237,6 +230,15 @@ namespace _Project.UI.Scripts.Tutorial
             // Update the points
             taskPoints.text = GlobalManager.TutorialPoints.ToString();
         }
+        
+        
+        private void Awake()
+        {
+            // make this object unique
+            if (!MakeUnique(this)) return;
+            lastScene = SceneManager.sceneCountInBuildSettings - 1;
+            currentScene = SceneManager.GetActiveScene().buildIndex;
+        }
 
         /// <summary>
         /// Initialize variables, update UI.
@@ -252,13 +254,6 @@ namespace _Project.UI.Scripts.Tutorial
 
             UpdateTutorial();
             UpdateExpandCollapse();
-        }
-
-        private void Awake()
-        {
-            lastScene = SceneManager.sceneCountInBuildSettings - 1;
-            currentScene = SceneManager.GetActiveScene().buildIndex;
-            instance = this;
         }
     }
 }

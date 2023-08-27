@@ -9,6 +9,7 @@ using _Project.UI.Scripts;
 using _Project.UI.Scripts.Render_Image_Window;
 using System.Collections;
 using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light;
+using _Project.Scripts;
 
 namespace _Project.Ray_Tracer.Scripts
 {
@@ -18,13 +19,20 @@ namespace _Project.Ray_Tracer.Scripts
     /// to produce a relatively small number of rays for the <see cref="RayManager"/> to visualize. For larger images
     /// (and no ray trees) the <see cref="RenderImage"/> function should be used.
     /// </summary>
-    public partial class UnityRayTracer : MonoBehaviour
+    public partial class UnityRayTracer : Unique<UnityRayTracer>
     {
         public delegate void RayTracerChanged();
         /// <summary>
         /// An event invoked whenever a property of this ray tracer is changed.
         /// </summary>
         public event RayTracerChanged OnRayTracerChanged;
+        
+        public delegate void ProgressUpdate(int percentage);
+        /// <summary>
+        /// An event invoked whenever a property of this ray tracer is changed.
+        /// </summary>
+        public event ProgressUpdate OnProgressUpdate;
+        
 
         [SerializeField]
         private float epsilon = 0.001f;
@@ -122,8 +130,7 @@ namespace _Project.Ray_Tracer.Scripts
                 OnRayTracerChanged?.Invoke();
             }
         }
-
-        static private UnityRayTracer instance = null;
+        
         private RTSceneManager rtSceneManager;
         private Texture2D image;
         public Texture2D Image { get => image; }
@@ -228,15 +235,6 @@ namespace _Project.Ray_Tracer.Scripts
 
                 return interpolatedNormal;
             }
-        }
-
-        /// <summary>
-        /// Get the current <see cref="UnityRayTracer"/> instance.
-        /// </summary>
-        /// <returns> The current <see cref="UnityRayTracer"/> instance. </returns>
-        public static UnityRayTracer Get()
-        {
-            return instance;
         }
 
         /// <summary>
@@ -461,8 +459,8 @@ namespace _Project.Ray_Tracer.Scripts
         public IEnumerator RenderImage()
         {
             AccelerationPrep();
+            OnProgressUpdate?.Invoke(0);
             
-            RenderedImageWindow renderedImageWindow = UIManager.Get().RenderedImageWindow;
             scene = rtSceneManager.Scene;
             camera = scene.Camera;
 
@@ -522,7 +520,7 @@ namespace _Project.Ray_Tracer.Scripts
                 if (100 * y / height > percentage) // Update only when the percentage changes to limit yields.
                 {
                     percentage = 100 * y / height;
-                    renderedImageWindow.UpdateProgressBar(percentage);
+                    OnProgressUpdate?.Invoke(percentage);
                     yield return null; // yield to update UI and give the ability to cancel
                 }
             }
@@ -661,7 +659,8 @@ namespace _Project.Ray_Tracer.Scripts
 
         private void Awake()
         {
-            instance = this;
+            // make this object unique
+            if (!MakeUnique(this)) return;
             rayTracerLayer = LayerMask.GetMask("Ray Tracer Objects");
             AccelerationAwake();
         }
@@ -669,7 +668,6 @@ namespace _Project.Ray_Tracer.Scripts
         private void Start()
         {
             rtSceneManager = RTSceneManager.Get();
-            Camera.main.backgroundColor = backgroundColor;
         }
     }
 }

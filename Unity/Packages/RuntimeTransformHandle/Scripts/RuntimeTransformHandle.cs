@@ -42,6 +42,8 @@ namespace RuntimeHandle
 
         void Start()
         {
+            
+            
             if (handleCamera == null)
                 handleCamera = Camera.main;
 

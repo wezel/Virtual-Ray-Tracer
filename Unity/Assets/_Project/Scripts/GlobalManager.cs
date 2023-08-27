@@ -19,20 +19,16 @@ namespace _Project.Scripts
     /// <summary>
     /// Manages the application in general.
     /// </summary>
-    public class GlobalManager : MonoBehaviour
+    public class GlobalManager : Unique<GlobalManager>
     {
+        
+ 
         private Dictionary<CursorType, Texture2D> cursorTextures = new Dictionary<CursorType, Texture2D>();
 
         // TODO add a key library here So keys can be remapped. GameObjects can check for these instead of the actual keys
-    
-        /// <summary>
-        /// The cursor texture used when dragging certain UI components.
-        /// </summary>
-        private static GlobalManager instance = null;
-
-        public bool FPSEnabled = false;
+        
         public bool CheatMode = false;
-
+        
         public static bool TutorialExpanded = true;
         public static int TutorialPoints = 0;
         public static int ObjectsCreated = 0;
@@ -43,15 +39,6 @@ namespace _Project.Scripts
         
         // Badges are fine here
         public List<Badge> Badges;
-
-        /// <summary>
-        /// Get the current <see cref="GlobalManager"/> instance.
-        /// </summary>
-        /// <returns> The current <see cref="GlobalManager"/> instance. </returns>
-        public static GlobalManager Get()
-        {
-            return instance;
-        }
 
         /// <summary>
         /// Set the cursor texture to <see cref="DragCursor"/>.
@@ -65,7 +52,7 @@ namespace _Project.Scripts
             Vector2 cursorOffset = new Vector2(cursorTexture.width / 2.0f, cursorTexture.height / 2.0f);
             Cursor.SetCursor(cursorTexture, cursorOffset, CursorMode.Auto);
         }
-
+        
         /// <summary>
         /// Reset the cursor texture to the default.
         /// </summary>
@@ -82,14 +69,14 @@ namespace _Project.Scripts
             foreach (var texture in textures) 
                 if (Enum.TryParse(texture.name, out CursorType type)) 
                     cursorTextures.Add(type, (Texture2D) texture);
+            
         }
 
         private void Awake()
         {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-
-#if true
+            if(!MakeUnique(this)) return;
+            DontDestroyOnLoad(this);
+            
             int required = 0, optional = 0;
             foreach (Tasks tasks in TutorialTasks)
             {
@@ -97,7 +84,6 @@ namespace _Project.Scripts
                 optional += tasks.GetOptionalTasksPoints();
             }
             Debug.Log("Total required points = " + required + ". Total optional points = " + optional + ". Total points = " + (required + optional));
-#endif
         }
     }
 }

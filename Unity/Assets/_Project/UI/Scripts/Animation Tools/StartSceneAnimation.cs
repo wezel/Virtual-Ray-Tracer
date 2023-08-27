@@ -15,8 +15,6 @@ namespace _Project.UI.Scripts.Animation_Tools
     /// </summary>
     public class StartSceneAnimation : MonoBehaviour
     {
-        [SerializeField]
-        private CameraController cameraController;
 
         [SerializeField] 
         private List<RTMesh> objects;
@@ -27,14 +25,14 @@ namespace _Project.UI.Scripts.Animation_Tools
         private int currentLight;
 
         private Transform cameraTransform;
+        private Transform targetTransform;
     
         private bool positive = true;
     
         [SerializeField]
         private float angle;
     
-        [SerializeField]
-        private Transform target;
+        
         [SerializeField]
         private float rotationSpeed;
         [SerializeField]
@@ -66,7 +64,9 @@ namespace _Project.UI.Scripts.Animation_Tools
         /// </summary>
         public void Start()
         {
-            cameraTransform = cameraController.transform;
+            Camera camera = Camera.main;
+            cameraTransform = camera.transform;
+            targetTransform = camera.GetComponent<CameraController>().Target.transform;
             angle = cameraTransform.eulerAngles.y;
             minAngle = angle - minAngle;
             maxAngle = angle + maxAngle;
@@ -81,10 +81,11 @@ namespace _Project.UI.Scripts.Animation_Tools
             rayTypesEnabled = 0;
 
             // Store the distance to the target and camera rotation.
-            distance = Vector3.Distance(cameraTransform.position, target.position);
+            Vector3 position = targetTransform.position;
+            distance = Vector3.Distance(cameraTransform.position, position);
 
             // Calculate the initial position based on the distance.
-            cameraTransform.position = target.position - (cameraTransform.rotation * Vector3.forward * distance);
+            cameraTransform.position = position - (cameraTransform.rotation * Vector3.forward * distance);
         }
 
         /// <summary>
@@ -100,9 +101,10 @@ namespace _Project.UI.Scripts.Animation_Tools
             // Linearly interpolate camera rotation to desired rotation. I have no idea why, but just setting the
             // rotation to desired does not work (its not normalization). Lerp seems to produce a quaternion with the
             // signs of the coordinates flipped.
-            cameraTransform.rotation = Quaternion.Lerp(cameraTransform.rotation, desiredRotation, 1.0f);
-            
-            cameraTransform.position = target.position - cameraTransform.rotation * Vector3.forward * distance;
+            Quaternion rotation = cameraTransform.rotation;
+            rotation = Quaternion.Lerp(rotation, desiredRotation, 1.0f);
+            cameraTransform.rotation = rotation;
+            cameraTransform.position = targetTransform.position - rotation * Vector3.forward * distance;
         }
 
         /// <summary>

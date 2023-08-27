@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using _Project.Ray_Tracer.Scripts.RT_Ray;
 using _Project.Ray_Tracer.Scripts.Utility;
+using _Project.Scripts;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEditor;
@@ -10,9 +11,28 @@ namespace _Project.Ray_Tracer.Scripts
     /// <summary>
     /// Manages the visible rays in the Unity scene. Gets new rays from the ray tracer each frame and draws them.
     /// </summary>
-    public class RayManager : MonoBehaviour
+    public class RayManager : Unique<RayManager>
     {
         [Header("Render Settings")]
+        
+        [SerializeField]
+        private bool showRays = true;
+
+        /// <summary>
+        /// Whether this ray manager hides all rays it would normally draw. When this is <c>false</c>, all ray drawing
+        /// and animation code will be skipped.
+        /// </summary>
+        public bool ShowRays
+        {
+            get => showRays;
+            set
+            {
+                if (value == showRays) return;
+                showRays = value;
+                if (!value) rayObjectPool.DeactivateAll();
+                else redraw = true;
+            }
+        }
 
         [SerializeField]
         private bool hideNegligibleRays;
@@ -181,13 +201,6 @@ namespace _Project.Ray_Tracer.Scripts
             set { infiniteRayDrawLength = value; }
         }
 
-        [SerializeField]
-        private RayObject rayPrefab;
-        [SerializeField]
-        private RayObject areaRayPrefab;
-        [Range(0, 1024)]
-        private int initialRayPoolSize = 64;
-
         private bool hideNoHitRays = false;
         /// <summary>
         /// Whether this ray manager hides rays that do not intersect an object.
@@ -202,46 +215,6 @@ namespace _Project.Ray_Tracer.Scripts
                 redraw = true;
             }
         }
-
-        [SerializeField]
-        private bool showRays = true;
-
-        /// <summary>
-        /// Whether this ray manager hides all rays it would normally draw. When this is <c>false</c>, all ray drawing
-        /// and animation code will be skipped.
-        /// </summary>
-        public bool ShowRays
-        {
-            get => showRays;
-            set
-            {
-                if (value == showRays) return;
-                showRays = value;
-                if (!value) rayObjectPool.DeactivateAll();
-                else redraw = true;
-            }
-        }
-
-        /// <summary>
-        /// Whether this ray manager should reload the rays' materials.
-        /// </summary>            
-        private void ReloadMaterials() => rayObjectPool.ReloadMaterials();
-
-        // TODO this can be changed to a resource as well removing the need to assign them all here
-        [SerializeField] private Material noHitMaterial;
-        [SerializeField] private Material reflectMaterial;
-        [SerializeField] private Material reflectMaterialTransparent;
-        [SerializeField] private Material refractMaterial;
-        [SerializeField] private Material refractMaterialTransparent;
-        [SerializeField] private Material normalMaterial;
-        [SerializeField] private Material normalMaterialTransparent;
-        [SerializeField] private Material shadowMaterial;
-        [SerializeField] private Material shadowMaterialTransparent;
-        [SerializeField] private Material lightMaterial;
-        [SerializeField] private Material lightMaterialTransparent;
-        [SerializeField] private Material colorRayMaterial;
-        [SerializeField] private Material colorRayMaterialTransparent;
-        [SerializeField] private Material errorMaterial;
 
         [Header("Animation Settings")]
 
@@ -311,9 +284,38 @@ namespace _Project.Ray_Tracer.Scripts
             get { return speed; }
             set { speed = value; }
         }
+        
+        [Header("Object References")]
+        
+        [SerializeField]
+        private RayObject rayPrefab;
+        [SerializeField]
+        private RayObject areaRayPrefab;
+        [Range(0, 1024)]
+        private int initialRayPoolSize = 64;
 
-        private static RayManager instance = null;
+        /// <summary>
+        /// Whether this ray manager should reload the rays' materials.
+        /// </summary>            
+        private void ReloadMaterials() => rayObjectPool.ReloadMaterials();
 
+        // TODO this can be changed to a resource as well removing the need to assign them all here
+        [SerializeField] private Material noHitMaterial;
+        [SerializeField] private Material reflectMaterial;
+        [SerializeField] private Material reflectMaterialTransparent;
+        [SerializeField] private Material refractMaterial;
+        [SerializeField] private Material refractMaterialTransparent;
+        [SerializeField] private Material normalMaterial;
+        [SerializeField] private Material normalMaterialTransparent;
+        [SerializeField] private Material shadowMaterial;
+        [SerializeField] private Material shadowMaterialTransparent;
+        [SerializeField] private Material lightMaterial;
+        [SerializeField] private Material lightMaterialTransparent;
+        [SerializeField] private Material colorRayMaterial;
+        [SerializeField] private Material colorRayMaterialTransparent;
+        [SerializeField] private Material errorMaterial;
+        
+        
         private List<TreeNode<RTRay>> rays;
         private RayObjectPool rayObjectPool;
 
@@ -340,15 +342,7 @@ namespace _Project.Ray_Tracer.Scripts
         //        if (value) redraw = true;
         //    }
         //}
-
-        /// <summary>
-        /// Get the current <see cref="RayManager"/> instance.
-        /// </summary>
-        /// <returns> The current <see cref="RayManager"/> instance. </returns>
-        public static RayManager Get()
-        {
-            return instance;
-        }
+        
 
         /// <summary>
         /// Get the colors of the root rays managed by this <see cref="RayManager"/>.
@@ -516,7 +510,8 @@ namespace _Project.Ray_Tracer.Scripts
 
         private void Awake()
         {
-            instance = this;
+            // make this object unique
+            if (!MakeUnique(this)) return;
         }
 
         private void Start()
@@ -531,7 +526,6 @@ namespace _Project.Ray_Tracer.Scripts
 
             rtSceneManager.Scene.OnSceneChanged += () => { UpdateRays(); };
             rayTracer.OnRayTracerChanged += () => { UpdateRays(); };
-            UpdateRays();   // This is needed for level-changes.
         }
 
         private bool redraw = true;

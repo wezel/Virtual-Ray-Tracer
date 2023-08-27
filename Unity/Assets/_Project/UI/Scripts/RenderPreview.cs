@@ -98,14 +98,14 @@ namespace _Project.UI.Scripts
                 expandCollapseImage.sprite = collapsedIcon;
                 windowSize.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, windowSize.rect.width / 3);
                 windowSize.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, windowSize.rect.height / 3);
-                UIManager.Get().RemoveEscapable(ExpandCollapse);
+                Overlay.Get().RemoveEscapable(ExpandCollapse);
             }
             else
             {
                 expandCollapseImage.sprite = expandedIcon;
                 windowSize.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, windowSize.rect.width * 3);
                 windowSize.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, windowSize.rect.height * 3);
-                UIManager.Get().AddEscapable(ExpandCollapse);
+                Overlay.Get().AddEscapable(ExpandCollapse);
             }
 
             UpdatePreview();
@@ -122,12 +122,14 @@ namespace _Project.UI.Scripts
             }
         }
 
-        private void OnDisable()
-        {
-            if(expanded)
-                ExpandCollapse();
-        }
+        // TODO remove it code keeps working
+        // private void OnDisable()
+        // {
+        //     if(expanded)
+        //         ExpandCollapse();
+        // }
 
+        // TODO move to unity editor instead of code
         private void Awake()
         {
             expandCollapseButton.onClick.AddListener(ExpandCollapse);
@@ -141,6 +143,7 @@ namespace _Project.UI.Scripts
             
             rayManager = RayManager.Get();
 
+            // TODO serialized field? 
             windowSize = GetComponent<RectTransform>();
 
             hoverImage.enabled = false;
@@ -149,6 +152,7 @@ namespace _Project.UI.Scripts
 
         private void Update()
         {
+            // TODO change to event triggered by input manager
             if (!PreviewWindowHovered && Input.GetMouseButtonDown(0) && expanded) ExpandCollapse();
 
             if (ImageHovered)
@@ -180,6 +184,7 @@ namespace _Project.UI.Scripts
 
                 hoverImage.enabled = true;
 
+                // TODO change to event triggered by input manager
                 // We can click to (de)select the hovered pixel.
                 if (Input.GetMouseButtonDown(0))
                 {

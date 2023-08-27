@@ -1,8 +1,6 @@
-using System.Collections;
 using _Project.Ray_Tracer.Scripts;
 using _Project.Scripts;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace _Project.UI.Scripts.Control_Panel
@@ -16,7 +14,6 @@ namespace _Project.UI.Scripts.Control_Panel
     {
         private UnityRayTracer rayTracer;
         private RayManager rayManager;
-        private UIManager uiManager;
         private RTSceneManager rtSceneManager;
 
         [SerializeField]
@@ -87,7 +84,6 @@ namespace _Project.UI.Scripts.Control_Panel
             gameObject.SetActive(true);
             rayTracer = UnityRayTracer.Get();
             rayManager = RayManager.Get();
-            uiManager = UIManager.Get();
             rtSceneManager = RTSceneManager.Get();
 
             renderShadowsEdit.IsOn = rayTracer.RenderShadows;
@@ -126,24 +122,14 @@ namespace _Project.UI.Scripts.Control_Panel
             gameObject.SetActive(false);
         }
 
-        private IEnumerator RunRenderImage()
-        {
-            yield return new WaitForFixedUpdate();
-            yield return rayTracer.RenderImage();
-            uiManager.RenderedImageWindow.SetImageTexture(rayTracer.Image);
-            yield return null;
-        }
-
         private void RenderImage()
         {
-            uiManager.RenderedImageWindow.Show();
-            uiManager.RenderedImageWindow.SetLoading();
-            StartCoroutine(RunRenderImage());
+            Overlay.Get().RenderedImageWindow.RenderShow();
         }
 
         private void ToggleImage()
         {
-            uiManager.RenderedImageWindow.Toggle();
+            Overlay.Get().RenderedImageWindow.Toggle();
         }
 
         // TODO overhaul object order in levels and dependencies. It's becoming a bit difficult to get the right order 

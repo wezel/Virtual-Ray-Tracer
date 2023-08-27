@@ -1,4 +1,5 @@
 using System;
+using _Project.Scripts;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -9,7 +10,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Camera
     /// representation of the camera and the projected screen.
     /// </summary>
     [RequireComponent(typeof(CameraCollisionMesh))]
-    public class RTCamera : MonoBehaviour
+    public class RTCamera : Unique<RTCamera>
     {
         public delegate void CameraChanged();
         /// <summary>
@@ -169,6 +170,12 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Camera
             Color = defaultColor;
         }
 
+        private void Awake()
+        {
+            // make this object unique
+            if (!MakeUnique(this)) return;
+        }
+        
         private void Start()
         {
             frustumLine1 = transform.Find("Frustum Line 1").GetComponent<LineRenderer>();

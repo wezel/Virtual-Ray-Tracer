@@ -22,26 +22,6 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
         /// </summary>
         public event SceneChanged OnSceneChanged;
 
-        private RTCamera camera;
-        /// <summary>
-        /// This ray tracer scene's camera. There can only be one camera in a scene.
-        /// </summary>
-        public RTCamera Camera
-        {
-            get { return camera; }
-            set
-            {
-                if (camera == value) return;
-
-                if (camera != null)
-                    camera.OnCameraChanged -= SceneObjectChanged;
-
-                camera = value;
-                camera.OnCameraChanged += SceneObjectChanged;
-                OnSceneChanged?.Invoke();
-            }
-        }
-
         private bool enablePointLights = true;
         public bool EnablePointLights
         {
@@ -87,6 +67,25 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
                     areaLight.gameObject.SetActive(value);
 
                 OnSceneChanged?.Invoke();
+            }
+        }
+        
+        private RTCamera camera;
+        /// <summary>
+        /// This ray tracer scene's camera. There can only be one camera in a scene.
+        /// </summary>
+        public RTCamera Camera
+        {
+            get { return camera; }
+            private set
+            {
+                if (camera == value) return;
+
+                if (camera != null)
+                    camera.OnCameraChanged -= SceneObjectChanged;
+
+                camera = value;
+                camera.OnCameraChanged += SceneObjectChanged;
             }
         }
 
@@ -135,11 +134,16 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
         /// <summary>
         /// This ray tracers scene's list of meshes.
         /// </summary>
-        public List<RTMesh> Meshes { get; }
+        public List<RTMesh> Meshes { get; private set; }
 
-        public RTScene(RTCamera camera) : this(camera, new List<RTPointLight>(), new List<RTSpotLight>(), new List<RTAreaLight>(), new List<RTMesh>()) { }
+        public RTScene() : this(null, new List<RTPointLight>(), new List<RTSpotLight>(), new List<RTAreaLight>(), new List<RTMesh>()) { }
 
         public RTScene(RTCamera camera, List<RTPointLight> pointlights, List<RTSpotLight> spotlights, List<RTAreaLight> arealights, List<RTMesh> meshes)
+        {
+            Reload(camera, pointlights, spotlights, arealights, meshes);
+        }
+
+        public void Reload(RTCamera camera, List<RTPointLight> pointlights, List<RTSpotLight> spotlights, List<RTAreaLight> arealights, List<RTMesh> meshes)
         {
             Camera = camera;
             
@@ -158,6 +162,8 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             Meshes = meshes;
             foreach (var mesh in meshes)
                 mesh.OnMeshChanged.AddListener(SceneObjectChanged);
+            
+            OnSceneChanged?.Invoke();
         }
 
         /// <summary>

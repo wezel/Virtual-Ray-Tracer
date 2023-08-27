@@ -1,3 +1,4 @@
+using _Project.Scripts;
 using UnityEngine;
 
 namespace _Project.UI.Scripts.Tooltips
@@ -5,21 +6,11 @@ namespace _Project.UI.Scripts.Tooltips
     /// <summary>
     /// Manages tooltips.
     /// </summary>
-    public class TooltipManager : MonoBehaviour
+    public class TooltipManager : Unique<TooltipManager>
     {
-        private static TooltipManager instance = null;
         
         [SerializeField]
         private Tooltip tooltip;
-
-        /// <summary>
-        /// Get the current <see cref="TooltipManager"/> instance.
-        /// </summary>
-        /// <returns> The current <see cref="TooltipManager"/> instance. </returns>
-        public static TooltipManager Get()
-        {
-            return instance;
-        }
 
         /// <summary>
         /// Show the tooltip window.
@@ -46,7 +37,8 @@ namespace _Project.UI.Scripts.Tooltips
 
         private void Awake()
         {
-            instance = this;
+            // make this object unique
+            if (!MakeUnique(this)) return;
         }
     }
 }

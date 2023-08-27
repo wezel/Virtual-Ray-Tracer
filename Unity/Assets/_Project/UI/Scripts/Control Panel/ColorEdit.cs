@@ -102,13 +102,13 @@ namespace _Project.UI.Scripts.Control_Panel
         {
             colorPicker.AssignColor(Color);
             colorPicker.gameObject.SetActive(true);
-            UIManager.Get().AddEscapable(CloseColorPicker);
+            Overlay.Get().AddEscapable(CloseColorPicker);
         }
 
         private void CloseColorPicker()
         {
             colorPicker.gameObject.SetActive(false);
-            UIManager.Get().RemoveEscapable(CloseColorPicker);
+            Overlay.Get().RemoveEscapable(CloseColorPicker);
         }
 
         private void Awake()

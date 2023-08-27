@@ -30,7 +30,7 @@ public class BadgesPanel : MonoBehaviour
         if (GlobalManager.EasterEggFound != 0) badgePrefabs[badgePrefabs.Count - 1].gameObject.SetActive(true);
         
         gameObject.SetActive(true);
-        UIManager.Get().AddEscapable(Hide);
+        Overlay.Get().AddEscapable(Hide);
     }
 
     /// <summary>
@@ -39,7 +39,7 @@ public class BadgesPanel : MonoBehaviour
     public void Hide()
     {
         gameObject.SetActive(false);
-        UIManager.Get().RemoveEscapable(Hide);
+        Overlay.Get().RemoveEscapable(Hide);
     }
 
     /// <summary>

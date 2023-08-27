@@ -1,5 +1,6 @@
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using _Project.UI.Scripts.Tutorial;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -21,9 +22,7 @@ namespace _Project.UI.Scripts.Main_Menu
         [SerializeField]
         private Button exitButton;
 
-        private List<Button> levelButtons = new List<Button>();
-
-        private MainMenu mainMenu;
+        private List<Button> levelButtons = new();
 
         /// <summary>
         /// Show the levels panel.
@@ -32,10 +31,10 @@ namespace _Project.UI.Scripts.Main_Menu
         {
             // make levels enabled/disabled
             for (int i = 0; i < levelButtons.Count; i++)
-                levelButtons[i].interactable = Tutorial.TutorialManager.CanLevelBeLoaded(i + 1);
+                levelButtons[i].interactable = TutorialManager.Get().CanLevelBeLoaded(i + 1);
 
             gameObject.SetActive(true);
-            UIManager.Get().AddEscapable(Hide);
+            Overlay.Get().AddEscapable(Hide);
         }
 
         /// <summary>
@@ -43,9 +42,11 @@ namespace _Project.UI.Scripts.Main_Menu
         /// </summary>
         public void Hide()
         {
+            //TODO there exists 2 versions of this 1 is in main base that one gets destroyed
+            Overlay.Get().RemoveEscapable(Hide);
             gameObject.SetActive(false);
-            UIManager.Get().RemoveEscapable(Hide);
         }
+
 
         /// <summary>
         /// Toggle the levels panel. If the levels panel is hidden it will now be shown and vice versa.
@@ -58,17 +59,9 @@ namespace _Project.UI.Scripts.Main_Menu
                 Show();
         }
 
-        private void OnButtonClicked(Button clickedButton)
-        {
-            // Hide main menu and loat the scene
-            mainMenu.Toggle();
-            SceneLoader.Get().LoadScene(int.Parse(clickedButton.name));
-        }
-
         private void Awake()
         {
             exitButton.onClick.AddListener(Hide);
-            mainMenu = gameObject.GetComponentInParent<MainMenu>();
 
             // Set up a button for each scene. We start the index at 1 because we skip the start and initialize scene.
             int sceneCount = SceneManager.sceneCountInBuildSettings;
@@ -77,9 +70,9 @@ namespace _Project.UI.Scripts.Main_Menu
                 Button levelButton = Instantiate(levelsPrefab, content.transform);
                 levelButton.name = i.ToString();
 
-                levelButton.interactable = Tutorial.TutorialManager.CanLevelBeLoaded(i);
+                levelButton.interactable = TutorialManager.Get().CanLevelBeLoaded(i);
                 levelButton.GetComponentInChildren<TextMeshProUGUI>().text = i + ". " + System.IO.Path.GetFileNameWithoutExtension(SceneUtility.GetScenePathByBuildIndex(i));
-                levelButton.onClick.AddListener(() => OnButtonClicked(levelButton));
+                levelButton.onClick.AddListener(() => LevelManager.Get().LoadLevel(int.Parse(levelButton.name)));
                 levelButtons.Add(levelButton);
             }
         }

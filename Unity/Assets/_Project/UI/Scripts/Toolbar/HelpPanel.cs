@@ -18,7 +18,7 @@ namespace _Project.UI.Scripts.Toolbar
         public void Show()
         {
             gameObject.SetActive(true);
-            UIManager.Get().AddEscapable(Hide);
+            Overlay.Get().AddEscapable(Hide);
         }
 
         /// <summary>
@@ -27,7 +27,7 @@ namespace _Project.UI.Scripts.Toolbar
         public void Hide()
         {
             gameObject.SetActive(false);
-            UIManager.Get().RemoveEscapable(Hide);
+            Overlay.Get().RemoveEscapable(Hide);
         }
         /// <summary>
         /// Toggle the visibility of the help panel. If the help panel is hidden it will now be shown and vice versa.

@@ -1,6 +1,7 @@
+using System.Collections;
 using System.IO;
+using _Project.Ray_Tracer.Scripts;
 using TMPro;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -28,9 +29,9 @@ namespace _Project.UI.Scripts.Render_Image_Window
         [SerializeField]
         private TextMeshProUGUI imageSavedText;
         [SerializeField]
-        private GameObject progressBar;
+        private RectTransform progressBar;
         [SerializeField]
-        private GameObject progressFill;
+        private RectTransform progressFill;
         [SerializeField]
         private TextMeshProUGUI taskProgress;
 
@@ -42,7 +43,7 @@ namespace _Project.UI.Scripts.Render_Image_Window
         /// <see cref="Show"/> should be called afterwards.
         /// </summary>
         /// <param name="texture"> The new texture for the displayed image. </param>
-        public void SetImageTexture(Texture2D texture)
+        private void SetImageTexture(Texture2D texture)
         {
             // Textures and sprites are not garbage collected. Provided we are the only users of these textures and
             // sprites destroying them here is fine.
@@ -78,8 +79,27 @@ namespace _Project.UI.Scripts.Render_Image_Window
                 texture.height * pixelsPerUnit);
         }
 
-        public void SetLoading()
+        private void UpdateProgressBar(int percentage)
         {
+            progressFill.sizeDelta = 
+                new Vector2(progressBar.rect.width / 100 * percentage, 0);
+            taskProgress.text = percentage.ToString() + "%";
+        }
+        
+        
+        private IEnumerator RunRenderImage()
+        {
+            // TODO remove this line completely if no issues arise
+            //yield return new WaitForFixedUpdate();
+            yield return UnityRayTracer.Get().RenderImage();
+            Overlay.Get().RenderedImageWindow.SetImageTexture(UnityRayTracer.Get().Image);
+            yield return null;
+        }
+
+        public void RenderShow()
+        {
+            Show();
+            
             // Textures and sprites are not garbage collected. Provided we are the only users of these textures and
             // sprites destroying them here is fine.
             if (texture != null)
@@ -93,16 +113,11 @@ namespace _Project.UI.Scripts.Render_Image_Window
             loading.gameObject.SetActive(true);
             progressFill.GetComponent<RectTransform>().sizeDelta = new Vector2(0, 0);
             taskProgress.text = "0%";
-            progressBar.SetActive(true);
+            progressBar.gameObject.SetActive(true);
             saveImageButton.gameObject.SetActive(false);
             imageSavedText.gameObject.SetActive(false);
-        }
-
-        public void UpdateProgressBar(int percentage)
-        {
-            progressFill.GetComponent<RectTransform>().sizeDelta = 
-                new Vector2(progressBar.GetComponent<RectTransform>().rect.width / 100 * percentage, 0);
-            taskProgress.text = percentage.ToString() + "%";
+            
+            StartCoroutine(RunRenderImage());
         }
 
         /// <summary>
@@ -111,8 +126,7 @@ namespace _Project.UI.Scripts.Render_Image_Window
         public void Show()
         {
             gameObject.SetActive(true);
-            UIManager.Get().EnableBlocker();
-            UIManager.Get().AddEscapable(closeButton.onClick.Invoke);
+            Overlay.Get().ShowBlocker(closeButton.onClick.Invoke);
         }
 
         /// <summary>
@@ -127,8 +141,7 @@ namespace _Project.UI.Scripts.Render_Image_Window
                 empty.gameObject.SetActive(true);
             }
 
-            UIManager.Get().DisableBlocker();
-            UIManager.Get().RemoveEscapable(closeButton.onClick.Invoke);
+            Overlay.Get().HideBlocker(closeButton.onClick.Invoke);
             gameObject.SetActive(false);
 
         }
@@ -170,6 +183,11 @@ namespace _Project.UI.Scripts.Render_Image_Window
             progressBar.gameObject.SetActive(false);
             saveImageButton.gameObject.SetActive(false);
             imageSavedText.gameObject.SetActive(false);
+        }
+
+        private void Start()
+        {
+            UnityRayTracer.Get().OnProgressUpdate += UpdateProgressBar;
         }
     }
 }

@@ -82,6 +82,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Camera
         private void OnDestroy()
         {
             DestroyLines();
+            rayTracerImage.OnImageChanged -= UpdatePreview;
         }
 
         /// <summary>

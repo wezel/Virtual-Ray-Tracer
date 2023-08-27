@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using _Project.Ray_Tracer.Scripts.RT_Scene;
 using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Point_Light;
@@ -23,7 +24,7 @@ namespace _Project.Ray_Tracer.Scripts
     /// <see cref="RTCamera"/>, <see cref="RTMesh"/> and <see cref="RTPointLight"/> components and construct an
     /// <see cref="RTScene"/> from them.
     /// </summary>
-    public class RTSceneManager : MonoBehaviour
+    public class RTSceneManager : Unique<RTSceneManager>
     {
         /// <summary>
         /// The scene this scene manager manages.
@@ -52,7 +53,7 @@ namespace _Project.Ray_Tracer.Scripts
 
         [Header("UI")]
         [SerializeField] private Color SelectionColor;
-        [SerializeField] private ControlPanel ControlPanel;
+        //[SerializeField] private ControlPanel ControlPanel;
         [SerializeField] private TMP_Dropdown HandleTypeDropdown;
         [SerializeField] private TMP_Dropdown HandleSpaceDropdown;
 
@@ -74,8 +75,7 @@ namespace _Project.Ray_Tracer.Scripts
         [Serializable]
         public class Event : UnityEvent { };
         public Event OnTranslationMode, OnRotationMode, OnScaleMode, OnLocalSpace, OnGlobalSpace, OnDeselect, OnObjectDeleted;
-
-        private static RTSceneManager instance = null;
+        
         private Selection selection = new Selection();
         private Transform previousTransform;
 
@@ -207,15 +207,6 @@ namespace _Project.Ray_Tracer.Scripts
         }
 
         /// <summary>
-        /// Get the current SceneManager instance.
-        /// </summary>
-        /// <returns> The current SceneManager instance. </returns>
-        public static RTSceneManager Get()
-        {
-            return instance;
-        }
-
-        /// <summary>
         /// Make <paramref name="newSelection"/> the selected object. Nothing is done if <paramref name="newSelection"/> is
         /// already the selected object or if we try to select an object that is has no <see cref="RTCamera"/>,
         /// <see cref="RTLight"/> or <see cref="RTMesh"/> component.
@@ -245,20 +236,21 @@ namespace _Project.Ray_Tracer.Scripts
             // Enable UI for the new selected object and outline it.
             if (selection.Type == typeof(RTCamera))
             {
-                ControlPanel.ShowCameraProperties(selection.Camera);
+                // TODO change to event trigger
+                UIBase.Get().ControlPanel.ShowCameraProperties(selection.Camera);
                 selection.Camera.Color = SelectionColor;
                 selection.Camera.OnCameraSelected?.Invoke();
             }
             else if (selection.Type.BaseType == typeof(RTLight))
             {
-                ControlPanel.ShowLightProperties(selection.Light);
+                UIBase.Get().ControlPanel.ShowLightProperties(selection.Light);
                 selection.Light.Higlight(SelectionColor);
                 previousTransform = newSelection;
                 selection.Light.OnLightSelected?.Invoke();
             }
             else if (selection.Type == typeof(RTMesh))
             {
-                ControlPanel.ShowMeshProperties(selection.Mesh);
+                UIBase.Get().ControlPanel.ShowMeshProperties(selection.Mesh);
                 selection.Mesh.Outline.OutlineColor = SelectionColor;
                 selection.Mesh.Outline.enabled = true;
                 previousTransform = newSelection;
@@ -267,8 +259,15 @@ namespace _Project.Ray_Tracer.Scripts
 
             transformHandle.target = selection.Transform;
             SetHandleType(transformHandle.type);
+            StartCoroutine(ActivateHandle());
+            Overlay.Get().AddEscapable(DeselectAndInvoke);
+        }
+
+        private IEnumerator ActivateHandle()
+        {
+            yield return new WaitForFixedUpdate();
             transformHandle.gameObject.SetActive(true);
-            UIManager.Get().AddEscapable(DeselectAndInvoke);
+            yield return null;
         }
         
         public bool HasSelection()
@@ -281,7 +280,7 @@ namespace _Project.Ray_Tracer.Scripts
         /// </summary>
         public void Deselect()
         {
-            ControlPanel.ShowRayTracerProperties();
+            UIBase.Get().ControlPanel.ShowRayTracerProperties();
             
             if (selection.Empty)
                 return;
@@ -297,7 +296,7 @@ namespace _Project.Ray_Tracer.Scripts
             selection = new Selection();
 
             transformHandle.gameObject.SetActive(false);
-            UIManager.Get().RemoveEscapable(DeselectAndInvoke);
+            Overlay.Get().RemoveEscapable(DeselectAndInvoke);
         }
 
         public void DeselectAndInvoke()
@@ -528,7 +527,7 @@ namespace _Project.Ray_Tracer.Scripts
                     else
                     {
                         Deselect();
-                        ControlPanel.ShowEmptyProperties();
+                        UIBase.Get().ControlPanel.ShowEmptyProperties();
                         GlobalManager.EasterEggFound = 1;
                     }
                     break;
@@ -548,16 +547,8 @@ namespace _Project.Ray_Tracer.Scripts
                 sceneLight.Shadows = shadowType;
         }
 
-        private void Awake()
+        public void LoadScene()
         {
-            instance = this;
-            Image = new RTImage(1, 1);
-
-            transformHandle.gameObject.SetActive(false);
-
-            HandleTypeDropdown.onValueChanged.AddListener(type => SetHandleType((HandleType)type));
-            HandleSpaceDropdown.onValueChanged.AddListener(space => SetHandleSpace((HandleSpace)space));
-
             // Find the first camera and all lights and meshes in the Unity scene.
             RTCamera camera = FindObjectOfType<RTCamera>();
             List<RTPointLight> pointLights = new List<RTPointLight>(FindObjectsOfType<RTPointLight>());
@@ -566,12 +557,33 @@ namespace _Project.Ray_Tracer.Scripts
             List<RTMesh> meshes = new List<RTMesh>(FindObjectsOfType<RTMesh>());
 
             // Construct the ray tracer scene with the found objects.
-            Scene = new RTScene(camera, pointLights, spotLights, areaLights, meshes);
+            Scene.Reload(camera, pointLights, spotLights, areaLights, meshes);
+        }
+
+        private void Awake()
+        {
+            
+            // make this object unique
+            if(!MakeUnique(this)) return;
+            
+            Image = new RTImage(1, 1);
+            Scene = new RTScene();
+
+            // TODO could be moved to start?
+            transformHandle.gameObject.SetActive(false);
+
+            
+            // TODO make delegate invoke?
+            HandleTypeDropdown.onValueChanged.AddListener(type => SetHandleType((HandleType)type));
+            HandleSpaceDropdown.onValueChanged.AddListener(space => SetHandleSpace((HandleSpace)space));
         }
 
         private void Start()
         {
-            ControlPanel.Subscribe(OnEvent);
+            LevelManager.Get().OnLevelLoaded += LoadScene;
+            
+            // TODO make this code instead
+            UIBase.Get().ControlPanel.Subscribe(OnEvent);
         }
 
         

@@ -2,6 +2,7 @@ using _Project.Ray_Tracer.Scripts;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using System;
+using _Project.UI.Scripts;
 using UnityEngine.Events;
 
 namespace _Project.Scripts
@@ -10,7 +11,7 @@ namespace _Project.Scripts
     /// A camera controller that mimics the controls and behavior of the Unity editor camera. Adapted from
     /// http://wiki.unity3d.com/index.php?title=MouseOrbitZoom.
     /// </summary>
-    public class CameraController : MonoBehaviour
+    public class CameraController : Unique<CameraController>
     {
         [SerializeField]
         private RectTransform inputBlocker;
@@ -28,8 +29,11 @@ namespace _Project.Scripts
 
         [Serializable]
         public class Event : UnityEvent { }
-        public Event onPanChanged, OnOrbitChanged, OnZoomChanged;
+        public Event OnPanChanged, OnOrbitChanged, OnZoomChanged;
 
+        private Vector3 defaultPosition;
+        private Vector3 defaultOrientation;
+        
         private float xDegrees = 0.0f;
         private float yDegrees = 0.0f;
         private float distance = 0.0f;
@@ -39,32 +43,72 @@ namespace _Project.Scripts
         private bool panning = false;
         private bool mode = false;
 
-        void Start() { Initialize(); }
 
-        void OnEnable() { Initialize(); }
+        void Awake()
+        {
+            // make this object unique
+            if (!MakeUnique(this)) return;
+        }
+
+        private void Start()
+        {
+            LevelManager.Get().OnLevelLoaded += PositionCamera;
+            
+            Camera.main.backgroundColor = UnityRayTracer.Get().BackgroundColor;
+            defaultOrientation = transform.eulerAngles;
+            defaultPosition = Target.position;
+        }
+
+        void PositionCamera()
+        {
+            GameObject camera = GameObject.FindWithTag("DummyCamera");
+            
+            if (camera != null)
+            {
+                Transform cameraTransform = camera.transform;
+                transform.localPosition = cameraTransform.localPosition;
+                transform.localEulerAngles = cameraTransform.localEulerAngles;
+                transform.localScale = cameraTransform.localScale;
+                Target.position = transform.position + (transform.forward * InitialDistance);
+                Destroy(camera);
+                return;
+            }
+
+            distance = InitialDistance;
+            transform.eulerAngles = defaultOrientation;
+            Target.position = defaultPosition;
+            transform.position = Target.position - (transform.forward * InitialDistance);
+
+
+        }
 
         /// <summary>
+        /// TODO deprecated
         /// Initialize this camera controller. Will rotate the camera to look at the provided <see cref="Target"/>. If no
         /// target is provided a new target will be placed <see cref="InitialDistance"/> in front of the camera.
         /// </summary>
-        public void Initialize()
-        {
-            // If there is no target, create a target at the given initial distance from the camera's current viewpoint.
-            if (!Target)
-            {
-                GameObject go = new GameObject("Camera Target");
-                go.transform.position = transform.position + (transform.forward * InitialDistance);
-                Target = go.transform;
-            }
-
-            // Store the distance to the target and camera rotation.
-            distance = Vector3.Distance(transform.position, Target.position);
-            xDegrees = transform.rotation.eulerAngles.y;
-            yDegrees = transform.rotation.eulerAngles.x;
-
-            // Calculate the initial position based on our rotation and the distance to the target.
-            transform.position = Target.position - (transform.rotation * Vector3.forward * distance);
-        }
+        // public void Initialize()
+        // {
+        //     // TODO remove code should not be needed
+        //     // // If there is no target, create a target at the given initial distance from the camera's current viewpoint.
+        //     // if (!Target)
+        //     // {
+        //     //     GameObject go = new GameObject("Camera Target");
+        //     //     go.transform.position = transform.position + (transform.forward * InitialDistance);
+        //     //     Target = go.transform;
+        //     // }
+        //
+        //     // Store the distance to the target and camera rotation.
+        //     Quaternion rotation = transform.rotation;
+        //     Vector3 ourPosition = transform.position;
+        //     Vector3 targetPosition = Target.position;
+        //     distance = Vector3.Distance(ourPosition, targetPosition);
+        //     xDegrees = rotation.eulerAngles.y;
+        //     yDegrees = rotation.eulerAngles.x;
+        //
+        //     // Calculate the initial position based on our rotation and the distance to the target.
+        //     transform.position = targetPosition - (rotation * Vector3.forward * distance);
+        // }
 
         public void SetCursor()
         {
@@ -117,7 +161,7 @@ namespace _Project.Scripts
                 yDistance -= Time.deltaTime * 0.5f;
 
             if (yDistance != 0f || xDistance != 0f)
-                onPanChanged?.Invoke();
+                OnPanChanged?.Invoke();
 
             // we pan by way of transforming the target in screen space.
             // Grab the rotation of the camera so we can move in a pseudo local XY space.
@@ -294,11 +338,13 @@ namespace _Project.Scripts
                 Transform RTCamTransform = RTSceneManager.Get().Scene.Camera.transform;
                 if (transform.position == RTCamTransform.position && transform.eulerAngles == RTCamTransform.eulerAngles)
                 {
+                    
                     flytocam = false;
                     distance = Vector3.Distance(Target.position, RTCamTransform.position);
-                    xDegrees = transform.rotation.eulerAngles.y;
-                    yDegrees = transform.rotation.eulerAngles.x;
-                    Target.position = transform.position + (transform.rotation * Vector3.forward * distance);
+                    Quaternion rotation = transform.rotation;
+                    xDegrees = rotation.eulerAngles.y;
+                    yDegrees = rotation.eulerAngles.x;
+                    Target.position = transform.position + (rotation * Vector3.forward * distance);
                 }
                 else
                     FlyToRTCameraStep();
