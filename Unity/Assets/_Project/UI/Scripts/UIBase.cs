@@ -49,11 +49,8 @@ namespace _Project.UI.Scripts
 
         private void Start()
         {
-            LevelManager.Get().OnLevelLoaded += ReloadUI;
+            LevelManager.Get().OnLevelLoadFinished += ReloadUI;
             InputManager.Get().OnToggleUI += ToggleUI;
-            
-            // TODO make editor reference
-            canvas = GetComponent<Canvas>();
             
             controlPanel.gameObject.SetActive(true);
             controlPanel.ShowRayTracerProperties();

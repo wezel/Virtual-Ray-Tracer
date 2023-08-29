@@ -1,5 +1,5 @@
 using System;
-using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light;
+using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;

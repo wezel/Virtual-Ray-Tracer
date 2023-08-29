@@ -1,12 +1,9 @@
-using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light;
-using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Point_Light;
 using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using _Project.Ray_Tracer.Scripts;
 using _Project.Ray_Tracer.Scripts.RT_Scene;
-using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Spot_Light;
 using System;
 using System.Collections.Generic;
 using UnityEngine.UI;

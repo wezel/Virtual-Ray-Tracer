@@ -1,11 +1,10 @@
 #if UNITY_EDITOR
 
 #endif
-using UnityEngine;
-using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light;
 using System.Collections.Generic;
+using UnityEngine;
 
-namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light
+namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
 {
     /// <summary>
     /// Represents a light in the ray tracer scene. Requires that the attached game object has a 

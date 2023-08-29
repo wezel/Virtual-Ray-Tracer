@@ -47,7 +47,7 @@ namespace Editor
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         static void OnAfterSceneLoadRuntimeMethod()
         {
-            if(currentLevel > 0)
+            if(currentLevel > 1)
                 LevelManager.Get().FirstLevel = currentLevel;
             
         }

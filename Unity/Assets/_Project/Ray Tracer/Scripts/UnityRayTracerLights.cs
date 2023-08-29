@@ -2,15 +2,12 @@ using System.Collections.Generic;
 using _Project.Ray_Tracer.Scripts.RT_Ray;
 using _Project.Ray_Tracer.Scripts.RT_Scene;
 using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Camera;
-using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Point_Light;
-using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light;
 using _Project.Ray_Tracer.Scripts.Utility;
 using UnityEngine;
 using _Project.UI.Scripts;
 using _Project.UI.Scripts.Render_Image_Window;
 using System.Collections;
 using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light;
-using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Spot_Light;
 
 namespace _Project.Ray_Tracer.Scripts
 {

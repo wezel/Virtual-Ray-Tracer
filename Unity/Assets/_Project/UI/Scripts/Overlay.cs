@@ -112,7 +112,7 @@ namespace _Project.UI.Scripts
 
         private void Start()
         {
-            LevelManager.Get().OnLevelLoaded += ResetEscapables;
+            LevelManager.Get().OnLevelLoadFinished += ResetEscapables;
             InputManager.Get().OnEscape += InvokeEscapable;
         }
     }

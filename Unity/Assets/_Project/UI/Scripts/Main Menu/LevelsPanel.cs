@@ -59,20 +59,26 @@ namespace _Project.UI.Scripts.Main_Menu
                 Show();
         }
 
+        private void OnButtonClick(Button button)
+        {
+            Hide();
+            LevelManager.Get().LoadLevel(int.Parse(button.name));
+        }
+
         private void Awake()
         {
             exitButton.onClick.AddListener(Hide);
 
             // Set up a button for each scene. We start the index at 1 because we skip the start and initialize scene.
             int sceneCount = SceneManager.sceneCountInBuildSettings;
-            for (int i = 1; i < sceneCount; i++)
+            for (int i = 3; i < sceneCount; i++)
             {
                 Button levelButton = Instantiate(levelsPrefab, content.transform);
                 levelButton.name = i.ToString();
 
                 levelButton.interactable = TutorialManager.Get().CanLevelBeLoaded(i);
-                levelButton.GetComponentInChildren<TextMeshProUGUI>().text = i + ". " + System.IO.Path.GetFileNameWithoutExtension(SceneUtility.GetScenePathByBuildIndex(i));
-                levelButton.onClick.AddListener(() => LevelManager.Get().LoadLevel(int.Parse(levelButton.name)));
+                levelButton.GetComponentInChildren<TextMeshProUGUI>().text = i-2 + ". " + System.IO.Path.GetFileNameWithoutExtension(SceneUtility.GetScenePathByBuildIndex(i));
+                levelButton.onClick.AddListener(() => OnButtonClick(levelButton));
                 levelButtons.Add(levelButton);
             }
         }

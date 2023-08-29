@@ -2,8 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using _Project.Ray_Tracer.Scripts.RT_Scene;
-using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Point_Light;
-using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Area_Light;
 using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light;
 using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Camera;
 using _Project.Ray_Tracer.Scripts.Utility;
@@ -14,7 +12,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
-using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Spot_Light;
 using _Project.Scripts;
 
 namespace _Project.Ray_Tracer.Scripts
@@ -580,7 +577,7 @@ namespace _Project.Ray_Tracer.Scripts
 
         private void Start()
         {
-            LevelManager.Get().OnLevelLoaded += LoadScene;
+            LevelManager.Get().OnLevelLoadFinished += LoadScene;
             
             // TODO make this code instead
             UIBase.Get().ControlPanel.Subscribe(OnEvent);

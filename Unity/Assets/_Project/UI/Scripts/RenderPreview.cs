@@ -128,8 +128,7 @@ namespace _Project.UI.Scripts
         //     if(expanded)
         //         ExpandCollapse();
         // }
-
-        // TODO move to unity editor instead of code
+        
         private void Awake()
         {
             expandCollapseButton.onClick.AddListener(ExpandCollapse);

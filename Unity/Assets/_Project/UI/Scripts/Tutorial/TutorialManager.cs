@@ -101,7 +101,7 @@ namespace _Project.UI.Scripts.Tutorial
         public bool CanLevelBeLoaded(int level)
         {
             // The first level can always be loaded
-            if (level <= 1)
+            if (level <= 3)
                 return true;
             
             GlobalManager globalManager = GlobalManager.Get();

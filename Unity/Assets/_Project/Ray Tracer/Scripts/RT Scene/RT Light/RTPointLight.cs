@@ -1,9 +1,6 @@
-using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light;
-using System;
 using UnityEngine;
-using UnityEngine.UI;
 
-namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Point_Light
+namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
 {
     /// <summary>
     /// Represents a light in the ray tracer scene. Requires that the attached game object has a 
@@ -45,24 +42,30 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Point_Light
 
         private void LateUpdate()
         {
+            
 #if UNITY_EDITOR
-                if(!Application.isPlaying) return;
+            if (!Application.isPlaying) return;
 #endif
+
             // Make the label face the camera. We do this in LateUpdate to make sure the camera has finished its moving.
             // From: https://answers.unity.com/questions/52656/how-i-can-create-an-sprite-that-always-look-at-the.html
             canvas.transform.forward = (Camera.main.transform.position - Position).normalized;
+
         }
-
+        
 #if UNITY_EDITOR
-
         private void OnRenderObject()
         {
+            
+            // Fix sprite not rotating properly while running game in editor
+            if(Application.isPlaying) return;
+            
             // Fix maximize window errors
-            if (UnityEditor.SceneView.lastActiveSceneView == null) 
-                return;
+            if (UnityEditor.SceneView.lastActiveSceneView == null) return;
+            
+            // Rotate the canvas to the user
             canvas.transform.forward = (UnityEditor.SceneView.lastActiveSceneView.camera.transform.position - Position).normalized;
         }
 #endif
-        
     }
 }

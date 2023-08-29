@@ -52,7 +52,7 @@ namespace _Project.Scripts
 
         private void Start()
         {
-            LevelManager.Get().OnLevelLoaded += PositionCamera;
+            LevelManager.Get().OnLevelLoadFinished += PositionCamera;
             
             Camera.main.backgroundColor = UnityRayTracer.Get().BackgroundColor;
             defaultOrientation = transform.eulerAngles;

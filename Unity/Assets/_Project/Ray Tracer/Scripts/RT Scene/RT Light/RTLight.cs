@@ -211,6 +211,7 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light
         protected virtual void Awake()
         {
             defaultOutline = outline.color;
+            //canvas.GetComponent<Canvas>().worldCamera = Camera.main;
         }
 #if UNITY_EDITOR
         private void OnEnable()
