@@ -83,4 +83,6 @@ Any questions, bug reports or suggestions can be created as an issue on this rep
 
 [R. Rosema: Adapting Virtual Ray Tracer to a Web and Mobile Application, BSc Thesis, University of Groningen, 2022.](https://fse.studenttheses.ub.rug.nl/27894)
 
+[A. Aaen: Virtual Ray Tracer in VR, BSc thesis, University of Groningen, 2024.](https://fse.studenttheses.ub.rug.nl/33355/)
+
 Further documents will appear here in due course.
