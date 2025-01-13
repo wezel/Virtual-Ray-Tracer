@@ -91,4 +91,10 @@ Any questions, bug reports or suggestions can be created as an issue on this rep
 
 [A. Aaen: Virtual Ray Tracer in VR, BSc thesis, University of Groningen, 2024.](https://fse.studenttheses.ub.rug.nl/33355/)
 
+[I, Bodola: Virtual Ray Tracer: Using Light to Deform Objects, BSc thesis, University of Groningen, 2024.](https://fse.studenttheses.ub.rug.nl/33891/)
+
+##### Others:
+
+[A, Bredenbals: Visualising Ray Marching in 3D, Msc Research Internship, University of Groningen, 2022.](https://fse.studenttheses.ub.rug.nl/27977/)
+
 Further documents will appear here in due course.
